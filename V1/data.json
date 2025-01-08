@@ -1,0 +1,102 @@
+{
+    "students": {
+        "Adesayo L": {
+            "subjects": {
+                "Math": 85,
+                "Science": 90,
+                "History": 78
+            }
+        },
+        "Moria Kincaid": {
+            "subjects": {
+                "Math": 35,
+                "Science": 45,
+                "History": 60
+            }
+        },
+        "Lola Pratt": {
+            "subjects": {
+                "Math": 85,
+                "Science": 90,
+                "History": 28
+            }
+        },
+        "Kayode Brown": {
+            "subjects": {
+                "Math": 85,
+                "Science": 90,
+                "History": 79
+            }
+        },
+        "Adeola Adebayo": {
+            "subjects": {
+                "Math": 70,
+                "Science": 80,
+                "History": 85
+            }
+        },
+        "Wanjiku Kamau": {
+            "subjects": {
+                "Math": 92,
+                "Science": 88,
+                "History": 79
+            }
+        },
+        "Chinwe Okafor": {
+            "subjects": {
+                "Math": 65,
+                "Science": 72,
+                "History": 68
+            }
+        },
+        "Joseph Njoroge": {
+            "subjects": {
+                "Math": 90,
+                "Science": 85,
+                "History": 88
+            }
+        },
+        "Fatima Bello": {
+            "subjects": {
+                "Math": 78,
+                "Science": 82,
+                "History": 80
+            }
+        },
+        "Amina Yusuf": {
+            "subjects": {
+                "Math": 60,
+                "Science": 75,
+                "History": 70
+            }
+        },
+        "Peter Ochieng": {
+            "subjects": {
+                "Math": 87,
+                "Science": 92,
+                "History": 84
+            }
+        },
+        "Grace Ndungu": {
+            "subjects": {
+                "Math": 55,
+                "Science": 62,
+                "History": 58
+            }
+        },
+        "Ada Lovelace": {
+            "subjects": {
+                "Math": 22,
+                "Science": 44,
+                "History": 55
+            }
+        },
+        "Ade Lovw": {
+            "subjects": {
+                "Math": 3,
+                "Science": 3,
+                "History": 3
+            }
+        }
+    }
+}
