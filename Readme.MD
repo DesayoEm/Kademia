@@ -1,6 +1,6 @@
 # Academic Management System
 
-## V1.0 (Current Implementation)
+## V1.0 (Old version)
 ### Core Architecture
 - CLI-based interface
 - JSON file-based persistence layer
@@ -30,7 +30,7 @@
    - Duplicate entry prevention
    - Input type verification
 
-## V2.0 (Planned Migration)
+## V2.0 (In Progress)
 ### System Architecture
 1. Backend Infrastructure
    - FastAPI-based RESTful API
@@ -47,17 +47,15 @@
 ### Enhanced Data Model
 1. Core Entities
    - Students (UUID-based identification)
-   - Academic Periods (semester/session tracking)
    - Departments
-   - Courses (with prerequisites)
    - Enrollments
    - Grades
 
 2. Extended Student Profile
    - Biometric data storage
-   - Academic history (JAMB scores, SSCE results)
+   - Academic history 
    - Demographic information
-   - Document management (PDF storage)
+   - Document management (PDF and Image storage)
    - Profile image handling
 
 ### Security Implementation
@@ -67,21 +65,13 @@
    - Session management
    - JWT token lifecycle
 
-2. User Hierarchy
-   - Administrative staff
-   - Students
-   
-
 ### Advanced Features
 1. Academic Workflow
    - Dynamic course enrollment
    - Prerequisite validation
-   - Credit load management
    - Course approval workflow
 
 2. Grade Management
-   - Weighted CGPA calculation
-   - Semester-wise GPA tracking
    - Academic standing computation
    - Performance analytics
 
