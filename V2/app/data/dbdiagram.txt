@@ -1,0 +1,163 @@
+Table students {
+  id uuid [pk]
+  student_id varchar [unique]
+  first_name varchar
+  last_name varchar
+  class char [ref: > classes.id]
+  department_id uuid [ref: > departments.id]
+  email varchar [unique]
+  parent_id uuid [ref: > parents.id]
+  image_url varchar
+  is_repeating boolean
+  admission_date date
+  leaving_date date
+  is_graduated boolean
+  is_enrolled boolean
+  created_at timestamp
+  updated_at timestamp
+}
+
+
+Table student_documents {
+  id uuid [pk]
+  student_id uuid [ref: > students.id]
+  title varchar
+  academic_year varchar
+  document_type varchar
+  file_path varchar
+  status varchar
+  upload_date timestamp
+  verified_at timestamp
+  verified_by uuid [ref: > educators.id]
+  }
+
+Table educators {
+  id uuid [pk]
+  first_name varchar
+  last_name varchar
+  email varchar [unique]
+  phone varchar
+  date_joined date
+  date_left date
+  is_active boolean
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table educator_subjects {
+    id uuid [pk]
+    educator_id uuid [ref: > educators.id]
+    subject_id uuid [ref: > subjects.id]
+    classes array // ['4A', '4B', '4C', '4D']  
+    academic_year varchar
+    is_active boolean
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table parents {
+  id uuid [pk]
+  first_name varchar
+  last_name varchar
+  address varchar
+  email varchar [unique]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table departments {
+  id uuid [pk]
+  name varchar
+  code varchar [unique]
+  description varchar
+  mentor_id uuid [ref: > educators.id]
+}
+
+Table classes {
+  level enum
+  code char
+  id pk (level, code)
+  mentor_id uuid [ref: > educators.id]
+}
+
+Table subjects {
+    id uuid [pk]
+    name varchar
+    class_level char [ref: > classes.level]
+    department_id uuid [ref: > departments.id, null] // null for classes 1-3
+    is_compulsory boolean
+    tag enum
+    is_active boolean
+}
+
+Table student_subjects {
+    id uuid [pk]
+    student_id uuid [ref: > students.id]
+    subject_id uuid [ref: > subjects.id]
+    academic_year varchar
+    is_active boolean
+    created_at timestamp
+}
+
+Table grades {
+    id uuid [pk]
+    student_id uuid [ref: > students.id]
+    subject_id uuid [ref: > subjects.id]
+    term enum
+    marks decimal
+    total_marks decimal
+    grade_date timestamp
+    graded_by uuid [ref: > educators.id]
+    created_at timestamp
+    updated_at timestamp
+    file_url varchar
+}
+
+Table repetitions {
+    id uuid [pk]
+    student_id uuid [ref: > students.id]
+    from_class char [ref: > classes.id]
+    to_class char [ref: > classes.id]
+    academic_year varchar
+    reason text
+    approved_by uuid [ref: > educators.id]
+    created_at timestamp
+    updated_at timestamp
+}
+Table users {
+    id uuid [pk]
+    email varchar [unique]
+    password_hash varchar
+    user_type enum // 'student', 'educator', 'parent'
+    user_id uuid // references the respective table based on user_type
+    is_active boolean
+    last_login timestamp
+    created_by uuid [ref:> educators.id]
+    created_at timestamp
+    updated_by uuid [ref:> educators.id]
+    updated_at timestamp
+}
+
+Table roles {
+    id INTEGER [pk]
+    name varchar [unique]
+    description text
+}
+
+Table user_roles {
+    user_id uuid [ref: > users.id]
+    role_id INTEGER [ref: > roles.id]
+    created_at timestamp
+}
+
+Table permissions {
+    id INTEGER [pk]
+    name varchar [unique]
+    description text
+}
+
+Table role_permissions {
+    role_id INTEGER [ref: > roles.id]
+    permission_id INTEGER [ref: > permissions.id]
+}
+
