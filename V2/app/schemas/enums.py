@@ -1,8 +1,8 @@
 from enum import Enum
 
 class Gender(str, Enum):
-    MALE = 'male'
-    FEMALE = 'female'
+    MALE = 'M'
+    FEMALE = 'F'
 
 class StaffType(str, Enum):
     STAFF = "staff"
@@ -12,6 +12,7 @@ class StaffType(str, Enum):
 
 class DocumentType(str, Enum):
     RESULT = "result"
+    ID = "id"
     AWARD = "award"
     CERTIFICATE = "certificate"
     ARTICLE = "article"
@@ -22,10 +23,12 @@ class DepartmentType(str, Enum):
     HUMANITIES = 'humanities'
     BUSINESS = 'business'
 
+
 class DepartmentCode(str, Enum):
     SCI = 'SCI'
     HMS= 'HMS'
     BSN = 'BSN'
+
 
 
 class ClassLevel(str, Enum):
@@ -45,18 +48,17 @@ class ClassCode(str, Enum):
     E = 'E'
     F = 'F'
 
-class StaffDepartmentName (str, Enum):
-    ADMIN = 'Admin'
-    EDUCATION = 'Education'
-    MANAGEMENT = 'Management'
-    OTHER = 'Other'
-
 
 class Term (str, Enum):
     FIRST = 'First'
     SECOND = 'Second'
     THIRD = 'Third'
 
+class SubjectDepartmentType(str, Enum):
+    SCIENCE = 'science'
+    HUMANITIES = 'humanities'
+    BUSINESS = 'business'
+    General = 'General'
 
 class GradeType (str, Enum):
     EXAM = 'Exam'
@@ -71,3 +73,18 @@ class UserType (str, Enum):
     ADMIN = 'Admin'
     EDUCATOR = 'Educator'
 
+class ApprovalStatus (str, Enum):
+    PENDING = 'Pending'
+    APPROVED= 'Approved'
+    REJECTED = 'Rejected'
+
+class StaffDepartmentName (str, Enum):
+    ADMIN = 'Admin'
+    EDUCATION = 'Education'
+    MANAGEMENT = 'Management'
+    OTHER = 'Other'
+
+class AccessLevel (str, Enum):
+    USER = 'User'
+    ADMIN = 'Admin'
+    SUPERUSER = 'Superuser'

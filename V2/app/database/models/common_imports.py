@@ -1,6 +1,8 @@
+from sqlalchemy.orm import declared_attr
 from typing import List, Optional
 from uuid import uuid4
 from enum import Enum
+from datetime import timezone
 
 
 from datetime import (
@@ -13,6 +15,7 @@ from sqlalchemy import (
     UniqueConstraint,
     func,
     Integer,
+    Index,
     Float,
     String,
     Boolean,
