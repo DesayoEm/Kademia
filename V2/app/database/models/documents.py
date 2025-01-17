@@ -6,7 +6,11 @@ import uuid
 
 class StudentDocuments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """Manages documents uploaded for students.
-    Maintains audit history with staff references defaulting to placeholder text (e.g., 'Anon User (left)') when referenced staff is deleted."""
+    Maintains audit history with staff references defaulting to placeholder text
+    (e.g., 'Anon User (left)') when referenced staff is deleted.
+
+    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+    """
     __tablename__ = 'student_documents'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
