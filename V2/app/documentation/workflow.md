@@ -6,7 +6,7 @@
 - [x] Database URL configuration
 - [x] SQLAlchemy connection setup
 - [x] Database session management
-- [ ] Migration setup (Alembic)
+- [x] Migration setup (Alembic)
 
 ### 2. SQLAlchemy Models
 - [x] Base model setup
@@ -23,7 +23,8 @@
 - [x] Model relationships and constraints
 
 ### 3. Pydantic Models
-- [ ] Base schema setup
+- [x]
+- Base schema setup
 - [ ] User schemas (create, read, update)
 - [ ] Student schemas
 - [ ] Educator schemas

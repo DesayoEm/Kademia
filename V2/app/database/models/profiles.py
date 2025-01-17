@@ -1,6 +1,6 @@
-from .common_imports import *
+from app.database.models.common_imports import *
 from app.database.models.data_enums import StaffType, Gender, AccessLevel
-from mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
 from sqlalchemy.orm import declared_attr
 
 
@@ -39,9 +39,9 @@ class Students(ProfileBase):
 
     #Relationships
     documents_owned = relationship('StudentDocuments', back_populates='owner')
-    parent = relationship('Parents', back_populates='wards')
-    class_ = relationship('Classes', back_populates='students')
-    department = relationship('Departments', back_populates='students')
+    parent = relationship('Parents', back_populates='wards',foreign_keys='[Students.parent_id]' )
+    class_ = relationship('Classes', back_populates='students', foreign_keys='[Students.class_id]')
+    department = relationship('Departments', back_populates='students', foreign_keys='[Students.department_id]')
     subjects_taken = relationship('StudentSubjects', back_populates='student')
     grades = relationship('Grades', back_populates='student')
     total_grades = relationship('TotalGrades', back_populates='student')
@@ -49,7 +49,7 @@ class Students(ProfileBase):
     transfers = relationship('StudentTransfers', back_populates='transferred_student')
 
     __table_args__ = (
-        Index('idx_students_deleted_at', 'deleted_at'),
+        Index('idx_students_soft_deleted_at', 'soft_deleted_at'),
         Index('idx_students_profile_id', 'profile_id')
     )
 
@@ -73,7 +73,7 @@ class Parents(ProfileBase):
     __table_args__ = (
         Index('idx_parents_email', 'email_address'),
         Index('idx_parents_phone', 'phone'),
-        Index('idx_parents_deleted_at', 'deleted_at'),
+        Index('idx_parents_soft_deleted_at', 'soft_deleted_at'),
         Index('idx_parents_profile_id', 'profile_id')
     )
 
@@ -91,23 +91,19 @@ class Staff(ProfileBase):
     address: Mapped[str] = mapped_column(String(500))
     phone: Mapped[str] = mapped_column(String(11), unique=True)
     department_id: Mapped[Optional[UUID]] = mapped_column(ForeignKey('staff_departments.id', ondelete='RESTRICT'))
-    role_id: Mapped[UUID] = mapped_column(ForeignKey('StaffRoles.id', ondelete='CASCADE'))
+    role_id: Mapped[UUID] = mapped_column(ForeignKey('staff_roles.id', ondelete='CASCADE'))
     date_joined: Mapped[date] = mapped_column(Date)
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default = True)
     staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType))
 
-
     #Relationships
-    department = relationship("StaffDepartments", foreign_keys="[department_id]")
-
-    department_led = relationship("StaffDepartments", back_populates="manager", primaryjoin="(Staff.id == StaffDepartments.manager_id)")
-
-    role = relationship("StaffRoles", foreign_keys=[role_id])
+    department = relationship("StaffDepartments", foreign_keys="[Staff.department_id]")
+    role = relationship("StaffRoles", foreign_keys='[Staff.role_id]')
 
 
     __table_args__ = (
-        Index('idx_staff_deleted_at', 'deleted_at'),
+        Index('idx_staff_soft_deleted_at', 'soft_deleted_at'),
         Index('idx_staff_department', 'department_id'),
         Index('idx_staff_role', 'role_id'),
         Index('idx_staff_type', 'staff_type'),
@@ -148,7 +144,6 @@ class Educator(Staff):
         'inherit_condition': (id == Staff.id)
     }
 
-    #Relationships
     subjects_taken = relationship('EducatorSubjects', back_populates='educator')
     mentored_department = relationship("Departments", back_populates="mentor")
     mentored_class = relationship("Classes", back_populates="mentor")
@@ -164,7 +159,7 @@ class Management(Staff):
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'educator',
+        'polymorphic_identity': 'management',
         'inherit_condition': (id == Staff.id)
     }
 
@@ -178,7 +173,7 @@ class Commercial(Staff):
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'educator',
+        'polymorphic_identity': 'commercial',
         'inherit_condition': (id == Staff.id)
     }
 
@@ -191,7 +186,7 @@ class Support(Staff):
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'educator',
+        'polymorphic_identity': 'support',
         'inherit_condition': (id == Staff.id)
     }
 

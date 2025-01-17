@@ -1,10 +1,12 @@
 import pytest
+from app.database.models.common_imports import Base
 from datetime import datetime, date, timezone
 from uuid import uuid4
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from app.security.auth_models import Users, AccessLevelChanges
 from app.database.models.profiles import Staff, Students, Parents, Admin, Educator
+from app.database.models.documents import StudentDocuments
 from app.database.models.organization import Departments, Classes, StaffDepartments, StaffRoles
 from app.database.models.academic import Subjects, Grades, StudentSubjects
 from app.database.models.data_enums import (
@@ -17,7 +19,10 @@ from app.database.models.data_enums import (
 @pytest.fixture(scope="session")
 def engine():
     """Create test database engine"""
-    return create_engine("postgresql://test_user:test_pass@localhost/test_db")
+    return create_engine("postgresql://postgres:password@localhost:5432/test")
+    Base.metadata.create_all(engine)
+
+    return engine
 
 @pytest.fixture(scope="function")
 def db_session(engine):

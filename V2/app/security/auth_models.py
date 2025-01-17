@@ -37,7 +37,7 @@ class Users(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
         return f"User(profile_id={self.profile_id}, type={self.user_type}, access={self.access_level})"
 
 
-class AccessLevelChanges(Base, TimeStampMixins, SoftDeleteMixins):
+class AccessLevelChanges(Base, TimeStampMixins):
     """Tracks changes to user access levels for audit purposes"""
     __tablename__ = 'access_level_changes'
 

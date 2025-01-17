@@ -1,8 +1,9 @@
-from .common_imports import *
+from app.database.models.common_imports import *
 from app.database.models.data_enums import DocumentType
+from app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
 
 
-class StudentDocuments(Base):
+class StudentDocuments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """Manages documents uploaded for students.
     Maintains audit history with staff references defaulting to placeholder text (e.g., 'Anon User (left)') when referenced staff is deleted."""
     __tablename__ = 'student_documents'
@@ -16,7 +17,7 @@ class StudentDocuments(Base):
 
 
     #Relationships
-    owner = relationship('Students', back_populates='documents_owned')
+    owner = relationship('Students', back_populates='documents_owned', foreign_keys='[StudentDocuments.owner_id]')
 
     __table_args__ = (
         Index('idx_owner_document_type', 'owner_id', 'document_type'),
