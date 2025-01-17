@@ -23,7 +23,8 @@ from sqlalchemy import (
     DateTime,
     Text,
     Enum,
-    DECIMAL
+    DECIMAL,
+    Column
 )
 from sqlalchemy.orm import (
     DeclarativeBase,

@@ -4,6 +4,8 @@ from app.database.models.data_enums import (
     DepartmentType, DepartmentCode,
     ClassLevel, ClassCode, StaffDepartmentName)
 
+import uuid
+
 class Departments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     __tablename__ = 'departments'
 
@@ -11,12 +13,7 @@ class Departments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     name: Mapped[DepartmentType] = mapped_column(Enum(DepartmentType))
     code: Mapped[DepartmentCode] = mapped_column(Enum(DepartmentCode))
     description: Mapped[str] = mapped_column(String(500))
-    mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='SET NULL'), nullable = True)
-
-    #Relationships
-    students = relationship('Students', back_populates='department')
-    mentor = relationship('Educator', back_populates='mentored_department', foreign_keys='[Departments.mentor_id]')
-
+    mentor_id: Mapped[UUID] =mapped_column(UUID(as_uuid=True), default=uuid.uuid4)
 
 
 class Classes(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
@@ -25,11 +22,8 @@ class Classes(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
     level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel))
     code: Mapped[ClassCode] = mapped_column(Enum(ClassCode))
-    mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='SET NULL'), nullable=True)
+    mentor_id: Mapped[UUID] =mapped_column(UUID(as_uuid=True), default=uuid.uuid4)
 
-    #Relationships
-    students = relationship('Students', back_populates='class_')
-    mentor = relationship('Educator', back_populates='mentored_class', foreign_keys='[Classes.mentor_id]')
 
     __table_args__ = (
         UniqueConstraint('level', 'code', name='uq_class_level_code'),
@@ -46,11 +40,7 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
     name: Mapped[StaffDepartmentName] = mapped_column(Enum(StaffDepartmentName), unique=True)
     description: Mapped[str] = mapped_column(String(500))
-    manager_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',ondelete='SET NULL'), nullable = True)
-
-
-    #Relationships
-    manager = relationship('Staff', foreign_keys = '[StaffDepartments.manager_id]')
+    manager_id: Mapped[UUID] =mapped_column(UUID(as_uuid=True), default=uuid.uuid4)
 
 
 class StaffRoles(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
