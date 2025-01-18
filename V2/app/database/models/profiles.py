@@ -198,41 +198,21 @@ class Educator(Staff):
         return f"Educator(name ={self.first_name} {self.last_name}, role_id={self.role_id})"
 
 
-
-class Management(Staff):
+class Operations(Staff):
     """
-    Represents a management staff member, inheriting from Staff.
+    Represents an operations staff member, inheriting from Staff.
     """
-    __tablename__ = 'management'
+    __tablename__ = 'operations'
 
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'management',
+        'polymorphic_identity': 'operations',
         'inherit_condition': (id == Staff.id)
     }
 
     def __repr__(self) -> str:
-        return f"Management staff(name ={self.first_name} {self.last_name}, role_id={self.role_id})"
-
-
-
-class Commercial(Staff):
-    """
-    Represents a commercial staff member, inheriting from Staff.
-    """
-    __tablename__ = 'commercial'
-
-    id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'commercial',
-        'inherit_condition': (id == Staff.id)
-    }
-
-    def __repr__(self) -> str:
-        return f"Comms staff(name ={self.first_name} {self.last_name}, role_id={self.role_id})"
-
+        return f"Operations staff(name ={self.first_name} {self.last_name}, role_id={self.role_id})"
 
 
 class Support(Staff):
