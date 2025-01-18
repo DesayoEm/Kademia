@@ -1,6 +1,8 @@
 from common_imports import *
 from enums import Gender, AccessLevel, StaffType
-
+from validators import (
+        validate_phone, validate_name, validate_admission_date
+)
 
 class UserBase(BaseModel):
     first_name: str
@@ -12,8 +14,8 @@ class UserBase(BaseModel):
     #Audit
     created_at: datetime
     created_by: UUID
-    updated_at: datetime
-    updated_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
 
     #Soft delete
     is_soft_deleted: bool = False
@@ -23,6 +25,10 @@ class UserBase(BaseModel):
 
     class Config:
         from_attributes = True
+
+    @field_validator('first_name', 'last_name')
+    def validate_first_and_last_name(cls, value):
+        return validate_name(value)
 
 
 class Students(UserBase):
@@ -40,6 +46,11 @@ class Students(UserBase):
     graduation_date: Optional[date] = None
     is_enrolled: bool = Field(default=True)
 
+    @field_validator('admission_date')
+    def validate_admission_date(cls, value):
+        return validate_admission_date(value)
+
+
 
 class Parents(UserBase):
     id: UUID = Field(default_factory=uuid4)
@@ -50,6 +61,9 @@ class Parents(UserBase):
     phone: str = Field(max_length=11)
     has_active_wards: bool = Field(default=True)
 
+    @field_validator('phone')
+    def validate_phone(cls, value):
+        return validate_phone(value)
 
 
 class Staff(UserBase):
@@ -66,6 +80,10 @@ class Staff(UserBase):
     is_active: bool = Field(default=True)
     staff_type: StaffType
 
+    @field_validator('phone')
+    def validate_phone(cls, value):
+        return validate_phone(value)
+
 
 class Educator(Staff):
     pass
@@ -73,23 +91,11 @@ class Educator(Staff):
 class Admin(Staff):
     pass
 
+class Commercial(Staff):
+    pass
 
+class Management(Staff):
+    pass
 
-# def validate_year(year: int) -> int:
-#     current_year = date.today().year
-#     if year < 1900:
-#         raise Exception()
-#     if year > current_year:
-#         raise Exception()
-#     return year
-#
-#
-# def validate_phone(phone: str) -> bool:
-#     if not len(phone) == 11 or not phone.isdigit():
-#         raise ValueError("Phone must be 11 digits")
-#     return phone
-#
-# def validate_name(name: str, max_length: int = 30) -> bool:
-#     if not name or len(name) > max_length:
-#         raise ValueError(f"Name must be between 1 and {max_length} characters")
-#     return name
+class Support(Staff):
+    pass

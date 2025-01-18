@@ -13,13 +13,4 @@ load_dotenv()
 database_url = os.getenv("DATABASE_URL")
 engine= create_engine(database_url, echo=True)
 
-print('create_tables')
-Base.metadata.create_all(engine)
 
-# Session=sessionmaker(bind=engine)
-# session = Session()
-#
-# with engine.connect() as connection:
-#     result= connection.execute(text("select 'Hello'"))
-#
-#     print (result.all())
