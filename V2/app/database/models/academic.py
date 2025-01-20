@@ -1,9 +1,11 @@
-from app.database.models.common_imports import *
-from app.database.models.data_enums import (
-    ClassLevel, Term, ApprovalStatus, SubjectDepartmentType,
-    GradeType, DepartmentType)
+from tokenize import group
 
-from app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from V2.app.database.models.common_imports import *
+from V2.app.database.models.data_enums import (
+    ClassLevel, Term, ApprovalStatus, SubjectGroup,
+    GradeType, DepartmentName)
+
+from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
 
 class Subjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """
@@ -17,8 +19,8 @@ class Subjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
     name: Mapped[str] = mapped_column(String(30))
     class_level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel))
-    department_type: Mapped[SubjectDepartmentType] = mapped_column(Enum(SubjectDepartmentType))
-    is_compulsory: Mapped[bool] = mapped_column(default = True)
+    group: Mapped[SubjectGroup] = mapped_column(Enum(SubjectGroup), nullable = True)
+    is_elective: Mapped[bool] = mapped_column(default = True)
 
     #Relationships
     grades = relationship('Grades', back_populates='subject')
@@ -189,8 +191,8 @@ class StudentTransfers(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
 
     from_class_level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel))
     to_class_level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel))
-    from_department: Mapped[DepartmentType] = mapped_column(Enum(DepartmentType))
-    to_department: Mapped[DepartmentType] = mapped_column(Enum(DepartmentType))
+    from_department: Mapped[DepartmentName] = mapped_column(Enum(DepartmentName))
+    to_department: Mapped[DepartmentName] = mapped_column(Enum(DepartmentName))
     reason: Mapped[str] = mapped_column(String(500))
     status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus), default=ApprovalStatus.PENDING)
     status_updated_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='SET NULL'))

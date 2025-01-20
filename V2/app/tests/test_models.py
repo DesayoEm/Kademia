@@ -12,7 +12,7 @@ from app.database.models.academic import Subjects, Grades, StudentSubjects
 from app.database.models.data_enums import (
     UserType, AccessLevel, StaffType, Gender,
     DepartmentType, DepartmentCode, ClassLevel,
-    ClassCode, StaffDepartmentName, SubjectDepartmentType
+    ClassCode, StaffDepartmentName, SubjectGroup
 )
 
 #db setup

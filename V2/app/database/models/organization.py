@@ -1,7 +1,7 @@
-from app.database.models.common_imports import *
-from app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
-from app.database.models.data_enums import (
-    DepartmentType, DepartmentCode,
+from V2.app.database.models.common_imports import *
+from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from V2.app.database.models.data_enums import (
+    DepartmentName, DepartmentCode,
     ClassLevel, ClassCode, StaffDepartmentName)
 
 class Departments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
@@ -14,7 +14,7 @@ class Departments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     __tablename__ = 'departments'
 
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    name: Mapped[DepartmentType] = mapped_column(Enum(DepartmentType))
+    name: Mapped[DepartmentName] = mapped_column(Enum(DepartmentName))
     code: Mapped[DepartmentCode] = mapped_column(Enum(DepartmentCode))
     description: Mapped[str] = mapped_column(String(500))
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='SET NULL'), nullable = True)
@@ -36,6 +36,7 @@ class Classes(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
     level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel))
     code: Mapped[ClassCode] = mapped_column(Enum(ClassCode))
+    student_count:Mapped[int]= mapped_column(Integer)
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='SET NULL'), nullable=True)
 
     #Relationships

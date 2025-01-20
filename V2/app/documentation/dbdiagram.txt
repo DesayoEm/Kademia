@@ -1,163 +1,207 @@
+// Users and Authentication
+Table users {
+  profile_id uuid [pk]
+  user_type enum
+  password_hash varchar
+  access_level enum
+  is_active boolean
+  is_verified boolean
+  last_login timestamp
+}
+
+// Base Profile Tables
 Table students {
   id uuid [pk]
-  student_id varchar [unique]
+  profile_id uuid [ref: > users.profile_id]
   first_name varchar
   last_name varchar
-  class char [ref: > classes.id]
-  department_id uuid [ref: > departments.id]
-  email varchar [unique]
-  parent_id uuid [ref: > parents.id]
+  gender enum
+  access_level enum
   image_url varchar
+  student_id varchar
+  class_id uuid [ref: > classes.id]
+  department_id uuid [ref: > departments.id]
+  parent_id uuid [ref: > parents.id]
   is_repeating boolean
   admission_date date
   leaving_date date
   is_graduated boolean
+  graduation_date date
   is_enrolled boolean
-  created_at timestamp
-  updated_at timestamp
-}
-
-
-Table student_documents {
-  id uuid [pk]
-  student_id uuid [ref: > students.id]
-  title varchar
-  academic_year varchar
-  document_type varchar
-  file_path varchar
-  status varchar
-  upload_date timestamp
-  verified_at timestamp
-  verified_by uuid [ref: > educators.id]
-  }
-
-Table educators {
-  id uuid [pk]
-  first_name varchar
-  last_name varchar
-  email varchar [unique]
-  phone varchar
-  date_joined date
-  date_left date
-  is_active boolean
-  created_at timestamp
-  updated_at timestamp
-}
-
-Table educator_subjects {
-    id uuid [pk]
-    educator_id uuid [ref: > educators.id]
-    subject_id uuid [ref: > subjects.id]
-    classes array // ['4A', '4B', '4C', '4D']  
-    academic_year varchar
-    is_active boolean
-    created_at timestamp
-    updated_at timestamp
+  last_active_date timestamp
+  deletion_eligible boolean
 }
 
 Table parents {
   id uuid [pk]
+  profile_id uuid [ref: > users.profile_id]
   first_name varchar
   last_name varchar
+  gender enum
+  access_level enum
+  image_url varchar
+  email_address varchar
   address varchar
-  email varchar [unique]
-  created_at timestamp
-  updated_at timestamp
+  phone varchar
+  has_active_wards boolean
+  last_active_date timestamp
+  deletion_eligible boolean
 }
 
+Table staff {
+  id uuid [pk]
+  profile_id uuid [ref: > users.profile_id]
+  first_name varchar
+  last_name varchar
+  gender enum
+  access_level enum
+  image_url varchar
+  email_address varchar
+  address varchar
+  phone varchar
+  department_id uuid [ref: > staff_departments.id]
+  role_id uuid [ref: > staff_roles.id]
+  date_joined date
+  date_left date
+  is_active boolean
+  staff_type enum
+  last_active_date timestamp
+  deletion_eligible boolean
+}
+
+// Academic Structure
 Table departments {
   id uuid [pk]
-  name varchar
-  code varchar [unique]
+  name enum
+  code enum
   description varchar
-  mentor_id uuid [ref: > educators.id]
+  mentor_id uuid [ref: > educator.id]
 }
 
 Table classes {
+  id uuid [pk]
   level enum
-  code char
-  id pk (level, code)
-  mentor_id uuid [ref: > educators.id]
+  code enum
+  mentor_id uuid [ref: > educator.id]
 }
 
+// Staff Related Tables
+Table staff_departments {
+  id uuid [pk]
+  name enum
+  description varchar
+  manager_id uuid [ref: > staff.id]
+}
+
+Table staff_roles {
+  id uuid [pk]
+  name varchar
+  description varchar
+}
+
+Table educator {
+  id uuid [pk, ref: > staff.id]
+}
+
+// Academic Records
 Table subjects {
-    id uuid [pk]
-    name varchar
-    class_level char [ref: > classes.level]
-    department_id uuid [ref: > departments.id, null] // null for classes 1-3
-    is_compulsory boolean
-    tag enum
-    is_active boolean
-}
-
-Table student_subjects {
-    id uuid [pk]
-    student_id uuid [ref: > students.id]
-    subject_id uuid [ref: > subjects.id]
-    academic_year varchar
-    is_active boolean
-    created_at timestamp
+  id uuid [pk]
+  name varchar
+  class_level enum
+  department_type enum
+  is_compulsory boolean
 }
 
 Table grades {
-    id uuid [pk]
-    student_id uuid [ref: > students.id]
-    subject_id uuid [ref: > subjects.id]
-    term enum
-    marks decimal
-    total_marks decimal
-    grade_date timestamp
-    graded_by uuid [ref: > educators.id]
-    created_at timestamp
-    updated_at timestamp
-    file_url varchar
+  id uuid [pk]
+  student_id uuid [ref: > students.id]
+  subject_id uuid [ref: > subjects.id]
+  department_id uuid [ref: > departments.id]
+  academic_year integer
+  term enum
+  type enum
+  marks integer
+  file_url varchar
+  graded_by uuid [ref: > staff.id]
 }
 
+Table total_grades {
+  id uuid [pk]
+  student_id uuid [ref: > students.id]
+  subject_id uuid [ref: > subjects.id]
+  academic_year integer
+  term enum
+  total_marks float
+  rank integer
+}
+
+Table student_subjects {
+  id uuid [pk]
+  student_id uuid [ref: > students.id]
+  subject_id uuid [ref: > subjects.id]
+  academic_year integer
+  term enum
+  is_active boolean
+  title varchar
+}
+
+Table educator_subjects {
+  id uuid [pk]
+  educator_id uuid [ref: > educator.id]
+  subject_id uuid [ref: > subjects.id]
+  term enum
+  academic_year integer
+  is_active boolean
+}
+
+// Student Movement Records
 Table repetitions {
-    id uuid [pk]
-    student_id uuid [ref: > students.id]
-    from_class char [ref: > classes.id]
-    to_class char [ref: > classes.id]
-    academic_year varchar
-    reason text
-    approved_by uuid [ref: > educators.id]
-    created_at timestamp
-    updated_at timestamp
-}
-Table users {
-    id uuid [pk]
-    email varchar [unique]
-    password_hash varchar
-    user_type enum // 'student', 'educator', 'parent'
-    user_id uuid // references the respective table based on user_type
-    is_active boolean
-    last_login timestamp
-    created_by uuid [ref:> educators.id]
-    created_at timestamp
-    updated_by uuid [ref:> educators.id]
-    updated_at timestamp
+  id uuid [pk]
+  student_id uuid [ref: > students.id]
+  academic_year integer
+  from_class_level enum
+  to_class_level enum
+  from_class_id uuid [ref: > classes.id]
+  to_class_id uuid [ref: > classes.id]
+  reason varchar
+  status enum
+  status_updated_by uuid [ref: > staff.id]
+  status_updated_at timestamp
+  rejection_reason varchar
 }
 
-Table roles {
-    id INTEGER [pk]
-    name varchar [unique]
-    description text
+Table student_transfers {
+  id uuid [pk]
+  student_id uuid [ref: > students.id]
+  academic_year integer
+  from_class_level enum
+  to_class_level enum
+  from_department enum
+  to_department enum
+  reason varchar
+  status enum
+  status_updated_by uuid [ref: > staff.id]
+  status_updated_at timestamp
+  rejection_reason varchar
 }
 
-Table user_roles {
-    user_id uuid [ref: > users.id]
-    role_id INTEGER [ref: > roles.id]
-    created_at timestamp
+// Documents
+Table student_documents {
+  id uuid [pk]
+  owner_id uuid [ref: > students.id]
+  title varchar
+  academic_year integer
+  document_type enum
+  file_path varchar
 }
 
-Table permissions {
-    id INTEGER [pk]
-    name varchar [unique]
-    description text
+// Audit tracking
+Table access_level_changes {
+  id uuid [pk]
+  profile_id uuid [ref: > users.profile_id]
+  previous_level enum
+  new_level enum
+  reason varchar
+  changed_at timestamp
+  changed_by uuid [ref: > staff.id]
 }
-
-Table role_permissions {
-    role_id INTEGER [ref: > roles.id]
-    permission_id INTEGER [ref: > permissions.id]
-}
-

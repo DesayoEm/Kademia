@@ -5,30 +5,29 @@ class Gender(str, Enum):
     FEMALE = 'F'
 
 class StaffType(str, Enum):
-    STAFF = "staff"
     EDUCATOR = "educator"
     ADMINISTRATOR = "admin"
     SUPPORT = "support"
 
 class DocumentType(str, Enum):
-    RESULT = "result"
+    RESULT = "Result"
     ID = "id"
-    AWARD = "award"
-    CERTIFICATE = "certificate"
-    ARTICLE = "article"
-    OTHER = "other"
+    AWARD = "Award"
+    CERTIFICATE = "Certificate"
+    ARTICLE = "Article"
+    OTHER = "Other"
 
-class DepartmentType(str, Enum):
-    SCIENCE = 'science'
-    HUMANITIES = 'humanities'
-    BUSINESS = 'business'
+
+class DepartmentName(str, Enum):
+    SCIENCE = 'Science'
+    HUMANITIES = 'Humanities'
+    BUSINESS = 'Business'
 
 
 class DepartmentCode(str, Enum):
     SCI = 'SCI'
     HMS= 'HMS'
     BSN = 'BSN'
-
 
 
 class ClassLevel(str, Enum):
@@ -56,25 +55,29 @@ class Term (str, Enum):
     THIRD = 'Third'
 
 
-class SubjectDepartmentType(str, Enum):
+class SubjectGroup(str, Enum):
     SCIENCE = 'Science'
     HUMANITIES = 'Humanities'
     BUSINESS = 'Business'
-    General = 'General'
+    GENERAL = 'General'
+
 
 
 class GradeType (str, Enum):
     EXAM = 'Exam'
     TEST = 'Test'
-    THIRD = 'Assignment'
-    PRACTICAL = 'Practical'
+    ASSIGNMENT = 'Assignment'
+    PRACTICALS = 'Practicals'
     MOCKEXAM = 'Mock exam'
+    EXTRACURRICULLAR = 'Extracurricular'
+
 
 class UserType (str, Enum):
     STUDENT = 'Student'
     PARENT = 'Parent'
     ADMIN = 'Admin'
     EDUCATOR = 'Educator'
+
 
 class ApprovalStatus (str, Enum):
     PENDING = 'Pending'
@@ -85,8 +88,8 @@ class ApprovalStatus (str, Enum):
 class StaffDepartmentName (str, Enum):
     ADMIN = 'Admin'
     EDUCATION = 'Education'
-    MANAGEMENT = 'Management'
-    COMMERCIAL = 'Commercial'
+    OPERATIONS = 'Operations'
+    SUPPORT = 'Support'
     OTHER = 'Other'
 
 
@@ -94,3 +97,4 @@ class AccessLevel (str, Enum):
     USER = 'User'
     ADMIN = 'Admin'
     SUPERUSER = 'Superuser'
+    SUPERADMIN = 'Superadmin'

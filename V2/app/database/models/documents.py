@@ -1,6 +1,6 @@
-from app.database.models.common_imports import *
-from app.database.models.data_enums import DocumentType
-from app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from V2.app.database.models.common_imports import *
+from V2.app.database.models.data_enums import DocumentType
+from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
 import uuid
 
 

@@ -1,6 +1,6 @@
-from app.database.models.common_imports import *
-from app.database.models.data_enums import StaffType, Gender, AccessLevel
-from app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from V2.app.database.models.common_imports import *
+from V2.app.database.models.data_enums import StaffType, Gender, AccessLevel
+from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
 from sqlalchemy.orm import declared_attr
 
 
@@ -141,7 +141,6 @@ class Staff(ProfileBase):
         Index('idx_staff_soft_deleted_at', 'soft_deleted_at'),
         Index('idx_staff_department', 'department_id'),
         Index('idx_staff_role', 'role_id'),
-        Index('idx_staff_type', 'staff_type'),
         Index('idx_staff_name', 'first_name', 'last_name'),
         Index('idx_staff_profile_id', 'profile_id')
     )

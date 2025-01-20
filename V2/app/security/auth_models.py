@@ -4,9 +4,9 @@ from sqlalchemy import String, Boolean, DateTime, ForeignKey, Enum, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
-from ..database.models.common_imports import Base
-from ..database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
-from ..database.models.data_enums import UserType, AccessLevel
+from V2.app.database.models.common_imports import Base
+from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from V2.app.database.models.data_enums import UserType, AccessLevel
 
 class Users(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """Boilerplate for all users"""

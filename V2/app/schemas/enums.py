@@ -18,7 +18,7 @@ class DocumentType(str, Enum):
     ARTICLE = "article"
     OTHER = "other"
 
-class DepartmentType(str, Enum):
+class DepartmentName(str, Enum):
     SCIENCE = 'science'
     HUMANITIES = 'humanities'
     BUSINESS = 'business'
@@ -54,7 +54,7 @@ class Term (str, Enum):
     SECOND = 'Second'
     THIRD = 'Third'
 
-class SubjectDepartmentType(str, Enum):
+class SubjectGroup(str, Enum):
     SCIENCE = 'science'
     HUMANITIES = 'humanities'
     BUSINESS = 'business'
@@ -63,9 +63,11 @@ class SubjectDepartmentType(str, Enum):
 class GradeType (str, Enum):
     EXAM = 'Exam'
     TEST = 'Test'
-    THIRD = 'Assignment'
-    PRACTICAL = 'Practical'
+    ASSIGNMENT = 'Assignment'
+    PRACTICALS = 'Practicals'
     MOCKEXAM = 'Mock exam'
+    EXTRACURRICULLAR = 'Extracurricular'
+
 
 class UserType (str, Enum):
     STUDENT = 'Student'
@@ -73,10 +75,12 @@ class UserType (str, Enum):
     ADMIN = 'Admin'
     EDUCATOR = 'Educator'
 
+
 class ApprovalStatus (str, Enum):
     PENDING = 'Pending'
     APPROVED= 'Approved'
     REJECTED = 'Rejected'
+
 
 class StaffDepartmentName (str, Enum):
     ADMIN = 'Admin'
