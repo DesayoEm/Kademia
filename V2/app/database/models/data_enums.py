@@ -69,7 +69,7 @@ class GradeType (str, Enum):
     ASSIGNMENT = 'Assignment'
     PRACTICALS = 'Practicals'
     MOCKEXAM = 'Mock exam'
-    EXTRACURRICULLAR = 'Extracurricular'
+    EXTRACURRICULAR = 'Extracurricular'
 
 
 class UserType (str, Enum):

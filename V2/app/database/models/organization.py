@@ -65,7 +65,6 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     description: Mapped[str] = mapped_column(String(500))
     manager_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',ondelete='SET NULL'), nullable = True)
 
-
     #Relationships
     manager = relationship('Staff', foreign_keys = '[StaffDepartments.manager_id]')
 

@@ -21,16 +21,7 @@ class Users(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     last_login: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
-
-
     #Relationships
-    staff = relationship('Staff', back_populates='user', foreign_keys="[Staff.profile_id]",
-                         primaryjoin="Users.profile_id == Staff.profile_id",uselist=False)
-
-    student =  relationship('Students', back_populates='user', foreign_keys="[Students.profile_id]", uselist=False)
-
-    parent = relationship('Parents', back_populates='user', foreign_keys="[Parents.profile_id]", uselist=False)
-
     access_changes = relationship('AccessLevelChanges', back_populates='user')
 
     def __repr__(self) -> str:
