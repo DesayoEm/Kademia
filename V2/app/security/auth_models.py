@@ -13,9 +13,11 @@ class Users(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     __tablename__ = 'users'
 
     profile_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    user_type: Mapped[UserType] = mapped_column(Enum(UserType))
+    user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype',
+                                values_callable=lambda obj: [e.value for e in obj]))
     password_hash: Mapped[str] = mapped_column(String(300))
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel), default=AccessLevel.USER)
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel',
+                                values_callable=lambda obj: [e.value for e in obj]))
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)

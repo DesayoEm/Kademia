@@ -15,7 +15,8 @@ class ProfileBase(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     profile_id: Mapped[UUID] = mapped_column(ForeignKey('users.profile_id', ondelete='RESTRICT'), unique=True)
     first_name: Mapped[str] = mapped_column(String(30))
     last_name: Mapped[str] = mapped_column(String(30))
-    gender: Mapped[str] = mapped_column(Enum(Gender))
+    gender: Mapped[str] = mapped_column(Enum(Gender, name='gender',
+                        values_callable=lambda obj: [e.value for e in obj]))
     last_active_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
 
@@ -127,7 +128,8 @@ class Staff(ProfileBase):
     date_joined: Mapped[date] = mapped_column(Date)
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default = True)
-    staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType))
+    staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType, name='stafftype',
+                                values_callable=lambda obj: [e.value for e in obj]))
 
     #Relationships
     department = relationship("StaffDepartments", foreign_keys="[Staff.department_id]")
@@ -149,23 +151,6 @@ class Staff(ProfileBase):
         'polymorphic_identity': 'staff',
         'polymorphic_on': staff_type
     }
-
-
-class Admin(Staff):
-    """
-    Represents an admin staff member, inheriting from Staff.
-    """
-    __tablename__ = 'admin'
-
-    id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'admin',
-        'inherit_condition': (id == Staff.id)
-    }
-
-    def __repr__(self) -> str:
-        return f"Admin(name={self.first_name} {self.last_name}, role={self.role_id})"
 
 
 class Educator(Staff):
@@ -226,3 +211,19 @@ class Support(Staff):
 
     def __repr__(self) -> str:
         return f"Support staff(name ={self.first_name} {self.last_name}, role_id={self.role_id})"
+
+class System(Staff):
+    """
+     Represents the system, inheriting from Staff.
+    """
+    __tablename__ = 'system'
+
+    id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'system',
+        'inherit_condition': (id == Staff.id)
+    }
+
+    def __repr__(self) -> str:
+        return f"System(name={self.first_name} {self.last_name}, role_id={self.role_id})"

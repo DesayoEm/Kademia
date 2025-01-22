@@ -61,7 +61,8 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """
     __tablename__ = 'staff_departments'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    name: Mapped[StaffDepartmentName] = mapped_column(Enum(StaffDepartmentName), unique=True)
+    name: Mapped[StaffDepartmentName] = mapped_column(Enum(StaffDepartmentName, name='staffdepartmentname',
+                                        values_callable=lambda obj: [e.value for e in obj]), unique=True)
     description: Mapped[str] = mapped_column(String(500))
     manager_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',ondelete='SET NULL'), nullable = True)
 

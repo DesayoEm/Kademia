@@ -3,11 +3,13 @@ from enum import Enum
 class Gender(str, Enum):
     MALE = 'M'
     FEMALE = 'F'
+    SYSTEM = 'S'
 
 class StaffType(str, Enum):
-    EDUCATOR = "educator"
-    ADMINISTRATOR = "admin"
-    SUPPORT = "support"
+    EDUCATOR = "Educator"
+    OPERATIONS = 'Operations'
+    SUPPORT = "Support"
+    SYSTEM = 'System'
 
 class DocumentType(str, Enum):
     RESULT = "Result"
@@ -75,8 +77,8 @@ class GradeType (str, Enum):
 class UserType (str, Enum):
     STUDENT = 'Student'
     PARENT = 'Parent'
-    ADMIN = 'Admin'
-    EDUCATOR = 'Educator'
+    STAFF = 'Staff'
+    SYSTEM = 'System'
 
 
 class ApprovalStatus (str, Enum):
@@ -90,11 +92,13 @@ class StaffDepartmentName (str, Enum):
     EDUCATION = 'Education'
     OPERATIONS = 'Operations'
     SUPPORT = 'Support'
+    SYSTEM = 'System'
     OTHER = 'Other'
 
 
-class AccessLevel (str, Enum):
+class AccessLevel(str, Enum):
+    INACTIVE = 'Inactive'
     USER = 'User'
     ADMIN = 'Admin'
     SUPERUSER = 'Superuser'
-    SUPERADMIN = 'Superadmin'
+    SYSTEM = 'System'

@@ -188,11 +188,10 @@ class StudentTransfers(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='CASCADE'))
     academic_year: Mapped[int] = mapped_column(Integer)
-
     from_class_level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel))
     to_class_level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel))
-    from_department: Mapped[DepartmentName] = mapped_column(Enum(DepartmentName))
-    to_department: Mapped[DepartmentName] = mapped_column(Enum(DepartmentName))
+    from_department_id: Mapped[UUID] = mapped_column(ForeignKey('departments.id', ondelete='RESTRICT'))
+    to_department_id: Mapped[UUID] = mapped_column(ForeignKey('departments.id', ondelete='RESTRICT'))
     reason: Mapped[str] = mapped_column(String(500))
     status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus), default=ApprovalStatus.PENDING)
     status_updated_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='SET NULL'))
@@ -202,16 +201,16 @@ class StudentTransfers(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     #Relationships
     transferred_student = relationship('Students', back_populates='transfers',
                                        foreign_keys='[StudentTransfers.student_id]')
-    from_dept = relationship('Departments', foreign_keys='[StudentTransfers.from_department]')
-    to_dept = relationship('Departments', foreign_keys='[StudentTransfers.to_department]')
+    from_dept = relationship('Departments', foreign_keys='[StudentTransfers.from_department_id]')
+    to_dept = relationship('Departments', foreign_keys='[StudentTransfers.to_department_id]')
     status_updater = relationship('Staff', foreign_keys='[StudentTransfers.status_updated_by]')
 
     __table_args__ = (
         Index('idx_transfer_status', 'status'),
         Index('idx_student_transfer_status', 'student_id', 'status'),
         Index('idx_student-transfer_academic_year', 'student_id', 'academic_year'),
-        Index('idx_from_department', 'from_department'),
-        Index('idx_to_department', 'to_department'),
+        Index('idx_from_department_id', 'from_department_id'),
+        Index('idx_to_department_id', 'to_department_id'),
     )
 
     def __repr__(self) -> str:
