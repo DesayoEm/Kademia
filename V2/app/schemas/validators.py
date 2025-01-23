@@ -13,13 +13,13 @@ def validate_name(value: str) -> str:
 
 
 def validate_phone(value: str) -> str:
-    """Validate that a phone number contains exactly 11 digits and is numeric."""
-    phone_pattern = re.compile(r"^\+?(\d{1,3})?(\d{10,15})$")
+    """
+    Validate that a phone number contains exactly 10 -11 digits and an optional
+    '+' with a 2- digit country code.
+    """
+    phone_pattern = re.compile(r"^(?:\+?\d{2})?\d{10,11}$")
     if not phone_pattern.match(value.strip()):
         raise ValueError("Invalid phone number format")
-    if len(value) < 10 or len(value) > 15:
-        raise ValueError("Phone number must be between 10 and 15 digits.")
-
     return value
 
 
