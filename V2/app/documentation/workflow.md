@@ -23,7 +23,6 @@
 - [x] Model relationships and constraints
 
 ### 3. Pydantic Models
-- [x]
 - Base schema setup
 - [ ] User schemas (create, read, update)
 - [ ] Student schemas

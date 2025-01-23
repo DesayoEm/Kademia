@@ -1,7 +1,7 @@
 from common_imports import *
 from enums import Gender, AccessLevel, StaffType
 from validators import (
-        validate_phone, validate_name, validate_admission_date
+        validate_phone, validate_name,
 )
 
 class NewUser(BaseModel):
@@ -77,9 +77,6 @@ class UpdateStudent(NewUser):
     graduation_date: Optional[date] = None
     is_enrolled: bool = Field(default=True)
 
-    @field_validator('admission_date')
-    def validate_admission_date(cls, value):
-        return validate_admission_date(value)
 
     class Config:
         json_schema_extra = {
@@ -179,10 +176,6 @@ class Staff(UpdateStaff):
 
 class Educator(Staff):
     """Model for Educators, inheriting all fields from Staff."""
-    pass
-
-class Admin(Staff):
-    """Model for Admins, inheriting all fields from Staff."""
     pass
 
 class Operations(Staff):

@@ -23,11 +23,6 @@ class Users(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     last_login: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
-    #Relationships
-    access_changes = relationship('AccessLevelChanges', back_populates='user')
-
-    def __repr__(self) -> str:
-        return f"User(profile_id={self.profile_id}, type={self.user_type}, access={self.access_level})"
 
 
 class AccessLevelChanges(Base, TimeStampMixins):
@@ -35,7 +30,7 @@ class AccessLevelChanges(Base, TimeStampMixins):
     __tablename__ = 'access_level_changes'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    profile_id: Mapped[UUID] = mapped_column(ForeignKey('users.profile_id', ondelete='CASCADE'))
+    user_id: Mapped[UUID] = mapped_column(ForeignKey('staff.user_id', ondelete='CASCADE'))
     previous_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel))
     new_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel))
     reason: Mapped[str] = mapped_column(String(500))

@@ -15,7 +15,7 @@ def validate_name(value: str) -> str:
 def validate_phone(value: str) -> str:
     """Validate that a phone number contains exactly 11 digits and is numeric."""
     phone_pattern = re.compile(r"^\+?(\d{1,3})?(\d{10,15})$")
-    if not phone_pattern.match(value):
+    if not phone_pattern.match(value.strip()):
         raise ValueError("Invalid phone number format")
     if len(value) < 10 or len(value) > 15:
         raise ValueError("Phone number must be between 10 and 15 digits.")
@@ -23,8 +23,3 @@ def validate_phone(value: str) -> str:
     return value
 
 
-def validate_admission_date(value: date) -> date:
-    """Validate that admission date is not in the future."""
-    if value > date.today():
-        raise ValueError('Admission date cannot be in the future')
-    return value

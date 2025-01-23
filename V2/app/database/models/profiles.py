@@ -1,8 +1,7 @@
 from V2.app.database.models.common_imports import *
-from V2.app.database.models.data_enums import StaffType, Gender
+from V2.app.database.models.data_enums import StaffType, Gender, UserType, AccessLevel
 from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
 from sqlalchemy.orm import declared_attr
-
 
 class ProfileBase(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """
@@ -12,18 +11,18 @@ class ProfileBase(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
    """
     __abstract__ = True
 
-    profile_id: Mapped[UUID] = mapped_column(ForeignKey('users.profile_id', ondelete='RESTRICT'), unique=True)
+    user_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]))
+    password_hash: Mapped[str] = mapped_column(String(300))
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]))
+
     first_name: Mapped[str] = mapped_column(String(30))
     last_name: Mapped[str] = mapped_column(String(30))
-    gender: Mapped[str] = mapped_column(Enum(Gender, name='gender',
-                        values_callable=lambda obj: [e.value for e in obj]))
-    last_active_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    gender: Mapped[str] = mapped_column(Enum(Gender, values_callable=lambda obj: [e.value for e in obj]))
+    is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    last_login: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
     deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
-
-    @declared_attr
-    def user(cls):
-        return relationship("Users", foreign_keys=[cls.profile_id],
-                            primaryjoin=f"Users.profile_id == {cls.__name__}.profile_id")
 
 
 class Students(ProfileBase):
@@ -45,7 +44,7 @@ class Students(ProfileBase):
     __tablename__ = 'students'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    image_url: Mapped[str] = mapped_column(String(200))
+    image_url: Mapped[str] = mapped_column(String(200), nullable=True)
     student_id: Mapped[str] = mapped_column(String(20), unique=True)
     class_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('classes.id', ondelete='RESTRICT'))
     department_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('departments.id', ondelete='RESTRICT'))
@@ -70,7 +69,6 @@ class Students(ProfileBase):
 
     __table_args__ = (
         Index('idx_students_soft_deleted_at', 'soft_deleted_at'),
-        Index('idx_students_profile_id', 'profile_id')
     )
 
     def __repr__(self) -> str:
@@ -100,7 +98,6 @@ class Parents(ProfileBase):
         Index('idx_parents_email', 'email_address'),
         Index('idx_parents_phone', 'phone'),
         Index('idx_parents_soft_deleted_at', 'soft_deleted_at'),
-        Index('idx_parents_profile_id', 'profile_id')
     )
 
     def __repr__(self) -> str:
@@ -119,6 +116,7 @@ class Staff(ProfileBase):
     __tablename__ = 'staff'
 
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
+    staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType,values_callable=lambda obj: [e.value for e in obj]))
     image_url: Mapped[str] = mapped_column(String(200))
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))
@@ -127,21 +125,17 @@ class Staff(ProfileBase):
     role_id: Mapped[UUID] = mapped_column(ForeignKey('staff_roles.id', ondelete='CASCADE'))
     date_joined: Mapped[date] = mapped_column(Date)
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
-    is_active: Mapped[bool] = mapped_column(Boolean, default = True)
-    staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType, name='stafftype',
-                                values_callable=lambda obj: [e.value for e in obj]))
 
     #Relationships
     department = relationship("StaffDepartments", foreign_keys="[Staff.department_id]")
     role = relationship("StaffRoles", foreign_keys='[Staff.role_id]')
-
+    access_changes = relationship('AccessLevelChanges', back_populates='user')
 
     __table_args__ = (
         Index('idx_staff_soft_deleted_at', 'soft_deleted_at'),
         Index('idx_staff_department', 'department_id'),
         Index('idx_staff_role', 'role_id'),
-        Index('idx_staff_name', 'first_name', 'last_name'),
-        Index('idx_staff_profile_id', 'profile_id')
+        Index('idx_staff_name', 'first_name', 'last_name')
     )
 
     def __repr__(self) -> str:
@@ -166,7 +160,7 @@ class Educator(Staff):
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'educator',
+        'polymorphic_identity': 'Educator',
         'inherit_condition': (id == Staff.id)
     }
 
@@ -176,7 +170,7 @@ class Educator(Staff):
 
 
     def __repr__(self) -> str:
-        return f"Educator(name ={self.first_name} {self.last_name}, role_id={self.role_id})"
+        return f"Educator(name ={self.first_name} {self.last_name})"
 
 
 class Operations(Staff):
@@ -188,7 +182,7 @@ class Operations(Staff):
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'operations',
+        'polymorphic_identity': 'Operations',
         'inherit_condition': (id == Staff.id)
     }
 
@@ -205,7 +199,7 @@ class Support(Staff):
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'support',
+        'polymorphic_identity': 'Support',
         'inherit_condition': (id == Staff.id)
     }
 
@@ -221,7 +215,7 @@ class System(Staff):
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'system',
+        'polymorphic_identity': 'System',
         'inherit_condition': (id == Staff.id)
     }
 

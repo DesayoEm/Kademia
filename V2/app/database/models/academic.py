@@ -47,6 +47,7 @@ class Grades(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     type: Mapped[GradeType] = mapped_column(Enum(GradeType))
     marks: Mapped[int] = mapped_column(Integer)
     file_url: Mapped[str] = mapped_column(String(300), nullable = True)
+    remarks: Mapped[str] = mapped_column(String(300), nullable = True)
     graded_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='SET NULL'))
 
     #Relationships
