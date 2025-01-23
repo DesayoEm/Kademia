@@ -8,14 +8,13 @@ class ProfileBase(BaseModel):
     first_name: str
     last_name: str
     gender: Gender
-    password_hash: str
+
 
     @field_validator('first_name', 'last_name')
     def validate_first_and_last_name(cls, value):
         return validate_name(value)
 
-    class Config:
-        from_attributes = True
+
 
 
 class Profile(ProfileBase):
@@ -41,7 +40,6 @@ class Profile(ProfileBase):
 
 class UpdateStudent(ProfileBase):
     """Model for updating existing student information."""
-    id:UUID
     image_url: str | None = Field(max_length=200)
     student_id: str = Field(max_length=20)
     class_id: UUID
@@ -55,12 +53,12 @@ class UpdateStudent(ProfileBase):
 
 
     class Config:
+        from_attributes = True
         json_schema_extra = {
             "example": {
                 "first_name": "Lara",
                 "last_name": "George",
                 "gender": "Female",
-                'password_hash': 'njeeeoi',
                 "student_id": "STU123456",
                 "class_id": "5fd8c523-bc62-4b5d-a2f3-123456789abc",
                 "department_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
@@ -73,19 +71,20 @@ class UpdateStudent(ProfileBase):
             }
         }
 
-class Students(UpdateStudent):
-    """Full student model"""
+class NewStudent(UpdateStudent):
+    """Full student model for initial creation"""
     id: UUID
-    access_level: AccessLevel = Field(default=AccessLevel.USER)
+    password_hash: str
 
     class Config:
+        from_attributes = True
         json_schema_extra = {
             "example": {
                 "id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
+                'password_hash': 'njeeeoi',
                 "first_name": "Lara",
                 "last_name": "George",
                 "gender": "Female",
-                'password_hash': 'njeeeoi',
                 "student_id": "STU123456",
                 "class_id": "5fd8c523-bc62-4b5d-a2f3-123456789abc",
                 "department_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
@@ -112,9 +111,30 @@ class UpdateParents(ProfileBase):
         return validate_phone(value)
 
     class Config:
+        from_attributes = True
         json_schema_extra = {
             "example": {
+                "first_name": "Kwame",
+                "last_name": "John",
+                "gender": "Male",
+                "email_address": "kwame.john@example.com",
+                "address": "123 Eric Moore",
+                "phone": "08012345678"
+            }
+        }
+
+class NewParent(UpdateParents):
+    """Parent model for initial creation."""
+    id: UUID
+    password_hash: str
+
+    class Config:
+        from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
                 "first_name": "John",
+                'password_hash': 'njeeeoi',
                 "last_name": "Doe",
                 "gender": "Male",
                 "email_address": "john.doe@example.com",
@@ -122,13 +142,6 @@ class UpdateParents(ProfileBase):
                 "phone": "08012345678"
             }
         }
-
-class Parents(UpdateParents):
-    """
-    Full parent model.
-    """
-    id: UUID = Field(default_factory=uuid4)
-    access_level: AccessLevel = Field(default=AccessLevel.USER)
 
 
 
@@ -138,49 +151,57 @@ class UpdateStaff(ProfileBase):
     email_address: EmailStr = Field(max_length=255)
     address: str = Field(max_length=500)
     phone: str = Field(max_length=11)
-    department_id: Optional[UUID] = None
-    role_id: str
+    department_id: UUID
+    role_id: UUID
     date_joined: date
-    date_left: Optional[date] = None
+    date_left: date | None = None
     is_active: bool = Field(default=True)
     staff_type: StaffType
+
+    @field_validator('phone')
+    def validate_phone(cls, value):
+        return validate_phone(value)
 
     class Config:
         from_attributes = True
         json_schema_extra = {
             "example": {
                 "first_name": "Jane",
-                "last_name": "Smith",
+                "last_name": "Olabode",
                 "gender": "Female",
-                "email_address": "jane.smith@example.com",
+                "email_address": "jane.olabode@example.com",
                 "address": "456 Allen Avenue",
                 "phone": "08087654321",
-                "role_id": "TEACHER",
+                "role_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
                 "date_joined": "2023-01-15",
+                "date_left": None,
                 "staff_type": "Educator"
             }
         }
 
 
-class Staff(UpdateStaff):
-    """Full staff model."""
-    id: UUID = Field(default_factory=uuid4)
-    access_level: AccessLevel = Field(default=AccessLevel.ADMIN)
+class NewStaff(UpdateStaff):
+    """Full staff model for initial creation."""
+    id: UUID
+    password_hash: str
+
+    class Config:
+        from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
+                'password_hash': 'njeeeoi',
+                "first_name": "Jane",
+                "last_name": "Olabode",
+                "gender": "Female",
+                "email_address": "jane.olabode@example.com",
+                "address": "456 Allen Avenue",
+                "phone": "08087654321",
+                "role_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
+                "date_joined": "2023-01-15",
+                "date_left": None,
+                "staff_type": "Educator"
+            }
+        }
 
 
-    @field_validator('phone')
-    def validate_phone(cls, value):
-        return validate_phone(value)
-
-
-class Educator(Staff):
-    """Model for Educators, inheriting all fields from Staff."""
-    pass
-
-class Operations(Staff):
-    """Model for Operations staff, inheriting all fields from Staff."""
-    pass
-
-class Support(Staff):
-    """Model for Support staff, inheriting all fields from Staff."""
-    pass

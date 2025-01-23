@@ -12,9 +12,7 @@ class ProfileBase(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     __abstract__ = True
 
     user_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]))
     password_hash: Mapped[str] = mapped_column(String(300))
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]))
 
     first_name: Mapped[str] = mapped_column(String(30))
     last_name: Mapped[str] = mapped_column(String(30))
@@ -44,6 +42,8 @@ class Students(ProfileBase):
     __tablename__ = 'students'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.USER)
+    user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.STUDENT)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
     student_id: Mapped[str] = mapped_column(String(20), unique=True)
     class_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('classes.id', ondelete='RESTRICT'))
@@ -85,6 +85,8 @@ class Parents(ProfileBase):
    """
     __tablename__ = 'parents'
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.USER)
+    user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.PARENT)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(255))
@@ -116,6 +118,8 @@ class Staff(ProfileBase):
     __tablename__ = 'staff'
 
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.ADMIN)
+    user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.STAFF)
     staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType,values_callable=lambda obj: [e.value for e in obj]))
     image_url: Mapped[str] = mapped_column(String(200))
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
