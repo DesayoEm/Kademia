@@ -43,4 +43,4 @@ class AccessLevelChanges(Base, TimeStampMixins):
     user = relationship('Users', back_populates='access_changes')
 
     def __repr__(self) -> str:
-        return f"AccessChange(user={self.profile_id}, {self.previous_level}->{self.new_level})"
+        return f"AccessChange(user={self.user_id}, {self.previous_level}->{self.new_level})"
