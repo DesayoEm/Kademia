@@ -133,7 +133,7 @@ class Staff(ProfileBase):
     #Relationships
     department = relationship("StaffDepartments", foreign_keys="[Staff.department_id]")
     role = relationship("StaffRoles", foreign_keys='[Staff.role_id]')
-    access_changes = relationship('AccessLevelChanges', back_populates='user')
+
 
     __table_args__ = (
         Index('idx_staff_soft_deleted_at', 'soft_deleted_at'),

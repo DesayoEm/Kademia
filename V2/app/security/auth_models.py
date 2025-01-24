@@ -13,7 +13,7 @@ class AccessLevelChanges(Base, TimeStampMixins):
     __tablename__ = 'access_level_changes'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    user_id: Mapped[UUID] = mapped_column(ForeignKey('staff.user_id', ondelete='CASCADE'))
+    staff_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='CASCADE'))
     previous_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel))
     new_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel))
     reason: Mapped[str] = mapped_column(String(500))
@@ -23,7 +23,7 @@ class AccessLevelChanges(Base, TimeStampMixins):
     changed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='SET NULL'))
 
     #Relationships
-    user = relationship('Users', back_populates='access_changes')
+    user = relationship('Staff', backref='access_changes', foreign_keys="[AccessLevelChanges.staff_id]")
 
     def __repr__(self) -> str:
-        return f"AccessChange(user={self.user_id}, {self.previous_level}->{self.new_level})"
+        return f"AccessChange(user={self.staff_id}, {self.previous_level}->{self.new_level})"
