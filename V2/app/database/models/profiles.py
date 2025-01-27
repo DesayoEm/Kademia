@@ -1,6 +1,6 @@
-from V2.app.database.models.common_imports import *
-from V2.app.database.models.data_enums import StaffType, Gender, UserType, AccessLevel
-from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from .common_imports import *
+from .data_enums import StaffType, Gender, UserType, AccessLevel
+from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
 from sqlalchemy.orm import declared_attr
 
 class ProfileBase(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
@@ -42,6 +42,7 @@ class Students(ProfileBase):
     __tablename__ = 'students'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    date_of_birth: Mapped[date] = mapped_column(Date)
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.USER)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.STUDENT)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
@@ -169,6 +170,7 @@ class Educator(Staff):
     }
 
     subjects_taken = relationship('EducatorSubjects', back_populates='educator')
+    qualifications = relationship('EducatorQualifications', back_populates='educator')
     mentored_department = relationship("Departments", back_populates="mentor")
     mentored_class = relationship("Classes", back_populates="mentor")
 

@@ -1,6 +1,6 @@
-from common_imports import *
-from enums import Gender, AccessLevel, StaffType, UserType
-from validators import (validate_phone, validate_name,)
+from .common_imports import *
+from .enums import Gender, AccessLevel, StaffType, UserType
+from .validators import (validate_phone, validate_name,)
 
 class ProfileBase(BaseModel):
     """Base model for creating new user"""
@@ -59,6 +59,7 @@ class UpdateStudent(ProfileBase):
                 "first_name": "Lara",
                 "last_name": "George",
                 "gender": "Female",
+                "date_of_birth": "2023-09-01",
                 "student_id": "STU123456",
                 "class_id": "5fd8c523-bc62-4b5d-a2f3-123456789abc",
                 "department_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
@@ -75,6 +76,7 @@ class NewStudent(UpdateStudent):
     """Full student model for initial creation"""
     id: UUID
     password_hash: str
+    date_of_birth: date
 
     class Config:
         from_attributes = True
@@ -85,6 +87,7 @@ class NewStudent(UpdateStudent):
                 "first_name": "Lara",
                 "last_name": "George",
                 "gender": "Female",
+                "date_of_birth": "2023-09-01",
                 "student_id": "STU123456",
                 "class_id": "5fd8c523-bc62-4b5d-a2f3-123456789abc",
                 "department_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
@@ -98,7 +101,7 @@ class NewStudent(UpdateStudent):
         }
 
 
-class UpdateParents(ProfileBase):
+class UpdateParent(ProfileBase):
     """Model for updating existing parent information."""
     image_url: Optional[str] = Field(None, max_length=200)
     email_address: EmailStr = Field(max_length=255)
@@ -123,7 +126,7 @@ class UpdateParents(ProfileBase):
             }
         }
 
-class NewParent(UpdateParents):
+class NewParent(UpdateParent):
     """Parent model for initial creation."""
     id: UUID
     password_hash: str

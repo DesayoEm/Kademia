@@ -1,6 +1,6 @@
-from V2.app.database.models.common_imports import *
-from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
-from V2.app.database.models.data_enums import (
+from .common_imports import *
+from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from .data_enums import (
     DepartmentName, DepartmentCode,
     ClassLevel, ClassCode, StaffDepartmentName)
 

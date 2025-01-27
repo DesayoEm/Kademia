@@ -1,11 +1,6 @@
-from tokenize import group
-
-from V2.app.database.models.common_imports import *
-from V2.app.database.models.data_enums import (
-    ClassLevel, Term, ApprovalStatus, SubjectGroup,
-    GradeType, DepartmentName)
-
-from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from .common_imports import *
+from .data_enums import (ClassLevel, Term, ApprovalStatus, SubjectGroup, GradeType, DepartmentName)
+from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
 
 class Subjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """
@@ -139,6 +134,7 @@ class EducatorSubjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     subject = relationship("Subjects", back_populates="educators", foreign_keys="[EducatorSubjects.subject_id]")
 
 
+
 class Repetitions(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """
      Represents a student's repetition of a class, including details like class level change,
@@ -215,5 +211,21 @@ class StudentTransfers(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     )
 
     def __repr__(self) -> str:
-        return f"student {self.student_id} transfer from {self.from_department} to {self.to_department} in {self.academic_year}\
+        return f"student {self.student_id} transfer from {self.from_department_id} to {self.to_department_id} in {self.academic_year}\
         was actioned by {self.status_updater}"
+
+class EducatorQualifications(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+    """
+    Represents an educator's assignment to a subject for a specific academic year and term.
+    Includes attributes like active status and term.
+
+    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+    """
+    __tablename__ = 'educator_qualifications'
+
+    id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
+    educator_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='CASCADE'))
+
+    #Relationships
+    educator = relationship('Educator', back_populates='qualifications', foreign_keys="[EducatorQualifications.educator_id]")
+

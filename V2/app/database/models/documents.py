@@ -1,7 +1,7 @@
-from V2.app.database.models.common_imports import *
-from V2.app.database.models.data_enums import DocumentType
-from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
-import uuid
+from .common_imports import *
+from .data_enums import DocumentType
+from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+
 
 
 class StudentDocuments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
