@@ -4,7 +4,7 @@ from .validators import (validate_phone, validate_name,)
 
 class ProfileBase(BaseModel):
     """Base model for creating new user"""
-    user_id: UUID
+    id: UUID
     first_name: str
     last_name: str
     gender: Gender
@@ -13,7 +13,6 @@ class ProfileBase(BaseModel):
     @field_validator('first_name', 'last_name')
     def validate_first_and_last_name(cls, value):
         return validate_name(value)
-
 
 
 
@@ -74,7 +73,6 @@ class UpdateStudent(ProfileBase):
 
 class NewStudent(UpdateStudent):
     """Full student model for initial creation"""
-    id: UUID
     password_hash: str
     date_of_birth: date
 
@@ -82,7 +80,6 @@ class NewStudent(UpdateStudent):
         from_attributes = True
         json_schema_extra = {
             "example": {
-                "id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
                 'password_hash': 'njeeeoi',
                 "first_name": "Lara",
                 "last_name": "George",
@@ -128,14 +125,12 @@ class UpdateParent(ProfileBase):
 
 class NewParent(UpdateParent):
     """Parent model for initial creation."""
-    id: UUID
     password_hash: str
 
     class Config:
         from_attributes = True
         json_schema_extra = {
             "example": {
-                "id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
                 "first_name": "John",
                 'password_hash': 'njeeeoi',
                 "last_name": "Doe",
@@ -185,14 +180,12 @@ class UpdateStaff(ProfileBase):
 
 class NewStaff(UpdateStaff):
     """Full staff model for initial creation."""
-    id: UUID
     password_hash: str
 
     class Config:
         from_attributes = True
         json_schema_extra = {
             "example": {
-                "id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
                 'password_hash': 'njeeeoi',
                 "first_name": "Jane",
                 "last_name": "Olabode",
