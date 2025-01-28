@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
-from .config import SessionLocal
+from .config import Session
 
 def get_db() -> Session:
-    db = SessionLocal()
+    db = Session()
     try:
         yield db
     finally:
-        db.close()
+        Session.remove()

@@ -1,19 +1,17 @@
 from .common_imports import *
 from .data_enums import StaffType, Gender, UserType, AccessLevel
 from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
-from sqlalchemy.orm import declared_attr
+
 
 class ProfileBase(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """
    Abstract base class for user profiles, including personal details, activity status, and eligibility for deletion.
-
    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
    """
     __abstract__ = True
 
-    user_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     password_hash: Mapped[str] = mapped_column(String(300))
-
     first_name: Mapped[str] = mapped_column(String(30))
     last_name: Mapped[str] = mapped_column(String(30))
     gender: Mapped[str] = mapped_column(Enum(Gender, values_callable=lambda obj: [e.value for e in obj]))
@@ -41,7 +39,6 @@ class Students(ProfileBase):
     """
     __tablename__ = 'students'
 
-    id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     date_of_birth: Mapped[date] = mapped_column(Date)
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.USER)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.STUDENT)
@@ -85,7 +82,7 @@ class Parents(ProfileBase):
        - wards (Students): The students under the parent's guardianship.
    """
     __tablename__ = 'parents'
-    id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.USER)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.PARENT)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
@@ -118,7 +115,6 @@ class Staff(ProfileBase):
     """
     __tablename__ = 'staff'
 
-    id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.ADMIN)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.STAFF)
     staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType,values_callable=lambda obj: [e.value for e in obj]))
@@ -217,7 +213,6 @@ class System(Staff):
      Represents the system, inheriting from Staff.
     """
     __tablename__ = 'system'
-
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
 
     __mapper_args__ = {
