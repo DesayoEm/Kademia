@@ -3,7 +3,6 @@ from .data_enums import DocumentType
 from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
 
 
-
 class StudentDocuments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """Manages documents uploaded for students.
     Maintains audit history with staff references defaulting to placeholder text
@@ -21,7 +20,7 @@ class StudentDocuments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     file_path: Mapped[str] = mapped_column(String(225))
 
     #Relationships
-    owner = relationship('Students', back_populates='documents_owned',foreign_keys='[StudentDocuments.owner_id]')
+    owner: Mapped['Students'] = relationship(back_populates='documents_owned',foreign_keys='[StudentDocuments.owner_id]')
 
 
 

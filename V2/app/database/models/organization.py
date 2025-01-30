@@ -20,8 +20,8 @@ class Departments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='SET NULL'), nullable = True)
 
     #Relationships
-    students = relationship('Students', back_populates='department')
-    mentor = relationship('Educator', back_populates='mentored_department', foreign_keys='[Departments.mentor_id]')
+    students:Mapped[List['Students']] = relationship(back_populates='department')
+    mentor:Mapped['Educator'] = relationship(back_populates='mentored_department', foreign_keys='[Departments.mentor_id]')
 
 
 
@@ -38,10 +38,15 @@ class Classes(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     code: Mapped[ClassCode] = mapped_column(Enum(ClassCode))
     student_count:Mapped[int]= mapped_column(Integer)
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='SET NULL'), nullable=True)
+    student_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='SET NULL'), nullable=True)
+    assistant_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='SET NULL'), nullable=True)
 
     #Relationships
-    students = relationship('Students', back_populates='class_')
-    mentor = relationship('Educator', back_populates='mentored_class', foreign_keys='[Classes.mentor_id]')
+    students: Mapped[List['Students']] = relationship(back_populates='class_')
+    mentor: Mapped['Educator']= relationship(back_populates='mentored_class', foreign_keys='[Classes.mentor_id]')
+    class_rep: Mapped['Students']= relationship(foreign_keys='[Classes.student_rep]')
+    assist_rep: Mapped['Students']= relationship(foreign_keys='[Classes.assistant_rep]')
+
 
     __table_args__ = (
         UniqueConstraint('level', 'code', name='uq_class_level_code'),
@@ -67,7 +72,7 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     manager_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',ondelete='SET NULL'), nullable = True)
 
     #Relationships
-    manager = relationship('Staff', foreign_keys = '[StaffDepartments.manager_id]')
+    manager: Mapped['Staff'] = relationship(foreign_keys = '[StaffDepartments.manager_id]')
 
 
 class StaffRoles(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
@@ -78,4 +83,4 @@ class StaffRoles(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     __tablename__ = 'staff_roles'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
     name: Mapped[str] = mapped_column(String(100), unique=True)
-    description: Mapped[str] = mapped_column(String(500), unique=True)
+    description: Mapped[str] = mapped_column(String(500))

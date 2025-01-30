@@ -3,7 +3,7 @@ from .common_imports import Base
 from .profiles import Students, Parents, Staff, Educator, Operations, Support, System
 from .documents import StudentDocuments
 from .organization import StaffDepartments, StaffRoles, Departments, Classes
-from .academic import (Subjects, Grades, TotalGrades, StudentSubjects, EducatorSubjects,
+from .academic import (Subjects, Grades, TotalGrades, StudentSubjects,
                        Repetitions, StudentTransfers, EducatorQualifications)
 
 __all__ = [
@@ -24,7 +24,6 @@ __all__ = [
     "Grades",
     "TotalGrades",
     "StudentSubjects",
-    "EducatorSubjects",
     "Repetitions",
     "StudentTransfers"
 ]

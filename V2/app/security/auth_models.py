@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from V2.app.database.models.common_imports import Base
-from V2.app.database.models.mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from V2.app.database.models.mixins import TimeStampMixins
 from V2.app.database.models.data_enums import UserType, AccessLevel
 
 class AccessLevelChanges(Base, TimeStampMixins):
@@ -23,7 +23,7 @@ class AccessLevelChanges(Base, TimeStampMixins):
     changed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='SET NULL'))
 
     #Relationships
-    user = relationship('Staff', backref='access_changes', foreign_keys="[AccessLevelChanges.staff_id]")
+    user: Mapped['Staff'] = relationship(back_populates='access_changes', foreign_keys="[AccessLevelChanges.staff_id]")
 
     def __repr__(self) -> str:
         return f"AccessChange(user={self.staff_id}, {self.previous_level}->{self.new_level})"

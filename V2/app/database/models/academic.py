@@ -16,13 +16,38 @@ class Subjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     class_level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel))
     group: Mapped[SubjectGroup] = mapped_column(Enum(SubjectGroup), nullable = True)
     is_elective: Mapped[bool] = mapped_column(default = True)
+    educator_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='SET NULL'), nullable=True)
 
     #Relationships
-    grades = relationship('Grades', back_populates='subject')
-    total_grades = relationship('TotalGrades', back_populates='subject')
-    student_subjects = relationship('StudentSubjects', back_populates='subject')
-    educators = relationship('EducatorSubjects', back_populates='subject')
+    students: Mapped[List['StudentSubjects']] = relationship(back_populates='subject')
+    educator: Mapped['Educator'] =  relationship(back_populates='subjects', foreign_keys='[Subjects.educator_id]')
+    grades: Mapped[List['Grades'] ]= relationship(back_populates='subject')
+    total_grades: Mapped[List['TotalGrades']] = relationship(back_populates='subject')
 
+
+
+class StudentSubjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+    """
+   Association table representing a student's enrollment in a subject for a specific academic year and term.
+   Includes attributes like enrollment status and subject title.
+   Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+   """
+    __tablename__ = 'student_subjects'
+
+    id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
+    student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='CASCADE'))
+    subject_id: Mapped[UUID] = mapped_column(ForeignKey('subjects.id', ondelete='SET NULL'))
+    academic_year: Mapped[str] = mapped_column(String(9))
+    term: Mapped[Term] = mapped_column(Enum(Term))
+    is_active: Mapped[bool] = mapped_column(Boolean, default = True)
+
+    __table_args__ = (
+        UniqueConstraint('student_id', 'subject_id', 'academic_year', 'term'),)
+
+
+    #Relationships
+    subject: Mapped['Subjects'] = relationship(back_populates='students', foreign_keys='[StudentSubjects.subject_id]')
+    student: Mapped['Students']= relationship(back_populates='subjects_taken', foreign_keys='[StudentSubjects.student_id]')
 
 
 class Grades(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
@@ -37,7 +62,7 @@ class Grades(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='CASCADE'))
     subject_id: Mapped[UUID] = mapped_column(ForeignKey('subjects.id', ondelete='SET NULL'), nullable=True)
     department_id: Mapped[UUID] = mapped_column(ForeignKey('departments.id', ondelete='SET NULL'), nullable=True)
-    academic_year: Mapped[int] = mapped_column(Integer)
+    academic_year: Mapped[str] = mapped_column(String(9))
     term: Mapped[Term] = mapped_column(Enum(Term))
     type: Mapped[GradeType] = mapped_column(Enum(GradeType))
     marks: Mapped[int] = mapped_column(Integer)
@@ -46,10 +71,10 @@ class Grades(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     graded_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='SET NULL'))
 
     #Relationships
-    subject = relationship('Subjects', back_populates='grades', foreign_keys='[Grades.subject_id]')
-    student = relationship('Students', back_populates='grades', foreign_keys='[Grades.student_id]')
-    grader = relationship('Educator', foreign_keys="[Grades.graded_by]")
-    department = relationship('Departments', foreign_keys="[Grades.department_id]")
+    subject: Mapped['Subjects'] = relationship(back_populates='grades', foreign_keys='[Grades.subject_id]')
+    student: Mapped['Students'] = relationship(back_populates='grades', foreign_keys='[Grades.student_id]')
+    grader: Mapped['Educator'] = relationship(foreign_keys="[Grades.graded_by]")
+    department: Mapped['Departments'] = relationship(foreign_keys="[Grades.department_id]")
 
 
     __table_args__ = (
@@ -72,67 +97,22 @@ class TotalGrades(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='CASCADE'))
     subject_id: Mapped[UUID] = mapped_column(ForeignKey('subjects.id', ondelete='SET NULL'))
-    academic_year: Mapped[int] = mapped_column(Integer)
+    academic_year: Mapped[str] = mapped_column(String(9))
     term: Mapped[Term] = mapped_column(Enum(Term))
     total_marks: Mapped[float] = mapped_column(Float)
     rank: Mapped[Optional[int]] = mapped_column(Integer, nullable = True)
 
     #Relationships
-    student = relationship('Students', back_populates='total_grades', foreign_keys='[TotalGrades.student_id]')
-    subject = relationship('Subjects', back_populates='total_grades', foreign_keys='[TotalGrades.subject_id]')
+    student: Mapped['Students'] = relationship(back_populates='total_grades', foreign_keys='[TotalGrades.student_id]')
+    subject: Mapped['Subjects'] = relationship(back_populates='total_grades', foreign_keys='[TotalGrades.subject_id]')
 
 
     __table_args__ = (
         UniqueConstraint('student_id', 'subject_id', 'academic_year', 'term'),
-        Index('idx_total_grade_subject_id', 'id'),
+        Index('idx_total_grade_subject_id', 'subject_id'),
         Index('idx_total_marks', 'total_marks'),
         Index('idx_total_grade_academic_year', 'academic_year')
     )
-
-
-
-class StudentSubjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
-    """
-   Represents a student's enrollment in a subject for a specific academic year and term.
-   Includes attributes like enrollment status and subject title.
-
-   Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
-   """
-    __tablename__ = 'student_subjects'
-
-    id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='CASCADE'))
-    subject_id: Mapped[UUID] = mapped_column(ForeignKey('subjects.id', ondelete='SET NULL'))
-    academic_year: Mapped[int] = mapped_column(Integer)
-    term: Mapped[Term] = mapped_column(Enum(Term))
-    is_active: Mapped[bool] = mapped_column(Boolean, default = True)
-    title: Mapped[str] = mapped_column(String(50))
-
-    #Relationships
-    subject = relationship('Subjects', back_populates='student_subjects', foreign_keys='[StudentSubjects.subject_id]')
-    student = relationship('Students', back_populates='subjects_taken', foreign_keys='[StudentSubjects.student_id]')
-
-
-class EducatorSubjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
-    """
-    Represents an educator's assignment to a subject for a specific academic year and term.
-    Includes attributes like active status and term.
-
-    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
-    """
-    __tablename__ = 'educator_subjects'
-
-    id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    educator_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='SET NULL'))
-    subject_id: Mapped[UUID] = mapped_column(ForeignKey('subjects.id', ondelete='SET NULL'), nullable=True)
-    term: Mapped[Term] = mapped_column(Enum(Term))
-    academic_year: Mapped[int] = mapped_column(Integer)
-    is_active: Mapped[bool] = mapped_column(Boolean, default = False)
-
-    #Relationships
-    educator = relationship('Educator', back_populates='subjects_taken', foreign_keys="[EducatorSubjects.educator_id]")
-    subject = relationship("Subjects", back_populates="educators", foreign_keys="[EducatorSubjects.subject_id]")
-
 
 
 class Repetitions(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
@@ -157,10 +137,10 @@ class Repetitions(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     #Relationships
-    repeater = relationship('Students', back_populates='classes_repeated', foreign_keys='[Repetitions.student_id]')
-    from_class = relationship('Classes', foreign_keys='[Repetitions.from_class_id]')
-    to_class = relationship('Classes', foreign_keys='[Repetitions.to_class_id]')
-    status_updated_staff = relationship('Staff', foreign_keys='[Repetitions.status_updated_by]')
+    repeater:Mapped['Students'] = relationship(back_populates='classes_repeated', foreign_keys='[Repetitions.student_id]')
+    from_class:Mapped['Classes'] = relationship(foreign_keys='[Repetitions.from_class_id]')
+    to_class:Mapped['Classes'] =  relationship( foreign_keys='[Repetitions.to_class_id]')
+    status_updated_staff:Mapped['Staff'] =  relationship(foreign_keys='[Repetitions.status_updated_by]')
 
     __table_args__ = (
         Index('idx_repetition_status', 'status'),
@@ -196,11 +176,10 @@ class StudentTransfers(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     #Relationships
-    transferred_student = relationship('Students', back_populates='transfers',
-                                       foreign_keys='[StudentTransfers.student_id]')
-    from_dept = relationship('Departments', foreign_keys='[StudentTransfers.from_department_id]')
-    to_dept = relationship('Departments', foreign_keys='[StudentTransfers.to_department_id]')
-    status_updater = relationship('Staff', foreign_keys='[StudentTransfers.status_updated_by]')
+    transferred_student: Mapped['Students'] = relationship(back_populates='transfers',foreign_keys='[StudentTransfers.student_id]')
+    from_dept: Mapped['Departments'] = relationship(foreign_keys='[StudentTransfers.from_department_id]')
+    to_dept: Mapped['Departments'] = relationship('Departments', foreign_keys='[StudentTransfers.to_department_id]')
+    status_updater: Mapped ['Staff'] = relationship(foreign_keys='[StudentTransfers.status_updated_by]')
 
     __table_args__ = (
         Index('idx_transfer_status', 'status'),
@@ -213,6 +192,7 @@ class StudentTransfers(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     def __repr__(self) -> str:
         return f"student {self.student_id} transfer from {self.from_department_id} to {self.to_department_id} in {self.academic_year}\
         was actioned by {self.status_updater}"
+
 
 class EducatorQualifications(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     """

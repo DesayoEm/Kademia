@@ -39,11 +39,11 @@ class Students(ProfileBase):
     """
     __tablename__ = 'students'
 
+    student_id: Mapped[str] = mapped_column(String(20), unique=True)
     date_of_birth: Mapped[date] = mapped_column(Date)
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.USER)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.STUDENT)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
-    student_id: Mapped[str] = mapped_column(String(20), unique=True)
     class_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('classes.id', ondelete='RESTRICT'))
     department_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('departments.id', ondelete='RESTRICT'))
     parent_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('parents.id', ondelete='RESTRICT'))
@@ -55,15 +55,15 @@ class Students(ProfileBase):
     is_enrolled: Mapped[bool] = mapped_column(Boolean, default=True)
 
     #Relationships
-    documents_owned = relationship('StudentDocuments', back_populates='owner')
-    parent = relationship('Parents', back_populates='wards',foreign_keys='[Students.parent_id]' )
-    class_ = relationship('Classes', back_populates='students', foreign_keys='[Students.class_id]')
-    department = relationship('Departments', back_populates='students', foreign_keys='[Students.department_id]')
-    subjects_taken = relationship('StudentSubjects', back_populates='student')
-    grades = relationship('Grades', back_populates='student')
-    total_grades = relationship('TotalGrades', back_populates='student')
-    classes_repeated = relationship('Repetitions', back_populates='repeater')
-    transfers = relationship('StudentTransfers', back_populates='transferred_student')
+    documents_owned: Mapped[List['StudentDocuments']] = relationship(back_populates='owner')
+    parent: Mapped['Parents'] = relationship(back_populates='wards',foreign_keys='[Students.parent_id]' )
+    class_:Mapped['Classes'] = relationship(back_populates='students', foreign_keys='[Students.class_id]')
+    department: Mapped['Departments'] = relationship(back_populates='students', foreign_keys='[Students.department_id]')
+    subjects_taken: Mapped[List['StudentSubjects']] = relationship(back_populates='student')
+    grades: Mapped[List['Grades']] = relationship(back_populates='student')
+    total_grades: Mapped[List['TotalGrades']] = relationship(back_populates='student')
+    classes_repeated:Mapped[List['Repetitions']] = relationship(back_populates='repeater')
+    transfers: Mapped[List['StudentTransfers']]= relationship(back_populates='transferred_student')
 
     __table_args__ = (
         Index('idx_students_soft_deleted_at', 'soft_deleted_at'),
@@ -92,7 +92,7 @@ class Parents(ProfileBase):
     has_active_wards: Mapped[bool] = mapped_column(Boolean, default=True)
 
     #Relationships
-    wards = relationship('Students', back_populates='parent')
+    wards: Mapped[List['Students']] = relationship(back_populates='parent')
 
     __table_args__ = (
         Index('idx_parents_email', 'email_address'),
@@ -112,6 +112,7 @@ class Staff(ProfileBase):
     Relationships:
         - department (StaffDepartments): The department the staff member belongs to.
         - role (StaffRoles): The role or position the staff member holds.
+        -access_changes: Audit trail of their access changed over time
     """
     __tablename__ = 'staff'
 
@@ -128,8 +129,9 @@ class Staff(ProfileBase):
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
 
     #Relationships
-    department = relationship("StaffDepartments", foreign_keys="[Staff.department_id]")
-    role = relationship("StaffRoles", foreign_keys='[Staff.role_id]')
+    department: Mapped["StaffDepartments"] = relationship(foreign_keys="[Staff.department_id]")
+    role:Mapped["StaffRoles"] = relationship(foreign_keys='[Staff.role_id]')
+    access_changes: Mapped[List["AccessLevelChanges"]] = relationship(back_populates='user')
 
 
     __table_args__ = (
@@ -152,7 +154,8 @@ class Educator(Staff):
     """
     Represents an educator, inheriting from Staff.
     Relationships:
-        - subjects_taken (EducatorSubjects): Subjects the educator is responsible for.
+         - qualifications
+        - subjects: Subjects the educator is responsible for.
         - mentored_department (Departments): The department the educator mentors.
         - mentored_class (Classes): The class level the educator mentors.
     """
@@ -165,10 +168,10 @@ class Educator(Staff):
         'inherit_condition': (id == Staff.id)
     }
 
-    subjects_taken = relationship('EducatorSubjects', back_populates='educator')
-    qualifications = relationship('EducatorQualifications', back_populates='educator')
-    mentored_department = relationship("Departments", back_populates="mentor")
-    mentored_class = relationship("Classes", back_populates="mentor")
+    qualifications: Mapped[List['EducatorQualifications']] = relationship(back_populates='educator')
+    subjects: Mapped[List['Subjects']] = relationship(back_populates='educator')
+    mentored_department: Mapped[List['Departments']] = relationship(back_populates="mentor")
+    mentored_class: Mapped["Classes"] = relationship(back_populates="mentor")
 
 
     def __repr__(self) -> str:
