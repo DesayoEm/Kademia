@@ -1,5 +1,5 @@
-from ..schemas.common_imports import *
-from ..schemas.enums import AccessLevel
+from V2.app.schemas.common_imports import *
+from V2.app.schemas.enums import AccessLevel
 
 
 class AccessLevelChangeRequest(BaseModel):

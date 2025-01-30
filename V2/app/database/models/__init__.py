@@ -2,6 +2,7 @@ from .common_imports import Base
 
 from .profiles import Students, Parents, Staff, Educator, Operations, Support, System
 from .documents import StudentDocuments
+from .auth_models import AccessLevelChanges
 from .organization import StaffDepartments, StaffRoles, Departments, Classes
 from .academic import (Subjects, Grades, TotalGrades, StudentSubjects,
                        Repetitions, StudentTransfers, EducatorQualifications)
@@ -19,6 +20,7 @@ __all__ = [
     "StaffDepartments",
     "StaffRoles",
     "Departments",
+    "AccessLevelChanges",
     "Classes",
     "Subjects",
     "Grades",
