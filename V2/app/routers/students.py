@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends, APIRouter
 from ..database.utils import get_db
-from ..crud.students import StudentCrud
+from ..crud.students import student_crud
 
 
 router = APIRouter()

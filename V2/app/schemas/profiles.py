@@ -2,6 +2,21 @@ from .common_imports import *
 from .enums import Gender, AccessLevel, StaffType, UserType
 from .validators import (validate_phone, validate_name,)
 
+
+class DeleteBase(BaseModel):
+    """Base model for storing deletion details"""
+    is_soft_deleted: bool = False
+    deleted_at: datetime | None = None
+    deleted_by: UUID | None = None
+    deletion_reason: str | None = None
+    deletion_eligible: bool
+
+class Activity(BaseModel):
+    is_verified: bool
+    is_active: bool
+    last_login: datetime
+
+
 class ProfileBase(BaseModel):
     """Base model for creating new user"""
     id: UUID
@@ -24,17 +39,10 @@ class Profile(ProfileBase):
     deletion_eligible: bool = False
 
     #Audit
-    created_at: datetime
-    created_by: UUID
-    last_modified_at: datetime
-    last_modified_by: UUID
-
-    #Soft delete
-    is_soft_deleted: bool = False
-    deleted_at: datetime | None = None
-    deleted_by: UUID | None = None
-    deletion_reason: str | None = None
-
+    created_at: datetime | None = None
+    created_by: UUID | None = None
+    last_modified_at: datetime | None = None
+    last_modified_by: UUID | None = None
 
 
 class UpdateStudent(ProfileBase):
@@ -71,6 +79,7 @@ class UpdateStudent(ProfileBase):
             }
         }
 
+
 class NewStudent(UpdateStudent):
     """Full student model for initial creation"""
     password_hash: str
@@ -94,6 +103,38 @@ class NewStudent(UpdateStudent):
                 "is_graduated": False,
                 "graduation_date": None,
                 "is_enrolled": True
+            }
+        }
+
+
+class Student(UpdateStudent, DeleteBase, Activity):
+    """Full student profile"""
+    date_of_birth: date
+
+    class Config:
+        from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "first_name": "Lara",
+                "last_name": "George",
+                "gender": "Female",
+                "date_of_birth": "2023-09-01",
+                "student_id": "STU123456",
+                "class_id": "5fd8c523-bc62-4b5d-a2f3-123456789abc",
+                "department_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
+                "parent_id": "7fd8c523-bc62-4b5d-a2f3-123456789ghi",
+                "admission_date": "2023-09-01",
+                "leaving_date": None,
+                "is_graduated": False,
+                "graduation_date": None,
+                "is_enrolled": True,
+                "is_active": True,
+                "last_login": "2023-09-01",
+                "is_soft_deleted": False,
+                "deleted_at":  None,
+                "deleted_by": None,
+                "deletion_reason": None
+
             }
         }
 

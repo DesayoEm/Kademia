@@ -15,7 +15,6 @@ class ProfileBase(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     first_name: Mapped[str] = mapped_column(String(30))
     last_name: Mapped[str] = mapped_column(String(30))
     gender: Mapped[str] = mapped_column(Enum(Gender, values_callable=lambda obj: [e.value for e in obj]))
-    is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     last_login: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
     deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
