@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
-from .config import Session
+from typing import Generator
+from .config import SessionFactory
 
-def get_db() -> Session:
-    db = Session()
+def get_db() -> Generator:
+    db = SessionFactory()
     try:
         yield db
     finally:
-        Session.remove()
+        db.close()

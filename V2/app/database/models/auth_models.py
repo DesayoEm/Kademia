@@ -1,12 +1,6 @@
-from uuid import uuid4
-from datetime import datetime
-from sqlalchemy import String, Boolean, DateTime, ForeignKey, Enum, Integer
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql import func
-from V2.app.database.models.common_imports import Base
-from V2.app.database.models.mixins import TimeStampMixins
-from V2.app.database.models.data_enums import UserType, AccessLevel
+from .common_imports import *
+from .data_enums import AccessLevel
+from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
 
 class AccessLevelChanges(Base, TimeStampMixins):
     """Tracks changes to user access levels for audit purposes"""
