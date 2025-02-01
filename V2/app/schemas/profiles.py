@@ -9,10 +9,9 @@ class DeleteBase(BaseModel):
     deleted_at: datetime | None = None
     deleted_by: UUID | None = None
     deletion_reason: str | None = None
-    deletion_eligible: bool
+    deletion_eligible: bool = False
 
 class Activity(BaseModel):
-    is_verified: bool
     is_active: bool
     last_login: datetime
 
@@ -33,11 +32,6 @@ class ProfileBase(BaseModel):
 
 class Profile(ProfileBase):
     """Complete user base model with system-generated fields."""
-    is_verified: bool = False
-    is_active: bool = True
-    last_login: datetime | None = None
-    deletion_eligible: bool = False
-
     #Audit
     created_at: datetime | None = None
     created_by: UUID | None = None

@@ -56,7 +56,8 @@ class Students(ProfileBase):
     #Relationships
     documents_owned: Mapped[List['StudentDocuments']] = relationship(back_populates='owner')
     parent: Mapped['Parents'] = relationship(back_populates='wards',foreign_keys='[Students.parent_id]' )
-    class_:Mapped['Classes'] = relationship(back_populates='students', foreign_keys='[Students.class_id]')
+    class_:Mapped['Classes'] = relationship(back_populates='students', foreign_keys=[class_id],
+                                            primaryjoin='Students.class_id == Classes.id')
     department: Mapped['Departments'] = relationship(back_populates='students', foreign_keys='[Students.department_id]')
     subjects_taken: Mapped[List['StudentSubjects']] = relationship(back_populates='student')
     grades: Mapped[List['Grades']] = relationship(back_populates='student')
@@ -130,7 +131,9 @@ class Staff(ProfileBase):
     #Relationships
     department: Mapped["StaffDepartments"] = relationship(foreign_keys="[Staff.department_id]")
     role:Mapped["StaffRoles"] = relationship(foreign_keys='[Staff.role_id]')
-    access_changes: Mapped[List["AccessLevelChanges"]] = relationship(back_populates='user')
+    access_changes: Mapped[List["AccessLevelChanges"]] = relationship("AccessLevelChanges",back_populates='user',
+                primaryjoin="Staff.id == AccessLevelChanges.staff_id")
+
 
 
     __table_args__ = (

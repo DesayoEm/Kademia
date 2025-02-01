@@ -19,7 +19,7 @@ class StudentCrud:
         student = self.db.query(Students).filter_by(student_id=student_id).first()
         if not student:
             raise HTTPException(status_code=404, detail="Student not found")
-        return student.model_dump_json()
+        return student
 
     def create_student(self, new_student:NewStudent, session:Session):
        pass

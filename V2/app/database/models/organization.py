@@ -42,7 +42,8 @@ class Classes(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     assistant_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='SET NULL'), nullable=True)
 
     #Relationships
-    students: Mapped[List['Students']] = relationship(back_populates='class_')
+    students: Mapped[List['Students']] = relationship(back_populates='class_', foreign_keys='[Students.class_id]',
+                                                      primaryjoin='Classes.id == Students.class_id')
     mentor: Mapped['Educator']= relationship(back_populates='mentored_class', foreign_keys='[Classes.mentor_id]')
     class_rep: Mapped['Students']= relationship(foreign_keys='[Classes.student_rep]')
     assist_rep: Mapped['Students']= relationship(foreign_keys='[Classes.assistant_rep]')
