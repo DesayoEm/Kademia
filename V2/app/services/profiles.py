@@ -1,25 +1,26 @@
 from datetime import date
 import re
+from ..exceptions.profiles import StudentIdFormatError, IdYearError
 
 class ProfileService:
     def __init__(self):
         pass
 
-    def validate_student_id(value: str) -> str:
+    def validate_student_id(self,value: str) -> str:
         """
-        Validate that a student's id matches the format `STU/10/11/0000` and the first integer
+        Validate that a student's id matches the format `STU/00/00/0000` and the first integer
         group is one less than the second, representing the academic year of student's admission
         """
-        pattern = r'^(?i)STU/(\d{2})/(\d{2})/([0-9]{4})$'
-        match = re.match(value, pattern)
+        pattern = r'(?i)^STU/(\d{2})/(\d{2})/([0-9]{4})$'
+        match = re.match(pattern, value)
         if not match:
-            raise Exception
+            raise StudentIdFormatError
 
         first_num = int(match.group(1))
         second_num = int(match.group(2))
 
         if second_num != first_num + 1:
-            raise Exception
+            raise IdYearError
         return value.upper()
 
 

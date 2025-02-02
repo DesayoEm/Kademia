@@ -6,6 +6,7 @@ from ..schemas.profiles import NewStudent, UpdateStudent, Student
 from ..database.models.profiles import Students
 from sqlalchemy.orm import Session
 from ..services.profiles import profile_service
+from ..exceptions.profiles import StudentIdFormatError, IdYearError
 
 
 class StudentCrud:
@@ -37,13 +38,13 @@ class StudentCrud:
         data = new_student.model_dump()
         data['id'] = uuid4()
         try:
-            student_id = data['student_id']
+            student_id = data['student_id'].strip()
             student_id  = self.profile_service.validate_student_id(student_id)
-        except Exception:
-            raise HTTPException(status_code=400)
-        except Exception:
-            raise HTTPException(status_code=400)
-        
+        except StudentIdFormatError as e:
+            raise HTTPException(status_code=400, detail = str(e))
+        except IdYearError as e:
+            raise HTTPException(status_code=400, detail= str(e))
+
         new_student = Students(**data)
         try:
             self.db.add(new_student)
