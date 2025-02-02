@@ -13,14 +13,16 @@ def read_students(db: Session = Depends(get_db)):
     student_crud = StudentCrud(db)
     return student_crud.get_all_students()
 
-@router.get("/students/{student_id}", response_model=Student)
-def read_student(student_id: str, db: Session = Depends(get_db)):
+@router.get("/students/{student_id}")
+def read_student(studentId: str, db: Session = Depends(get_db)):
     student_crud = StudentCrud(db)
-    return student_crud.get_student(student_id)
+    return student_crud.get_student(studentId)
 
-@router.post("/students/{student_id}")
-def create_student(db: Session = Depends(get_db)):
-    pass
+@router.post("/students/", status_code = 201)
+def create_student(new_student:NewStudent, db: Session = Depends(get_db)):
+    student_crud = StudentCrud(db)
+    return student_crud.create_student(new_student)
+
 
 @router.put("/students/{student_id}")
 def update_student(student_id: str, db: Session = Depends(get_db)):

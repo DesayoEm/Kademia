@@ -11,17 +11,29 @@ class DeleteBase(BaseModel):
     deletion_reason: str | None = None
     deletion_eligible: bool = False
 
+    class Config:
+        from_attributes = True
+
+    
+
 class Activity(BaseModel):
     is_active: bool
-    last_login: datetime
+    last_login: datetime | None = None
+
+    class Config:
+        from_attributes = True
+    
 
 
 class ProfileBase(BaseModel):
     """Base model for creating new user"""
-    id: UUID
+    id: UUID | None = None
     first_name: str
     last_name: str
     gender: Gender
+
+    class Config:
+        from_attributes = True
 
 
     @field_validator('first_name', 'last_name')
@@ -37,6 +49,9 @@ class Profile(ProfileBase):
     created_by: UUID | None = None
     last_modified_at: datetime | None = None
     last_modified_by: UUID | None = None
+
+    class Config:
+        from_attributes = True
 
 
 class UpdateStudent(ProfileBase):
@@ -59,12 +74,13 @@ class UpdateStudent(ProfileBase):
             "example": {
                 "first_name": "Lara",
                 "last_name": "George",
+                "image_url": "path_to_img",
                 "gender": "Female",
                 "date_of_birth": "2023-09-01",
-                "student_id": "STU123456",
-                "class_id": "5fd8c523-bc62-4b5d-a2f3-123456789abc",
-                "department_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
-                "parent_id": "7fd8c523-bc62-4b5d-a2f3-123456789ghi",
+                "student_id": "STU2",
+                "class_id": "00000000-0000-0000-0000-000000000001",
+                "department_id": "00000000-0000-0000-0000-000000000001",
+                "parent_id": "00000000-0000-0000-0000-000000000001",
                 "admission_date": "2023-09-01",
                 "leaving_date": None,
                 "is_graduated": False,
@@ -86,12 +102,13 @@ class NewStudent(UpdateStudent):
                 'password_hash': 'njeeeoi',
                 "first_name": "Lara",
                 "last_name": "George",
-                "gender": "Female",
+                "image_url": "path_to_img",
+                "gender": "F",
                 "date_of_birth": "2023-09-01",
-                "student_id": "STU123456",
-                "class_id": "5fd8c523-bc62-4b5d-a2f3-123456789abc",
-                "department_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
-                "parent_id": "7fd8c523-bc62-4b5d-a2f3-123456789ghi",
+                "student_id": "STU2",
+                "class_id": "00000000-0000-0000-0000-000000000001",
+                "department_id": "00000000-0000-0000-0000-000000000001",
+                "parent_id": "00000000-0000-0000-0000-000000000001",
                 "admission_date": "2023-09-01",
                 "leaving_date": None,
                 "is_graduated": False,
@@ -104,6 +121,7 @@ class NewStudent(UpdateStudent):
 class Student(UpdateStudent, DeleteBase, Activity):
     """Full student profile"""
     date_of_birth: date
+    
 
     class Config:
         from_attributes = True
@@ -113,7 +131,7 @@ class Student(UpdateStudent, DeleteBase, Activity):
                 "last_name": "George",
                 "gender": "Female",
                 "date_of_birth": "2023-09-01",
-                "student_id": "STU123456",
+                "student_id": "STU2",
                 "class_id": "5fd8c523-bc62-4b5d-a2f3-123456789abc",
                 "department_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
                 "parent_id": "7fd8c523-bc62-4b5d-a2f3-123456789ghi",
@@ -123,7 +141,6 @@ class Student(UpdateStudent, DeleteBase, Activity):
                 "graduation_date": None,
                 "is_enrolled": True,
                 "is_active": True,
-                "last_login": "2023-09-01",
                 "is_soft_deleted": False,
                 "deleted_at":  None,
                 "deleted_by": None,

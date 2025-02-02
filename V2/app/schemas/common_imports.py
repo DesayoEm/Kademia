@@ -6,7 +6,8 @@ from pydantic import(
     BaseModel,
     Field,
     EmailStr,
-    field_validator
+    field_validator,
+    ConfigDict
 )
 
 from typing import(
