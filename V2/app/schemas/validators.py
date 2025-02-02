@@ -1,4 +1,3 @@
-from datetime import date
 import re
 
 def validate_name(value: str) -> str:
@@ -22,17 +21,7 @@ def validate_phone(value: str) -> str:
         raise ValueError("Invalid phone number format")
     return value
 
-def student_id(value: str) -> str:
-    pattern = r'^(?i)STU/(\d{2})/(\d{2})/([0-9]{4})$'
-    match = re.match(value, pattern)
-    if not match:
-        raise Exception
-    first_num = int(match.group(1))
-    second_num = int(match.group(2))
 
-    if second_num != first_num + 1:
-        raise Exception
-    return value.upper()
 
 
 
