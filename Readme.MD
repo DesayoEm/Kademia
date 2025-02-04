@@ -46,15 +46,13 @@
 
 ### Enhanced Data Model
 1. Core Entities
-   - Students (UUID-based identification)
+   - Students, Staff, Parents(UUID-based identification)
    - Departments
-   - Enrollments
+   - Classes
    - Grades
 
 2. Extended Student Profile
-   - Biometric data storage
-   - Academic history 
-   - Demographic information
+   - Academic history
    - Document management (PDF and Image storage)
    - Profile image handling
 
@@ -65,7 +63,7 @@
    - Session management
    - JWT token lifecycle
 
-### Advanced Features
+###  Features
 1. Academic Workflow
    - Dynamic course enrollment
    - Prerequisite validation
@@ -113,7 +111,7 @@
    - Course management system
    - Grade calculation enhancement
 
-3. Phase 3: Advanced Features
+3. Phase 3
    - Workflow implementation
    - Analytics engine
    - Reporting system
