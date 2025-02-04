@@ -6,7 +6,7 @@ from ..schemas.profiles import NewStudent, UpdateStudent, Student
 from ..database.models.profiles import Students
 from sqlalchemy.orm import Session
 from ..services.profiles import profile_service
-from ..exceptions.profiles import StudentIdFormatError, IdYearError
+from ..exceptions.profiles import StudentIdFormatError, IdYearError, DuplicateStudentIDError, StudentNotFoundError
 from .base import BaseCrud
 
 
@@ -28,7 +28,7 @@ class StudentCrud(BaseCrud):
             .first()
         )
         if not student:
-            raise HTTPException(status_code=404,detail=f"Student not found")
+            raise StudentNotFoundError
         return student
         # student_model = Student.model_validate(student)
         # return student_model.model_dump(exclude={"is_active", "last_login", "is_soft_deleted",
@@ -54,8 +54,7 @@ class StudentCrud(BaseCrud):
             return Student.model_validate(new_student)
         except IntegrityError:
             self.db.rollback()
-            raise HTTPException(
-                status_code=409, detail=f"Student ID {new_student.student_id} already exists")
+            raise DuplicateStudentIDError
 
 
     def update_student(self, student_id:str, data:UpdateStudent):
@@ -68,13 +67,12 @@ class StudentCrud(BaseCrud):
             return student
         except IntegrityError:
             self.db.rollback()
-            raise
+            raise DuplicateStudentIDError
 
 
     def archive_student(self, student_id:str):
         student= self.get_student(student_id)
         student.is_archived = True
-        # student.is_archived = True
         # student.archived_by = archived_by
         # student.archived_at = datetime.now(timezone.utc)
         self.db.commit()
