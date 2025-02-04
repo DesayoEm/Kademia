@@ -15,9 +15,9 @@ def read_students(db: Session = Depends(get_db)):
 
 
 @router.get("/students/{student_id}")
-def read_student(studentId: str, db: Session = Depends(get_db)):
+def get_student(stu_id: str, db: Session = Depends(get_db)):
     student_crud = StudentCrud(db)
-    return student_crud.get_student(studentId)
+    return student_crud.get_student(stu_id)
 
 @router.post("/students/", status_code = 201)
 def create_student(new_student:NewStudent, db: Session = Depends(get_db)):
@@ -26,15 +26,15 @@ def create_student(new_student:NewStudent, db: Session = Depends(get_db)):
 
 
 @router.put("/students/{student_id}")
-def update_student(student_id: str, data:UpdateStudent, db: Session = Depends(get_db)):
+def update_student(stu_id: str, data:UpdateStudent, db: Session = Depends(get_db)):
     student_crud = StudentCrud(db)
-    return student_crud.update_student(student_id, data)
+    return student_crud.update_student(stu_id, data)
 
 
 @router.patch("/students/{student_id}")
-def archive_student(student_id: str, db: Session = Depends(get_db)):
+def archive_student(stu_id: str, db: Session = Depends(get_db)):
     student_crud = StudentCrud(db)
-    return student_crud.archive_student(student_id)
+    return student_crud.archive_student(stu_id)
 
 
 @router.delete("/students/{student_id}", status_code = 204)

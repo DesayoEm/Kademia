@@ -19,6 +19,7 @@ class StudentCrud:
         students = self.db.query(Students).order_by(Students.first_name).all()
         return [Student.model_validate(student) for student in students]
 
+
     def get_student(self, student_id: str) -> dict:
         student = (
             self.db.query(Students)
@@ -26,7 +27,7 @@ class StudentCrud:
             .first()
         )
         if not student:
-            raise HTTPException(status_code=404, detail="Student not found")
+            raise HTTPException(status_code=404,detail=f"Student not found")
         return student
         # student_model = Student.model_validate(student)
         # return student_model.model_dump(exclude={"is_active", "last_login", "is_soft_deleted",
@@ -67,7 +68,10 @@ class StudentCrud:
 
     def archive_student(self, student_id:str):
         student= self.get_student(student_id)
-        student['is_archived'] = True
+        student.is_archived = True
+        self.db.commit()
+        self.db.refresh(student)
+        return student
 
 
     def delete_student(self, student_id:str):
