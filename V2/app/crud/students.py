@@ -7,22 +7,23 @@ from ..database.models.profiles import Students
 from sqlalchemy.orm import Session
 from ..services.profiles import profile_service
 from ..exceptions.profiles import StudentIdFormatError, IdYearError
+from .base import BaseCrud
 
 
-class StudentCrud:
+class StudentCrud(BaseCrud):
     def __init__(self, db:Session):
+        super().__init__(db, Students)
         self.profile_service = profile_service
-        self.db = db
 
 
     def get_all_students(self) -> list[Student]:
-        students = self.db.query(Students).order_by(Students.first_name).all()
+        students = self.base_query().order_by(Students.first_name).all()
         return [Student.model_validate(student) for student in students]
 
 
     def get_student(self, student_id: str) -> dict:
         student = (
-            self.db.query(Students)
+            self.base_query()
             .filter(func.lower(Students.student_id) == student_id.strip().lower())
             .first()
         )
@@ -59,16 +60,23 @@ class StudentCrud:
 
     def update_student(self, student_id:str, data:UpdateStudent):
         student= self.get_student(student_id)
-        for key,value in data.model_dump(exclude_unset=True).items():
-            setattr(student, key, value)
-        self.db.commit()
-        self.db.refresh(student)
-        return student
+        try:
+            for key,value in data.model_dump(exclude_unset=True).items():
+                setattr(student, key, value)
+            self.db.commit()
+            self.db.refresh(student)
+            return student
+        except IntegrityError:
+            self.db.rollback()
+            raise
 
 
     def archive_student(self, student_id:str):
         student= self.get_student(student_id)
         student.is_archived = True
+        # student.is_archived = True
+        # student.archived_by = archived_by
+        # student.archived_at = datetime.now(timezone.utc)
         self.db.commit()
         self.db.refresh(student)
         return student
