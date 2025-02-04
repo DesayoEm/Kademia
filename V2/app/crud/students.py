@@ -56,13 +56,22 @@ class StudentCrud:
                 status_code=409, detail=f"Student ID {new_student.student_id} already exists")
 
 
-    def update_student(self):
-        pass
+    def update_student(self, studentId:str,  data:UpdateStudent):
+        student= self.get_student(studentId)
+        for key,value in data.model_dump(exclude_unset=True).items():
+            setattr(student, key, value)
+        self.db.commit()
+        self.db.refresh(student)
+        return student
 
 
-    def archive_student(self):
-            pass
+    def archive_student(self, student_id:str):
+        student= self.get_student(student_id)
+        student['is_archived'] = True
 
-    def delete_student(self):
-       pass
+
+    def delete_student(self, student_id:str):
+        student= self.get_student(student_id)
+        self.db.delete(student)
+        self.db.commit()
 
