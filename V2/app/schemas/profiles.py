@@ -75,7 +75,7 @@ class UpdateStudent(ProfileBase):
                 "first_name": "Lara",
                 "last_name": "George",
                 "image_url": "path_to_img",
-                "gender": "Female",
+                "gender": "F",
                 "date_of_birth": "2023-09-01",
                 "student_id": "STU/11/12/2222",
                 "class_id": "00000000-0000-0000-0000-000000000001",
