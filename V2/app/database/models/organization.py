@@ -1,15 +1,15 @@
 from .common_imports import *
-from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 from .data_enums import (
     DepartmentName, DepartmentCode,
     ClassLevel, ClassCode, StaffDepartmentName)
 
-class Departments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class Departments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
    Represents a department within an educational institution, including its name, code,
    description, and associated mentor. Links to students and educator mentor relationships.
 
-   Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+   Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
    """
     __tablename__ = 'departments'
 
@@ -25,11 +25,11 @@ class Departments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
 
 
 
-class Classes(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents a class within an educational institution, including its level, code, and mentor.
     Links to students and educator mentor relationships.
-    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
     __tablename__ = 'classes'
 
@@ -59,11 +59,11 @@ class Classes(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
 
 
 
-class StaffDepartments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class StaffDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents a staff department, including its name, description, and manager.
     Links to the staff member who manages the department.
-    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
     __tablename__ = 'staff_departments'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
@@ -76,10 +76,10 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     manager: Mapped['Staff'] = relationship(foreign_keys = '[StaffDepartments.manager_id]')
 
 
-class StaffRoles(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class StaffRoles(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
      Represents a role assigned to a staff member, including the role name and description.
-     Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
     __tablename__ = 'staff_roles'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)

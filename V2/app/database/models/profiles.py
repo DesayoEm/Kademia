@@ -1,9 +1,9 @@
 from .common_imports import *
 from .data_enums import StaffType, Gender, UserType, AccessLevel
-from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from .mixins import AuditMixins, AuditMixins, TimeStampMixins, ArchiveMixins
 
 
-class ProfileBase(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class ProfileBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
    Abstract base class for user profiles, including personal details, activity status, and eligibility for deletion.
    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
@@ -66,7 +66,7 @@ class Students(ProfileBase):
     transfers: Mapped[List['StudentTransfers']]= relationship(back_populates='transferred_student')
 
     __table_args__ = (
-        Index('idx_students_soft_deleted_at', 'soft_deleted_at'),
+        Index('idx_students_archived_at', 'archived_at'),
     )
 
     def __repr__(self) -> str:
@@ -97,7 +97,7 @@ class Parents(ProfileBase):
     __table_args__ = (
         Index('idx_parents_email', 'email_address'),
         Index('idx_parents_phone', 'phone'),
-        Index('idx_parents_soft_deleted_at', 'soft_deleted_at'),
+        Index('idx_parents_archived_at', 'archived_at'),
     )
 
     def __repr__(self) -> str:
@@ -137,7 +137,7 @@ class Staff(ProfileBase):
 
 
     __table_args__ = (
-        Index('idx_staff_soft_deleted_at', 'soft_deleted_at'),
+        Index('idx_staff_archived_at', 'archived_at'),
         Index('idx_staff_department', 'department_id'),
         Index('idx_staff_role', 'role_id'),
         Index('idx_staff_name', 'first_name', 'last_name')

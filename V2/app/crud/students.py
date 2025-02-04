@@ -60,7 +60,7 @@ class StudentCrud:
         pass
 
 
-    def soft_delete_student(self):
+    def archive_student(self):
             pass
 
     def delete_student(self):

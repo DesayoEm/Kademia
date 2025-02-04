@@ -44,36 +44,36 @@ class AuditMixins:
                             primaryjoin=f"Staff.id == {cls.__name__}.last_modified_by")
 
 
-class SoftDeleteMixins:
+class ArchiveMixins:
     """
-     Provides soft delete functionality for marking records as deleted without removing them from the database.
+     Provides archive functionality for marking records as deleted without removing them from the database.
 
     Attributes:
-        is_soft_deleted (bool): Indicates whether the record is soft-deleted.
-        soft_deleted_at (datetime): Timestamp when the record was soft-deleted.
-        deletion_reason (str | None): Reason for the soft deletion.
-        soft_deleted_by (UUID): ID of the staff member who performed the soft delete.
-        soft_deleted_by_staff (relationship): Relationship to the staff member who deleted the record.
+        is_archived (bool): Indicates whether the record is archived.
+        archived_at (datetime): Timestamp when the record was archived.
+        archive_reason (str | None): Reason for the soft deletion.
+        archived_by (UUID): ID of the staff member who performed the archive.
+        archived_by_staff (relationship): Relationship to the staff member who deleted the record.
 
     Methods:
-        soft_delete (deleted_by, reason): Marks the instance as soft-deleted.
+        archive (archived_by, reason): Marks the instance as archived.
     """
-    is_soft_deleted: Mapped[bool] = mapped_column(Boolean, default=False)
-    soft_deleted_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
-    deletion_reason: Mapped[str | None] = mapped_column(String(500), nullable = True)
+    is_archived: Mapped[bool] = mapped_column(Boolean, default=False)
+    archived_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    archive_reason: Mapped[str | None] = mapped_column(String(500), nullable = True)
 
     @declared_attr
-    def soft_deleted_by(cls):
+    def archived_by(cls):
         return mapped_column(ForeignKey('staff.id', ondelete= 'SET NULL'), nullable = True)
 
     @declared_attr
-    def soft_deleted_by_staff(cls):
-        return relationship('Staff', uselist=False, foreign_keys=[cls.soft_deleted_by],
-                            primaryjoin=f"Staff.id == {cls.__name__}.soft_deleted_by")
+    def archived_by_staff(cls):
+        return relationship('Staff', uselist=False, foreign_keys=[cls.archived_by],
+                            primaryjoin=f"Staff.id == {cls.__name__}.archived_by")
 
-    def soft_delete(self, deleted_by: UUID, reason: str | None = None) -> None:
-        """Marks the instance as soft-deleted."""
-        self.is_soft_deleted = True
-        self.deleted_at = datetime.now(timezone.utc)
-        self.deleted_by = deleted_by
-        self.deletion_reason = reason
+    def archive(self, arvhived_by: UUID, reason: str | None = None) -> None:
+        """Marks the instance as archived."""
+        self.is_archived = True
+        self.archived_at = datetime.now(timezone.utc)
+        self.archived_by = arvhived_by
+        self.archive_reason = reason

@@ -1,6 +1,6 @@
 from datetime import date
 import re
-from ..exceptions.profiles import StudentIdFormatError, IdYearError
+from ..exceptions.profiles import StudentIdFormatError, IdYearError, AdmissionDateError
 
 class ProfileService:
     def __init__(self):
@@ -27,7 +27,7 @@ class ProfileService:
     def validate_admission_date(value: date) -> date:
         """Validate that admission date is not in the future."""
         if value > date.today():
-            raise ValueError('Admission date cannot be in the future')
+            raise AdmissionDateError
         return value
 
 profile_service = ProfileService()

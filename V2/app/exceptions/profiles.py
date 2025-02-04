@@ -8,3 +8,7 @@ class IdYearError(ProfileExceptions):
     def __init__(self):
         super().__init__("Academic years in student_id must be consecutive e.g (STU/10/11/0000)")
 
+class AdmissionDateError(ProfileExceptions):
+    def __init__(self):
+        super().__init__('Admission date cannot be in the future')
+

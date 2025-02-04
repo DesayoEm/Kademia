@@ -1,14 +1,14 @@
 from .common_imports import *
 from .data_enums import DocumentType
-from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 
 
-class StudentDocuments(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class StudentDocuments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """Manages documents uploaded for students.
     Maintains audit history with staff references defaulting to placeholder text
     (e.g., 'Anon User (left)') when referenced staff is deleted.
 
-    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
     __tablename__ = 'student_documents'
 

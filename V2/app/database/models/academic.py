@@ -1,14 +1,14 @@
 from .common_imports import *
 from .data_enums import (ClassLevel, Term, ApprovalStatus, SubjectGroup, GradeType, DepartmentName)
-from .mixins import AuditMixins, SoftDeleteMixins, TimeStampMixins
+from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 
-class Subjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class Subjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents an educational subject with attributes like name, class level,
     department, and compulsory status. Includes relationships to grades, students,
     and educators.
 
-    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
     __tablename__ = 'subjects'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
@@ -26,11 +26,11 @@ class Subjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
 
 
 
-class StudentSubjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class StudentSubjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
    Association table representing a student's enrollment in a subject for a specific academic year and term.
    Includes attributes like enrollment status and subject title.
-   Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+   Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
    """
     __tablename__ = 'student_subjects'
 
@@ -50,12 +50,12 @@ class StudentSubjects(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     student: Mapped['Students']= relationship(back_populates='subjects_taken', foreign_keys='[StudentSubjects.student_id]')
 
 
-class Grades(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class Grades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents student grades, linking students, subjects, departments, and educators.
     Includes attributes for academic year, term, grade type, and marks, with optional file URL.
 
-    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
     __tablename__ = 'grades'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
@@ -85,13 +85,13 @@ class Grades(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     )
 
 
-class TotalGrades(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class TotalGrades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
    Represents total grades for a student in a subject, including total marks, rank,
    academic year, and term. Links students and subjects with unique constraints on
    student, subject, academic year, and term.
 
-   Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+   Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
    """
     __tablename__ = 'total_grades'
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
@@ -115,12 +115,12 @@ class TotalGrades(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
     )
 
 
-class Repetitions(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class Repetitions(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
      Represents a student's repetition of a class, including details like class level change,
      reason for repetition, approval status, and class assignments.
 
-     Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
      """
     __tablename__ = 'repetitions'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
@@ -154,12 +154,12 @@ class Repetitions(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
         return f"student {self.student_id} repetition in {self.academic_year} was actioned by {self.status_updated_staff}"
 
 
-class StudentTransfers(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class StudentTransfers(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
    Represents a student's transfer between departments or class levels, including the reason,
    approval status, and status updates.
 
-   Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+   Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
    """
     __tablename__ = 'student_transfers'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
@@ -194,12 +194,12 @@ class StudentTransfers(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
         was actioned by {self.status_updater}"
 
 
-class EducatorQualifications(Base, AuditMixins, TimeStampMixins, SoftDeleteMixins):
+class EducatorQualifications(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents an educator's assignment to a subject for a specific academic year and term.
     Includes attributes like active status and term.
 
-    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
     __tablename__ = 'educator_qualifications'
 
