@@ -3,6 +3,8 @@ from ..schemas.profiles import NewStudent, UpdateStudent, Student
 from fastapi import Depends, APIRouter
 from ..database.utils import get_db
 from ..crud.students import StudentCrud
+from fastapi import HTTPException
+from ..exceptions.profiles import StudentIdFormatError, IdYearError, DuplicateStudentIDError, StudentNotFoundError
 
 
 router = APIRouter()
@@ -16,8 +18,12 @@ def read_students(db: Session = Depends(get_db)):
 
 @router.get("/students/{student_id}")
 def get_student(stu_id: str, db: Session = Depends(get_db)):
-    student_crud = StudentCrud(db)
-    return student_crud.get_student(stu_id)
+    try:
+        student_crud = StudentCrud(db)
+        return student_crud.get_student(stu_id)
+    except StudentNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
 
 @router.post("/students/", status_code = 201)
 def create_student(new_student:NewStudent, db: Session = Depends(get_db)):

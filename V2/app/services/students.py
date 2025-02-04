@@ -7,13 +7,13 @@ from ..database.models.profiles import Students
 from sqlalchemy.orm import Session
 from ..services.profile_validation import profile_validator
 from ..exceptions.profiles import StudentIdFormatError, IdYearError, DuplicateStudentIDError, StudentNotFoundError
-from .base import BaseCrud
+from ..crud.base import BaseCrud
 
 
-class StudentCrud(BaseCrud):
+class StudentService(BaseCrud):
     def __init__(self, db:Session):
         super().__init__(db, Students)
-        self.profile_service = profile_validator
+        self.profile_validator = profile_validator
 
 
     def get_all_students(self) -> list[Student]:
@@ -34,6 +34,8 @@ class StudentCrud(BaseCrud):
         # return student_model.model_dump(exclude={"is_active", "last_login", "is_soft_deleted",
         #                                    "deleted_at", "deleted_by", "deletion_reason",
         #                                    "deletion_eligible"})
+
+
 
 
     def create_student(self, new_student:NewStudent):

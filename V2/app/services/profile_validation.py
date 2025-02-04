@@ -2,7 +2,7 @@ from datetime import date
 import re
 from ..exceptions.profiles import StudentIdFormatError, IdYearError, AdmissionDateError
 
-class ProfileService:
+class ProfileValidator:
     def __init__(self):
         pass
 
@@ -30,4 +30,4 @@ class ProfileService:
             raise AdmissionDateError
         return value
 
-profile_service = ProfileService()
+profile_validator = ProfileValidator()
