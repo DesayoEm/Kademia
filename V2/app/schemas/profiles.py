@@ -5,10 +5,10 @@ from .validators import (validate_phone, validate_name,)
 
 class DeleteBase(BaseModel):
     """Base model for storing deletion details"""
-    is_soft_deleted: bool = False
-    deleted_at: datetime | None = None
-    deleted_by: UUID | None = None
-    deletion_reason: str | None = None
+    is_archived: bool = False
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: str | None = None
     deletion_eligible: bool = False
 
     class Config:
@@ -77,7 +77,7 @@ class UpdateStudent(ProfileBase):
                 "image_url": "path_to_img",
                 "gender": "Female",
                 "date_of_birth": "2023-09-01",
-                "student_id": "STU2",
+                "student_id": "STU/11/12/2222",
                 "class_id": "00000000-0000-0000-0000-000000000001",
                 "department_id": "00000000-0000-0000-0000-000000000001",
                 "parent_id": "00000000-0000-0000-0000-000000000001",
@@ -99,13 +99,13 @@ class NewStudent(UpdateStudent):
         from_attributes = True
         json_schema_extra = {
             "example": {
-                'password_hash': 'njeeeoi',
+                'password_hash': '###########',
                 "first_name": "Lara",
                 "last_name": "George",
                 "image_url": "path_to_img",
                 "gender": "F",
                 "date_of_birth": "2023-09-01",
-                "student_id": "STU2",
+                "student_id": "STU/11/12/2222",
                 "class_id": "00000000-0000-0000-0000-000000000001",
                 "department_id": "00000000-0000-0000-0000-000000000001",
                 "parent_id": "00000000-0000-0000-0000-000000000001",
@@ -131,7 +131,7 @@ class Student(UpdateStudent, DeleteBase, Activity):
                 "last_name": "George",
                 "gender": "Female",
                 "date_of_birth": "2023-09-01",
-                "student_id": "STU2",
+                "student_id": "STU/11/12/2222",
                 "class_id": "5fd8c523-bc62-4b5d-a2f3-123456789abc",
                 "department_id": "6fd8c523-bc62-4b5d-a2f3-123456789def",
                 "parent_id": "7fd8c523-bc62-4b5d-a2f3-123456789ghi",
@@ -141,10 +141,10 @@ class Student(UpdateStudent, DeleteBase, Activity):
                 "graduation_date": None,
                 "is_enrolled": True,
                 "is_active": True,
-                "is_soft_deleted": False,
-                "deleted_at":  None,
-                "deleted_by": None,
-                "deletion_reason": None
+                "is_archived": False,
+                "archived_at":  None,
+                "archived_by": None,
+                "archive_reason": None
 
             }
         }
@@ -184,7 +184,7 @@ class NewParent(UpdateParent):
         json_schema_extra = {
             "example": {
                 "first_name": "John",
-                'password_hash': 'njeeeoi',
+                'password_hash': '##########',
                 "last_name": "Doe",
                 "gender": "Male",
                 "email_address": "john.doe@example.com",

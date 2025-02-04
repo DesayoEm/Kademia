@@ -19,10 +19,10 @@ class StudentCrud:
         students = self.db.query(Students).order_by(Students.first_name).all()
         return [Student.model_validate(student) for student in students]
 
-    def get_student(self, studentId: str) -> dict:
+    def get_student(self, student_id: str) -> dict:
         student = (
             self.db.query(Students)
-            .filter(func.lower(Students.student_id) == studentId.strip().lower())
+            .filter(func.lower(Students.student_id) == student_id.strip().lower())
             .first()
         )
         if not student:
@@ -56,8 +56,8 @@ class StudentCrud:
                 status_code=409, detail=f"Student ID {new_student.student_id} already exists")
 
 
-    def update_student(self, studentId:str,  data:UpdateStudent):
-        student= self.get_student(studentId)
+    def update_student(self, student_id:str, data:UpdateStudent):
+        student= self.get_student(student_id)
         for key,value in data.model_dump(exclude_unset=True).items():
             setattr(student, key, value)
         self.db.commit()
