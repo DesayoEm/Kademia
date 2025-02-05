@@ -11,16 +11,16 @@ router = APIRouter()
 
 
 @router.get("/students/", response_model = list[Student])
-def read_students(db: Session = Depends(get_db)):
+def get_students(db: Session = Depends(get_db)):
     student_crud = StudentCrud(db)
-    return student_crud.get_all_students()
+    return student_crud.read_all_students()
 
 
 @router.get("/students/{student_id}")
 def get_student(stu_id: str, db: Session = Depends(get_db)):
     try:
         student_crud = StudentCrud(db)
-        return student_crud.get_student(stu_id)
+        return student_crud.read_student(stu_id)
     except StudentNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
 

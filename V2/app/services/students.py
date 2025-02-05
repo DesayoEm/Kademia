@@ -7,13 +7,28 @@ from ..database.models.profiles import Students
 from sqlalchemy.orm import Session
 from ..services.profile_validation import profile_validator
 from ..exceptions.profiles import StudentIdFormatError, IdYearError, DuplicateStudentIDError, StudentNotFoundError
-from ..crud.base import BaseCrud
+from ..services.base import CrudService
 
 
-class StudentService(BaseCrud):
+class StudentService(CrudService):
     def __init__(self, db:Session):
         super().__init__(db, Students)
         self.profile_validator = profile_validator
+
+    def create_student(self, new_student:NewStudent):
+        data = new_student.model_dump()
+        data['id'] = uuid4()
+        student_id = data['student_id'].strip()
+        student_id  = self.profile_validator.validate_student_id(student_id)
+
+        new_student = Students(**data)
+        try:
+            self.db.add(new_student)
+            self.db.commit()
+            return Student.model_validate(new_student)
+        except IntegrityError:
+            self.db.rollback()
+            raise DuplicateStudentIDError
 
 
     def get_all_students(self) -> list[Student]:
@@ -36,27 +51,6 @@ class StudentService(BaseCrud):
         #                                    "deletion_eligible"})
 
 
-
-
-    def create_student(self, new_student:NewStudent):
-        data = new_student.model_dump()
-        data['id'] = uuid4()
-        try:
-            student_id = data['student_id'].strip()
-            student_id  = self.profile_service.validate_student_id(student_id)
-        except StudentIdFormatError as e:
-            raise HTTPException(status_code=400, detail = str(e))
-        except IdYearError as e:
-            raise HTTPException(status_code=400, detail= str(e))
-
-        new_student = Students(**data)
-        try:
-            self.db.add(new_student)
-            self.db.commit()
-            return Student.model_validate(new_student)
-        except IntegrityError:
-            self.db.rollback()
-            raise DuplicateStudentIDError
 
 
     def update_student(self, student_id:str, data:UpdateStudent):
