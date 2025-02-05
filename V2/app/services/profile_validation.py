@@ -1,6 +1,6 @@
 from datetime import date
 import re
-from ..exceptions.profiles import StudentIdFormatError, IdYearError, AdmissionDateError
+from V2.app.services.exceptions.profiles import StudentIdFormatError, IdYearError, AdmissionDateError
 
 class ProfileValidator:
     def __init__(self):

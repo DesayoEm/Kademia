@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from uuid import uuid4
@@ -6,7 +5,7 @@ from ..schemas.profiles import NewStudent, UpdateStudent, Student
 from ..database.models.profiles import Students
 from sqlalchemy.orm import Session
 from ..services.profile_validation import profile_validator
-from ..exceptions.profiles import StudentIdFormatError, IdYearError, DuplicateStudentIDError, StudentNotFoundError
+from ..services.exceptions.profiles import DuplicateStudentIDError, StudentNotFoundError
 from ..services.base import CrudService
 
 

@@ -4,7 +4,7 @@ from fastapi import Depends, APIRouter
 from ..database.utils import get_db
 from ..crud.students import StudentCrud
 from fastapi import HTTPException
-from ..exceptions.profiles import StudentIdFormatError, IdYearError, DuplicateStudentIDError, StudentNotFoundError
+from ..services.exceptions.profiles import StudentNotFoundError
 
 
 router = APIRouter()
