@@ -1,4 +1,6 @@
 from sqlalchemy.orm import Session
+
+from ..database.models.data_enums import ArchiveReason
 from ..schemas.profiles import NewStudent, UpdateStudent, Student
 from fastapi import Depends, APIRouter
 from ..database.utils import get_db
@@ -38,9 +40,9 @@ def update_student(stu_id: str, data:UpdateStudent, db: Session = Depends(get_db
 
 
 @router.patch("/students/{student_id}")
-def archive_student(stu_id: str, db: Session = Depends(get_db)):
+def archive_student(stu_id: str, reason: ArchiveReason, db: Session = Depends(get_db)):
     student_crud = StudentCrud(db)
-    return student_crud.archive_student(stu_id)
+    return student_crud.archive_student(stu_id, reason)
 
 
 @router.delete("/students/{student_id}", status_code = 204)

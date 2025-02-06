@@ -1,3 +1,4 @@
+from ..database.models.data_enums import ArchiveReason
 from ..schemas.profiles import NewStudent, UpdateStudent, Student
 from ..database.models.profiles import Students
 from sqlalchemy.orm import Session
@@ -27,8 +28,8 @@ class StudentCrud(CrudService):
         return self.student_service.update_student(student_id, data)
 
 
-    def archive_student(self, student_id:str):
-        return self.student_service.archive_student(student_id)
+    def archive_student(self, student_id:str, reason: ArchiveReason):
+        return self.student_service.archive_student(student_id, reason)
 
 
     def delete_student(self, student_id:str):

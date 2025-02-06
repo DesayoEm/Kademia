@@ -1,12 +1,15 @@
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from uuid import uuid4
+
+from ..database.models.data_enums import ArchiveReason
 from ..schemas.profiles import NewStudent, UpdateStudent, Student
 from ..database.models.profiles import Students
 from sqlalchemy.orm import Session
 from ..services.profile_validation import profile_validator
 from ..services.exceptions.profiles import DuplicateStudentIDError, StudentNotFoundError
 from ..services.base import CrudService
+SYSTEM_USER_ID="00000000-0000-0000-0000-000000000000"
 
 
 class StudentService(CrudService):
@@ -65,11 +68,26 @@ class StudentService(CrudService):
             raise DuplicateStudentIDError(student_id)
 
 
-    def archive_student(self, student_id:str):
+    def archive_student(self, student_id:str, reason: ArchiveReason):
         student= self.get_student(student_id)
-        student.is_archived = True
-        # student.archived_by = archived_by
-        # student.archived_at = datetime.now(timezone.utc)
+        #archive all related records first
+        for doc in student.documents_owned:
+            doc.archive(SYSTEM_USER_ID, reason)
+
+        for grade in student.grades:
+            grade.archive(SYSTEM_USER_ID, reason)
+
+        for total_grade in student.total_grades:
+            total_grade.archive(SYSTEM_USER_ID, reason)
+
+        for transfer in student.transfers:
+            transfer.archive(SYSTEM_USER_ID, reason)
+
+        for repetition in student.classes_repeated:
+            repetition.archive(SYSTEM_USER_ID, reason)
+
+        student.archive(SYSTEM_USER_ID, reason)
+
         self.db.commit()
         self.db.refresh(student)
         return student
