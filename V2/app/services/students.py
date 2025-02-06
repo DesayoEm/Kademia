@@ -62,7 +62,7 @@ class StudentService(CrudService):
             return student
         except IntegrityError:
             self.db.rollback()
-            raise DuplicateStudentIDError
+            raise DuplicateStudentIDError(student_id)
 
 
     def archive_student(self, student_id:str):

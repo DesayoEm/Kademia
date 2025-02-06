@@ -44,7 +44,7 @@ def archive_student(stu_id: str, db: Session = Depends(get_db)):
 
 
 @router.delete("/students/{student_id}", status_code = 204)
-def delete_student(student_id: str, db: Session = Depends(get_db)):
+def delete_student(stu_id: str, db: Session = Depends(get_db)):
     student_crud = StudentCrud(db)
-    return student_crud.delete_student(student_id)
+    return student_crud.delete_student(stu_id)
 

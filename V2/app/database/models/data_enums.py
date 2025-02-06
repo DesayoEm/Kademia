@@ -102,3 +102,11 @@ class AccessLevel(str, Enum):
     ADMIN = 'Admin'
     SUPERUSER = 'Superuser'
     SYSTEM = 'System'
+
+
+class ArchiveReason(str, Enum):
+    ERROR = "created_in_error"
+    GRADUATED = "graduated"
+    TRANSFERRED = "transferred"
+    WITHDRAWN = "withdrawn"
+    ADMINISTRATIVE = "administrative"

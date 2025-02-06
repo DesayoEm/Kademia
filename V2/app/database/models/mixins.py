@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 from sqlalchemy import Boolean, DateTime, String, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column
 from uuid import UUID
+from .data_enums import ArchiveReason
+from sqlalchemy import Enum
 
 
 class TimeStampMixins:
@@ -51,7 +53,7 @@ class ArchiveMixins:
     Attributes:
         is_archived (bool): Indicates whether the record is archived.
         archived_at (datetime): Timestamp when the record was archived.
-        archive_reason (str | None): Reason for the soft deletion.
+        archive_reason (ArchiveReason): Reason for the soft deletion.
         archived_by (UUID): ID of the staff member who performed the archive.
         archived_by_staff (relationship): Relationship to the staff member who deleted the record.
 
@@ -60,7 +62,7 @@ class ArchiveMixins:
     """
     is_archived: Mapped[bool] = mapped_column(Boolean, default=False)
     archived_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
-    archive_reason: Mapped[str | None] = mapped_column(String(500), nullable = True)
+    archive_reason: Mapped[ArchiveReason] = mapped_column(Enum(ArchiveReason), nullable=True)
 
     @declared_attr
     def archived_by(cls):
@@ -71,9 +73,9 @@ class ArchiveMixins:
         return relationship('Staff', uselist=False, foreign_keys=[cls.archived_by],
                             primaryjoin=f"Staff.id == {cls.__name__}.archived_by")
 
-    def archive(self, arvhived_by: UUID, reason: str | None = None) -> None:
+    def archive(self, archived_by: UUID, archive_reason: ArchiveReason) -> None:
         """Marks the instance as archived."""
         self.is_archived = True
         self.archived_at = datetime.now(timezone.utc)
-        self.archived_by = arvhived_by
-        self.archive_reason = reason
+        self.archived_by = archived_by
+        self.archive_reason = archive_reason
