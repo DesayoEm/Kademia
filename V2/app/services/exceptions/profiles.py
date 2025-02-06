@@ -21,5 +21,9 @@ class AdmissionDateError(ProfileExceptions):
     def __init__(self):
         super().__init__('Admission date cannot be in the future')
 
+class ArchivedStudentNotFound(ProfileExceptions):
+    def __init__(self):
+        super().__init__("Student not found in archived records")
+
 
 

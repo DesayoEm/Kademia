@@ -79,3 +79,10 @@ class ArchiveMixins:
         self.archived_at = datetime.now(timezone.utc)
         self.archived_by = archived_by
         self.archive_reason = archive_reason
+
+    def restore(self) -> None:
+        """Restores an archived entity"""
+        self.is_archived = False
+        self.archived_at =None
+        self.archived_by = None
+        self.archive_reason = None

@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
 
-from ..database.models.data_enums import ArchiveReason
-from ..schemas.profiles import NewStudent, UpdateStudent, Student
+from V2.app.database.models.data_enums import ArchiveReason
+from V2.app.schemas.profiles import NewStudent, UpdateStudent, Student
 from fastapi import Depends, APIRouter
-from ..database.utils import get_db
-from ..crud.students import StudentCrud
+from V2.app.database.utils import get_db
+from V2.app.crud.students import StudentCrud
 from fastapi import HTTPException
-from ..services.exceptions.profiles import StudentNotFoundError
+from V2.app.services.exceptions.profiles import StudentNotFoundError
 
 
 router = APIRouter()

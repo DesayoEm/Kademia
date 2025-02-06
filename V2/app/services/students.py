@@ -2,13 +2,13 @@ from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from uuid import uuid4
 
-from ..database.models.data_enums import ArchiveReason
-from ..schemas.profiles import NewStudent, UpdateStudent, Student
-from ..database.models.profiles import Students
+from V2.app.database.models.data_enums import ArchiveReason
+from V2.app.schemas.profiles import NewStudent, UpdateStudent, Student
+from V2.app.database.models.profiles import Students
 from sqlalchemy.orm import Session
-from ..services.profile_validation import profile_validator
-from ..services.exceptions.profiles import DuplicateStudentIDError, StudentNotFoundError
-from ..services.base import CrudService
+from V2.app.services.profile_validation import profile_validator
+from V2.app.services.exceptions.profiles import DuplicateStudentIDError, StudentNotFoundError, ArchivedStudentNotFound
+from V2.app.services.base import CrudService
 SYSTEM_USER_ID="00000000-0000-0000-0000-000000000000"
 
 
@@ -92,9 +92,54 @@ class StudentService(CrudService):
         self.db.refresh(student)
         return student
 
-
     def delete_student(self, student_id:str):
         student= self.get_student(student_id)
         self.db.delete(student)
         self.db.commit()
+
+
+
+class ArchivedStudentService():
+    def __init__(self, db:Session):
+        self.db = db
+
+    def get_archived_students(self, student_id):
+        return self.db.query(Students).filter(Students.is_archived == True).all()
+
+    def get_archived_student(self, student_id):
+        student =  (self.db.query(Students)
+                    .filter(Students.is_archived == True)
+                    .filter(Students.student_id == student_id)
+                    .first())
+        if not student:
+            raise ArchivedStudentNotFound
+        return student
+
+
+
+    def restore_student(self, student_id:str):
+        student= self.get_archived_student(student_id)
+
+        for doc in student.documents_owned:
+            doc.restore()
+
+        for grade in student.grades:
+            grade.restore()
+
+        for total_grade in student.total_grades:
+            total_grade.restore()
+
+        for transfer in student.transfers:
+            transfer.restore()
+
+        for repetition in student.classes_repeated:
+            repetition.restore()
+
+        student.restore()
+
+        self.db.commit()
+        self.db.refresh(student)
+        return student
+
+
 
