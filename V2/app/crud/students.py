@@ -47,3 +47,6 @@ class StudentCrud(CrudService):
     def restore_student(self, student_id):
         return self.archive_service.restore_student(student_id)
 
+
+    def delete_archived_student(self, student_id:str):
+        return self.archive_service.delete_archived_student(student_id)

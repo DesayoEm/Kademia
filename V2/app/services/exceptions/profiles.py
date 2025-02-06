@@ -25,5 +25,9 @@ class ArchivedStudentNotFound(ProfileExceptions):
     def __init__(self):
         super().__init__("Student not found in archived records")
 
+class NoArchiveRecords(ProfileExceptions):
+    def __init__(self):
+        super().__init__("No archived records")
+
 
 

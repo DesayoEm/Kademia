@@ -2,6 +2,7 @@ from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from uuid import uuid4
 
+from .exceptions.profiles import NoArchiveRecords
 from ..database.models.data_enums import ArchiveReason
 from ..schemas.profiles import NewStudent, UpdateStudent, Student
 from ..database.models.profiles import Students
@@ -103,7 +104,11 @@ class ArchivedStudentService():
         self.db = db
 
     def get_archived_students(self):
-        return self.db.query(Students).filter(Students.is_archived == True).all()
+        students = self.db.query(Students).filter(Students.is_archived == True).all()
+        if not students:
+            raise NoArchiveRecords
+        return students
+
 
     def get_archived_student(self, student_id):
         student =  (self.db.query(Students)
@@ -113,7 +118,6 @@ class ArchivedStudentService():
         if not student:
             raise ArchivedStudentNotFound
         return student
-
 
 
     def restore_student(self, student_id:str):
@@ -139,6 +143,11 @@ class ArchivedStudentService():
         self.db.commit()
         self.db.refresh(student)
         return student
+
+    def delete_archived_student(self, student_id):
+        student =  self.get_archived_student(student_id)
+        self.db.delete(student)
+        self.db.commit()
 
 
 

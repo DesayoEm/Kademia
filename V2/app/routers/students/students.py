@@ -7,7 +7,7 @@ from ...database.utils import get_db
 from ...crud.students import StudentCrud
 from fastapi import HTTPException
 from ...services.exceptions.profiles import (
-    StudentNotFoundError, IdYearError, StudentIdFormatError,
+    StudentNotFoundError, IdYearError, StudentIdFormatError,NoArchiveRecords, ArchivedStudentNotFound,
     AdmissionDateError, DuplicateStudentIDError)
 
 router = APIRouter()
@@ -56,7 +56,6 @@ def update_student(stu_id: str, data:UpdateStudent, db: Session = Depends(get_db
         raise HTTPException(status_code=400, detail = str(e))
     except AdmissionDateError as e:
         raise HTTPException(status_code=400, detail = str(e))
-
 
 
 @router.patch("/{student_id}")
