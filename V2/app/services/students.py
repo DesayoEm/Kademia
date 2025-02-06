@@ -2,13 +2,13 @@ from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from uuid import uuid4
 
-from V2.app.database.models.data_enums import ArchiveReason
-from V2.app.schemas.profiles import NewStudent, UpdateStudent, Student
-from V2.app.database.models.profiles import Students
+from ..database.models.data_enums import ArchiveReason
+from ..schemas.profiles import NewStudent, UpdateStudent, Student
+from ..database.models.profiles import Students
 from sqlalchemy.orm import Session
-from V2.app.services.profile_validation import profile_validator
-from V2.app.services.exceptions.profiles import DuplicateStudentIDError, StudentNotFoundError, ArchivedStudentNotFound
-from V2.app.services.base import CrudService
+from ..services.profile_validation import profile_validator
+from ..services.exceptions.profiles import DuplicateStudentIDError, StudentNotFoundError, ArchivedStudentNotFound
+from ..services.base import CrudService
 SYSTEM_USER_ID="00000000-0000-0000-0000-000000000000"
 
 
@@ -30,7 +30,7 @@ class StudentService(CrudService):
             return Student.model_validate(new_student)
         except IntegrityError:
             self.db.rollback()
-            raise DuplicateStudentIDError
+            raise DuplicateStudentIDError(student_id)
 
 
     def get_all_students(self) -> list[Student]:
@@ -65,7 +65,7 @@ class StudentService(CrudService):
             return student
         except IntegrityError:
             self.db.rollback()
-            raise DuplicateStudentIDError(student_id)
+            raise DuplicateStudentIDError(data['student_id'])
 
 
     def archive_student(self, student_id:str, reason: ArchiveReason):
@@ -98,12 +98,11 @@ class StudentService(CrudService):
         self.db.commit()
 
 
-
 class ArchivedStudentService():
     def __init__(self, db:Session):
         self.db = db
 
-    def get_archived_students(self, student_id):
+    def get_archived_students(self):
         return self.db.query(Students).filter(Students.is_archived == True).all()
 
     def get_archived_student(self, student_id):

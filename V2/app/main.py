@@ -1,5 +1,5 @@
 from fastapi import Depends, FastAPI
-from .routers import students
+from .routers.students import students
 from .routers import parents
 from .routers import staff
 
