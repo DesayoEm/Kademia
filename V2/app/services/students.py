@@ -34,12 +34,14 @@ class StudentService(CrudService):
             raise DuplicateStudentIDError(student_id)
 
 
-    def get_all_students(self) -> list[Student]:
-        students = self.base_query().order_by(Students.first_name).all()
+    def get_active_students(self) -> list[Student]:
+        students = (self.base_query()
+                    .filter(Students.is_graduated == False)
+                    .order_by(Students.first_name).all())
         return [Student.model_validate(student) for student in students]
 
 
-    def get_student(self, student_id: str) -> dict:
+    def get_active_student(self, student_id: str) -> dict:
         student = (
             self.base_query()
             .filter(func.lower(Students.student_id) == student_id.strip().lower())
@@ -56,7 +58,7 @@ class StudentService(CrudService):
 
 
 
-    def update_student(self, student_id:str, data:UpdateStudent):
+    def update_active_student(self, student_id:str, data:UpdateStudent):
         student= self.get_student(student_id)
         try:
             for key,value in data.model_dump(exclude_unset=True).items():
@@ -69,8 +71,8 @@ class StudentService(CrudService):
             raise DuplicateStudentIDError(data['student_id'])
 
 
-    def archive_student(self, student_id:str, reason: ArchiveReason):
-        student= self.get_student(student_id)
+    def archive_active_student(self, student_id:str, reason: ArchiveReason):
+        student= self.get_active_student(student_id)
         #archive all related records first
         for doc in student.documents_owned:
             doc.archive(SYSTEM_USER_ID, reason)
@@ -93,7 +95,7 @@ class StudentService(CrudService):
         self.db.refresh(student)
         return student
 
-    def delete_student(self, student_id:str):
+    def delete_active_student(self, student_id:str):
         student= self.get_student(student_id)
         self.db.delete(student)
         self.db.commit()

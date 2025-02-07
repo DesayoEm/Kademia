@@ -17,23 +17,23 @@ class StudentCrud(CrudService):
 
 
     def read_all_students(self) -> list[Student]:
-        return self.student_service.get_all_students()
+        return self.student_service.get_active_students()
 
 
     def read_student(self, student_id: str) -> dict:
-        return self.student_service.get_student(student_id)
+        return self.student_service.get_active_student(student_id)
 
 
     def update_student(self, student_id:str, data:UpdateStudent):
-        return self.student_service.update_student(student_id, data)
+        return self.student_service.update_active_student(student_id, data)
 
 
     def archive_student(self, student_id:str, reason: ArchiveReason):
-        return self.student_service.archive_student(student_id, reason)
+        return self.student_service.archive_active_student(student_id, reason)
 
 
     def delete_student(self, student_id:str):
-        return self.student_service.delete_student(student_id)
+        return self.student_service.delete_active_student(student_id)
 
 
     def read_archived_students(self, student_id: str) -> dict:
