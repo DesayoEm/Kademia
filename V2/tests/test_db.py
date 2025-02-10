@@ -11,4 +11,10 @@ load_dotenv(dotenv_path=env_path)
 
 TEST_DB_URL = os.getenv('TEST_DB_URL')
 
-print(TEST_DB_URL)
+def get_engine():
+    return create_engine(TEST_DB_URL)
+
+def get_session():
+    engine = get_engine()
+    Session = sessionmaker(bind=engine)
+    return Session()
