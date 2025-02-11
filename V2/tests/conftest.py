@@ -17,12 +17,14 @@ def docker_container():
 def db_session(docker_container):
     container = start_database_container()
     engine = create_engine(os.getenv('TEST_DB_URL'))
-    SessionLocal = sessionmaker(bind=engine)
+    SessionLocal = sessionmaker(autoflush=True, autocommit = False, bind=engine)
     session = SessionLocal()
     with engine.begin() as connection:
         migrate_to_db('migrations', 'alembic.ini', connection)
     yield session
-    session.close()
+    container.stop()
+    container.remove()
+    engine.dispose()
 
 
 @pytest.fixture(autouse=True)
