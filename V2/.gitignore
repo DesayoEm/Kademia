@@ -9,3 +9,4 @@ env.py
 /shelf/
 /workspace.xml
 /docker-compose.yml
+alembic.ini
