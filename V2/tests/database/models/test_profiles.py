@@ -1,9 +1,4 @@
-from V2.app.database.models import AccessLevelChanges
-from V2.app.database.models.common_imports import Base
-from V2.app.database.models.data_enums import *
-from V2.app.database.models.profiles import Students
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import String, Enum, Integer, Boolean, DateTime, Date
+from common_test_imports import *
 
 def test_model_structure(db_inspector):
     """Confirm the presence of all required tables"""
@@ -16,8 +11,7 @@ def test_model_structure(db_inspector):
 
 
 def test_column_data_types_in_students(db_inspector):
-    """Confirm the presence of all required columns and  in students table are present
-    and have the correct data type"""
+    """Confirm all required columns  are present and have the correct data type"""
     table = 'students'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -69,8 +63,7 @@ def test_column_data_types_in_students(db_inspector):
 
 
 def test_column_data_types_in_parents(db_inspector):
-    """Confirm the presence of all required columns and  in parents table are present
-    and have the correct data type"""
+    """Confirm all required columns  are present and have the correct data type"""
     table = 'parents'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -114,8 +107,7 @@ def test_column_data_types_in_parents(db_inspector):
 
 
 def test_column_data_types_in_staff(db_inspector):
-    """Confirm the presence of all required columns and  in parents table are present
-    and have the correct data type"""
+    """Confirm all required columns  are present and have the correct data type"""
     table = 'staff'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -164,8 +156,7 @@ def test_column_data_types_in_staff(db_inspector):
 
 
 def test_column_data_types_in_educator(db_inspector):
-    """Confirm the presence of all required columns and  in parents table are present
-    and have the correct data type"""
+    """Confirm all required columns  are present and have the correct data type"""
     table = 'educator'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -175,8 +166,7 @@ def test_column_data_types_in_educator(db_inspector):
         assert isinstance(columns[column]['type'], expected_type), f"{column} has incorrect type"
 
 def test_column_data_types_in_operations(db_inspector):
-    """Confirm the presence of all required columns and  in parents table are present
-    and have the correct data type"""
+    """Confirm all required columns  are present and have the correct data type"""
     table = 'operations'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -187,8 +177,7 @@ def test_column_data_types_in_operations(db_inspector):
 
 
 def test_column_data_types_in_support(db_inspector):
-    """Confirm the presence of all required columns and  in parents table are present
-    and have the correct data type"""
+    """Confirm all required columns  are present and have the correct data type"""
     table = 'support'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -199,8 +188,7 @@ def test_column_data_types_in_support(db_inspector):
 
 
 def test_column_data_types_in_system(db_inspector):
-    """Confirm the presence of all required columns and  in parents table are present
-    and have the correct data type"""
+    """Confirm all required columns  are present and have the correct data type"""
     table = 'system'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {

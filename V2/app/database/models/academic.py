@@ -28,10 +28,7 @@ class Subjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
 class StudentSubjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
-   Association table representing a student's enrollment in a subject for a specific academic year and term.
-   Includes attributes like enrollment status and subject title.
-   Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
-   """
+   Association table representing a student's enrollment in a subject for a specific academic year and term."""
     __tablename__ = 'student_subjects'
 
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
@@ -166,7 +163,9 @@ class StudentTransfers(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='CASCADE'))
     academic_year: Mapped[int] = mapped_column(Integer)
     from_class_level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel, name='classlevel'))
-    to_class_level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel), name='classlevel')
+    to_class_level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel, name='classlevel'))
+    from_class_id: Mapped[UUID] = mapped_column(ForeignKey ('classes.id',ondelete='SET NULL'),nullable=True)
+    to_class_id: Mapped[UUID] = mapped_column(ForeignKey ('classes.id', ondelete='SET NULL'),nullable=True)
     from_department_id: Mapped[UUID] = mapped_column(ForeignKey('departments.id', ondelete='RESTRICT'))
     to_department_id: Mapped[UUID] = mapped_column(ForeignKey('departments.id', ondelete='RESTRICT'))
     reason: Mapped[str] = mapped_column(String(500))
@@ -179,6 +178,8 @@ class StudentTransfers(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     transferred_student: Mapped['Students'] = relationship(back_populates='transfers',foreign_keys='[StudentTransfers.student_id]')
     from_dept: Mapped['Departments'] = relationship(foreign_keys='[StudentTransfers.from_department_id]')
     to_dept: Mapped['Departments'] = relationship('Departments', foreign_keys='[StudentTransfers.to_department_id]')
+    from_class: Mapped['Classes'] = relationship(foreign_keys='[StudentTransfers.from_class_id]')
+    to_class: Mapped['Classes'] = relationship('Departments', foreign_keys='[StudentTransfers.to_class_id]')
     status_updater: Mapped ['Staff'] = relationship(foreign_keys='[StudentTransfers.status_updated_by]')
 
     __table_args__ = (
