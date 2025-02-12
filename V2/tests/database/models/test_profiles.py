@@ -20,39 +20,51 @@ def test_column_data_types(db_inspector):
     and have the correct data type"""
     table = 'students'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
+    expected_types = {
+        "id": UUID,
+        "password_hash": String,
+        "first_name": String,
+        "last_name": String,
+        "gender": Enum,
+        "is_active": Boolean,
+        "last_login": DateTime,
+        "created_at": DateTime,
+        "last_modified_at": DateTime,
+        "is_archived": Boolean,
+        "archived_at": DateTime,
+        "archive_reason": Enum,
+        "created_by": UUID,
+        "last_modified_by": UUID,
+        "student_id": String,
+        "date_of_birth": Date,
+        "access_level": Enum,
+        "user_type": Enum,
+        "image_url": String,
+        "class_id": UUID,
+        "department_id": UUID,
+        "parent_id": UUID,
+        "is_repeating": Boolean,
+        "admission_date": Date,
+        "leaving_date": Date,
+        "is_graduated": Boolean,
+        "graduation_date": Date,
+        "is_enrolled": Boolean,
+    }
 
-    assert isinstance (columns['id']['type'],UUID)
-    assert isinstance(columns['password_hash']['type'],String)
-    assert isinstance(columns['first_name']['type'],String)
-    assert isinstance(columns['last_name']['type'],String)
-    assert isinstance(columns['gender']['type'],Enum)
-    assert isinstance(columns['gender']['type'], Enum) and columns['gender']['type'].enum_class is Gender
-    assert isinstance(columns['is_active']['type'],Boolean)
-    assert isinstance(columns['last_login']['type'],DateTime)
-    assert isinstance(columns['created_at']['type'],DateTime)
-    assert isinstance(columns['last_modified_at']['type'],DateTime)
-    assert isinstance(columns['is_archived']['type'],Boolean)
-    assert isinstance(columns['archived_at']['type'],DateTime)
-    assert isinstance(columns['archive_reason']['type'], Enum) and columns['archive_reason']['type'].enum_class is ArchiveReason
-    assert isinstance (columns['created_by']['type'],UUID)
-    assert isinstance (columns['last_modified_by']['type'],UUID)
-    assert isinstance(columns['date_of_birth']['type'],Date)
-    assert isinstance(columns['access_level']['type'], Enum) and columns['access_level']['type'].enum_class is AccessLevel
-    assert isinstance(columns['user_type']['type'], Enum) and columns['user_type']['type'].enum_class is UserType
-    assert isinstance(columns['student_id']['type'],String)
-    assert isinstance(columns['image_url']['type'],String)
-    assert isinstance (columns['class_id']['type'],UUID)
-    assert isinstance (columns['department_id']['type'],UUID)
-    assert isinstance (columns['parent_id']['type'],UUID)
-    assert isinstance(columns['is_repeating']['type'],Boolean)
-    assert isinstance(columns['admission_date']['type'],Date)
-    assert isinstance(columns['leaving_date']['type'],Date)
-    assert isinstance(columns['is_graduated']['type'],Boolean)
-    assert isinstance(columns['graduation_date']['type'],Date)
-    assert isinstance(columns['is_enrolled']['type'],Boolean)
+    for column, expected_type in expected_types.items():
+        assert isinstance(columns[column]['type'], expected_type), f"{column} has incorrect type"
 
+    enum_checks = {
+        "gender": Gender,
+        "archive_reason": ArchiveReason,
+        "access_level": AccessLevel,
+        "user_type": UserType
+    }
 
-
+    for column, enum_class in enum_checks.items():
+        col_type = columns[column]['type']
+        assert isinstance(col_type, Enum), f"{column} should be Enum"
+        assert col_type.enum_class is enum_class or col_type.enums == [e.value for e in enum_class], f"{column} Enum mismatch"
 
 
 

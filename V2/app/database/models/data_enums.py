@@ -1,46 +1,42 @@
 from enum import Enum
 
 class Gender(str, Enum):
-    MALE = 'M'
-    FEMALE = 'F'
-    SYSTEM = 'S'
+    MALE = 'MALE'
+    FEMALE = 'FEMALE'
+    SYSTEM = 'SYSTEM'
 
 class StaffType(str, Enum):
-    EDUCATOR = "Educator"
-    OPERATIONS = 'Operations'
-    SUPPORT = "Support"
-    SYSTEM = 'System'
+    EDUCATOR = 'EDUCATOR'
+    OPERATIONS = 'OPERATIONS'
+    SUPPORT = 'SUPPORT'
+    SYSTEM = 'SYSTEM'
 
 class DocumentType(str, Enum):
-    RESULT = "Result"
-    ID = "id"
-    AWARD = "Award"
-    CERTIFICATE = "Certificate"
-    ARTICLE = "Article"
-    OTHER = "Other"
-
+    RESULT = 'RESULT'
+    ID = 'ID'
+    AWARD = 'AWARD'
+    CERTIFICATE = 'CERTIFICATE'
+    ARTICLE = 'ARTICLE'
+    OTHER = 'OTHER'
 
 class DepartmentName(str, Enum):
-    SCIENCE = 'Science'
-    HUMANITIES = 'Humanities'
-    BUSINESS = 'Business'
-
+    SCIENCE = 'SCIENCE'
+    HUMANITIES = 'HUMANITIES'
+    BUSINESS = 'BUSINESS'
 
 class DepartmentCode(str, Enum):
     SCI = 'SCI'
-    HMS= 'HMS'
+    HMS = 'HMS'
     BSN = 'BSN'
 
-
 class ClassLevel(str, Enum):
-    JuniorSecondarySchool1 = 'JSS 1'
-    JuniorSecondarySchool2 = 'JSS 2'
-    JuniorSecondarySchool3 = 'JSS 3'
-    SeniorSecondarySchool1 = 'SSS 1'
-    SeniorSecondarySchool2 = 'SSS 2'
-    SeniorSecondarySchool3 = 'SSS 3'
-    ALevels = 'A Levels'
-
+    JSS1 = 'JSS1'
+    JSS2 = 'JSS2'
+    JSS3 = 'JSS3'
+    SSS1 = 'SSS1'
+    SSS2 = 'SSS2'
+    SSS3 = 'SSS3'
+    ALEVELS = 'ALEVELS'
 
 class ClassCode(str, Enum):
     A = 'A'
@@ -50,63 +46,54 @@ class ClassCode(str, Enum):
     E = 'E'
     F = 'F'
 
-
-class Term (str, Enum):
-    FIRST = 'First'
-    SECOND = 'Second'
-    THIRD = 'Third'
-
+class Term(str, Enum):
+    FIRST = 'FIRST'
+    SECOND = 'SECOND'
+    THIRD = 'THIRD'
 
 class SubjectGroup(str, Enum):
-    SCIENCE = 'Science'
-    HUMANITIES = 'Humanities'
-    BUSINESS = 'Business'
-    GENERAL = 'General'
+    SCIENCE = 'SCIENCE'
+    HUMANITIES = 'HUMANITIES'
+    BUSINESS = 'BUSINESS'
+    GENERAL = 'GENERAL'
 
+class GradeType(str, Enum):
+    EXAM = 'EXAM'
+    TEST = 'TEST'
+    ASSIGNMENT = 'ASSIGNMENT'
+    PRACTICALS = 'PRACTICALS'
+    MOCKEXAM = 'MOCKEXAM'
+    EXTRACURRICULAR = 'EXTRACURRICULAR'
 
+class UserType(str, Enum):
+    STUDENT = 'STUDENT'
+    PARENT = 'PARENT'
+    STAFF = 'STAFF'
+    SYSTEM = 'SYSTEM'
 
-class GradeType (str, Enum):
-    EXAM = 'Exam'
-    TEST = 'Test'
-    ASSIGNMENT = 'Assignment'
-    PRACTICALS = 'Practicals'
-    MOCKEXAM = 'Mock exam'
-    EXTRACURRICULAR = 'Extracurricular'
+class ApprovalStatus(str, Enum):
+    PENDING = 'PENDING'
+    APPROVED = 'APPROVED'
+    REJECTED = 'REJECTED'
 
-
-class UserType (str, Enum):
-    STUDENT = 'Student'
-    PARENT = 'Parent'
-    STAFF = 'Staff'
-    SYSTEM = 'System'
-
-
-class ApprovalStatus (str, Enum):
-    PENDING = 'Pending'
-    APPROVED= 'Approved'
-    REJECTED = 'Rejected'
-
-
-class StaffDepartmentName (str, Enum):
-    ADMIN = 'Admin'
-    EDUCATION = 'Education'
-    OPERATIONS = 'Operations'
-    SUPPORT = 'Support'
-    SYSTEM = 'System'
-    OTHER = 'Other'
-
+class StaffDepartmentName(str, Enum):
+    ADMIN = 'ADMIN'
+    EDUCATION = 'EDUCATION'
+    OPERATIONS = 'OPERATIONS'
+    SUPPORT = 'SUPPORT'
+    SYSTEM = 'SYSTEM'
+    OTHER = 'OTHER'
 
 class AccessLevel(str, Enum):
-    INACTIVE = 'Inactive'
-    USER = 'User'
-    ADMIN = 'Admin'
-    SUPERUSER = 'Superuser'
-    SYSTEM = 'System'
-
+    INACTIVE = 'INACTIVE'
+    USER = 'USER'
+    ADMIN = 'ADMIN'
+    SUPERUSER = 'SUPERUSER'
+    SYSTEM = 'SYSTEM'
 
 class ArchiveReason(str, Enum):
-    ERROR = "created_in_error"
-    GRADUATED = "graduated"
-    TRANSFERRED = "transferred"
-    WITHDRAWN = "withdrawn"
-    ADMINISTRATIVE = "administrative"
+    ERROR = 'ERROR'
+    GRADUATED = 'GRADUATED'
+    TRANSFERRED = 'TRANSFERRED'
+    WITHDRAWN = 'WITHDRAWN'
+    ADMINISTRATIVE = 'ADMINISTRATIVE'

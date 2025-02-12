@@ -1,8 +1,8 @@
 """Initial
 
-Revision ID: 76f4bd2bfad8
+Revision ID: be06f1392b7e
 Revises: 
-Create Date: 2025-02-12 03:28:56.016350
+Create Date: 2025-02-12 10:38:32.736887
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ from V2.app.database.models.common_imports import Base
 
 
 # revision identifiers, used by Alembic.
-revision: str = '76f4bd2bfad8'
+revision: str = 'be06f1392b7e'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
