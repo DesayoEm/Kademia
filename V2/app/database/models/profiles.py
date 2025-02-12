@@ -89,7 +89,6 @@ class Parents(ProfileBase):
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(255))
     phone: Mapped[str] = mapped_column(String(11), unique=True)
-    has_active_wards: Mapped[bool] = mapped_column(Boolean, default=True)
 
     #Relationships
     wards: Mapped[List['Students']] = relationship(back_populates='parent')
