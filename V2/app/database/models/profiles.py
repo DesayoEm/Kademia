@@ -14,7 +14,7 @@ class ProfileBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     password_hash: Mapped[str] = mapped_column(String(300))
     first_name: Mapped[str] = mapped_column(String(30))
     last_name: Mapped[str] = mapped_column(String(30))
-    gender: Mapped[str] = mapped_column(Enum(Gender, values_callable=lambda obj: [e.value for e in obj]))
+    gender: Mapped[Gender] = mapped_column(Enum(Gender, name="gender"))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     last_login: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
     deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -40,8 +40,8 @@ class Students(ProfileBase):
 
     student_id: Mapped[str] = mapped_column(String(20), unique=True)
     date_of_birth: Mapped[date] = mapped_column(Date)
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.USER)
-    user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.STUDENT)
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel,  name='accesslevel' ),default = AccessLevel.USER)
+    user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default = UserType.STUDENT)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
     class_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('classes.id', ondelete='RESTRICT'))
     department_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('departments.id', ondelete='RESTRICT'))
@@ -83,8 +83,8 @@ class Parents(ProfileBase):
    """
     __tablename__ = 'parents'
 
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.USER)
-    user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.PARENT)
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name = 'accesslevel'), default = AccessLevel.USER)
+    user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default = UserType.PARENT)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(255))
@@ -116,9 +116,9 @@ class Staff(ProfileBase):
     """
     __tablename__ = 'staff'
 
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj]), default = AccessLevel.ADMIN)
-    user_type: Mapped[UserType] = mapped_column(Enum(UserType, values_callable=lambda obj: [e.value for e in obj]), default = UserType.STAFF)
-    staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType,values_callable=lambda obj: [e.value for e in obj]))
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default = AccessLevel.ADMIN)
+    user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default = UserType.STAFF)
+    staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType,name='stafftype'))
     image_url: Mapped[str] = mapped_column(String(200))
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))

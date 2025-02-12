@@ -13,19 +13,22 @@ def docker_container():
     # container.stop()
     # container.remove()
 
-@pytest.fixture(scope='session', autouse = True)
+
+@pytest.fixture(scope='session', autouse=True)
 def db_session(docker_container):
-    container = start_database_container()
     engine = create_engine(os.getenv('TEST_DB_URL'))
-    SessionLocal = sessionmaker(autoflush=True, autocommit = False, bind=engine)
+    SessionLocal = sessionmaker(autoflush=True, autocommit=False, bind=engine)
     session = SessionLocal()
+
     with engine.begin() as connection:
         migrate_to_db('migrations', 'alembic.ini', connection)
-    yield session
-    container.stop()
-    container.remove()
-    engine.dispose()
+        connection.commit()
 
+    yield session
+    session.close()
+    docker_container.stop()
+    docker_container.remove()
+    engine.dispose()
 
 @pytest.fixture(autouse=True)
 def cleanup_database(db_session):

@@ -27,5 +27,6 @@ __all__ = [
     "TotalGrades",
     "StudentSubjects",
     "Repetitions",
-    "StudentTransfers"
+    "StudentTransfers",
+    "EducatorQualifications"
 ]

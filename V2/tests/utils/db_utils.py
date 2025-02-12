@@ -1,28 +1,21 @@
 import alembic.config
 from alembic import command
-import os
 
-def migrate_to_db(script_location, alembic_ini_path, connection=None, revision='head'):
-    print(f"Looking for migrations in: {os.path.abspath('app/database/migrations/versions')}")
-    print("Available migrations:", os.listdir('app/database/migrations/versions'))
+def migrate_to_db(script_location, alembic_ini_path, connection = None, revision = 'head'):
+    try:
+        # Try direct table creation first
+        from V2.app.database.models.common_imports import Base
+        Base.metadata.create_all(bind=connection)
 
-    if connection is not None:
-        try:
+        # Then try migrations
+        config = alembic.config.Config(alembic_ini_path)
+        config.config_ini_section = 'testtrakademik' #TO fix why migrations wont work
+        config.set_main_option('script_location', 'app/database/migrations')
+        config.attributes['connection'] = connection
 
-            print("Creating tables directly via SQLAlchemy...")
-            from V2.app.database.models.common_imports import Base
-            Base.metadata.create_all(bind=connection)
-            print("Tables created successfully")
+        command.stamp(config, revision)
+        print("Database stamped at latest revision")
 
-
-            config = alembic.config.Config(alembic_ini_path)
-            config.config_ini_section = 'testtrakademik'
-            config.set_main_option('script_location', 'app/database/migrations')
-            config.attributes['connection'] = connection
-
-            command.stamp(config, "head")  # Mark as migrated to head
-            print("Database stamped at head revision")
-
-        except Exception as e:
-            print(f"Error during database setup: {str(e)}")
-            raise
+    except Exception as e:
+        print(f"Migration error: {e}")
+        raise

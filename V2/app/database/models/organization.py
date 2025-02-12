@@ -14,8 +14,8 @@ class Departments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __tablename__ = 'departments'
 
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    name: Mapped[DepartmentName] = mapped_column(Enum(DepartmentName))
-    code: Mapped[DepartmentCode] = mapped_column(Enum(DepartmentCode))
+    name: Mapped[DepartmentName] = mapped_column(Enum(DepartmentName, name = 'departmentname'))
+    code: Mapped[DepartmentCode] = mapped_column(Enum(DepartmentCode, name = 'departmentcode'))
     description: Mapped[str] = mapped_column(String(500))
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='SET NULL'), nullable = True)
 
@@ -34,9 +34,8 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __tablename__ = 'classes'
 
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel))
-    code: Mapped[ClassCode] = mapped_column(Enum(ClassCode))
-    student_count:Mapped[int]= mapped_column(Integer)
+    level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel, name = 'classlevel'))
+    code: Mapped[ClassCode] = mapped_column(Enum(ClassCode, name = 'classcode'))
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='SET NULL'), nullable=True)
     student_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='SET NULL'), nullable=True)
     assistant_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='SET NULL'), nullable=True)
@@ -67,8 +66,7 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     __tablename__ = 'staff_departments'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    name: Mapped[StaffDepartmentName] = mapped_column(Enum(StaffDepartmentName, name='staffdepartmentname',
-                                        values_callable=lambda obj: [e.value for e in obj]), unique=True)
+    name: Mapped[StaffDepartmentName] = mapped_column(Enum(StaffDepartmentName, name='staffdepartmentname',unique=True))
     description: Mapped[str] = mapped_column(String(500))
     manager_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',ondelete='SET NULL'), nullable = True)
 

@@ -8,8 +8,8 @@ class AccessLevelChanges(Base, TimeStampMixins):
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     staff_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='CASCADE'))
-    previous_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel))
-    new_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel))
+    previous_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name = 'accesslevel'))
+    new_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name = 'accesslevel'))
     reason: Mapped[str] = mapped_column(String(500))
 
     #Audit
