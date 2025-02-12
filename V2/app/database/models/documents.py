@@ -17,7 +17,7 @@ class StudentDocuments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     title: Mapped[str] = mapped_column(String(50))
     academic_year: Mapped[int] = mapped_column(Integer)
     document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType, name = 'documenttype'))
-    file_path: Mapped[str] = mapped_column(String(225))
+    file_url: Mapped[str] = mapped_column(String(225))
 
     #Relationships
     owner: Mapped['Students'] = relationship(back_populates='documents_owned',foreign_keys='[StudentDocuments.owner_id]')

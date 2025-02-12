@@ -2,7 +2,7 @@ from .common_imports import *
 from .data_enums import AccessLevel
 from .mixins import TimeStampMixins
 
-class AccessLevelChanges(Base, TimeStampMixins):
+class AccessLevelChanges(Base):
     """Tracks changes to user access levels for audit purposes"""
     __tablename__ = 'access_level_changes'
 
