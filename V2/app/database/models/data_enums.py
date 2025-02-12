@@ -38,6 +38,15 @@ class ClassLevel(str, Enum):
     SSS3 = 'SSS3'
     ALEVELS = 'ALEVELS'
 
+class EmploymentStatus(str, Enum):
+    ACTIVE = 'ACTIVE'
+    LEFT = 'LEFT'
+
+
+class StaffAvailability(str, Enum):
+    AVAILABLE = 'AVAILABLE'     # Can receive and respond to chats
+    UNAVAILABLE = 'UNAVAILABLE'
+
 class ClassCode(str, Enum):
     A = 'A'
     B = 'B'

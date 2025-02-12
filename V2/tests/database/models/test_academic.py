@@ -1,4 +1,4 @@
-from common_test_imports import *
+from .common_test_imports import *
 
 
 def test_column_data_types_in_subject(db_inspector):
@@ -32,7 +32,32 @@ def test_column_data_types_in_subject(db_inspector):
         col_type = columns[column]['type']
         assert col_type.enum_class is enum_class or col_type.enums == [e.value for e in enum_class], f"{column} Enum mismatch"
 
-#
+def test_subjects_nullable_constraints(db_inspector):
+    """verify nullable and not nullable fields"""
+    table = 'subjects'
+    columns = db_inspector.get_columns(table)
+
+    expected_nullable = {
+        "id": False,
+        "name": False,
+        "class_level": False,
+        "group": False,
+        "educator_id": False,
+        "is_elective": False,
+        "created_at": False,
+        "last_modified_at": False,
+        "is_archived": False,
+        "archived_at": False,
+        "archived_by": False,
+        "archive_reason": False,
+        "created_by": False,
+        "last_modified_by": False
+    }
+    for column in columns:
+        column['name'] = column['name']
+        assert column['nullable'] == expected_nullable.get(column['name']), \
+            f"column {column['name']} is not nullable as expected"
+
 def test_column_data_types_in_student_subjects(db_inspector):
     """Confirm all required columns are present and have the correct data type"""
     table = 'student_subjects'
@@ -63,6 +88,32 @@ def test_column_data_types_in_student_subjects(db_inspector):
         col_type = columns[column]['type']
         assert col_type.enum_class is enum_class or col_type.enums == [e.value for e in enum_class], f"{column} Enum mismatch"
 
+def student_subjects_nullable_constraints(db_inspector):
+    """verify nullable and not nullable fields"""
+    table = 'student_subjects'
+    columns = db_inspector.get_columns(table)
+
+    expected_nullable = {
+        "id": False,
+        "student_id": False,
+        "subject_id": False,
+        "academic_year": False,
+        "term": False,
+        "is_active": False,
+        "created_at": False,
+        "last_modified_at": False,
+        "is_archived": False,
+        "archived_at": False,
+        "archived_by": False,
+        "archive_reason": False,
+        "created_by": False,
+        "last_modified_by": False
+    }
+    for column in columns:
+        column['name'] = column['name']
+        assert column['nullable'] == expected_nullable.get(column['name']), \
+            f"column {column['name']} is not nullable as expected"
+
 
 def test_column_data_types_in_grades(db_inspector):
     """Confirm all required columns are present and have the correct data type"""
@@ -72,14 +123,13 @@ def test_column_data_types_in_grades(db_inspector):
         "id": UUID,
         "student_id": UUID,
         "subject_id": UUID,
-        "department_id": UUID,
         "academic_year": String,
         "term": Enum,
         "type": Enum,
         "marks": Integer,
         "file_url": String,
         "graded_by": UUID,
-        "remarks": String,
+        "feedback": String,
         "created_at": DateTime,
         "last_modified_at": DateTime,
         "is_archived": Boolean,

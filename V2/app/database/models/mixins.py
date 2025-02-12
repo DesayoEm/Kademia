@@ -15,8 +15,8 @@ class TimeStampMixins:
          created_at (datetime): Timestamp when the record is created.
          last_modified_at (datetime): Timestamp when the record was last modified.
      """
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
-    last_modified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable = False, default=func.now())
+    last_modified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable = False, default=func.now(), onupdate=func.now())
 
 
 
@@ -29,11 +29,11 @@ class AuditMixins:
    """
     @declared_attr
     def created_by(cls):
-        return mapped_column(ForeignKey('staff.id', ondelete= 'SET NULL'), nullable = True)
+        return mapped_column(ForeignKey('staff.id', ondelete= 'SET NULL'), nullable = False)
 
     @declared_attr
     def last_modified_by(cls):
-        return mapped_column(ForeignKey('staff.id', ondelete= 'SET NULL'), nullable = True)
+        return mapped_column(ForeignKey('staff.id', ondelete= 'SET NULL'), nullable = False)
 
     @declared_attr
     def created_by_staff(cls):
@@ -60,13 +60,13 @@ class ArchiveMixins:
     Methods:
         archive (archived_by, reason): Marks the instance as archived.
     """
-    is_archived: Mapped[bool] = mapped_column(Boolean, default=False)
-    archived_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
-    archive_reason: Mapped[ArchiveReason] = mapped_column(Enum(ArchiveReason), nullable=True)
+    is_archived: Mapped[bool] = mapped_column(Boolean, default=False, nullable = False)
+    archived_at: Mapped[datetime] = mapped_column(DateTime, nullable = False)
+    archive_reason: Mapped[ArchiveReason] = mapped_column(Enum(ArchiveReason), nullable = False)
 
     @declared_attr
     def archived_by(cls):
-        return mapped_column(ForeignKey('staff.id', ondelete= 'SET NULL'), nullable = True)
+        return mapped_column(ForeignKey('staff.id', ondelete= 'SET NULL'), nullable = False)
 
     @declared_attr
     def archived_by_staff(cls):

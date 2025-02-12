@@ -1,4 +1,4 @@
-from common_test_imports import *
+from .common_test_imports import *
 
 def test_column_data_types_in_departments(db_inspector):
     """Confirm all required columns are present and have the correct data type for departments table"""

@@ -1,4 +1,4 @@
-from common_test_imports import *
+from .common_test_imports import *
 
 def test_model_structure(db_inspector):
     """Confirm the presence of all required tables"""

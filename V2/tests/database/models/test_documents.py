@@ -1,4 +1,4 @@
-from common_test_imports import *
+from .common_test_imports import *
 
 
 def test_column_data_types_in_student_documents(db_inspector):
