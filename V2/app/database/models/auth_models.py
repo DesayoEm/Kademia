@@ -14,7 +14,7 @@ class AccessLevelChanges(Base):
 
     #Audit
     changed_at: Mapped[datetime] = mapped_column(DateTime, default=func.now())
-    changed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='SET NULL'))
+    changed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='RESTRICT'))
 
     #Relationships
     user: Mapped['Staff'] = relationship(back_populates='access_changes', foreign_keys="[AccessLevelChanges.staff_id]")

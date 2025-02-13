@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from .common_test_imports import *
 
 
@@ -44,3 +46,16 @@ def test_access_level_changes_nullable_constraints(db_inspector):
         assert column['nullable'] == expected_nullable.get(column_name), \
             f"column {column['name']} is not nullable as expected"
 
+
+# def test_access_level_changes_default_values(db_inspector):
+#     """Test default values and constraints for access_level_changes table"""
+#     table = 'access_level_changes'
+#     columns = {col['name']: col for col in db_inspector.get_columns(table)}
+#
+#     assert 'uuid4' in str(columns['id']['default']).lower(), "ID default should use uuid4()"
+#
+#     assert 'now()' in str(columns['changed_at']['default']).lower(), "changed_at default should use func.now()"
+#
+#     fields_without_defaults = ['staff_id', 'previous_level', 'new_level', 'reason', 'changed_by']
+#     for field in fields_without_defaults:
+#         assert columns[field]['default'] is None, f"{field} should not have a default value"

@@ -1,19 +1,25 @@
-import alembic.config
-from alembic import command
+from sqlalchemy import create_engine, MetaData
+from V2.app.database.models.common_imports import Base
 
-def migrate_to_db(script_location, alembic_ini_path, connection = None, revision = 'head'):
+def create_test_tables(engine):
+    """Create all tables defined in Base.metadata"""
     try:
-        from V2.app.database.models.common_imports import Base
-        Base.metadata.create_all(bind=connection)
-
-        config = alembic.config.Config(alembic_ini_path)
-        config.config_ini_section = 'testtrakademik' #TO fix why migrations wont work
-        config.set_main_option('script_location', 'app/database/migrations')
-        config.attributes['connection'] = connection
-
-        command.stamp(config, revision)
-        print("Database stamped at latest revision")
-
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        metadata.drop_all(bind=engine)
+        Base.metadata.create_all(bind=engine)
+        print("Test tables created successfully")
     except Exception as e:
-        print(f"Migration error: {e}")
+        print(f"Error creating test tables: {e}")
+        raise
+
+def drop_test_tables(engine):
+    """Drop all tables in correct order based on dependencies"""
+    try:
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        metadata.drop_all(bind=engine)
+        print("Test tables dropped successfully")
+    except Exception as e:
+        print(f"Error dropping test tables: {e}")
         raise

@@ -1,37 +1,38 @@
-from ..tests.utils.docker_utils import start_database_container
-from ..tests.utils.db_utils import migrate_to_db
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 import pytest
 import os
+from sqlalchemy import create_engine,inspect
+from sqlalchemy.orm import sessionmaker
+from ..tests.utils.db_utils import create_test_tables, drop_test_tables
+from .test_db import TEST_DB_URL
 
 @pytest.fixture(scope='session')
-def docker_container():
-    """start the Docker container"""
-    container = start_database_container()
-    yield container
-    # container.stop()
-    # container.remove()
+def test_engine():
+    """Create test database engine"""
+    engine = create_engine(os.getenv('TEST_DB_URL'))
+    return engine
 
 
 @pytest.fixture(scope='session', autouse=True)
-def db_session(docker_container):
-    engine = create_engine(os.getenv('TEST_DB_URL'))
-    SessionLocal = sessionmaker(autoflush=True, autocommit=False, bind=engine)
+def db_session(test_engine):
+    """Create a test database session with fresh tables"""
+    SessionLocal = sessionmaker(autoflush=True, autocommit=False, bind=test_engine)
     session = SessionLocal()
-
-    with engine.begin() as connection:
-        migrate_to_db('migrations', 'alembic.ini', connection)
-        connection.commit()
-
+    create_test_tables(test_engine)
     yield session
+
+    drop_test_tables(test_engine)
     session.close()
-    docker_container.stop()
-    docker_container.remove()
-    engine.dispose()
+    test_engine.dispose()
+
 
 @pytest.fixture(autouse=True)
 def cleanup_database(db_session):
-    """clean up the database after each test"""
+    """clean up the db after each test"""
     yield
     db_session.rollback()
+
+
+@pytest.fixture(scope='function')
+def db_inspector(db_session):
+    """Get database inspector"""
+    return inspect(db_session.bind)
