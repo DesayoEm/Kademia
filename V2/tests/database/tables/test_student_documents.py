@@ -30,3 +30,31 @@ def test_column_data_types_in_student_documents(db_inspector):
     for column, enum_class in enum_checks.items():
         col_type = columns[column]['type']
         assert col_type.enum_class is enum_class or col_type.enums == [e.value for e in enum_class], f"{column} Enum mismatch"
+
+
+
+def test_student_documents_nullable_constraints(db_inspector):
+    """verify nullable and not nullable fields"""
+    table = 'student_documents'
+    columns = db_inspector.get_columns(table)
+
+    expected_nullable = {
+        "id": False,
+        "owner_id": False,
+        "title": False,
+        "created_at": False,
+        "academic_year": False,
+        "document_type": False,
+        "file_url": False,
+        "last_modified_at": False,
+        "is_archived": False,
+        "archived_at": False,
+        "archived_by": False,
+        "archive_reason": False,
+        "created_by": False,
+        "last_modified_by": False
+    }
+    for column in columns:
+        column['name'] = column['name']
+        assert column['nullable'] == expected_nullable.get(column['name']), \
+            f"column {column['name']} is not nullable as expected"

@@ -169,9 +169,9 @@ class StudentTransfers(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     to_department_id: Mapped[UUID] = mapped_column(ForeignKey('departments.id', ondelete='RESTRICT'))
     reason: Mapped[str] = mapped_column(String(500))
     status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus, name='approvalstatus'), default=ApprovalStatus.PENDING)
-    status_updated_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='RESTRICT'))
-    status_updated_at: Mapped[datetime] = mapped_column(DateTime)
-    rejection_reason: Mapped[Optional[str]] = mapped_column(String(500))
+    status_updated_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='RESTRICT'), nullable=True)
+    status_updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     #Relationships
     transferred_student: Mapped['Students'] = relationship(back_populates='transfers',foreign_keys='[StudentTransfers.student_id]')

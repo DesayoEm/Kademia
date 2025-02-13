@@ -24,3 +24,23 @@ def test_column_data_types_in_access_level_changes(db_inspector):
     for column, enum_class in enum_checks.items():
         col_type = columns[column]['type']
         assert col_type.enum_class is enum_class or col_type.enums == [e.value for e in enum_class], f"{column} Enum mismatch"
+
+
+def test_access_level_changes_nullable_constraints(db_inspector):
+    table = 'access_level_changes'
+    columns = db_inspector.get_columns(table)
+
+    expected_nullable = {
+        "id": False,
+        "staff_id": False,
+        "previous_level": False,
+        "new_level": False,
+        "reason": False,
+        "changed_at": False,
+        "changed_by": False,
+    }
+    for column in columns:
+        column_name = column['name']
+        assert column['nullable'] == expected_nullable.get(column_name), \
+            f"column {column['name']} is not nullable as expected"
+

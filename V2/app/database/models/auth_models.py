@@ -13,7 +13,7 @@ class AccessLevelChanges(Base):
     reason: Mapped[str] = mapped_column(String(500))
 
     #Audit
-    changed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True, default=func.now())
+    changed_at: Mapped[datetime] = mapped_column(DateTime, default=func.now())
     changed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='SET NULL'))
 
     #Relationships
