@@ -48,8 +48,8 @@ class Departments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __tablename__ = 'departments'
 
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    name: Mapped[DepartmentName] = mapped_column(Enum(DepartmentName, name = 'departmentname'))
-    code: Mapped[DepartmentCode] = mapped_column(Enum(DepartmentCode, name = 'departmentcode'))
+    name: Mapped[DepartmentName] = mapped_column(Enum(DepartmentName, name = 'departmentname'), unique = True)
+    code: Mapped[DepartmentCode] = mapped_column(Enum(DepartmentCode, name = 'departmentcode'), unique = True)
     description: Mapped[str] = mapped_column(String(500))
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id', ondelete='RESTRICT'))
 
@@ -82,5 +82,5 @@ class StaffRoles(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     __tablename__ = 'staff_roles'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    name: Mapped[str] = mapped_column(String(100), unique=True)
+    title: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str] = mapped_column(String(500))

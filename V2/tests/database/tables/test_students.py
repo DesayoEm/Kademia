@@ -122,3 +122,15 @@ def test_string_column_length_in_students(db_inspector):
     assert columns['image_url']['type'].length == 200
 
 
+def test_unique_constraints_in_students(db_inspector):
+    """Test unique constraint"""
+    table = 'students'
+    unique_constraints = db_inspector.get_unique_constraints(table)
+
+    constraints_map = {
+        constraint['name']: constraint['column_names']
+        for constraint in unique_constraints
+    }
+    assert any(columns == ['student_id'] for columns in constraints_map.values()
+               ), "student_id should have a unique constraint"
+

@@ -72,9 +72,27 @@ def test_departments_default_values(db_inspector):
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
+
 def test_string_column_length_in_departments(db_inspector):
     """Test that string columns have correct max lengths"""
     table = 'departments'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     assert columns['description']['type'].length == 500
+
+
+def test_unique_constraints_in_departments(db_inspector):
+    """Test unique constraint"""
+    table = 'departments'
+    unique_constraints = db_inspector.get_unique_constraints(table)
+
+    constraints_map = {
+        constraint['name']: constraint['column_names']
+        for constraint in unique_constraints
+    }
+
+    assert any(columns == ['name'] for columns in constraints_map.values()
+               ), "name should have a unique constraint"
+    assert any(columns == ['code'] for columns in constraints_map.values()
+               ), "code should have a unique constraint"
+

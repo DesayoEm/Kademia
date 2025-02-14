@@ -64,3 +64,17 @@ def test_string_column_length_in_access_level_changes(db_inspector):
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     assert columns['reason']['type'].length == 500
+
+
+def test_unique_constraints_in_staff_departments(db_inspector):
+    """Test unique constraint"""
+    table = 'staff_departments'
+    unique_constraints = db_inspector.get_unique_constraints(table)
+
+    constraints_map = {
+        constraint['name']: constraint['column_names']
+        for constraint in unique_constraints
+    }
+
+    assert any(columns == ['name'] for columns in constraints_map.values()
+               ), "name should have a unique constraint"

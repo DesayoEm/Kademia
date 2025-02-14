@@ -207,7 +207,7 @@ class EducatorQualifications(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
     educator_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id', ondelete='CASCADE'))
-    title: Mapped[str] = mapped_column(String(100))
+    title: Mapped[str] = mapped_column(String(100), unique = True)
     description: Mapped[str] = mapped_column(String(500), nullable =True)
 
     #Relationships

@@ -77,4 +77,16 @@ def test_classes_default_values(db_inspector):
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
+def test_unique_constraints_in_classes(db_inspector):
+    """Test unique constraint"""
+    table = 'classes'
+    unique_constraints = db_inspector.get_unique_constraints(table)
 
+    has_staff_dept_constraint = any(
+        sorted(constraint['column_names']) == sorted(['level', 'code'])
+        for constraint in unique_constraints
+    )
+    assert has_staff_dept_constraint, (
+        "classes should have a unique constraint on "
+        "level and code"
+    )

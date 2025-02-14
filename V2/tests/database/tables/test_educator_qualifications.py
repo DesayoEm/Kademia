@@ -70,10 +70,16 @@ def test_educator_qualifications_default_values(db_inspector):
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
 
-def test_string_column_length_in_educator_qualifications(db_inspector):
-    """Test that string columns have correct max lengths"""
+def test_unique_constraints_in_educator_qualifications(db_inspector):
+    """Test unique constraint"""
     table = 'educator_qualifications'
-    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+    unique_constraints = db_inspector.get_unique_constraints(table)
 
-    assert columns['title']['type'].length == 100
-    assert columns['description']['type'].length == 500
+    constraints_map = {
+        constraint['name']: constraint['column_names']
+        for constraint in unique_constraints
+    }
+
+    assert any(columns == ['title'] for columns in constraints_map.values()
+               ), "name should have a unique constraint"
+

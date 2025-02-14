@@ -7,7 +7,7 @@ def test_column_data_types_in_staff_roles(db_inspector):
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
         "id": UUID,
-        "name": String,
+        "title": String,
         "description": String,
         "created_at": DateTime,
         "last_modified_at": DateTime,
@@ -35,7 +35,7 @@ def test_staff_roles_nullable_constraints(db_inspector):
 
     expected_nullable = {
         "id": False,
-        "name": False,
+        "title": False,
         "description": False,
         "created_at": False,
         "last_modified_at": False,
@@ -58,7 +58,7 @@ def test_staff_roles_default_values(db_inspector):
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     fields_without_defaults = [
-        'id', "name", "description","created_at","last_modified_at",
+        'id', "title", "description","created_at","last_modified_at",
         "is_archived", "archived_at","archived_by", "archive_reason", "created_by","last_modified_by"
     ]
 
@@ -68,9 +68,22 @@ def test_staff_roles_default_values(db_inspector):
 
 def test_string_column_length_in_staff_departments(db_inspector):
     """Test that string columns have correct max lengths"""
-    table = 'staff_departments'
+    table = 'staff_roles'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
-    assert columns['name']['type'].length == 100
+    assert columns['title']['type'].length == 100
     assert columns['description']['type'].length == 500
+
+
+def test_unique_constraints_in_staff_roles(db_inspector):
+    """Test unique constraint"""
+    table = 'staff_roles'
+    unique_constraints = db_inspector.get_unique_constraints(table)
+
+    constraints_map = {
+        constraint['name']: constraint['column_names']
+        for constraint in unique_constraints
+    }
+    assert any(columns == ['title'] for columns in constraints_map.values()
+               ), "name should have a unique constraint"
 

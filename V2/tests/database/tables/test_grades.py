@@ -90,3 +90,5 @@ def test_string_column_length_in_grades(db_inspector):
     assert columns['academic_year']['type'].length == 9
     assert columns['file_url']['type'].length == 300
     assert columns['feedback']['type'].length == 500
+
+

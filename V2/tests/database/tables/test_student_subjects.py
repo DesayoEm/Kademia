@@ -81,3 +81,16 @@ def test_string_column_length_in_student_subjects(db_inspector):
     assert columns['academic_year']['type'].length == 9
 
 
+def test_unique_constraints_in_student_subjects(db_inspector):
+    """Test unique constraint"""
+    table = 'student_subjects'
+    unique_constraints = db_inspector.get_unique_constraints(table)
+
+    has_staff_dept_constraint = any(
+        sorted(constraint['column_names']) == sorted(['student_id', 'subject_id', 'academic_year', 'term'])
+        for constraint in unique_constraints
+    )
+    assert has_staff_dept_constraint, (
+        "student_subjects should have a unique constraint on "
+        "student_id, subject_id, academic_year, and term"
+    )

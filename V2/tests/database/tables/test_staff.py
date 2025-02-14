@@ -123,3 +123,21 @@ def test_string_column_length_in_staff(db_inspector):
     assert columns['address']['type'].length == 500
     assert columns['phone']['type'].length == 14
 
+
+def test_unique_constraints_in_staff(db_inspector):
+    """Test unique constraint"""
+    table = 'staff'
+    unique_constraints = db_inspector.get_unique_constraints(table)
+
+    constraints_map = {
+        constraint['name']: constraint['column_names']
+        for constraint in unique_constraints
+    }
+
+    assert any(columns == ['email_address'] for columns in constraints_map.values()
+               ), "email should have a unique constraint"
+    assert any(columns == ['phone'] for columns in constraints_map.values()
+               ), "phone should have a unique constraint"
+
+
+
