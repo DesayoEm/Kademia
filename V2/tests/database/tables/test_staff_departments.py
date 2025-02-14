@@ -6,7 +6,7 @@ def test_column_data_types_in_staff_departments(db_inspector):
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
         "id": UUID,
-        "name": Enum,
+        "name": String,
         "description": String,
         "manager_id": UUID,
         "created_at": DateTime,
@@ -21,7 +21,6 @@ def test_column_data_types_in_staff_departments(db_inspector):
         assert isinstance(columns[column]['type'], expected_type), f"{column} has incorrect type"
 
     enum_checks = {
-        "name": StaffDepartmentName,
         "archive_reason": ArchiveReason
     }
     for column, enum_class in enum_checks.items():
@@ -67,3 +66,11 @@ def test_staff_departments_default_values(db_inspector):
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
+
+def test_string_column_length_in_staff_departments(db_inspector):
+    """Test that string columns have correct max lengths"""
+    table = 'staff_departments'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    assert columns['name']['type'].length == 100
+    assert columns['description']['type'].length == 500

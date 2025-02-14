@@ -110,3 +110,16 @@ def test_staff_default_values(db_inspector):
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
 
+def test_string_column_length_in_staff(db_inspector):
+    """Test that string columns have correct max lengths"""
+    table = 'staff'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    assert columns['password_hash']['type'].length == 300
+    assert columns['first_name']['type'].length == 30
+    assert columns['last_name']['type'].length == 30
+    assert columns['image_url']['type'].length == 200
+    assert columns['email_address']['type'].length == 255
+    assert columns['address']['type'].length == 500
+    assert columns['phone']['type'].length == 14
+

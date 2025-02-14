@@ -56,3 +56,11 @@ def test_access_level_changes_default_values(db_inspector):
     fields_without_defaults = ['staff_id', 'previous_level', 'new_level', 'reason', 'changed_by']
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
+
+
+def test_string_column_length_in_access_level_changes(db_inspector):
+    """Test that string columns have correct max lengths"""
+    table = 'access_level_changes'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    assert columns['reason']['type'].length == 500

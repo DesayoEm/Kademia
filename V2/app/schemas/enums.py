@@ -82,12 +82,6 @@ class ApprovalStatus (str, Enum):
     REJECTED = 'Rejected'
 
 
-class StaffDepartmentName (str, Enum):
-    ADMIN = 'Admin'
-    EDUCATION = 'Education'
-    MANAGEMENT = 'Management'
-    OTHER = 'Other'
-
 class AccessLevel (str, Enum):
     USER = 'User'
     ADMIN = 'Admin'

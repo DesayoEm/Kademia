@@ -7,6 +7,8 @@ def test_column_data_types_in_educator_qualifications(db_inspector):
     expected_types = {
         "id": UUID,
         "educator_id": UUID,
+        "title": String,
+        "description": String,
         "created_at": DateTime,
         "last_modified_at": DateTime,
         "is_archived": Boolean,
@@ -35,9 +37,6 @@ def test_educator_qualifications_nullable_constraints(db_inspector):
     expected_nullable = {
         "id": False,
         "educator_id": False,
-        "code": False,
-        "mentor_id": False,
-        "description": False,
         "created_at": False,
         "last_modified_at": False,
         "is_archived": False,
@@ -45,7 +44,9 @@ def test_educator_qualifications_nullable_constraints(db_inspector):
         "archived_by": False,
         "archive_reason": False,
         "created_by": False,
-        "last_modified_by": False
+        "last_modified_by": False,
+        "title": False,
+        "description": True
     }
     for column in columns:
         column['name'] = column['name']
@@ -62,10 +63,17 @@ def test_educator_qualifications_default_values(db_inspector):
         'id', 'created_at', 'created_by',
         'last_modified_at', 'last_modified_by',
         'is_archived', 'archived_at', 'archive_reason',
-        'educator_id'
+        'educator_id', 'title', 'description'
     ]
 
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
 
+def test_string_column_length_in_educator_qualifications(db_inspector):
+    """Test that string columns have correct max lengths"""
+    table = 'educator_qualifications'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    assert columns['title']['type'].length == 100
+    assert columns['description']['type'].length == 500

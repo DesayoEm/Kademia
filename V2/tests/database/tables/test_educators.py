@@ -38,4 +38,3 @@ def test_educator_default_values(db_inspector):
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
-

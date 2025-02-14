@@ -2,7 +2,7 @@ from .common_imports import *
 from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 from .data_enums import (
     DepartmentName, DepartmentCode,
-    ClassLevel, ClassCode, StaffDepartmentName)
+    ClassLevel, ClassCode)
 
 
 class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
@@ -67,7 +67,7 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     __tablename__ = 'staff_departments'
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    name: Mapped[StaffDepartmentName] = mapped_column(Enum(StaffDepartmentName, name='staffdepartmentname',unique=True))
+    name: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str] = mapped_column(String(500))
     manager_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',ondelete='SET NULL'), nullable = True)
 

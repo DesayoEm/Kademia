@@ -82,3 +82,11 @@ def test_grades_default_values(db_inspector):
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
 
+def test_string_column_length_in_grades(db_inspector):
+    """Test that string columns have correct max lengths"""
+    table = 'grades'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    assert columns['academic_year']['type'].length == 9
+    assert columns['file_url']['type'].length == 300
+    assert columns['feedback']['type'].length == 500

@@ -72,3 +72,12 @@ def test_student_subjects_default_values(db_inspector):
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
+
+def test_string_column_length_in_student_subjects(db_inspector):
+    """Test that string columns have correct max lengths"""
+    table = 'student_subjects'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    assert columns['academic_year']['type'].length == 9
+
+

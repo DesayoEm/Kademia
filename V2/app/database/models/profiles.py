@@ -37,7 +37,7 @@ class Students(ProfileBase):
     """
     __tablename__ = 'students'
 
-    student_id: Mapped[str] = mapped_column(String(20), unique=True)
+    student_id: Mapped[str] = mapped_column(String(14), unique=True)
     date_of_birth: Mapped[date] = mapped_column(Date)
     status: Mapped[StudentStatus] = mapped_column(Enum(StudentStatus,  name='studentstatus' ),default = StudentStatus.ENROLLED)
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel,  name='accesslevel' ),default = AccessLevel.USER)
@@ -86,8 +86,8 @@ class Parents(ProfileBase):
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default = UserType.PARENT)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
-    address: Mapped[str] = mapped_column(String(255))
-    phone: Mapped[str] = mapped_column(String(11), unique=True)
+    address: Mapped[str] = mapped_column(String(500))
+    phone: Mapped[str] = mapped_column(String(14), unique=True)
 
     #Relationships
     wards: Mapped[List['Students']] = relationship(back_populates='parent')
@@ -122,7 +122,7 @@ class Staff(ProfileBase):
     image_url: Mapped[str] = mapped_column(String(200))
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))
-    phone: Mapped[str] = mapped_column(String(11), unique=True)
+    phone: Mapped[str] = mapped_column(String(14), unique=True)
     department_id: Mapped[UUID] = mapped_column(ForeignKey('staff_departments.id', ondelete='RESTRICT'))
     role_id: Mapped[UUID] = mapped_column(ForeignKey('staff_roles.id', ondelete='CASCADE'))
     date_joined: Mapped[date] = mapped_column(Date)

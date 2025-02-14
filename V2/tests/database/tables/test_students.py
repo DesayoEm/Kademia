@@ -109,3 +109,16 @@ def test_students_default_values(db_inspector):
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
+def test_string_column_length_in_students(db_inspector):
+    """Test that string columns have correct max lengths"""
+    table = 'students'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+
+    assert columns['password_hash']['type'].length == 300
+    assert columns['first_name']['type'].length == 30
+    assert columns['last_name']['type'].length == 30
+    assert columns['student_id']['type'].length == 14
+    assert columns['image_url']['type'].length == 200
+
+

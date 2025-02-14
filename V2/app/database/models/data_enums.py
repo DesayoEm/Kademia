@@ -98,14 +98,6 @@ class ApprovalStatus(str, Enum):
     APPROVED = 'APPROVED'
     REJECTED = 'REJECTED'
 
-class StaffDepartmentName(str, Enum):
-    ADMIN = 'ADMIN'
-    EDUCATION = 'EDUCATION'
-    OPERATIONS = 'OPERATIONS'
-    SUPPORT = 'SUPPORT'
-    SYSTEM = 'SYSTEM'
-    OTHER = 'OTHER'
-
 
 class AccessLevel(str, Enum):
     INACTIVE = 'INACTIVE'

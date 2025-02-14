@@ -65,7 +65,7 @@ class Grades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     type: Mapped[GradeType] = mapped_column(Enum(GradeType, name='gradetype'))
     marks: Mapped[int] = mapped_column(Integer)
     file_url: Mapped[str] = mapped_column(String(300), nullable = True)
-    feedback: Mapped[str] = mapped_column(String(300), nullable = True)
+    feedback: Mapped[str] = mapped_column(String(500), nullable = True)
     graded_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='RESTRICT'))
 
     #Relationships
@@ -207,6 +207,8 @@ class EducatorQualifications(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
     educator_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id', ondelete='CASCADE'))
+    title: Mapped[str] = mapped_column(String(100))
+    description: Mapped[str] = mapped_column(String(500), nullable =True)
 
     #Relationships
     educator = relationship('Educator', back_populates='qualifications', foreign_keys="[EducatorQualifications.educator_id]")

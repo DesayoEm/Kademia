@@ -88,3 +88,10 @@ def test_repetitions_default_values(db_inspector):
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
 
+def test_string_column_length_in_repetitions(db_inspector):
+    """Test that string columns have correct max lengths"""
+    table = 'repetitions'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    assert columns['reason']['type'].length == 500
+    assert columns['rejection_reason']['type'].length == 500
