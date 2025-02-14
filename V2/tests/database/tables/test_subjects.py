@@ -9,6 +9,7 @@ def test_column_data_types_in_subject(db_inspector):
         "name": String,
         "class_level": Enum,
         "group": Enum,
+        "syllabus_url": String,
         "educator_id": UUID,
         "is_elective": Boolean,
         "created_at": DateTime,
@@ -41,6 +42,7 @@ def test_subjects_nullable_constraints(db_inspector):
         "name": False,
         "class_level": False,
         "group": False,
+        "syllabus_url": True,
         "educator_id": False,
         "is_elective": False,
         "created_at": False,
@@ -56,3 +58,18 @@ def test_subjects_nullable_constraints(db_inspector):
         column['name'] = column['name']
         assert column['nullable'] == expected_nullable.get(column['name']), \
             f"column {column['name']} is not nullable as expected"
+
+
+def test_subjects_default_values(db_inspector):
+    """Test that no default values are set at database level since they're handled
+    at the application level"""
+    table = 'subjects'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    fields_without_defaults = [
+        'id', "name","class_level","is_elective","educator_id", "syllabus_url",
+        "is_archived", "archived_at","archived_by", "archive_reason", "created_by","last_modified_by"
+    ]
+
+    for field in fields_without_defaults:
+        assert columns[field]['default'] is None, f"{field} should not have a default value"

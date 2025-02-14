@@ -51,3 +51,19 @@ def test_staff_departments_nullable_constraints(db_inspector):
         column['name'] = column['name']
         assert column['nullable'] == expected_nullable.get(column['name']), \
             f"column {column['name']} is not nullable as expected"
+
+
+def test_staff_departments_default_values(db_inspector):
+    """Test that no default values are set at database level since they're handled
+    at the application level"""
+    table = 'staff_departments'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    fields_without_defaults = [
+        'id', "name", "description", "manager_id","created_at","last_modified_at",
+        "is_archived", "archived_at","archived_by", "archive_reason", "created_by","last_modified_by"
+    ]
+
+    for field in fields_without_defaults:
+        assert columns[field]['default'] is None, f"{field} should not have a default value"
+

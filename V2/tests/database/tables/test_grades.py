@@ -64,3 +64,21 @@ def test_grades_nullable_constraints(db_inspector):
         assert column['nullable'] == expected_nullable.get(column['name']), \
             f"column {column['name']} is not nullable as expected"
 
+def test_grades_default_values(db_inspector):
+    """Test that no default values are set at database level since they're handled
+    at the application level"""
+    table = 'grades'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    fields_without_defaults = [
+        'id', 'created_at', 'created_by',
+        'last_modified_at', 'last_modified_by',
+        'is_archived', 'archived_at', 'archive_reason',
+        'student_id', 'subject_id', 'academic_year', 'term',
+        'type','marks','file_url', 'feedback', 'graded_by'
+    ]
+
+    for field in fields_without_defaults:
+        assert columns[field]['default'] is None, f"{field} should not have a default value"
+
+

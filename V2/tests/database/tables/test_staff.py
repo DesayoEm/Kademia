@@ -10,7 +10,6 @@ def test_column_data_types_in_staff(db_inspector):
         "first_name": String,
         "last_name": String,
         "gender": Enum,
-        "is_active": Boolean,
         "last_login": DateTime,
         "created_at": DateTime,
         "last_modified_at": DateTime,
@@ -20,6 +19,8 @@ def test_column_data_types_in_staff(db_inspector):
         "created_by": UUID,
         "last_modified_by": UUID,
         "access_level": Enum,
+        "status": Enum,
+        "availability": Enum,
         "user_type": Enum,
         "staff_type": Enum,
         "image_url": String,
@@ -40,7 +41,9 @@ def test_column_data_types_in_staff(db_inspector):
         "archive_reason": ArchiveReason,
         "access_level": AccessLevel,
         "user_type": UserType,
-        "staff_type": StaffType
+        "staff_type": StaffType,
+        "status": EmploymentStatus,
+        "availability": StaffAvailability,
     }
 
     for column, enum_class in enum_checks.items():
@@ -59,7 +62,6 @@ def test_staff_nullable_constraints(db_inspector):
         "first_name": False,
         "last_name": False,
         "gender": False,
-        "is_active": False,
         "last_login": True,
         "deletion_eligible":False,
         "created_at": False,
@@ -71,6 +73,8 @@ def test_staff_nullable_constraints(db_inspector):
         "created_by": False,
         "last_modified_by": False,
         "access_level": False,
+        "status": False,
+        "availability": False,
         "user_type": False,
         "staff_type": False,
         "image_url": False,
@@ -87,4 +91,22 @@ def test_staff_nullable_constraints(db_inspector):
         column['name'] = column['name']
         assert column['nullable'] == expected_nullable.get(column['name']), \
             f"column {column['name']} is not nullable as expected"
+
+def test_staff_default_values(db_inspector):
+    """Test that no default values are set at database level since they're handled
+    at the application level"""
+    table = 'staff'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    fields_without_defaults = [
+        'id', "password_hash", "first_name", "last_name", "gender", "status",
+        "last_login","created_at","last_modified_at","is_archived", "archived_at","availability",
+        "archived_by", "archive_reason", "created_by","last_modified_by", "access_level","user_type",
+        "staff_type","image_url","email_address","address","phone","deletion_eligible", "department_id",
+        "role_id", "date_joined", "date_left",
+    ]
+
+    for field in fields_without_defaults:
+        assert columns[field]['default'] is None, f"{field} should not have a default value"
+
 

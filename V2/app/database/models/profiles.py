@@ -1,5 +1,5 @@
 from .common_imports import *
-from .data_enums import StaffType, Gender, UserType, AccessLevel
+from .data_enums import StaffType, Gender, UserType, AccessLevel, StudentStatus, StaffAvailability, EmploymentStatus
 from .mixins import AuditMixins, AuditMixins, TimeStampMixins, ArchiveMixins
 
 
@@ -15,7 +15,6 @@ class ProfileBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     first_name: Mapped[str] = mapped_column(String(30))
     last_name: Mapped[str] = mapped_column(String(30))
     gender: Mapped[Gender] = mapped_column(Enum(Gender, name="gender"))
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     last_login: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
     deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
 
@@ -40,6 +39,7 @@ class Students(ProfileBase):
 
     student_id: Mapped[str] = mapped_column(String(20), unique=True)
     date_of_birth: Mapped[date] = mapped_column(Date)
+    status: Mapped[StudentStatus] = mapped_column(Enum(StudentStatus,  name='studentstatus' ),default = StudentStatus.ENROLLED)
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel,  name='accesslevel' ),default = AccessLevel.USER)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default = UserType.STUDENT)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
@@ -48,10 +48,9 @@ class Students(ProfileBase):
     parent_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('parents.id', ondelete='RESTRICT'))
     is_repeating: Mapped[bool] = mapped_column(Boolean, default=False)
     admission_date: Mapped[date] = mapped_column(Date)
-    leaving_date: Mapped[date] = mapped_column(Date, nullable=True)
-    is_graduated: Mapped[bool] = mapped_column(Boolean, default=False)
+    date_left: Mapped[date] = mapped_column(Date, nullable=True)
     graduation_date: Mapped[date] = mapped_column(Date, nullable=True)
-    is_enrolled: Mapped[bool] = mapped_column(Boolean, default=True)
+
 
     #Relationships
     documents_owned: Mapped[List['StudentDocuments']] = relationship(back_populates='owner')
@@ -117,6 +116,8 @@ class Staff(ProfileBase):
 
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default = AccessLevel.ADMIN)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default = UserType.STAFF)
+    status: Mapped[EmploymentStatus] = mapped_column(Enum(EmploymentStatus, name='employmentstatus'), default = EmploymentStatus.ACTIVE)
+    availability: Mapped[StaffAvailability] = mapped_column(Enum(StaffAvailability, name='staffavailability'), default = StaffAvailability.AVAILABLE)
     staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType,name='stafftype'))
     image_url: Mapped[str] = mapped_column(String(200))
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
@@ -160,7 +161,7 @@ class Educator(Staff):
         - mentored_department (Departments): The department the educator mentors.
         - mentored_class (Classes): The class level the educator mentors.
     """
-    __tablename__ = 'educator'
+    __tablename__ = 'educators'
 
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
 

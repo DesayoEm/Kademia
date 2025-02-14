@@ -56,3 +56,19 @@ def student_subjects_nullable_constraints(db_inspector):
         column['name'] = column['name']
         assert column['nullable'] == expected_nullable.get(column['name']), \
             f"column {column['name']} is not nullable as expected"
+
+
+def test_student_subjects_default_values(db_inspector):
+    """Test that no default values are set at database level since they're handled
+    at the application level"""
+    table = 'student_subjects'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    fields_without_defaults = [
+        'id', "student_id","subject_id","academic_year", "term","is_active",
+        "is_archived", "archived_at","archived_by", "archive_reason", "created_by","last_modified_by"
+    ]
+
+    for field in fields_without_defaults:
+        assert columns[field]['default'] is None, f"{field} should not have a default value"
+

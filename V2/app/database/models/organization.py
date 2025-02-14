@@ -16,7 +16,7 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
     level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel, name = 'classlevel'))
     code: Mapped[ClassCode] = mapped_column(Enum(ClassCode, name = 'classcode'))
-    mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='RESTRICT'))
+    mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id', ondelete='RESTRICT'))
     student_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='SET NULL'), nullable=True)
     assistant_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id', ondelete='SET NULL'), nullable=True)
 
@@ -51,7 +51,7 @@ class Departments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     name: Mapped[DepartmentName] = mapped_column(Enum(DepartmentName, name = 'departmentname'))
     code: Mapped[DepartmentCode] = mapped_column(Enum(DepartmentCode, name = 'departmentcode'))
     description: Mapped[str] = mapped_column(String(500))
-    mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='RESTRICT'))
+    mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id', ondelete='RESTRICT'))
 
     #Relationships
     students:Mapped[List['Students']] = relationship(back_populates='department')

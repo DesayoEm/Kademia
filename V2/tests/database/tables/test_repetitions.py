@@ -69,3 +69,22 @@ def test_repetitions_nullable_constraints(db_inspector):
         column['name'] = column['name']
         assert column['nullable'] == expected_nullable.get(column['name']), \
             f"column {column['name']} is not nullable as expected"
+
+
+def test_repetitions_default_values(db_inspector):
+    """Test that no default values are set at database level since they're handled
+    at the application level"""
+    table = 'repetitions'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    fields_without_defaults = [
+        'id', "student_id", "academic_year", "from_class_level", "to_class_level",
+        "from_class_id","to_class_id","reason","status","status_updated_by","status_updated_at",
+        "rejection_reason","created_at","last_modified_at","is_archived", "archived_at",
+        "archived_by", "archive_reason", "created_by","last_modified_by"
+    ]
+
+    for field in fields_without_defaults:
+        assert columns[field]['default'] is None, f"{field} should not have a default value"
+
+

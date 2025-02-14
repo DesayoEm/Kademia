@@ -10,7 +10,6 @@ def test_column_data_types_in_parents(db_inspector):
         "first_name": String,
         "last_name": String,
         "gender": Enum,
-        "is_active": Boolean,
         "last_login": DateTime,
         "created_at": DateTime,
         "last_modified_at": DateTime,
@@ -25,6 +24,7 @@ def test_column_data_types_in_parents(db_inspector):
         "email_address": String,
         "address": String,
         "phone": String,
+
     }
 
     for column, expected_type in expected_types.items():
@@ -34,7 +34,8 @@ def test_column_data_types_in_parents(db_inspector):
         "gender": Gender,
         "archive_reason": ArchiveReason,
         "access_level": AccessLevel,
-        "user_type": UserType
+        "user_type": UserType,
+
     }
 
     for column, enum_class in enum_checks.items():
@@ -76,4 +77,21 @@ def test_parents_nullable_constraints(db_inspector):
         column['name'] = column['name']
         assert column['nullable'] == expected_nullable.get(column['name']), \
             f"column {column['name']} is not nullable as expected"
+
+def test_parents_default_values(db_inspector):
+    """Test that no default values are set at database level since they're handled
+    at the application level"""
+    table = 'parents'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    fields_without_defaults = [
+        'id', "password_hash", "first_name", "last_name", "gender",
+        "last_login","created_at","last_modified_at","is_archived", "archived_at",
+        "archived_by", "archive_reason", "created_by","last_modified_by", "access_level","user_type",
+        "image_url","email_address","address","phone","deletion_eligible"
+    ]
+
+    for field in fields_without_defaults:
+        assert columns[field]['default'] is None, f"{field} should not have a default value"
+
 

@@ -16,7 +16,9 @@ class Subjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     class_level: Mapped[ClassLevel] = mapped_column(Enum(ClassLevel, name = 'classlevel'))
     group: Mapped[SubjectGroup] = mapped_column(Enum(SubjectGroup, name = 'subjectgroup'))
     is_elective: Mapped[bool] = mapped_column(default = True)
-    educator_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='RESTRICT'))
+    syllabus_url: Mapped[str] = mapped_column(String(225), nullable = True)
+    educator_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id', ondelete='RESTRICT'))
+
 
     #Relationships
     students: Mapped[List['StudentSubjects']] = relationship(back_populates='subject')
@@ -204,7 +206,7 @@ class EducatorQualifications(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __tablename__ = 'educator_qualifications'
 
     id: Mapped[UUID]  = mapped_column(UUID(as_uuid = True), primary_key= True, default = uuid4)
-    educator_id: Mapped[UUID] = mapped_column(ForeignKey('educator.id', ondelete='CASCADE'))
+    educator_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id', ondelete='CASCADE'))
 
     #Relationships
     educator = relationship('Educator', back_populates='qualifications', foreign_keys="[EducatorQualifications.educator_id]")

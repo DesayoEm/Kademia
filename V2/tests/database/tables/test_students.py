@@ -11,7 +11,7 @@ def test_column_data_types_in_students(db_inspector):
         "first_name": String,
         "last_name": String,
         "gender": Enum,
-        "is_active": Boolean,
+        "status": Enum,
         "last_login": DateTime,
         "created_at": DateTime,
         "last_modified_at": DateTime,
@@ -30,10 +30,8 @@ def test_column_data_types_in_students(db_inspector):
         "parent_id": UUID,
         "is_repeating": Boolean,
         "admission_date": Date,
-        "leaving_date": Date,
-        "is_graduated": Boolean,
+        "date_left": Date,
         "graduation_date": Date,
-        "is_enrolled": Boolean,
     }
 
     for column, expected_type in expected_types.items():
@@ -43,7 +41,8 @@ def test_column_data_types_in_students(db_inspector):
         "gender": Gender,
         "archive_reason": ArchiveReason,
         "access_level": AccessLevel,
-        "user_type": UserType
+        "user_type": UserType,
+        "status": StudentStatus
     }
 
     for column, enum_class in enum_checks.items():
@@ -63,7 +62,7 @@ def test_students_nullable_constraints(db_inspector):
         "first_name": False,
         "last_name": False,
         "gender": False,
-        "is_active": False,
+        "status": False,
         "last_login": True,
         "deletion_eligible":False,
         "created_at": False,
@@ -84,14 +83,29 @@ def test_students_nullable_constraints(db_inspector):
         "parent_id": False,
         "is_repeating": False,
         "admission_date":False,
-        "leaving_date":True,
-        "is_graduated":False,
+        "date_left":True,
         "graduation_date":True,
-        "is_enrolled":False,
 
     }
     for column in columns:
         column['name'] = column['name']
         assert column['nullable'] == expected_nullable.get(column['name']), \
             f"column {column['name']} is not nullable as expected"
+
+def test_students_default_values(db_inspector):
+    """Test that no default values are set at database level since they're handled
+    at the application level"""
+    table = 'students'
+    columns = {col['name']: col for col in db_inspector.get_columns(table)}
+
+    fields_without_defaults = [
+        'id', "password_hash", "first_name", "last_name", "gender", "status",
+        "last_login","created_at","last_modified_at","is_archived", "archived_at",
+        "archived_by", "archive_reason", "created_by","last_modified_by", "access_level","user_type",
+        "student_id","image_url","date_of_birth","class_id","department_id","deletion_eligible", "parent_id",
+        "is_repeating", "admission_date", "date_left",  "graduation_date",
+    ]
+
+    for field in fields_without_defaults:
+        assert columns[field]['default'] is None, f"{field} should not have a default value"
 

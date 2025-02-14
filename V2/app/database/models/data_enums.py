@@ -5,11 +5,12 @@ class Gender(str, Enum):
     FEMALE = 'FEMALE'
     SYSTEM = 'SYSTEM'
 
-class StaffType(str, Enum):
-    EDUCATOR = 'EDUCATOR'
-    OPERATIONS = 'OPERATIONS'
-    SUPPORT = 'SUPPORT'
+class UserType(str, Enum):
+    STUDENT = 'STUDENT'
+    PARENT = 'PARENT'
+    STAFF = 'STAFF'
     SYSTEM = 'SYSTEM'
+
 
 class DocumentType(str, Enum):
     RESULT = 'RESULT'
@@ -38,14 +39,28 @@ class ClassLevel(str, Enum):
     SSS3 = 'SSS3'
     ALEVELS = 'ALEVELS'
 
+class StaffType(str, Enum):
+    EDUCATOR = 'EDUCATOR'
+    OPERATIONS = 'OPERATIONS'
+    SUPPORT = 'SUPPORT'
+    SYSTEM = 'SYSTEM'
+
+
+class StaffAvailability(str, Enum):
+    AVAILABLE = 'AVAILABLE'
+    UNAVAILABLE = 'UNAVAILABLE'
+
+
 class EmploymentStatus(str, Enum):
     ACTIVE = 'ACTIVE'
     LEFT = 'LEFT'
 
 
-class StaffAvailability(str, Enum):
-    AVAILABLE = 'AVAILABLE'     # Can receive and respond to chats
-    UNAVAILABLE = 'UNAVAILABLE'
+class StudentStatus(str, Enum):
+    ENROLLED = 'ENROLLED'
+    LEFT = 'LEFT'
+    GRADUATED = 'GRADUATED'
+
 
 class ClassCode(str, Enum):
     A = 'A'
@@ -55,16 +70,19 @@ class ClassCode(str, Enum):
     E = 'E'
     F = 'F'
 
+
 class Term(str, Enum):
     FIRST = 'FIRST'
     SECOND = 'SECOND'
     THIRD = 'THIRD'
+
 
 class SubjectGroup(str, Enum):
     SCIENCE = 'SCIENCE'
     HUMANITIES = 'HUMANITIES'
     BUSINESS = 'BUSINESS'
     GENERAL = 'GENERAL'
+
 
 class GradeType(str, Enum):
     EXAM = 'EXAM'
@@ -74,11 +92,6 @@ class GradeType(str, Enum):
     MOCKEXAM = 'MOCKEXAM'
     EXTRACURRICULAR = 'EXTRACURRICULAR'
 
-class UserType(str, Enum):
-    STUDENT = 'STUDENT'
-    PARENT = 'PARENT'
-    STAFF = 'STAFF'
-    SYSTEM = 'SYSTEM'
 
 class ApprovalStatus(str, Enum):
     PENDING = 'PENDING'
@@ -92,6 +105,7 @@ class StaffDepartmentName(str, Enum):
     SUPPORT = 'SUPPORT'
     SYSTEM = 'SYSTEM'
     OTHER = 'OTHER'
+
 
 class AccessLevel(str, Enum):
     INACTIVE = 'INACTIVE'
