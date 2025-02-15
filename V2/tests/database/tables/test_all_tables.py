@@ -1,6 +1,6 @@
 from .common_test_imports import *
 
-def test_model_structure(db_inspector):
+def test_model_structure_table_exists(db_inspector):
     """Confirm the presence of all tables"""
     expected_tables = [
         "students", "parents", "staff", "educators", "operations", "support", "system", "student_documents", "staff_departments",

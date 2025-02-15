@@ -1,6 +1,6 @@
 from .common_test_imports import *
 
-def test_column_data_types_in_student_transfers(db_inspector):
+def test_model_structure_column_data_types(db_inspector):
     """Confirm all required columns are present and have the correct data type"""
     table ='student_transfers'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
@@ -41,7 +41,7 @@ def test_column_data_types_in_student_transfers(db_inspector):
         assert col_type.enum_class is enum_class or col_type.enums == [e.value for e in enum_class], f"{column} Enum mismatch"
 
 
-def test_student_transfers_nullable_constraints(db_inspector):
+def test_model_structure_nullable_constraints(db_inspector):
     """verify nullable and not nullable fields"""
     table = 'student_transfers'
     columns = db_inspector.get_columns(table)
@@ -78,7 +78,7 @@ def test_student_transfers_nullable_constraints(db_inspector):
             f"column {column['name']} is not nullable as expected"
 
 
-def test_student_transfers_default_values(db_inspector):
+def test_model_structure_default_values(db_inspector):
     """Test that no default values are set at database level since they're handled
     at the application level"""
     table = 'student_transfers'
@@ -94,8 +94,8 @@ def test_student_transfers_default_values(db_inspector):
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
-def test_string_column_length_in_student_transfers(db_inspector):
-    """Test that string columns have correct max lengths"""
+def test_model_structure_string_column_length(db_inspector):
+    """Test that columns with String type have the correct max lengths"""
     table = 'student_transfers'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 

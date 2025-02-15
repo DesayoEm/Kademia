@@ -1,6 +1,6 @@
 from .common_test_imports import *
 
-def test_column_data_types_in_operations(db_inspector):
+def test_model_structure_column_data_types(db_inspector):
     """Confirm all required columns  are present and have the correct data type"""
     table = 'operations'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
@@ -10,7 +10,8 @@ def test_column_data_types_in_operations(db_inspector):
     for column, expected_type in expected_types.items():
         assert isinstance(columns[column]['type'], expected_type), f"{column} has incorrect type"
 
-def test_operations_nullable_constraints(db_inspector):
+
+def test_model_structure_nullable_constraints(db_inspector):
     """verify nullable and not nullable fields"""
     table = 'operations'
     columns = db_inspector.get_columns(table)
@@ -24,7 +25,7 @@ def test_operations_nullable_constraints(db_inspector):
             f"column {column['name']} is not nullable as expected"
 
 
-def test_operations_default_values(db_inspector):
+def test_model_structure_default_values(db_inspector):
     """Test that no default values are set at database level since they're handled
     at the application level"""
     table = 'operations'

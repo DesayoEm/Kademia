@@ -3,7 +3,7 @@ from uuid import uuid4
 from .common_test_imports import *
 
 
-def test_column_data_types_in_access_level_changes(db_inspector):
+def test_model_structure_column_data_types(db_inspector):
     """Confirm all required columns are present and have the correct data type"""
     table ='access_level_changes'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
@@ -28,7 +28,7 @@ def test_column_data_types_in_access_level_changes(db_inspector):
         assert col_type.enum_class is enum_class or col_type.enums == [e.value for e in enum_class], f"{column} Enum mismatch"
 
 
-def test_access_level_changes_nullable_constraints(db_inspector):
+def test_model_structure_nullable_constraints(db_inspector):
     table = 'access_level_changes'
     columns = db_inspector.get_columns(table)
 
@@ -47,7 +47,7 @@ def test_access_level_changes_nullable_constraints(db_inspector):
             f"column {column['name']} is not nullable as expected"
 
 
-def test_access_level_changes_default_values(db_inspector):
+def test_model_structure_default_values(db_inspector):
     """Test that no default values are set at database level since they're handled
      at the application level"""
     table = 'access_level_changes'
@@ -58,15 +58,15 @@ def test_access_level_changes_default_values(db_inspector):
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
 
-def test_string_column_length_in_access_level_changes(db_inspector):
-    """Test that string columns have correct max lengths"""
+def test_model_structure_string_column_length(db_inspector):
+    """Test that columns with String type have the correct max lengths"""
     table = 'access_level_changes'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     assert columns['reason']['type'].length == 500
 
 
-def test_unique_constraints_in_staff_departments(db_inspector):
+def test_model_structure_unique_constraints(db_inspector):
     """Test unique constraint"""
     table = 'staff_departments'
     unique_constraints = db_inspector.get_unique_constraints(table)

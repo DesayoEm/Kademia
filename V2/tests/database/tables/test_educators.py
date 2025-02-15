@@ -1,6 +1,6 @@
 from .common_test_imports import *
 
-def test_column_data_types_in_educator(db_inspector):
+def test_model_structure_column_data_types(db_inspector):
     """Confirm all required columns  are present and have the correct data type"""
     table = 'educators'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
@@ -11,7 +11,7 @@ def test_column_data_types_in_educator(db_inspector):
         assert isinstance(columns[column]['type'], expected_type), f"{column} has incorrect type"
 
 
-def test_educator_nullable_constraints(db_inspector):
+def test_model_structure_nullable_constraints(db_inspector):
     """verify nullable and not nullable fields"""
     table = 'educators'
     columns = db_inspector.get_columns(table)
@@ -25,7 +25,7 @@ def test_educator_nullable_constraints(db_inspector):
             f"column {column['name']} is not nullable as expected"
 
 
-def test_educator_default_values(db_inspector):
+def test_model_structure_default_values(db_inspector):
     """Test that no default values are set at database level since they're handled
     at the application level"""
     table = 'educators'

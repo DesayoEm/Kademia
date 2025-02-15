@@ -1,6 +1,6 @@
 from .common_test_imports import *
 
-def test_column_data_types_in_classes(db_inspector):
+def test_model_structure_column_data_types(db_inspector):
     """Confirm all required columns are present and have the correct data type for classes table"""
     table = 'classes'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
@@ -33,7 +33,7 @@ def test_column_data_types_in_classes(db_inspector):
 
 
 
-def test_classes_nullable_constraints(db_inspector):
+def test_model_structure_nullable_constraints(db_inspector):
     """verify nullable and not nullable fields"""
     table = 'classes'
     columns = db_inspector.get_columns(table)
@@ -60,7 +60,7 @@ def test_classes_nullable_constraints(db_inspector):
             f"column {column['name']} is not nullable as expected"
 
 
-def test_classes_default_values(db_inspector):
+def test_model_structure_default_values(db_inspector):
     """Test that no default values are set at database level since they're handled
     at the application level"""
     table = 'classes'
@@ -77,7 +77,7 @@ def test_classes_default_values(db_inspector):
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
-def test_unique_constraints_in_classes(db_inspector):
+def test_model_structure_unique_constraints(db_inspector):
     """Test unique constraint"""
     table = 'classes'
     unique_constraints = db_inspector.get_unique_constraints(table)
@@ -90,3 +90,4 @@ def test_unique_constraints_in_classes(db_inspector):
         "classes should have a unique constraint on "
         "level and code"
     )
+

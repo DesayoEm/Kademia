@@ -3,6 +3,7 @@ import os
 from sqlalchemy import create_engine,inspect
 from sqlalchemy.orm import sessionmaker
 from ..tests.utils.db_utils import create_test_tables, drop_test_tables
+from ..tests.utils.pytest_utils import pytest_collection_modifyitems
 from .test_db import TEST_DB_URL
 
 @pytest.fixture(scope='session')

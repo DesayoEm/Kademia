@@ -1,6 +1,6 @@
 from .common_test_imports import *
 
-def test_column_data_types_in_repetitions(db_inspector):
+def test_model_structure_column_data_types(db_inspector):
     """Confirm all required columns are present and have the correct data type"""
     table ='repetitions'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
@@ -38,7 +38,7 @@ def test_column_data_types_in_repetitions(db_inspector):
         col_type = columns[column]['type']
         assert col_type.enum_class is enum_class or col_type.enums == [e.value for e in enum_class], f"{column} Enum mismatch"
 
-def test_repetitions_nullable_constraints(db_inspector):
+def test_model_structure_nullable_constraints(db_inspector):
     """verify nullable and not nullable fields"""
     table = 'repetitions'
     columns = db_inspector.get_columns(table)
@@ -71,7 +71,7 @@ def test_repetitions_nullable_constraints(db_inspector):
             f"column {column['name']} is not nullable as expected"
 
 
-def test_repetitions_default_values(db_inspector):
+def test_model_structure_default_values(db_inspector):
     """Test that no default values are set at database level since they're handled
     at the application level"""
     table = 'repetitions'
@@ -88,7 +88,7 @@ def test_repetitions_default_values(db_inspector):
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
 
-def test_string_column_length_in_repetitions(db_inspector):
+def test_model_structure_string_column_length(db_inspector):
     """Test that string columns have correct max lengths"""
     table = 'repetitions'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}

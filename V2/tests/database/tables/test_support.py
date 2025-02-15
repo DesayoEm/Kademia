@@ -1,6 +1,6 @@
 from .common_test_imports import *
 
-def test_column_data_types_in_support(db_inspector):
+def test_model_structure_column_data_types(db_inspector):
     """Confirm all required columns  are present and have the correct data type"""
     table = 'support'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
@@ -12,7 +12,7 @@ def test_column_data_types_in_support(db_inspector):
 
 
 
-def test_support_nullable_constraints(db_inspector):
+def test_model_structure_nullable_constraints(db_inspector):
     """verify nullable and not nullable fields"""
     table = 'support'
     columns = db_inspector.get_columns(table)
@@ -25,7 +25,8 @@ def test_support_nullable_constraints(db_inspector):
         assert column['nullable'] == expected_nullable.get(column['name']), \
             f"column {column['name']} is not nullable as expected"
 
-def test_support_default_values(db_inspector):
+
+def test_model_structure_default_values(db_inspector):
     """Test that no default values are set at database level since they're handled
     at the application level"""
     table = 'support'
