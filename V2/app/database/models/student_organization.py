@@ -39,10 +39,10 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
             ondelete='RESTRICT', name='fk_classes_educators_mentor_id'), nullable = True
         )
-    student_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id',
+    student_rep_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
             ondelete='SET NULL', name='fk_classes_students_student_rep'), nullable=True
         )
-    assistant_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id',
+    assistant_rep_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
             ondelete='SET NULL', name='fk_classes_students_assistant_rep'), nullable=True
         )
 
@@ -57,14 +57,14 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     mentor: Mapped['Educator'] = relationship(
         back_populates='mentored_class', foreign_keys='[Classes.mentor_id]'
     )
-    class_rep: Mapped['Students'] = relationship(foreign_keys='[Classes.student_rep]')
-    assist_rep: Mapped['Students'] = relationship(foreign_keys='[Classes.assistant_rep]')
+    student_rep: Mapped['Students'] = relationship(foreign_keys='[Classes.student_rep_id]')
+    assistant_rep: Mapped['Students'] = relationship(foreign_keys='[Classes.assistant_rep_id]')
 
     __table_args__ = (
         UniqueConstraint('level_id', 'code', name='uq_class_level_code'),
         Index('idx_class_level_code', 'level_id', 'code'),
         Index('idx_class_mentor', 'mentor_id'),
-        Index('idx_class_reps', 'student_rep', 'assistant_rep')
+        Index('idx_class_reps', 'student_rep_id', 'assistant_rep_id')
     )
 
     def __repr__(self) -> str:
@@ -86,10 +86,10 @@ class StudentDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
             ondelete='RESTRICT', name='fk_student_departments_educators_mentor_id'), nullable=True
         )
-    student_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id',
+    student_rep_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
             ondelete='SET NULL', name='fk_student_departments_students_student_rep'), nullable=True
         )
-    assistant_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id',
+    assistant_rep_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
             ondelete='SET NULL', name='fk_student_departments_students_assistant_rep'), nullable=True
         )
 
@@ -102,5 +102,5 @@ class StudentDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __table_args__ = (
         Index('idx_department_mentor', 'mentor_id'),
         Index('idx_department_name', 'name'),
-        Index('idx_department_reps', 'student_rep', 'assistant_rep')
+        Index('idx_department_reps', 'student_rep_id', 'assistant_rep_id')
     )

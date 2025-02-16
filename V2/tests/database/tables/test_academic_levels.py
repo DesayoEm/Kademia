@@ -1,7 +1,7 @@
 from .common_test_imports import *
 
 def test_model_structure_column_data_types(db_inspector):
-    """Confirm all required columns are present and have the correct data type for departments table"""
+    """Ensure all required columns are present and have the correct data type"""
     table = 'academic_levels'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -22,7 +22,7 @@ def test_model_structure_column_data_types(db_inspector):
 
 
 def test_model_structure_nullable_constraints(db_inspector):
-    """verify nullable and not nullable fields"""
+    """Ensure correctness of  nullable and not nullable fields"""
     table = 'academic_levels'
     columns = db_inspector.get_columns(table)
     expected_nullable = {
@@ -46,7 +46,8 @@ def test_model_structure_nullable_constraints(db_inspector):
 
 
 def test_model_structure_default_values(db_inspector):
-    """Test that no default values are set at database level since they're handled by SQLAlchemy"""
+    """Ensure no default values are set at database level since they're handled
+   at the application level"""
     table = 'academic_levels'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     fields_without_defaults = [
@@ -59,7 +60,7 @@ def test_model_structure_default_values(db_inspector):
 
 
 def test_model_structure_string_column_length(db_inspector):
-    """Test that string columns have correct max lengths"""
+    """Ensure columns with String type have the correct max lengths"""
     table = 'academic_levels'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
@@ -69,7 +70,7 @@ def test_model_structure_string_column_length(db_inspector):
 
 
 def test_model_structure_unique_constraints(db_inspector):
-    """Test unique constraint"""
+    """Ensure unique constraints are correctly defined"""
     table = 'academic_levels'
     unique_constraints = db_inspector.get_unique_constraints(table)
 
@@ -84,6 +85,27 @@ def test_model_structure_unique_constraints(db_inspector):
                ), "name should have a unique constraint"
 
 
+
+
+def test_model_structure_foreign_keys(db_inspector):
+    """Ensure that column foreign keys are correctly defined"""
+    table = 'academic_level_subjects'
+    foreign_keys = db_inspector.get_foreign_keys(table)
+    level_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['level_id']),
+        None
+    )
+    subject_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['subject_id']),
+        None
+    )
+    educator_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['educator_id']),
+        None
+    )
+    assert level_fk is not None, "Missing foreign key for level_id"
+    assert subject_fk is not None, "Missing foreign key for subject_fk"
+    assert educator_fk is not None, "Missing foreign key for educator_fk"
 
 
 

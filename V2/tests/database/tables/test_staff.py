@@ -1,7 +1,7 @@
 from .common_test_imports import *
 
 def test_model_structure_column_data_types(db_inspector):
-    """Confirm all required columns  are present and have the correct data type"""
+    """Ensure all required columns are present and have the correct data type"""
     table = 'staff'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -52,7 +52,7 @@ def test_model_structure_column_data_types(db_inspector):
         assert col_type.enum_class is enum_class or col_type.enums == [e.value for e in enum_class], f"{column} Enum mismatch"
 
 def test_model_structure_nullable_constraints(db_inspector):
-    """verify nullable and not nullable fields"""
+    """Ensure correctness of  nullable and not nullable fields"""
     table = 'staff'
     columns = db_inspector.get_columns(table)
 
@@ -92,8 +92,9 @@ def test_model_structure_nullable_constraints(db_inspector):
         assert column['nullable'] == expected_nullable.get(column['name']), \
             f"column {column['name']} is not nullable as expected"
 
+
 def test_model_structure_default_values(db_inspector):
-    """Test that no default values are set at database level since they're handled
+    """Ensure no default values are set at database level since they're handled
     at the application level"""
     table = 'staff'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
@@ -111,7 +112,7 @@ def test_model_structure_default_values(db_inspector):
 
 
 def test_model_structure_string_column_length(db_inspector):
-    """Test that string columns have correct max lengths"""
+    """Ensure columns with String type have the correct max lengths"""
     table = 'staff'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
@@ -125,7 +126,7 @@ def test_model_structure_string_column_length(db_inspector):
 
 
 def test_model_structure_unique_constraints(db_inspector):
-    """Test unique constraint"""
+    """Ensure unique constraints are correctly defined"""
     table = 'staff'
     unique_constraints = db_inspector.get_unique_constraints(table)
 
@@ -139,5 +140,21 @@ def test_model_structure_unique_constraints(db_inspector):
     assert any(columns == ['phone'] for columns in constraints_map.values()
                ), "phone should have a unique constraint"
 
+
+def test_model_structure_foreign_keys(db_inspector):
+    """Ensure that column foreign keys are correctly defined"""
+    table = 'staff'
+    foreign_keys = db_inspector.get_foreign_keys(table)
+    department_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['department_id']),
+        None
+    )
+    role_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['role_id']),
+        None
+    )
+
+    assert department_fk is not None, "Missing foreign key for department_id"
+    assert role_fk is not None, "Missing foreign key for role_id"
 
 

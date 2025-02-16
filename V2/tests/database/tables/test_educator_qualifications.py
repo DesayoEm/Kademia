@@ -1,7 +1,7 @@
 from .common_test_imports import *
 
 def test_model_structure_column_data_types(db_inspector):
-    """Confirm all required columns are present and have the correct data type"""
+    """Ensure all required columns are present and have the correct data type"""
     table ='educator_qualifications'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -30,7 +30,7 @@ def test_model_structure_column_data_types(db_inspector):
 
 
 def test_model_structure_nullable_constraints(db_inspector):
-    """verify nullable and not nullable fields"""
+    """Ensure correctness of  nullable and not nullable fields"""
     table = 'educator_qualifications'
     columns = db_inspector.get_columns(table)
 
@@ -54,7 +54,7 @@ def test_model_structure_nullable_constraints(db_inspector):
             f"column {column['name']} is not nullable as expected"
 
 def test_model_structure_default_values(db_inspector):
-    """Test that no default values are set at database level since they're handled
+    """Ensure no default values are set at database level since they're handled
     at the application level"""
     table = 'educator_qualifications'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
@@ -71,7 +71,7 @@ def test_model_structure_default_values(db_inspector):
 
 
 def test_model_structure_unique_constraints(db_inspector):
-    """Test unique constraint"""
+    """"Ensure unique constraints are correctly defined"""
     table = 'educator_qualifications'
     unique_constraints = db_inspector.get_unique_constraints(table)
 
@@ -82,4 +82,17 @@ def test_model_structure_unique_constraints(db_inspector):
 
     assert any(columns == ['title'] for columns in constraints_map.values()
                ), "name should have a unique constraint"
+
+
+def test_model_structure_foreign_keys(db_inspector):
+    """Ensure that column foreign keys are correctly defined"""
+    table = 'educator_qualifications'
+    foreign_keys = db_inspector.get_foreign_keys(table)
+    educator_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['educator_id']),
+        None
+        )
+
+    assert educator_fk is not None, "Missing foreign key for educator_id"
+
 

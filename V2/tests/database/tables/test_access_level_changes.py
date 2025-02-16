@@ -4,7 +4,7 @@ from .common_test_imports import *
 
 
 def test_model_structure_column_data_types(db_inspector):
-    """Confirm all required columns are present and have the correct data type"""
+    """Ensure all required columns are present and have the correct data type"""
     table ='access_level_changes'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -29,6 +29,7 @@ def test_model_structure_column_data_types(db_inspector):
 
 
 def test_model_structure_nullable_constraints(db_inspector):
+    """Ensure correctness of  nullable and not nullable fields"""
     table = 'access_level_changes'
     columns = db_inspector.get_columns(table)
 
@@ -48,8 +49,8 @@ def test_model_structure_nullable_constraints(db_inspector):
 
 
 def test_model_structure_default_values(db_inspector):
-    """Test that no default values are set at database level since they're handled
-     at the application level"""
+    """Ensure no default values are set at database level since they're handled
+   at the application level"""
     table = 'access_level_changes'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
@@ -59,22 +60,20 @@ def test_model_structure_default_values(db_inspector):
 
 
 def test_model_structure_string_column_length(db_inspector):
-    """Test that columns with String type have the correct max lengths"""
+    """Ensure columns with String type have the correct max lengths"""
     table = 'access_level_changes'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     assert columns['reason']['type'].length == 500
 
 
-def test_model_structure_unique_constraints(db_inspector):
-    """Test unique constraint"""
-    table = 'staff_departments'
-    unique_constraints = db_inspector.get_unique_constraints(table)
+def test_model_structure_foreign_keys(db_inspector):
+    """Ensure that column foreign keys are correctly defined"""
+    table = 'access_level_changes'
+    foreign_keys = db_inspector.get_foreign_keys(table)
+    staff_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['staff_id']),
+        None
+    )
+    assert staff_fk is not None, "Missing foreign key for staff_id"
 
-    constraints_map = {
-        constraint['name']: constraint['column_names']
-        for constraint in unique_constraints
-    }
-
-    assert any(columns == ['name'] for columns in constraints_map.values()
-               ), "name should have a unique constraint"

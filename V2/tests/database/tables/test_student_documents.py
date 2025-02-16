@@ -2,7 +2,7 @@ from .common_test_imports import *
 
 
 def test_model_structure_column_data_types(db_inspector):
-    """Confirm all required columns are present and have the correct data type"""
+    """Ensure all required columns are present and have the correct data type"""
     table ='student_documents'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -34,7 +34,7 @@ def test_model_structure_column_data_types(db_inspector):
 
 
 def test_model_structure_nullable_constraints(db_inspector):
-    """verify nullable and not nullable fields"""
+    """Ensure correctness of  nullable and not nullable fields"""
     table = 'student_documents'
     columns = db_inspector.get_columns(table)
 
@@ -61,7 +61,7 @@ def test_model_structure_nullable_constraints(db_inspector):
 
 
 def test_model_structure_default_values(db_inspector):
-    """Test that no default values are set at database level since they're handled
+    """Ensure no default values are set at database level since they're handled
     at the application level"""
     table = 'student_documents'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
@@ -76,10 +76,22 @@ def test_model_structure_default_values(db_inspector):
 
 
 def test_model_structure_string_column_length(db_inspector):
-    """Test that string columns have correct max lengths"""
+    """Ensure columns with String type have the correct max lengths"""
     table = 'student_documents'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     assert columns['title']['type'].length == 50
     assert columns['file_url']['type'].length == 225
+
+
+def test_model_structure_foreign_keys(db_inspector):
+    """Ensure that column foreign keys are correctly defined"""
+    table = 'student_documents'
+    foreign_keys = db_inspector.get_foreign_keys(table)
+    owner_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['owner_id']),
+        None
+    )
+
+    assert owner_fk is not None, "Missing foreign key for student_id"
 

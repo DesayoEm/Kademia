@@ -1,7 +1,7 @@
 from .common_test_imports import *
 
 def test_model_structure_column_data_types(db_inspector):
-    """Confirm all required columns are present and have the correct data type"""
+    """Ensure all required columns are present and have the correct data type"""
     table ='student_department_transfers'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -41,7 +41,7 @@ def test_model_structure_column_data_types(db_inspector):
 
 
 def test_model_structure_nullable_constraints(db_inspector):
-    """verify nullable and not nullable fields"""
+    """Ensure correctness of  nullable and not nullable fields"""
     table = 'student_department_transfers'
     columns = db_inspector.get_columns(table)
 
@@ -78,8 +78,8 @@ def test_model_structure_nullable_constraints(db_inspector):
 
 
 def test_model_structure_default_values(db_inspector):
-    """Test that no default values are set at database level since they're handled
-    at the application level"""
+    """Ensure no default values are set at database level since they're handled
+     at the application level"""
     table = 'student_department_transfers'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
@@ -93,12 +93,53 @@ def test_model_structure_default_values(db_inspector):
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
+
 def test_model_structure_string_column_length(db_inspector):
-    """Test that columns with String type have the correct max lengths"""
+    """Ensure columns with String type have the correct max lengths"""
     table = 'student_department_transfers'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     assert columns['reason']['type'].length == 500
     assert columns['rejection_reason']['type'].length == 500
 
+
+def test_model_structure_foreign_keys(db_inspector):
+    """Ensure that column foreign keys are correctly defined"""
+    table = 'student_department_transfers'
+    foreign_keys = db_inspector.get_foreign_keys(table)
+    student_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['student_id']),
+        None
+    )
+    previous_level_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['previous_level_id']),
+        None
+    )
+    new_level_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['new_level_id']),
+        None
+    )
+    previous_class_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['previous_class_id']),
+        None
+    )
+    new_class_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['new_class_id']),
+        None
+    )
+    previous_department_id = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['previous_department_id']),
+        None
+    )
+    new_department_id = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['new_department_id']),
+        None
+    )
+    assert student_fk is not None, "Missing foreign key for student_id"
+    assert previous_level_fk is not None, "Missing foreign key for previous_level_id"
+    assert new_level_fk is not None, "Missing foreign key for new_level_id"
+    assert previous_class_fk is not None, "Missing foreign key for previous_class_id"
+    assert new_class_fk is not None, "Missing foreign key for new_class_id"
+    assert previous_department_id is not None, "Missing foreign key for previous_department_id"
+    assert new_department_id is not None, "Missing foreign key for new_department_id"
 

@@ -124,3 +124,6 @@ def test_model_structure_unique_constraints(db_inspector):
     assert any(columns == ['phone'] for columns in constraints_map.values()
                ), "phone should have a unique constraint"
 
+
+
+

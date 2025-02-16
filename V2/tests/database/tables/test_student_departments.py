@@ -1,6 +1,6 @@
 from .common_test_imports import *
 def test_model_structure_column_data_types(db_inspector):
-    """Confirm all required columns are present and have the correct data type for departments table"""
+    """Ensure all required columns are present and have the correct data type"""
     table = 'student_departments'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
@@ -8,8 +8,8 @@ def test_model_structure_column_data_types(db_inspector):
         "name": String,
         "description": String,
         "mentor_id": UUID,
-        "student_rep": UUID,
-        "assistant_rep": UUID,
+        "student_rep_id": UUID,
+        "assistant_rep_id": UUID,
         "created_at": DateTime,
         "last_modified_at": DateTime,
         "is_archived": Boolean,
@@ -31,7 +31,7 @@ def test_model_structure_column_data_types(db_inspector):
 
 
 def test_model_structure_nullable_constraints(db_inspector):
-    """verify nullable and not nullable fields"""
+    """Ensure correctness of  nullable and not nullable fields"""
     table = 'student_departments'
     columns = db_inspector.get_columns(table)
 
@@ -40,8 +40,8 @@ def test_model_structure_nullable_constraints(db_inspector):
         "name": False,
         "code": False,
         "mentor_id": True,
-        "student_rep": True,
-        "assistant_rep": True,
+        "student_rep_id": True,
+        "assistant_rep_id": True,
         "description": False,
         "created_at": False,
         "last_modified_at": False,
@@ -59,12 +59,13 @@ def test_model_structure_nullable_constraints(db_inspector):
 
 
 def test_model_structure_default_values(db_inspector):
-    """Test that no default values are set at database level since they're handled by SQLAlchemy"""
+    """Ensure no default values are set at database level since they're handled
+     at the application level"""
     table = 'student_departments'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     fields_without_defaults = [
-        'id', 'created_at', 'created_by', 'student_rep', 'assistant_rep',
+        'id', 'created_at', 'created_by', 'student_rep_id', 'assistant_rep_id',
         'last_modified_at', 'last_modified_by','is_archived', 'archived_at',
         'archive_reason','name', 'description', 'mentor_id'
     ]
@@ -74,7 +75,7 @@ def test_model_structure_default_values(db_inspector):
 
 
 def test_model_structure_string_column_length(db_inspector):
-    """Test that string columns have correct max lengths"""
+    """Ensure columns with String type have the correct max lengths"""
     table = 'student_departments'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
@@ -83,7 +84,7 @@ def test_model_structure_string_column_length(db_inspector):
 
 
 def test_model_structure_unique_constraints(db_inspector):
-    """Test unique constraint"""
+    """Ensure unique constraints are correctly defined"""
     table = 'student_departments'
     unique_constraints = db_inspector.get_unique_constraints(table)
 
@@ -94,4 +95,28 @@ def test_model_structure_unique_constraints(db_inspector):
 
     assert any(columns == ['name'] for columns in constraints_map.values()
                ), "name should have a unique constraint"
+
+
+def test_model_structure_foreign_keys(db_inspector):
+    """Ensure that column foreign keys are correctly defined"""
+    table = 'student_departments'
+    foreign_keys = db_inspector.get_foreign_keys(table)
+
+    mentor_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['mentor_id']),
+        None
+    )
+    student_rep_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['student_rep_id']),
+        None
+    )
+    assistant_rep_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['assistant_rep_id']),
+        None
+    )
+
+    assert mentor_fk is not None, "Missing foreign key for mentor_id"
+    assert student_rep_fk is not None, "Missing foreign key for student_rep_id"
+    assert assistant_rep_fk is not None, "Missing foreign key for assistant_rep_id"
+
 
