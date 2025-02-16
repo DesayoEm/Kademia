@@ -11,7 +11,7 @@ class AcademicLevel(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     name: Mapped[str] = mapped_column(String(30), unique=True)
     description: Mapped[str] = mapped_column(String(500))
-    order: Mapped[int] = mapped_column(Integer)
+    order: Mapped[int] = mapped_column(Integer, unique=True)
 
     # Relationships
     classes: Mapped[List['Classes']] = relationship(back_populates='academic_level')

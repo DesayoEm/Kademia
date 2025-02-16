@@ -93,11 +93,11 @@ class SubjectEducators(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __tablename__ = 'subject_educators'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    subject_id: Mapped[UUID] = mapped_column(ForeignKey('subjects.id',
+                                                        ondelete='RESTRICT',name='fk_subject_educators_subjects_subject_id')
+                                             )
     educator_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
             ondelete='RESTRICT',name='fk_subject_educators_educators_educator_id')
-        )
-    subject_id: Mapped[UUID] = mapped_column(ForeignKey('subjects.id',
-            ondelete='RESTRICT',name='fk_subject_educators_subjects_subject_id')
         )
     level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
             ondelete='RESTRICT',name='fk_subject_educators_academic_levels_level_id')
@@ -173,7 +173,8 @@ class TotalGrades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
     academic_year: Mapped[str] = mapped_column(String(9))
     term: Mapped[Term] = mapped_column(Enum(Term, name='term'))
-    total_score: Mapped[int] = mapped_column(Integer)
+    total_score: Mapped[int] = mapped_column(Integer
+                                             )
     rank: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     # Relationships

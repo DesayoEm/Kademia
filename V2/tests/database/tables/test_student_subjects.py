@@ -87,11 +87,11 @@ def test_model_structure_unique_constraints(db_inspector):
     table = 'student_subjects'
     unique_constraints = db_inspector.get_unique_constraints(table)
 
-    has_staff_dept_constraint = any(
+    has_constraint = any(
         sorted(constraint['column_names']) == sorted(['student_id', 'subject_id', 'academic_year', 'term'])
         for constraint in unique_constraints
     )
-    assert has_staff_dept_constraint, (
+    assert has_constraint, (
         "student_subjects should have a unique constraint on "
         "student_id, subject_id, academic_year, and term"
     )
