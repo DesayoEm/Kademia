@@ -6,7 +6,7 @@ def test_model_structure_table_exists(db_inspector):
         "students", "parents", "staff", "educators", "operations", "support", "system", "student_documents", "staff_departments",
         "staff_roles", "student_departments", "access_level_changes", "classes","subjects", "grades", "total_grades", "student_subjects",
         "student_repetitions", "student_department_transfers", 'educator_qualifications', 'academic_level_subjects', 'academic_levels',
-        'subject_educators']
+        'subject_educators', 'student_class_transfers']
 
 
     for table in expected_tables:
