@@ -133,10 +133,10 @@ class StudentDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             ondelete='RESTRICT', name='fk_student_departments_educators_mentor_id'), nullable=True
         )
     student_rep_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-            ondelete='SET NULL', name='fk_student_departments_students_student_rep'), nullable=True
+            ondelete='RESTRICT', name='fk_student_departments_students_student_rep'), nullable=True
         )
     assistant_rep_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-            ondelete='SET NULL', name='fk_student_departments_students_assistant_rep'), nullable=True
+            ondelete='RESTRICT', name='fk_student_departments_students_assistant_rep'), nullable=True
         )
 
     # Relationships

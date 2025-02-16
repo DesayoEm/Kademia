@@ -14,7 +14,7 @@ def test_model_structure_column_data_types(db_inspector):
         "new_level": Enum,
         "reason": String,
         "changed_at": DateTime,
-        "changed_by": UUID
+        "changed_by_id": UUID
     }
     for column, expected_type in expected_types.items():
         assert isinstance(columns[column]['type'], expected_type), f"{column} has incorrect type"
@@ -40,7 +40,7 @@ def test_model_structure_nullable_constraints(db_inspector):
         "new_level": False,
         "reason": False,
         "changed_at": False,
-        "changed_by": False,
+        "changed_by_id": False,
     }
     for column in columns:
         column_name = column['name']
@@ -54,7 +54,7 @@ def test_model_structure_default_values(db_inspector):
     table = 'access_level_changes'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
-    fields_without_defaults = ['staff_id', 'previous_level', 'new_level', 'reason', 'changed_by']
+    fields_without_defaults = ['staff_id', 'previous_level', 'new_level', 'reason', 'changed_by_id']
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
@@ -76,4 +76,15 @@ def test_model_structure_foreign_keys(db_inspector):
         None
     )
     assert staff_fk is not None, "Missing foreign key for staff_id"
+    assert staff_fk['options']['ondelete'].upper() == 'CASCADE', \
+        "level_id should CASCADE on delete"
+
+    changed_by_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['changed_by_id']),
+        None
+    )
+    assert changed_by_fk is not None, "Missing foreign key for changed_by_id"
+    assert changed_by_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "level_id should RESTRICT on delete"
+
 

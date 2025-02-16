@@ -16,7 +16,7 @@ class AccessLevelChanges(Base):
 
     # Audit
     changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
-    changed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
+    changed_by_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
             ondelete='RESTRICT',name='fk_access_level_changes_staff_changed_by')
         )
 
@@ -25,7 +25,7 @@ class AccessLevelChanges(Base):
 
     __table_args__ = (
         Index('idx_staff_id', 'staff_id'),
-        Index('idx_access_level_changed_by', 'changed_by'),
+        Index('idx_access_level_changed_by', 'changed_by_id'),
     )
 
 

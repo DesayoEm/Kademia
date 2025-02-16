@@ -94,4 +94,6 @@ def test_model_structure_foreign_keys(db_inspector):
     )
 
     assert owner_fk is not None, "Missing foreign key for owner_id"
+    assert owner_fk['options']['ondelete'].upper() == 'CASCADE', \
+        "owner_id should CASCADE on delete"
 

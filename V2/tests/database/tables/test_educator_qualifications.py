@@ -94,5 +94,7 @@ def test_model_structure_foreign_keys(db_inspector):
         )
 
     assert educator_fk is not None, "Missing foreign key for educator_id"
+    assert educator_fk['options']['ondelete'].upper() == 'CASCADE', \
+        "educator_id should CASCADE on delete"
 
 

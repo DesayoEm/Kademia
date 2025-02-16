@@ -104,8 +104,17 @@ def test_model_structure_foreign_keys(db_inspector):
         None
     )
     assert level_fk is not None, "Missing foreign key for level_id"
-    assert subject_fk is not None, "Missing foreign key for subject_fk"
-    assert educator_fk is not None, "Missing foreign key for educator_fk"
+
+    assert level_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "level_id should RESTRICT on delete"
+
+    assert subject_fk is not None, "Missing foreign key for subject_id"
+    assert subject_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "subject_id should RESTRICT on delete"
+
+    assert educator_fk is not None, "Missing foreign key for educator_id"
+    assert subject_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "educator_id should RESTRICT on delete"
 
 
 

@@ -82,3 +82,26 @@ def test_model_structure_string_column_length(db_inspector):
 
     assert columns['academic_year']['type'].length == 9
 
+
+def test_model_structure_foreign_keys(db_inspector):
+    """Ensure that column foreign keys are correctly defined"""
+    table = 'grades'
+    foreign_keys = db_inspector.get_foreign_keys(table)
+    student_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['student_id']),
+        None
+    )
+    subject_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['subject_id']),
+        None
+    )
+
+    assert student_fk is not None, "Missing foreign key for student_id"
+    assert student_fk['options']['ondelete'].upper() == 'CASCADE', \
+        "student_id should CASCADE on delete"
+
+    assert subject_fk is not None, "Missing foreign key for subject_id"
+    assert subject_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "subject_id should RESTRICT on delete"
+
+

@@ -152,7 +152,7 @@ def test_model_structure_foreign_keys(db_inspector):
         (fk for fk in foreign_keys if fk['constrained_columns'] == ['level_id']),
         None
     )
-    subject_fk = next(
+    department_fk = next(
         (fk for fk in foreign_keys if fk['constrained_columns'] == ['department_id']),
         None
     )
@@ -161,9 +161,20 @@ def test_model_structure_foreign_keys(db_inspector):
         None
     )
     assert class_fk is not None, "Missing foreign key for class_id"
+    assert class_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "class_id should RESTRICT on delete"
+
     assert level_fk is not None, "Missing foreign key for level_id"
-    assert subject_fk is not None, "Missing foreign key for department_id"
+    assert level_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "level_id should RESTRICT on delete"
+
+    assert department_fk is not None, "Missing foreign key for department_id"
+    assert department_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "department_id should RESTRICT on delete"
+
     assert parent_fk is not None, "Missing foreign key for parent_id"
+    assert parent_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "parent_id should RESTRICT on delete"
 
 
 

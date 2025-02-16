@@ -100,6 +100,8 @@ def test_model_structure_foreign_keys(db_inspector):
     )
 
     assert manager_fk is not None, "Missing foreign key for manager_id"
+    assert manager_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "manager_id should RESTRICT on delete"
 
 
 

@@ -155,6 +155,12 @@ def test_model_structure_foreign_keys(db_inspector):
     )
 
     assert department_fk is not None, "Missing foreign key for department_id"
+    assert department_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "department_id should RESTRICT on delete"
+
     assert role_fk is not None, "Missing foreign key for role_id"
+    assert role_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "role_id should RESTRICT on delete"
+
 
 

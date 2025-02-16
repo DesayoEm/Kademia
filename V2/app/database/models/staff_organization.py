@@ -12,7 +12,7 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     name: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str] = mapped_column(String(500))
     manager_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-            ondelete='SET NULL', name='fk_staff_departments_staff_manager_id'),nullable=True
+            ondelete='RESTRICT', name='fk_staff_departments_staff_manager_id'),nullable=True
         )
     # Relationships
     manager: Mapped['Staff'] = relationship(foreign_keys='[StaffDepartments.manager_id]')

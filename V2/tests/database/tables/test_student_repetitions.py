@@ -122,7 +122,21 @@ def test_model_structure_foreign_keys(db_inspector):
     )
 
     assert student_fk is not None, "Missing foreign key for student_id"
+    assert student_fk['options']['ondelete'].upper() == 'CASCADE', \
+        "student_id should CASCADE on delete"
+
     assert previous_level_fk is not None, "Missing foreign key for previous_level_id"
+    assert previous_level_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "previous_level_id should RESTRICT on delete"
+
     assert new_level_fk is not None, "Missing foreign key for new_level_id"
+    assert new_level_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "new_level_id should RESTRICT on delete"
+
     assert previous_class_fk is not None, "Missing foreign key for previous_class_id"
+    assert previous_class_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "previous_class_id should RESTRICT on delete"
+
     assert new_class_fk is not None, "Missing foreign key for new_class_id"
+    assert new_class_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "new_class_id should RESTRICT on delete"
