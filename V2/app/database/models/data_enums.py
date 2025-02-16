@@ -20,17 +20,8 @@ class DocumentType(str, Enum):
     ARTICLE = 'ARTICLE'
     OTHER = 'OTHER'
 
-class DepartmentName(str, Enum):
-    SCIENCE = 'SCIENCE'
-    HUMANITIES = 'HUMANITIES'
-    BUSINESS = 'BUSINESS'
 
-class DepartmentCode(str, Enum):
-    SCI = 'SCI'
-    HMS = 'HMS'
-    BSN = 'BSN'
-
-class ClassLevel(str, Enum):
+class AcademicLevel(str, Enum):
     JSS1 = 'JSS1'
     JSS2 = 'JSS2'
     JSS3 = 'JSS3'

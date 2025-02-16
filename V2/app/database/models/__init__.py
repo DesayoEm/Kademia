@@ -3,9 +3,10 @@ from .common_imports import Base
 from .profiles import Students, Parents, Staff, Educator, Operations, Support, System
 from .documents import StudentDocuments
 from .auth_models import AccessLevelChanges
-from .organization import StaffDepartments, StaffRoles, Departments, Classes
+from .student_organization import StudentDepartments, Classes
+from .staff_organization import StaffDepartments, StaffRoles, EducatorQualifications
 from .academic import (Subjects, Grades, TotalGrades, StudentSubjects,
-                       Repetitions, StudentTransfers, EducatorQualifications)
+                     StudentDepartmentTransfers)
 
 __all__ = [
     "Base",
@@ -19,14 +20,14 @@ __all__ = [
     "StudentDocuments",
     "StaffDepartments",
     "StaffRoles",
-    "Departments",
+    "StudentDepartments",
     "AccessLevelChanges",
     "Classes",
     "Subjects",
     "Grades",
     "TotalGrades",
     "StudentSubjects",
-    "Repetitions",
-    "StudentTransfers",
+    "StudentDepartments",
+    "StudentDepartmentTransfers",
     "EducatorQualifications"
 ]
