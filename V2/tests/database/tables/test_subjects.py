@@ -7,11 +7,9 @@ def test_model_structure_column_data_types(db_inspector):
     expected_types = {
         "id": UUID,
         "name": String,
-        "class_level": Enum,
-        "group": Enum,
-        "syllabus_url": String,
-        "educator_id": UUID,
+        "department_id": UUID,
         "is_elective": Boolean,
+        "syllabus_url": String,
         "created_at": DateTime,
         "last_modified_at": DateTime,
         "is_archived": Boolean,
@@ -25,8 +23,6 @@ def test_model_structure_column_data_types(db_inspector):
 
     enum_checks = {
         "archive_reason": ArchiveReason,
-        'class_level': ClassLevel,
-        'group': SubjectGroup
     }
     for column, enum_class in enum_checks.items():
         col_type = columns[column]['type']
@@ -40,17 +36,15 @@ def test_model_structure_nullable_constraints(db_inspector):
     expected_nullable = {
         "id": False,
         "name": False,
-        "class_level": False,
-        "group": False,
+        "department_id": False,
         "syllabus_url": True,
-        "educator_id": False,
         "is_elective": False,
         "created_at": False,
         "last_modified_at": False,
         "is_archived": False,
-        "archived_at": False,
-        "archived_by": False,
-        "archive_reason": False,
+        "archived_at": True,
+        "archived_by": True,
+        "archive_reason": True,
         "created_by": False,
         "last_modified_by": False
     }
@@ -67,8 +61,8 @@ def test_model_structure_default_values(db_inspector):
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     fields_without_defaults = [
-        'id', "name","class_level","is_elective","educator_id", "syllabus_url",
-        "is_archived", "archived_at","archived_by", "archive_reason", "created_by","last_modified_by"
+        'id', "name","department_id","is_elective", "syllabus_url","is_archived", "archived_at",
+        "archived_by", "archive_reason", "created_by","last_modified_by"
     ]
 
     for field in fields_without_defaults:

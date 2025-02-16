@@ -1,14 +1,15 @@
 from .common_test_imports import *
 def test_model_structure_column_data_types(db_inspector):
     """Confirm all required columns are present and have the correct data type for departments table"""
-    table = 'departments'
+    table = 'student_departments'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
         "id": UUID,
-        "name": Enum,
-        "code": Enum,
+        "name": String,
         "description": String,
         "mentor_id": UUID,
+        "student_rep": UUID,
+        "assistant_rep": UUID,
         "created_at": DateTime,
         "last_modified_at": DateTime,
         "is_archived": Boolean,
@@ -21,8 +22,7 @@ def test_model_structure_column_data_types(db_inspector):
         assert isinstance(columns[column]['type'], expected_type), f"{column} has incorrect type"
 
     enum_checks = {
-        "name": DepartmentName,
-        "code": DepartmentCode,
+
         "archive_reason": ArchiveReason
     }
     for column, enum_class in enum_checks.items():
@@ -32,21 +32,23 @@ def test_model_structure_column_data_types(db_inspector):
 
 def test_model_structure_nullable_constraints(db_inspector):
     """verify nullable and not nullable fields"""
-    table = 'departments'
+    table = 'student_departments'
     columns = db_inspector.get_columns(table)
 
     expected_nullable = {
         "id": False,
         "name": False,
         "code": False,
-        "mentor_id": False,
+        "mentor_id": True,
+        "student_rep": True,
+        "assistant_rep": True,
         "description": False,
         "created_at": False,
         "last_modified_at": False,
         "is_archived": False,
-        "archived_at": False,
-        "archived_by": False,
-        "archive_reason": False,
+        "archived_at": True,
+        "archived_by": True,
+        "archive_reason": True,
         "created_by": False,
         "last_modified_by": False
     }
@@ -58,14 +60,13 @@ def test_model_structure_nullable_constraints(db_inspector):
 
 def test_model_structure_default_values(db_inspector):
     """Test that no default values are set at database level since they're handled by SQLAlchemy"""
-    table = 'departments'
+    table = 'student_departments'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     fields_without_defaults = [
-        'id', 'created_at', 'created_by',
-        'last_modified_at', 'last_modified_by',
-        'is_archived', 'archived_at', 'archive_reason',
-        'name', 'code', 'description',
+        'id', 'created_at', 'created_by', 'student_rep', 'assistant_rep',
+        'last_modified_at', 'last_modified_by','is_archived', 'archived_at',
+        'archive_reason','name', 'description',
         'mentor_id'
     ]
 
@@ -75,15 +76,16 @@ def test_model_structure_default_values(db_inspector):
 
 def test_model_structure_string_column_length(db_inspector):
     """Test that string columns have correct max lengths"""
-    table = 'departments'
+    table = 'student_departments'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
+    assert columns['name']['type'].length == 30
     assert columns['description']['type'].length == 500
 
 
 def test_model_structure_unique_constraints(db_inspector):
     """Test unique constraint"""
-    table = 'departments'
+    table = 'student_departments'
     unique_constraints = db_inspector.get_unique_constraints(table)
 
     constraints_map = {
@@ -93,6 +95,4 @@ def test_model_structure_unique_constraints(db_inspector):
 
     assert any(columns == ['name'] for columns in constraints_map.values()
                ), "name should have a unique constraint"
-    assert any(columns == ['code'] for columns in constraints_map.values()
-               ), "code should have a unique constraint"
 

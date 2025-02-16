@@ -173,7 +173,7 @@ class TotalGrades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
     academic_year: Mapped[str] = mapped_column(String(9))
     term: Mapped[Term] = mapped_column(Enum(Term, name='term'))
-    total_score: Mapped[float] = mapped_column(Float)
+    total_score: Mapped[int] = mapped_column(Integer)
     rank: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     # Relationships
@@ -201,16 +201,16 @@ class StudentRepetitions(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             ondelete='CASCADE',name='fk_student_repetitions_students_student_id')
         )
     academic_year: Mapped[int] = mapped_column(Integer)
-    previous_level: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
+    previous_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
             ondelete='RESTRICT',name='fk_student_repetitions_academic_levels_previous_level')
         )
-    new_level: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
+    new_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
             ondelete='RESTRICT',name='fk_student_repetitions_academic_levels_new_level')
         )
-    previous_class: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
+    previous_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
             ondelete='RESTRICT',name='fk_student_repetitions_classes_previous_class')
         )
-    new_class: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
+    new_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
             ondelete='RESTRICT', name='fk_student_repetitions_classes_new_class')
         )
     reason: Mapped[str] = mapped_column(String(500))
@@ -223,17 +223,17 @@ class StudentRepetitions(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     # Relationships
     repeating_student: Mapped['Students'] = relationship(back_populates='classes_repeated', foreign_keys='[StudentRepetitions.student_id]')
-    previous_level_rel: Mapped['AcademicLevel'] = relationship(foreign_keys='[StudentRepetitions.previous_level]')
-    new_level_rel:Mapped['AcademicLevel'] =  relationship( foreign_keys='[StudentRepetitions.new_level]')
-    previous_class_rel: Mapped['Classes'] = relationship(foreign_keys='[StudentRepetitions.previous_class]')
-    new_class_rel:Mapped['Classes'] =  relationship( foreign_keys='[StudentRepetitions.new_class]')
+    previous_level: Mapped['AcademicLevel'] = relationship(foreign_keys='[StudentRepetitions.previous_level_id]')
+    new_level:Mapped['AcademicLevel'] =  relationship( foreign_keys='[StudentRepetitions.new_level_id]')
+    previous_class: Mapped['Classes'] = relationship(foreign_keys='[StudentRepetitions.previous_class_id]')
+    new_class:Mapped['Classes'] =  relationship( foreign_keys='[StudentRepetitions.new_class_id]')
     status_updated_staff:Mapped['Staff'] =  relationship(foreign_keys='[StudentRepetitions.status_updated_by]')
 
     __table_args__ = (
         Index('idx_student_repetition_status', 'student_id', 'status'),
         Index('idx_student_academic_year', 'student_id', 'academic_year'),
-        Index('idx_previous_level', 'previous_level'),
-        Index('idx_new_level', 'new_level'),
+        Index('idx_previous_level', 'previous_level_id'),
+        Index('idx_new_level', 'new_level_id'),
     )
 
     def __repr__(self) -> str:
@@ -254,22 +254,22 @@ class StudentDepartmentTransfers(Base, AuditMixins, TimeStampMixins, ArchiveMixi
             ondelete='CASCADE',name='fk_student_department_transfers_students_student_id')
         )
     academic_year: Mapped[int] = mapped_column(Integer)
-    previous_level: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
+    previous_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
             ondelete='RESTRICT', name='fk_student_department_transfers_academic_levels_previous_level')
         )
-    new_level: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
+    new_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
             ondelete='RESTRICT',name='fk_student_department_transfers_academic_levels_new_level')
         )
-    previous_class: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
+    previous_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
             ondelete='RESTRICT', name='fk_student_department_transfers_classes_previous_class')
         )
-    new_class: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
+    new_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
             ondelete='RESTRICT', name='fk_student_department_transfers_classes_new_class')
         )
-    previous_department: Mapped[UUID] = mapped_column(
+    previous_department_id: Mapped[UUID] = mapped_column(
         ForeignKey('student_departments.id',ondelete='RESTRICT', name='fk_student_transfers_previous_department')
         )
-    new_department: Mapped[UUID] = mapped_column(ForeignKey('student_departments.id',
+    new_department_id: Mapped[UUID] = mapped_column(ForeignKey('student_departments.id',
             ondelete='RESTRICT',name='fk_student_transfers_new_department')
         )
     reason: Mapped[str] = mapped_column(String(500))
@@ -282,20 +282,20 @@ class StudentDepartmentTransfers(Base, AuditMixins, TimeStampMixins, ArchiveMixi
 
     # Relationships
     transferred_student: Mapped['Students'] = relationship(back_populates='transfers', foreign_keys='[StudentDepartmentTransfers.student_id]')
-    former_dept: Mapped['StudentDepartments'] = relationship(foreign_keys='[StudentDepartmentTransfers.previous_department]')
-    new_dept: Mapped['StudentDepartments'] = relationship(foreign_keys='[StudentDepartmentTransfers.new_department]')
-    former_class_rel: Mapped['Classes'] = relationship(foreign_keys='[StudentDepartmentTransfers.previous_class]')
-    new_class_rel: Mapped['Classes'] = relationship('Classes', foreign_keys='[StudentDepartmentTransfers.new_class]')
-    previous_level_rel: Mapped['AcademicLevel'] = relationship(foreign_keys='[StudentDepartmentTransfers.previous_level]')
-    new_level_rel: Mapped['AcademicLevel'] = relationship('AcademicLevel', foreign_keys='[StudentDepartmentTransfers.new_level]')
+    former_dept: Mapped['StudentDepartments'] = relationship(foreign_keys='[StudentDepartmentTransfers.previous_department_id]')
+    new_dept: Mapped['StudentDepartments'] = relationship(foreign_keys='[StudentDepartmentTransfers.new_department_id]')
+    former_class_rel: Mapped['Classes'] = relationship(foreign_keys='[StudentDepartmentTransfers.previous_class_id]')
+    new_class_rel: Mapped['Classes'] = relationship('Classes', foreign_keys='[StudentDepartmentTransfers.new_class_id]')
+    previous_level_rel: Mapped['AcademicLevel'] = relationship(foreign_keys='[StudentDepartmentTransfers.previous_level_id]')
+    new_level_rel: Mapped['AcademicLevel'] = relationship('AcademicLevel', foreign_keys='[StudentDepartmentTransfers.new_level_id]')
     status_changer: Mapped['Staff'] = relationship(foreign_keys='[StudentDepartmentTransfers.status_updated_by]')
 
     __table_args__ = (
         Index('idx_transfer_status', 'status'),
         Index('idx_student_transfer_status', 'student_id', 'status'),
         Index('idx_student-transfer_academic_year', 'student_id', 'academic_year'),
-        Index('idx_from_department_id', 'previous_department'),
-        Index('idx_new_department_id', 'new_department'),
+        Index('idx_from_department_id', 'previous_department_id'),
+        Index('idx_new_department_id', 'new_department_id'),
     )
 
     def __repr__(self) -> str:

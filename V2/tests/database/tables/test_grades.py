@@ -10,7 +10,7 @@ def test_model_structure_column_data_types(db_inspector):
         "academic_year": String,
         "term": Enum,
         "type": Enum,
-        "marks": Integer,
+        "score": Integer,
         "file_url": String,
         "graded_by": UUID,
         "feedback": String,
@@ -46,16 +46,16 @@ def test_model_structure_nullable_constraints(db_inspector):
         "academic_year": False,
         "term": False,
         "type": False,
-        "marks": False,
+        "score": False,
         "file_url": True,
         "feedback": True,
         "graded_by": False,
         "created_at": False,
         "last_modified_at": False,
         "is_archived": False,
-        "archived_at": False,
-        "archived_by": False,
-        "archive_reason": False,
+        "archived_at": True,
+        "archived_by": True,
+        "archive_reason": True,
         "created_by": False,
         "last_modified_by": False
     }
@@ -75,7 +75,7 @@ def test_model_structure_default_values(db_inspector):
         'last_modified_at', 'last_modified_by',
         'is_archived', 'archived_at', 'archive_reason',
         'student_id', 'subject_id', 'academic_year', 'term',
-        'type','marks','file_url', 'feedback', 'graded_by'
+        'type','score','file_url', 'feedback', 'graded_by'
     ]
 
     for field in fields_without_defaults:
@@ -88,7 +88,7 @@ def test_model_structure_string_column_length(db_inspector):
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     assert columns['academic_year']['type'].length == 9
-    assert columns['file_url']['type'].length == 300
+    assert columns['file_url']['type'].length == 225
     assert columns['feedback']['type'].length == 500
 
 

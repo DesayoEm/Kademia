@@ -6,7 +6,7 @@ def test_model_structure_column_data_types(db_inspector):
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
         "id": UUID,
-        "level": Enum,
+        "level_id": UUID,
         "code": Enum,
         "mentor_id": UUID,
         "student_rep": UUID,
@@ -23,7 +23,6 @@ def test_model_structure_column_data_types(db_inspector):
         assert isinstance(columns[column]['type'], expected_type), f"{column} has incorrect type"
 
     enum_checks = {
-        "level": ClassLevel,
         "code": ClassCode,
         "archive_reason": ArchiveReason
     }
@@ -40,17 +39,17 @@ def test_model_structure_nullable_constraints(db_inspector):
 
     expected_nullable = {
         "id": False,
-        "level": False,
+        "level_id": False,
         "code": False,
-        "mentor_id": False,
+        "mentor_id": True,
         "student_rep": True,
         "assistant_rep": True,
         "created_at": False,
         "last_modified_at": False,
         "is_archived": False,
-        "archived_at": False,
-        "archived_by": False,
-        "archive_reason": False,
+        "archived_at": True,
+        "archived_by": True,
+        "archive_reason": True,
         "created_by": False,
         "last_modified_by": False
     }
@@ -70,7 +69,7 @@ def test_model_structure_default_values(db_inspector):
         'id', 'created_at', 'created_by',
         'last_modified_at', 'last_modified_by',
         'is_archived', 'archived_at', 'archive_reason',
-        'code', 'level', 'mentor_id',
+        'code', 'level_id', 'mentor_id',
         'student_rep', 'assistant_rep'
     ]
 
@@ -83,7 +82,7 @@ def test_model_structure_unique_constraints(db_inspector):
     unique_constraints = db_inspector.get_unique_constraints(table)
 
     has_staff_dept_constraint = any(
-        sorted(constraint['column_names']) == sorted(['level', 'code'])
+        sorted(constraint['column_names']) == sorted(['level_id', 'code'])
         for constraint in unique_constraints
     )
     assert has_staff_dept_constraint, (

@@ -37,7 +37,7 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
     code: Mapped[ClassCode] = mapped_column(Enum(ClassCode, name='classcode'))
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
-            ondelete='RESTRICT', name='fk_classes_educators_mentor_id')
+            ondelete='RESTRICT', name='fk_classes_educators_mentor_id'), nullable = True
         )
     student_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id',
             ondelete='SET NULL', name='fk_classes_students_student_rep'), nullable=True
@@ -84,7 +84,7 @@ class StudentDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     name: Mapped[str] = mapped_column(String(30), unique=True)
     description: Mapped[str] = mapped_column(String(500))
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
-            ondelete='RESTRICT', name='fk_student_departments_educators_mentor_id')
+            ondelete='RESTRICT', name='fk_student_departments_educators_mentor_id'), nullable=True
         )
     student_rep: Mapped[UUID] = mapped_column(ForeignKey('students.id',
             ondelete='SET NULL', name='fk_student_departments_students_student_rep'), nullable=True

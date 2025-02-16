@@ -60,9 +60,9 @@ def test_model_structure_nullable_constraints(db_inspector):
         "created_at": False,
         "last_modified_at": False,
         "is_archived": False,
-        "archived_at": False,
-        "archived_by": False,
-        "archive_reason": False,
+        "archived_at": True,
+        "archived_by": True,
+        "archive_reason": True,
         "created_by": False,
         "last_modified_by": False,
         "access_level": False,
@@ -103,7 +103,7 @@ def test_model_structure_string_column_length(db_inspector):
     assert columns['password_hash']['type'].length == 300
     assert columns['first_name']['type'].length == 30
     assert columns['last_name']['type'].length == 30
-    assert columns['image_url']['type'].length == 200
+    assert columns['image_url']['type'].length == 225
     assert columns['email_address']['type'].length == 255
     assert columns['address']['type'].length == 500
     assert columns['phone']['type'].length == 14

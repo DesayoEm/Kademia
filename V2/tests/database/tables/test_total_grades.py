@@ -11,7 +11,7 @@ def test_model_structure_column_data_types(db_inspector):
         "subject_id": UUID,
         "academic_year": String,
         "term": Enum,
-        "total_marks": Float,
+        "total_score": Integer,
         "rank": Integer,
         "created_at": DateTime,
         "last_modified_at": DateTime,
@@ -43,14 +43,14 @@ def test_model_structure_nullable_constraints(db_inspector):
         "subject_id": False,
         "academic_year": False,
         "term": False,
-        "total_marks": False,
+        "total_score": False,
         "rank": True,
         "created_at": False,
         "last_modified_at": False,
         "is_archived": False,
-        "archived_at": False,
-        "archived_by": False,
-        "archive_reason": False,
+        "archived_at": True,
+        "archived_by": True,
+        "archive_reason": True,
         "created_by": False,
         "last_modified_by": False
     }
@@ -68,7 +68,7 @@ def test_model_structure_default_values(db_inspector):
     fields_without_defaults = [
         'id', 'created_at', 'created_by','last_modified_at', 'last_modified_by',
         'is_archived', 'archived_at', 'archive_reason','student_id', 'subject_id', 'academic_year',
-        'term','total_marks','rank'
+        'term','total_score','rank'
     ]
 
     for field in fields_without_defaults:
