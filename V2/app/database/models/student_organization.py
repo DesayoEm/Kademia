@@ -99,10 +99,10 @@ class StudentClassTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Relationships
-    transferred_student: Mapped['Students'] = relationship(back_populates='class_transfers', foreign_keys='[StudentDepartmentTransfers.student_id]')
-    previous_class: Mapped['Classes'] = relationship(foreign_keys='[StudentDepartmentTransfers.previous_class_id]')
-    new_class: Mapped['Classes'] = relationship('Classes', foreign_keys='[StudentDepartmentTransfers.new_class_id]')
-    status_changer: Mapped['Staff'] = relationship(foreign_keys='[StudentDepartmentTransfers.status_updated_by]')
+    transferred_student: Mapped['Students'] = relationship(back_populates='class_transfers', foreign_keys='[StudentClassTransfers.student_id]')
+    previous_class: Mapped['Classes'] = relationship(foreign_keys='[StudentClassTransfers.previous_class_id]')
+    new_class: Mapped['Classes'] = relationship('Classes', foreign_keys='[StudentClassTransfers.new_class_id]')
+    status_changer: Mapped['Staff'] = relationship(foreign_keys='[StudentClassTransfers.status_updated_by]')
 
     __table_args__ = (
         Index('idx_class_transfer_status', 'status'),

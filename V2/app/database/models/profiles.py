@@ -51,6 +51,7 @@ class Students(ProfileBase):
 
     # Relationships
     documents_owned: Mapped[List['StudentDocuments']] = relationship(back_populates='owner')
+    awards_earned: Mapped[List['StudentAwards']] = relationship(back_populates='owner')
     parent: Mapped['Parents'] = relationship(back_populates='wards', foreign_keys='[Students.parent_id]')
     class_: Mapped['Classes'] = relationship(back_populates='students',foreign_keys='[Students.class_id]',
         primaryjoin='Students.class_id == Classes.id')

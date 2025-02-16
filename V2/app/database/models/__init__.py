@@ -5,7 +5,8 @@ from .documents import StudentDocuments
 from .auth_models import AccessLevelChanges
 from .staff_organization import StaffDepartments, StaffRoles, EducatorQualifications
 from .student_organization import StudentDepartments, Classes, AcademicLevel, StudentDepartmentTransfers, StudentClassTransfer
-from .academic import (Subjects, Grades, TotalGrades, StudentSubjects, AcademicLevelSubjects,SubjectEducators,StudentRepetitions)
+from .academic import (Subjects, Grades, TotalGrades, StudentSubjects, AcademicLevelSubjects,SubjectEducators,StudentRepetitions,
+                       StudentAwards)
 
 __all__ = [
     "Base",
@@ -29,5 +30,6 @@ __all__ = [
     "StudentDepartments",
     "StudentDepartmentTransfers",
     "StudentClassTransfer",
-    "EducatorQualifications"
+    "EducatorQualifications",
+    "StudentAwards"
 ]

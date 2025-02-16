@@ -241,3 +241,28 @@ class StudentRepetitions(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         return f"student {self.student_id} repetition in {self.academic_year} was actioned by {self.status_updated_staff}"
 
 
+
+class StudentAwards(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+    """
+    Represents an award earned by a student
+    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
+    """
+    __tablename__ = 'student_awards'
+    id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    owner_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
+         ondelete='CASCADE',name='fk_student_documents_students_owner_id'),default=uuid4
+        )
+    title: Mapped[str] = mapped_column(String(50))
+    description: Mapped[str] = mapped_column(String(225), nullable = True)
+    academic_year: Mapped[int] = mapped_column(Integer)
+    file_url: Mapped[str] = mapped_column(String(225))
+
+    # Relationships
+    owner: Mapped['Students'] = relationship(back_populates='awards_earned', foreign_keys='[StudentDocuments.owner_id]')
+
+    __table_args__ = (
+        Index('idx_owner_title', 'owner_id', 'title'),
+    )
+
+    def __repr__(self) -> str:
+        return f"Document(name={self.title}, owner={self.owner_id})"
