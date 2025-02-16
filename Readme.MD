@@ -1,122 +1,142 @@
 # Academic Management System
 
-## V1.0 (Old version)
-### Core Architecture
-- CLI-based interface
-- JSON file-based persistence layer
-- In-memory case-insensitive student lookup optimization
+## Version History
 
-### Data Model
-- Student records with fixed subjects (Mathematics, Science, History)
-- Grade storage with score validation (0-100 range)
-- Basic academic performance metrics
+### V1.0
+- CLI-based interface with JSON file storage
+- Basic student and grade management
+- In-memory student lookup
+- Fixed subject structure (Math, Science, History)
+- Simple grade validation and performance metrics
 
-### Core Functionality
-1. Student Management
-   - Add new students with validation (name format, duplicate prevention)
-   - Remove student records
-   - Update student grades
-   - View comprehensive student listings
+### V2.0 (Current)
+- FastAPI and PostgreSQL backend
+- Comprehensive user management (Students, Staff, Parents)
+- Full academic lifecycle handling
+- Document management system
+- Role-based access control
+- Audit trail implementation
 
-2. Academic Analytics
-   - Calculate individual student averages
-   - Identify top-performing students
-   - Track failing students (threshold: 40%)
-   - Generate class-wide grade distributions
+## System Architecture
 
-3. Data Validation
-   - Score range enforcement (0-100)
-   - Student name format validation
-   - Duplicate entry prevention
-   - Input type verification
+### Backend Infrastructure
+- FastAPI-based RESTful API
+- PostgreSQL with SQLAlchemy ORM
+- Comprehensive data validation and error handling
+- Modular service-based architecture
 
-## V2.0 (In Progress)
-### System Architecture
-1. Backend Infrastructure
-   - FastAPI-based RESTful API
-   - PostgreSQL persistent storage
-   - SQLAlchemy ORM integration
-   - JWT-based authentication
+### Database Design
+- UUID-based identification system
+- Robust audit trail implementation (created_by, modified_by, etc.)
+- Soft deletion support across all entities
+- Extensive indexing strategy for performance optimization
 
-2. Database Architecture
-   - Normalized schema design
-   - Referential integrity enforcement
-   - Complex relationship modeling
-   - Audit trail implementation
+## Core Modules
 
-### Enhanced Data Model
-1. Core Entities
-   - Students, Staff, Parents(UUID-based identification)
-   - Departments
-   - Classes
-   - Grades
+### 1. User Management
+#### Profile Management
+- Students with academic tracking
+- Parents with ward management
+- Staff (Educators, Operations, Support, System) with role-based access
+- Comprehensive profile attributes (contact info, status, etc.)
 
-2. Extended Student Profile
-   - Academic history
-   - Document management (PDF and Image storage)
-   - Profile image handling
+#### Access Control
+- Role-based access control (User, Admin, Superuser, System)
+- Access level change tracking
+- Activity logging (last login, status changes)
 
-### Security Implementation
-1. Authentication & Authorization
-   - Role-Based Access Control (RBAC)
-   - OAuth2 implementation
-   - Session management
-   - JWT token lifecycle
+### 2. Academic Structure
+#### Organization
+- Academic levels 
+- Class management with mentors and student representatives
+- Department organization
+- Subject management with curriculum tracking
 
-###  Features
-1. Academic Workflow
-   - Dynamic course enrollment
-   - Prerequisite validation
-   - Course approval workflow
+#### Course Management
+- Subject-educator assignments
+- Student subject enrollment
+- Elective vs. compulsory subject designation
+- Curriculum and syllabus tracking
 
-2. Grade Management
-   - Academic standing computation
-   - Performance analytics
+### 3. Academic Records
+#### Grade Management
+- Multiple assessment types (Exams, Tests, Assignments, Practicals)
+- Term-wise grade tracking
+- Cumulative grade calculation
+- Academic performance ranking
 
-3. Search & Analytics
-   - Full-text search capability
-   - Advanced filtering mechanisms
-   - Academic performance trending
-   - Cohort analysis
+#### Student Progression
+- Class transfers with approval workflow
+- Department transfers
+- Grade repetition management
+- Academic status tracking (Enrolled, Left, Graduated)
 
-### Technical Specifications
-1. API Design
-   - RESTful endpoint architecture
-   - Request/Response validation
-   - Rate limiting implementation
-   - Error handling protocols
+### 4. Document Management
+- Student document storage (Results, IDs, Awards, Certificates)
+- Academic records
+- File storage with URL tracking
+- Document type categorization
 
-2. Database Optimization
-   - Indexing strategy
-   - Query optimization
-   - Connection pooling
-   - Cache implementation
+## Technical Features
 
-3. Security Measures
-   - Password hashing (bcrypt)
-   - Input sanitization
-   - CORS configuration
-   - Audit logging
+### 1. Data Integrity
+- Foreign key constraints
+- Unique constraint enforcement
+- Nullable field control
+- Default value management
 
+### 2. Audit System
+- Creation tracking
+- Modification logging
+- Archival management
+- Status change history
 
+### 3. Security Implementation
+- Password hashing
+- Session management
+- Access level control
+- Activity logging
 
-## Migration Path
-1. Phase 1: Core Infrastructure
-   - Database migration
-   - Basic API implementation
-   - Authentication setup
+## Database Features
+- Comprehensive indexing strategy
+- Audit trail implementation
+- Soft deletion support
+- Relationship management
+- Data validation constraints
 
-2. Phase 2: Feature Enhancement
-   - Extended profile management
-   - Course management system
-   - Grade calculation enhancement
+## Service Layer
+- Modular service architecture
+- CRUD operations base service
+- Specialized services for each entity
 
-3. Phase 3
-   - Workflow implementation
-   - Analytics engine
-   - Reporting system
+- Error handling
 
-4. Phase 4: Security Hardening
-   - Access control implementation
-   - Audit system
-   - Security testing
+## Validation System
+- Input validation
+- Business rule enforcement
+- Data format verification
+- Error messaging
+
+## Future Enhancements
+1. Analytics Dashboard
+   - Academic performance metrics
+   - Attendance tracking
+   - Student progress monitoring
+   - Department performance analysis
+
+2. Communication System
+   - Parent-teacher communication
+   - Announcement management
+   - Automated notifications
+   - Report generation
+
+3. Resource Management
+   - Timetable management
+   - Event scheduling
+   - Resource booking
+
+4. Mobile Application
+   - Student portal
+   - Parent dashboard
+   - Staff interface
+   - Real-time notifications
