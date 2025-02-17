@@ -14,6 +14,7 @@ def test_model_structure_column_data_types(db_inspector):
         "is_archived": Boolean,
         "archived_at": DateTime,
         "archive_reason": Enum,
+        "archived_by": UUID,
         "created_by": UUID,
         "last_modified_by": UUID
     }

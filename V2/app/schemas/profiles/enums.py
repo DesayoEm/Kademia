@@ -24,35 +24,11 @@ class DepartmentName(str, Enum):
     BUSINESS = 'business'
 
 
-class DepartmentCode(str, Enum):
-    SCI = 'SCI'
-    HMS= 'HMS'
-    BSN = 'BSN'
-
-
-
-class ClassLevel(str, Enum):
-    JuniorSecondarySchool1 = 'JSS 1'
-    JuniorSecondarySchool2 = 'JSS 2'
-    JuniorSecondarySchool3 = 'JSS 3'
-    SeniorSecondarySchool1 = 'SSS 1'
-    SeniorSecondarySchool2 = 'SSS 2'
-    SeniorSecondarySchool3 = 'SSS 3'
-    ALevels = 'A Levels'
-
-class ClassCode(str, Enum):
-    A = 'A'
-    B = 'B'
-    C = 'C'
-    D = 'D'
-    E = 'E'
-    F = 'F'
-
-
 class Term (str, Enum):
     FIRST = 'First'
     SECOND = 'Second'
     THIRD = 'Third'
+
 
 class SubjectGroup(str, Enum):
     SCIENCE = 'science'
@@ -76,10 +52,6 @@ class UserType (str, Enum):
     EDUCATOR = 'Educator'
 
 
-class ApprovalStatus (str, Enum):
-    PENDING = 'Pending'
-    APPROVED= 'Approved'
-    REJECTED = 'Rejected'
 
 
 class AccessLevel (str, Enum):
