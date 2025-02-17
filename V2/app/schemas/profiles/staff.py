@@ -1,5 +1,5 @@
-from .common_imports import *
-from .enums import Gender, AccessLevel, StaffType, UserType
+from ..common_imports import *
+from ..enums import Gender, AccessLevel, StaffType, UserType
 from .validators import (validate_phone, validate_name,)
 
 

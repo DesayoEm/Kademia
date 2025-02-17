@@ -1,5 +1,5 @@
-from .common_imports import *
-from .enums import ArchiveReason
+from ..common_imports import *
+from ..enums import ArchiveReason
 
 class AcademicLevelBase(BaseModel):
     """Base model for class levels"""

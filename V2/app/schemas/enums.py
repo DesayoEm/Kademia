@@ -1,5 +1,41 @@
 from enum import Enum
 
+class ArchiveReason(str, Enum):
+    ERROR = 'ERROR'
+    GRADUATED = 'GRADUATED'
+    TRANSFERRED = 'TRANSFERRED'
+    WITHDRAWN = 'WITHDRAWN'
+    ADMINISTRATIVE = 'ADMINISTRATIVE'
+
+
+class ClassCode(str, Enum):
+    A = 'A'
+    B = 'B'
+    C = 'C'
+    D = 'D'
+    E = 'E'
+    F = 'F'
+
+class ApprovalStatus (str, Enum):
+    PENDING = 'Pending'
+    APPROVED= 'Approved'
+    REJECTED = 'Rejected'
+
+class GradeType (str, Enum):
+    EXAM = 'Exam'
+    TEST = 'Test'
+    ASSIGNMENT = 'Assignment'
+    PRACTICALS = 'Practicals'
+    MOCKEXAM = 'Mock exam'
+    EXTRACURRICULLAR = 'Extracurricular'
+
+
+class Term (str, Enum):
+    FIRST = 'First'
+    SECOND = 'Second'
+    THIRD = 'Third'
+
+
 class Gender(str, Enum):
     MALE = 'M'
     FEMALE = 'F'
@@ -24,11 +60,6 @@ class DepartmentName(str, Enum):
     BUSINESS = 'business'
 
 
-class Term (str, Enum):
-    FIRST = 'First'
-    SECOND = 'Second'
-    THIRD = 'Third'
-
 
 class SubjectGroup(str, Enum):
     SCIENCE = 'science'
@@ -36,22 +67,12 @@ class SubjectGroup(str, Enum):
     BUSINESS = 'business'
     General = 'General'
 
-class GradeType (str, Enum):
-    EXAM = 'Exam'
-    TEST = 'Test'
-    ASSIGNMENT = 'Assignment'
-    PRACTICALS = 'Practicals'
-    MOCKEXAM = 'Mock exam'
-    EXTRACURRICULLAR = 'Extracurricular'
-
 
 class UserType (str, Enum):
     STUDENT = 'Student'
     PARENT = 'Parent'
     ADMIN = 'Admin'
     EDUCATOR = 'Educator'
-
-
 
 
 class AccessLevel (str, Enum):

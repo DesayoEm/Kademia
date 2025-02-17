@@ -1,5 +1,5 @@
-from .common_imports import *
-from .enums import ApprovalStatus, ArchiveReason
+from ..common_imports import *
+from ..enums import ApprovalStatus, ArchiveReason
 
 
 class StudentClassTransferBase(BaseModel):

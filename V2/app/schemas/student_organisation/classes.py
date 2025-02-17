@@ -1,5 +1,5 @@
-from .common_imports import *
-from .enums import ArchiveReason, ClassCode
+from ..common_imports import *
+from ..enums import ArchiveReason, ClassCode
 
 
 class ClassBase(BaseModel):
