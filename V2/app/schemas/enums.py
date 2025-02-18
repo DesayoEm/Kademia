@@ -1,11 +1,48 @@
 from enum import Enum
 
-class ArchiveReason(str, Enum):
-    ERROR = 'ERROR'
+class Gender(str, Enum):
+    MALE = 'MALE'
+    FEMALE = 'FEMALE'
+    SYSTEM = 'SYSTEM'
+
+
+class UserType(str, Enum):
+    STUDENT = 'STUDENT'
+    PARENT = 'PARENT'
+    STAFF = 'STAFF'
+    SYSTEM = 'SYSTEM'
+
+
+class DocumentType(str, Enum):
+    RESULT = 'RESULT'
+    ID = 'ID'
+    AWARD = 'AWARD'
+    CERTIFICATE = 'CERTIFICATE'
+    ARTICLE = 'ARTICLE'
+    OTHER = 'OTHER'
+
+
+class StaffType(str, Enum):
+    EDUCATOR = 'EDUCATOR'
+    OPERATIONS = 'OPERATIONS'
+    SUPPORT = 'SUPPORT'
+    SYSTEM = 'SYSTEM'
+
+
+class StaffAvailability(str, Enum):
+    AVAILABLE = 'AVAILABLE'
+    UNAVAILABLE = 'UNAVAILABLE'
+
+
+class EmploymentStatus(str, Enum):
+    ACTIVE = 'ACTIVE'
+    LEFT = 'LEFT'
+
+
+class StudentStatus(str, Enum):
+    ENROLLED = 'ENROLLED'
+    LEFT = 'LEFT'
     GRADUATED = 'GRADUATED'
-    TRANSFERRED = 'TRANSFERRED'
-    WITHDRAWN = 'WITHDRAWN'
-    ADMINISTRATIVE = 'ADMINISTRATIVE'
 
 
 class ClassCode(str, Enum):
@@ -16,66 +53,46 @@ class ClassCode(str, Enum):
     E = 'E'
     F = 'F'
 
-class ApprovalStatus (str, Enum):
-    PENDING = 'Pending'
-    APPROVED= 'Approved'
-    REJECTED = 'Rejected'
 
-class GradeType (str, Enum):
-    EXAM = 'Exam'
-    TEST = 'Test'
-    ASSIGNMENT = 'Assignment'
-    PRACTICALS = 'Practicals'
-    MOCKEXAM = 'Mock exam'
-    EXTRACURRICULLAR = 'Extracurricular'
-
-
-class Term (str, Enum):
-    FIRST = 'First'
-    SECOND = 'Second'
-    THIRD = 'Third'
-
-
-class Gender(str, Enum):
-    MALE = 'M'
-    FEMALE = 'F'
-
-class StaffType(str, Enum):
-    STAFF = "staff"
-    EDUCATOR = "educator"
-    ADMINISTRATOR = "admin"
-    SUPPORT = "support"
-
-class DocumentType(str, Enum):
-    RESULT = "result"
-    ID = "id"
-    AWARD = "award"
-    CERTIFICATE = "certificate"
-    ARTICLE = "article"
-    OTHER = "other"
-
-class DepartmentName(str, Enum):
-    SCIENCE = 'science'
-    HUMANITIES = 'humanities'
-    BUSINESS = 'business'
-
+class Term(str, Enum):
+    FIRST = 'FIRST'
+    SECOND = 'SECOND'
+    THIRD = 'THIRD'
 
 
 class SubjectGroup(str, Enum):
-    SCIENCE = 'science'
-    HUMANITIES = 'humanities'
-    BUSINESS = 'business'
-    General = 'General'
+    SCIENCE = 'SCIENCE'
+    HUMANITIES = 'HUMANITIES'
+    BUSINESS = 'BUSINESS'
+    GENERAL = 'GENERAL'
 
 
-class UserType (str, Enum):
-    STUDENT = 'Student'
-    PARENT = 'Parent'
-    ADMIN = 'Admin'
-    EDUCATOR = 'Educator'
+class GradeType(str, Enum):
+    EXAM = 'EXAM'
+    TEST = 'TEST'
+    ASSIGNMENT = 'ASSIGNMENT'
+    PRACTICALS = 'PRACTICALS'
+    MOCKEXAM = 'MOCKEXAM'
+    EXTRACURRICULAR = 'EXTRACURRICULAR'
 
 
-class AccessLevel (str, Enum):
-    USER = 'User'
-    ADMIN = 'Admin'
-    SUPERUSER = 'Superuser'
+class ApprovalStatus(str, Enum):
+    PENDING = 'PENDING'
+    APPROVED = 'APPROVED'
+    REJECTED = 'REJECTED'
+
+
+class AccessLevel(str, Enum):
+    INACTIVE = 'INACTIVE'
+    USER = 'USER'
+    ADMIN = 'ADMIN'
+    SUPERUSER = 'SUPERUSER'
+    SYSTEM = 'SYSTEM'
+
+
+class ArchiveReason(str, Enum):
+    ERROR = 'ERROR'
+    GRADUATED = 'GRADUATED'
+    TRANSFERRED = 'TRANSFERRED'
+    WITHDRAWN = 'WITHDRAWN'
+    ADMINISTRATIVE = 'ADMINISTRATIVE'
