@@ -72,7 +72,7 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
 
 
-class StudentClassTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class StudentClassTransfers(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents a student's transfer between classes, including the reason, approval status, and status updates.
     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
@@ -140,7 +140,10 @@ class StudentDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
 
     # Relationships
-    students: Mapped[List['Students']] = relationship(back_populates='department')
+    students: Mapped[List['Students']] = relationship(
+        'Students', back_populates='department',
+        primaryjoin='StudentDepartments.id == Students.department_id'
+    )
     mentor: Mapped['Educator'] = relationship(
         back_populates='mentored_department', foreign_keys='[StudentDepartments.mentor_id]'
     )

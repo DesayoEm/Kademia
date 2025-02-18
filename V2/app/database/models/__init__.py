@@ -4,7 +4,7 @@ from .profiles import Students, Parents, Staff, Educator, Operations, Support, S
 from .documents import StudentDocuments
 from .auth_models import AccessLevelChanges
 from .staff_organization import StaffDepartments, StaffRoles, EducatorQualifications
-from .student_organization import StudentDepartments, Classes, AcademicLevel, StudentDepartmentTransfers, StudentClassTransfer
+from .student_organization import StudentDepartments, Classes, AcademicLevel, StudentDepartmentTransfers, StudentClassTransfers
 from .academic import (Subjects, Grades, TotalGrades, StudentSubjects, AcademicLevelSubjects,SubjectEducators,StudentRepetitions,
                        StudentAwards)
 
@@ -29,7 +29,7 @@ __all__ = [
     "StudentSubjects",
     "StudentDepartments",
     "StudentDepartmentTransfers",
-    "StudentClassTransfer",
+    "StudentClassTransfers",
     "EducatorQualifications",
     "StudentAwards"
 ]

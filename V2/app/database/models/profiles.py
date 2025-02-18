@@ -62,7 +62,7 @@ class Students(ProfileBase):
     total_grades: Mapped[List['TotalGrades']] = relationship(back_populates='student')
     classes_repeated: Mapped[List['StudentRepetitions']] = relationship(back_populates='repeating_student')
     department_transfers: Mapped[List['StudentDepartmentTransfers']] = relationship(back_populates='transferred_student')
-    class_transfers: Mapped[List['StudentDepartmentTransfers']] = relationship(back_populates='transferred_student')
+    class_transfers: Mapped[List['StudentClassTransfers']] = relationship(back_populates='transferred_student')
 
     __table_args__ = (
         Index('idx_students_name', 'first_name', 'last_name'),

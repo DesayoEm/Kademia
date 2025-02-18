@@ -6,4 +6,4 @@ class CrudService:
         self.db = db
 
     def base_query(self):
-        return self.db.query(self.model).filter(self.model.is_archived != True)
+        return self.db.query(self.model).filter(self.model.is_archived == False)

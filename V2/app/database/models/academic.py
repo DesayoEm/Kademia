@@ -258,7 +258,7 @@ class StudentAwards(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     file_url: Mapped[str] = mapped_column(String(225))
 
     # Relationships
-    owner: Mapped['Students'] = relationship(back_populates='awards_earned', foreign_keys='[StudentDocuments.owner_id]')
+    owner: Mapped['Students'] = relationship(back_populates='awards_earned', foreign_keys='[StudentAwards.owner_id]')
 
     __table_args__ = (
         Index('idx_owner_title', 'owner_id', 'title'),

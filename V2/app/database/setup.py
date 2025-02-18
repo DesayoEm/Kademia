@@ -4,7 +4,9 @@ from V2.app.database.models.profiles import ProfileBase,Students, Parents, Staff
 from V2.app.database.models.academic import Subjects, Grades, TotalGrades, StudentSubjects,StudentRepetitions, SubjectEducators, AcademicLevelSubjects, StudentAwards
 from V2.app.database.models.documents import StudentDocuments
 from V2.app.database.models.auth_models import AccessLevelChanges
-from V2.app.database.models.student_organization import StudentDepartments, Classes, AcademicLevel, StudentClassTransfer, StudentDepartmentTransfers
+from V2.app.database.models.student_organization import (
+    StudentDepartments, Classes, AcademicLevel, StudentClassTransfers, StudentDepartmentTransfers
+)
 from V2.app.database.models.staff_organization import EducatorQualifications, StaffDepartments, StaffRoles
 
 
