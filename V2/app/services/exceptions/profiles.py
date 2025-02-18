@@ -1,4 +1,4 @@
-from .base import ProfileExceptions
+from V2.app.services.base_exception import ProfileExceptions
 class DuplicateStudentIDError(ProfileExceptions):
     def __init__(self, stu_id):
         self.stu_id = stu_id
