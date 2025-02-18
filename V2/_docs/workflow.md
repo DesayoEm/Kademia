@@ -10,119 +10,86 @@
 
 ### 2. SQLAlchemy Models
 - [x] Base model setup
-- [x] User model
-- [x] Student model
-- [x] Educator model
-- [x] Parent model
-- [x] Department model
-- [x] Class model
-- [x] Subject model
-- [x] Grade model
-- [x] Document model
-- [x] Role and Permission models
+- [x] Common mixins (Audit, Archive, Timestamp)
+- [x] User model hierarchy (Staff, Students, Parents)
+- [x] Academic models (Classes, Subjects, Grades)
+- [x] Organization models (Departments, Roles)
+- [x] Document and award models
 - [x] Model relationships and constraints
+- [x] Database tests
 
 ### 3. Pydantic Models
-- Base schema setup
-- [ ] User schemas (create, read, update)
-- [ ] Student schemas
-- [ ] Educator schemas
-- [ ] Academic schemas
-- [ ] Response models
-- [ ] Validation rules
+- [x] Base schema setup (ProfileBase, ProfileInDB)
+- [x] Staff schemas
+- [x] Student schemas
+- [x] Parent schemas
+- [x] Academic schemas
+- [x] Organization schemas
+- [x] Transfer and Repetition schemas
+- [x] Document schemas
 
-## Phase 1: Authentication & Core Security
-### 1. Basic Authentication
-- [ ] User registration endpoint
-- [ ] Login endpoint with JWT
-- [ ] Password hashing and validation
-- [ ] JWT token generation and verification
+## Phase 1: Core CRUD Operations
+### 1. Base Service Layer
+- [ ] Base CRUD service implementation
+- [ ] Common query filters
+- [ ] Pagination support
+- [ ] Soft delete handling
 
-### 2. Email Verification
-- [ ] Redis connection setup
-- [ ] Verification token generation
-- [ ] Email service implementation
-- [ ] Email verification endpoint
-- [ ] Password reset flow
+### 2. Organization Services 
+- [ ] Staff departments service
+- [ ] Staff roles service
+- [ ] Academic levels service
+- [ ] Student departments service
 
-### 3. Exception Handling
+### 3. User Management Services
+- [ ] Staff service
+- [ ] Parent service
+- [ ] Student service
+- [ ] Profile service
+
+### 4. Academic Services
+- [ ] Class management service
+- [ ] Subject management service
+- [ ] Grade management service
+- [ ] Document management service
+
+## Phase 2: Authentication & Security
+### 1. Authentication
+- [ ] Password hashing service
+- [ ] JWT token service
+- [ ] Authentication service
+- [ ] Login/Registration flows
+
+### 2. Exception Handling
 - [ ] Base exception classes
 - [ ] Authentication exceptions
 - [ ] Resource exceptions
 - [ ] Validation exceptions
 - [ ] Global exception handler
 
-### 4. Caching & Rate Limiting
-- [ ] Redis caching setup
-- [ ] Cache decorators
-- [ ] Rate limiting implementation
-- [ ] Session management
-- [ ] Token blacklisting
+## Phase 3: API Routes
+### 1. Auth Routes
+- [ ] Login endpoints
+- [ ] Registration endpoints
+- [ ] Profile management endpoints
 
-## Phase 2: Core CRUD Operations
-### 1. Student Management
-- [ ] Student CRUD endpoints
-- [ ] Profile management
-- [ ] Class assignment
-- [ ] Department tracking
+### 2. Core Routes
+- [ ] Staff routes
+- [ ] Student routes
+- [ ] Parent routes
+- [ ] Department routes
+- [ ] Class routes
+- [ ] Subject routes
+- [ ] Grade routes
 
-### 2. Educator Management
-- [ ] Educator CRUD endpoints
-- [ ] Subject assignment
-- [ ] Class mentorship
+## Phase 4: Testing & Documentation
+### 1. Testing
+- [x] Database model tests
+- [ ] Service layer tests
+- [ ] API endpoint tests
+- [ ] Integration tests
 
-### 3. Academic Structure
-- [ ] Department management
-- [ ] Class management
-- [ ] Subject management
-- [ ] Academic year setup
-
-## Phase 3: Academic Workflows
-### 1. Grade Management
-- [ ] Grade entry system
-- [ ] Grade calculation
-- [ ] Report generation
-- [ ] Academic performance tracking
-
-### 2. Document Management
-- [ ] Document upload
-- [ ] Document verification
-- [ ] Storage management
-- [ ] Document retrieval
-
-### 3. Advanced Features
-- [ ] Class position calculation
-- [ ] Student promotion workflow
-- [ ] Academic reports
-- [ ] Performance analytics
-
-## Phase 4: Testing & Optimization
-### 1. Testing Implementation
-- [ ] Unit tests for models
-- [ ] Integration tests for endpoints
-- [ ] Authentication tests
-- [ ] Performance tests
-
-### 2. System Optimization
-- [ ] Query optimization
-- [ ] Cache optimization
-- [ ] Bulk operations
-- [ ] Performance monitoring
-
-### 3. Documentation
+### 2. Documentation
 - [ ] API documentation
-- [ ] System architecture docs
+- [ ] Service layer documentation
 - [ ] Deployment guides
-- [ ] User manuals
-
-## Phase 5: Deployment
-### 1. Environment Setup
-- [ ] Development environment
-- [ ] Staging environment
-- [ ] Production environment
-
-### 2. CI/CD Pipeline
-- [ ] Automated testing
-- [ ] Build process
-- [ ] Deployment automation
-- [ ] Monitoring setup

@@ -8,7 +8,7 @@ class ProfileBase(BaseModel):
     last_name: str
     gender: Gender
 
-    
+
 
 
 class ProfileInDb(BaseModel):
