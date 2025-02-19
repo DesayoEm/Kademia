@@ -7,7 +7,7 @@ def test_model_structure_column_data_types(db_inspector):
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
         "id": UUID,
-        "title": String,
+        "name": String,
         "description": String,
         "created_at": DateTime,
         "last_modified_at": DateTime,
@@ -35,7 +35,7 @@ def test_model_structure_nullable_constraints(db_inspector):
 
     expected_nullable = {
         "id": False,
-        "title": False,
+        "name": False,
         "description": False,
         "created_at": False,
         "last_modified_at": False,
@@ -59,7 +59,7 @@ def test_model_structure_default_values(db_inspector):
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     fields_without_defaults = [
-        'id', "title", "description","created_at","last_modified_at",
+        'id', "name", "description","created_at","last_modified_at",
         "is_archived", "archived_at","archived_by", "archive_reason", "created_by","last_modified_by"
     ]
 
@@ -72,7 +72,7 @@ def test_model_structure_string_column_length(db_inspector):
     table = 'staff_roles'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
-    assert columns['title']['type'].length == 100
+    assert columns['name']['type'].length == 100
     assert columns['description']['type'].length == 500
 
 
@@ -85,7 +85,7 @@ def test_model_structure_unique_constraints(db_inspector):
         constraint['name']: constraint['column_names']
         for constraint in unique_constraints
     }
-    assert any(columns == ['title'] for columns in constraints_map.values()
+    assert any(columns == ['name'] for columns in constraints_map.values()
                ), "name should have a unique constraint"
 
 

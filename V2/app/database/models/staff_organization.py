@@ -12,10 +12,13 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     name: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str] = mapped_column(String(500))
     manager_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-            ondelete='RESTRICT', name='fk_staff_departments_staff_manager_id'),nullable=True
+            ondelete='SET NULL', name='fk_staff_departments_staff_manager_id'),nullable=True
         )
+
     # Relationships
     manager: Mapped['Staff'] = relationship(foreign_keys='[StaffDepartments.manager_id]')
+    staff: Mapped[List["Staff"]] = relationship(back_populates='department')
+
 
     __table_args__ = (
         Index('idx_department_manager', 'manager_id'),
@@ -30,11 +33,14 @@ class StaffRoles(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     __tablename__ = 'staff_roles'
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    title: Mapped[str] = mapped_column(String(100), unique=True)
+    name: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str] = mapped_column(String(500))
 
+    # Relationships
+    staff: Mapped[List["Staff"]] = relationship(back_populates='role')
+
     __table_args__ = (
-        Index('idx_role_title', 'title'),
+        Index('idx_role_name', 'name'),
         Index('idx_role_description', 'description'),
     )
 
@@ -50,7 +56,7 @@ class EducatorQualifications(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     educator_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
             ondelete='CASCADE', name='fk_educator_qualifications_educators_educator_id')
         )
-    title: Mapped[str] = mapped_column(String(100), unique=True)
+    name: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str] = mapped_column(String(500), nullable=True)
 
     # Relationships
@@ -61,5 +67,5 @@ class EducatorQualifications(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     __table_args__ = (
         Index('idx_educator', 'educator_id'),
-        Index('idx_qualification_title', 'title'),
+        Index('idx_qualification_name', 'name'),
     )

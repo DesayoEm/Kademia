@@ -7,7 +7,7 @@ def test_model_structure_column_data_types(db_inspector):
     expected_types = {
         "id": UUID,
         "educator_id": UUID,
-        "title": String,
+        "name": String,
         "description": String,
         "created_at": DateTime,
         "last_modified_at": DateTime,
@@ -45,7 +45,7 @@ def test_model_structure_nullable_constraints(db_inspector):
         "archive_reason": True,
         "created_by": False,
         "last_modified_by": False,
-        "title": False,
+        "name": False,
         "description": True
     }
     for column in columns:
@@ -63,7 +63,7 @@ def test_model_structure_default_values(db_inspector):
         'id', 'created_at', 'created_by',
         'last_modified_at', 'last_modified_by',
         'is_archived', 'archived_at', 'archive_reason',
-        'educator_id', 'title', 'description'
+        'educator_id', 'name', 'description'
     ]
 
     for field in fields_without_defaults:
@@ -80,7 +80,7 @@ def test_model_structure_unique_constraints(db_inspector):
         for constraint in unique_constraints
     }
 
-    assert any(columns == ['title'] for columns in constraints_map.values()
+    assert any(columns == ['name'] for columns in constraints_map.values()
                ), "name should have a unique constraint"
 
 

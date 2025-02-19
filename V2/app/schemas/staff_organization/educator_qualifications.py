@@ -2,7 +2,7 @@ from ..common_imports import *
 from ..enums import ArchiveReason
 
 
-class EducatorQualificationBase(BaseModel):
+class QualificationBase(BaseModel):
     """Base model for educator qualifications"""
     educator_id: UUID
     title: str
@@ -20,23 +20,23 @@ class EducatorQualificationBase(BaseModel):
     }
 
 
-class EducatorQualificationCreate(EducatorQualificationBase):
+class QualificationCreate(QualificationBase):
     """Used for creating new educator qualifications"""
     pass
 
 
-class EducatorQualificationUpdate(BaseModel):
+class QualificationUpdate(BaseModel):
     """Used for updating educator qualifications"""
     title: str
     description: str | None
 
 
-class EducatorQualificationResponse(EducatorQualificationBase):
+class QualificationResponse(QualificationBase):
     """Response model for educator qualifications"""
     pass
 
 
-class EducatorQualificationInDB(EducatorQualificationBase):
+class QualificationInDB(QualificationBase):
     """Represents stored educator qualifications"""
     id: UUID
     created_at: datetime
