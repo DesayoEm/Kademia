@@ -1,0 +1,3 @@
+class TrakademikError(Exception):
+    pass
+
