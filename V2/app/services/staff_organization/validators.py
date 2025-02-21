@@ -1,4 +1,4 @@
-from .exceptions import (
+from V2.app.services.errors.staff_organisation_errors import (
     EmptyNameError, BlankNameError, NameTooShortError
 )
 

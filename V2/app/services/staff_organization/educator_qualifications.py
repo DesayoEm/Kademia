@@ -6,7 +6,7 @@ from .validators import staff_organisation_validators
 from ..base_crud import CrudService
 from ...database.models.staff_organization import EducatorQualifications
 from ...database.models.data_enums import ArchiveReason
-from .exceptions import QualificationNotFoundError, DuplicateQualificationError
+from V2.app.services.errors.staff_organisation_errors import QualificationNotFoundError, DuplicateQualificationError
 from ...schemas.staff_organization.educator_qualifications import (
     QualificationCreate,
     QualificationResponse,

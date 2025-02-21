@@ -6,7 +6,7 @@ from .validators import staff_organisation_validators
 from ..base_crud import CrudService
 from ...database.models.staff_organization import StaffRoles
 from ...database.models.data_enums import ArchiveReason
-from .exceptions import RoleNotFoundError, DuplicateRoleError
+from V2.app.services.errors.staff_organisation_errors import RoleNotFoundError, DuplicateRoleError
 from ...schemas.staff_organization.staff_roles import (
     StaffRoleCreate,
     StaffRoleResponse,

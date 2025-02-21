@@ -1,3 +1,3 @@
 class TrakademikError(Exception):
-    pass
+    """Base exception class for all application errors"""
 

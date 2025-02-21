@@ -1,4 +1,4 @@
-from V2.app.services.errors.base_error import TrakademikError
+from .base_error import TrakademikError
 
 class StaffOrganizationError(TrakademikError):
     """
@@ -18,6 +18,6 @@ class BlankNameError(StaffOrganizationError):
         super().__init__('Name cannot be blank')
 
 class NameTooShortError(StaffOrganizationError):
-    """Raised when a name is too short, specifically when it has three or fewer characters."""
+    """Raised when a name is too short, specifically when it has two or fewer characters."""
     def __init__(self):
         super().__init__('Name must be greater than three characters')

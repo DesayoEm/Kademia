@@ -30,10 +30,10 @@
 
 ## Phase 1: Core CRUD Operations
 ### 1. Base Service Layer
-- [ ] Base CRUD service implementation
-- [ ] Common query filters
+- [x] Base CRUD service implementation
+- [x] Common query filters
 - [ ] Pagination support
-- [ ] Soft delete handling
+- [x] Soft delete handling
 
 ### 2. Organization Services 
 - [ ] Staff departments service

@@ -6,7 +6,7 @@ from .validators import staff_organisation_validators
 from ..base_crud import CrudService
 from ...database.models.staff_organization import StaffDepartments
 from ...database.models.data_enums import ArchiveReason
-from .exceptions import DepartmentNotFoundError, DuplicateDepartmentError
+from V2.app.services.errors.staff_organisation_errors import DepartmentNotFoundError, DuplicateDepartmentError
 from ...schemas.staff_organization.staff_departments import (
     StaffDepartmentCreate,
     StaffDepartmentResponse,
