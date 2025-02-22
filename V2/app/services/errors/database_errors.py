@@ -2,9 +2,13 @@ from .base_error import TrakademikError
 
 class DatabaseError(TrakademikError):
     """Base exception for all database operations"""
-    def __init__(self):
+    def __init__(self, error: str = None):
         self.user_message = "An unexpected error occurred"
-        self.log_message = "Database operation failed"  # Detailed message for logging
+        self.log_message = f"Database operation failed on {error}"
+
+        if error:
+            self.log_message += f" on {error}"
+
         super().__init__(self.log_message)
 
     def __str__(self):
@@ -41,6 +45,21 @@ class UniqueViolationError(DatabaseError):
 
     def __str__(self):
         return self.user_message
+
+
+class RelationshipError(DatabaseError):
+    """Raised when a foreign key constraint is violated during data operations"""
+    def __init__(self, relationship_name: str, operation: str = "update"):
+        self.relationship_name = relationship_name
+        self.user_message = f"Cannot {operation} record because related {relationship_name} does not exist"
+        self.log_message =  f"Foreign key constraint violation on {relationship_name}"
+        f"during {operation} operation"
+
+        super().__init__()
+
+    def __str__(self):
+        return self.user_message
+
 
 
 class TransactionError(DatabaseError):
