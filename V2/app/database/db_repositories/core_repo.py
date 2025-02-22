@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, List, Optional
 from uuid import UUID
+from ...database.models.common_imports import Base
 
-T = TypeVar('T')
+T = TypeVar('T', bound=Base)
 
 class Repository(ABC, Generic[T]):
     """Abstract base class for repositories"""
@@ -31,7 +32,6 @@ class Repository(ABC, Generic[T]):
     def archive(self, entity: T) -> T:
         """Update an entity"""
         pass
-
 
     @abstractmethod
     def delete(self, entity_id: UUID) -> None:

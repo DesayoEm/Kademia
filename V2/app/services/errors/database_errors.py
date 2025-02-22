@@ -36,7 +36,7 @@ class UniqueViolationError(DatabaseError):
     def __init__(self, field_name: str, value: str = None):
         self.field_name = field_name
         self.value = value
-        self.user_message = f"A record with this {field_name} already exists"
+        self.user_message = "This record already exists"
         self.log_message = f"Unique constraint violation for {field_name}"
         if self.value:
             self.log_message += f": {self.value}"
