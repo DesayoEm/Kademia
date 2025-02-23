@@ -13,7 +13,13 @@ class DuplicateDepartmentError(StaffOrganizationError):
         self.user_message = f"A department with name {name} already exists"
         self.log_message = f"Duplicate department creation attempted: {original_error}"
 
-class DuplicateClassError(StaffOrganizationError):
+class DepartmentNotFoundError(StaffOrganizationError):
+    """Raised when a department is not found."""
+    def __init__(self, name: str, original_error: Exception):
+        self.user_message = f"A department with name {name} already exists"
+        self.log_message = f"Duplicate department creation attempted: {original_error}"
+
+class DuplicateRoleError(StaffOrganizationError):
     """Raised when a duplicate department is created."""
     def __init__(self, name: str, original_error: Exception):
         self.user_message = f"A class with name {name} already exists"

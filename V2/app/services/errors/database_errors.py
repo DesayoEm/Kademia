@@ -49,11 +49,10 @@ class UniqueViolationError(DatabaseError):
 
 class RelationshipError(DatabaseError):
     """Raised when a foreign key constraint is violated during data operations"""
-    def __init__(self, relationship_name: str, operation: str = "update"):
-        self.relationship_name = relationship_name
-        self.user_message = f"Cannot {operation} record because related {relationship_name} does not exist"
-        self.log_message =  f"Foreign key constraint violation on {relationship_name}"
-        f"during {operation} operation"
+    def __init__(self, detail: str, operation: str):
+        self.detail = detail
+        self.user_message = f"Cannot {operation} record because related record does not exist" #Too generic
+        self.log_message = f"Foreign key constraint violation during {operation} operation. Detail: {detail}"
 
         super().__init__()
 

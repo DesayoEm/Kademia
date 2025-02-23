@@ -1,27 +1,29 @@
-from abc import ABC, abstractmethod
 from sqlalchemy.exc import (
     SQLAlchemyError, IntegrityError, OperationalError
 )
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 
 from V2.app.services.errors.database_errors import (
     UniqueViolationError, EntityNotFoundError, TransactionError, RelationshipError)
 from V2.app.services.errors.database_errors import DatabaseError as TKDatabaseError
 from uuid import UUID
+
 from typing import Optional, List, Type
+
 from V2.app.database.db_repositories.core_repo import Repository, T
 
 
 class BaseRepository(Repository[T]):
     def __init__(self, model: Type[T], session: Session):
+        super().__init__()
         self.model = model
         self.session = session
 
-    def base_query(self):
+
+    def base_query(self) -> Query:
         return self.session.query(self.model).filter(
             self.model.is_archived == False
         )
-
 
 class SQLAlchemyRepository(BaseRepository[T]):
     """Core CRUD operations"""
@@ -39,7 +41,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
                     field_name=self._extract_constraint_field(str(e))
                 )
             elif 'foreign key constraint' in str(e).lower():
-                raise RelationshipError(details=str(e))
+                raise RelationshipError(operation = "create", detail=str(e))
         except OperationalError as e:
             self.session.rollback()
             raise ConnectionError(details=str(e))
@@ -62,6 +64,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
         except SQLAlchemyError as e:
             raise TKDatabaseError(error=str(e))
 
+
     def get_all(self) -> List[T]:
         try:
             result = self.base_query().all()
@@ -74,35 +77,29 @@ class SQLAlchemyRepository(BaseRepository[T]):
             raise TKDatabaseError(error=str(e))
 
 
-    def update(self, id: UUID, updated_data: dict) -> T:
+    def update(self, id, updated_entity: T) -> T:
         try:
-            existing = self.base_query().filter(
-                self.model.id == id
-            ).first()
+            existing = self.base_query().filter(self.model.id == id).first()
             if not existing:
                 raise EntityNotFoundError(
                     entity_type=self.model.__name__,
                     identifier=str(id)
                 )
-
-            for key, value in updated_data.items():
-                if hasattr(existing, key):
-                    setattr(existing, key, value)
-
+            self.session.merge(updated_entity)
             self.session.commit()
             self.session.refresh(existing)
             return existing
+
         except IntegrityError as e:
             self.session.rollback()
             raise UniqueViolationError(
-                field_name=self._extract_constraint_field(str(e))
-            )
+                field_name=self._extract_constraint_field(str(e)))
         except SQLAlchemyError as e:
             self.session.rollback()
             raise TKDatabaseError(error=str(e))
 
 
-    def archive(self, id: UUID) -> T:
+    def archive(self, id, archived_by_id, reason) -> T:
         try:
             entity = self.base_query().filter(
                 self.model.id == id
@@ -113,7 +110,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
                     identifier=str(id)
                 )
 
-            entity.is_archived = True
+            entity.archive(archived_by_id, reason)
             self.session.commit()
             self.session.refresh(entity)
             return entity
