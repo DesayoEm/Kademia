@@ -4,7 +4,7 @@ from ..enums import ArchiveReason
 
 class StaffRoleBase(BaseModel):
     """Base model for staff roles"""
-    title: str
+    name: str
     description: str
 
     class Config:
@@ -12,7 +12,7 @@ class StaffRoleBase(BaseModel):
 
     json_schema_extra = {
         "example": {
-            "title": "Head of Department",
+            "name": "Head of Department",
             "description": "Manages departmental operations and staff"
         }
     }
@@ -48,7 +48,7 @@ class StaffRoleInDB(StaffRoleBase):
     json_schema_extra = {
         "example": {
             "id": "00000000-0000-0000-0000-000000000000",
-            "title": "Head of Department",
+            "name": "Head of Department",
             "description": "Manages departmental operations and staff",
             "created_at": "2024-02-17T12:00:00Z",
             "created_by": "00000000-0000-0000-0000-000000000000",

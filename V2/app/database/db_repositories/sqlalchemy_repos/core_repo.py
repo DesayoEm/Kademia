@@ -1,15 +1,10 @@
-from sqlalchemy.exc import (
-    SQLAlchemyError, IntegrityError, OperationalError
-)
+from uuid import UUID
+from typing import Optional, List, Type
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from sqlalchemy.orm import Session, Query
-
 from V2.app.services.errors.database_errors import (
     UniqueViolationError, EntityNotFoundError, TransactionError, RelationshipError)
 from V2.app.services.errors.database_errors import DatabaseError as TKDatabaseError
-from uuid import UUID
-
-from typing import Optional, List, Type
-
 from V2.app.database.db_repositories.core_repo import Repository, T
 
 
@@ -53,13 +48,11 @@ class SQLAlchemyRepository(BaseRepository[T]):
     def get_by_id(self, id: UUID) -> Optional[T]:
         try:
             entity = self.base_query().filter(
-                self.model.id == id
-            ).first()
+                self.model.id == id).first()
             if not entity:
                 raise EntityNotFoundError(
                     entity_type=self.model.__name__,
-                    identifier=str(id)
-                )
+                    identifier=str(id))
             return entity
         except SQLAlchemyError as e:
             raise TKDatabaseError(error=str(e))

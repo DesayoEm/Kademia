@@ -5,7 +5,7 @@ from ..enums import ArchiveReason
 class QualificationBase(BaseModel):
     """Base model for educator qualifications"""
     educator_id: UUID
-    title: str
+    name: str
     description: str | None = None
 
     class Config:
@@ -14,7 +14,7 @@ class QualificationBase(BaseModel):
     json_schema_extra = {
         "example": {
             "educator_id": "00000000-0000-0000-0000-000000000001",
-            "title": "Master of Science in Mathematics",
+            "name": "Master of Science in Mathematics",
             "description": "Advanced degree in pure mathematics"
         }
     }
@@ -27,7 +27,7 @@ class QualificationCreate(QualificationBase):
 
 class QualificationUpdate(BaseModel):
     """Used for updating educator qualifications"""
-    title: str
+    name: str
     description: str | None
 
 
@@ -52,7 +52,7 @@ class QualificationInDB(QualificationBase):
         "example": {
             "id": "00000000-0000-0000-0000-000000000000",
             "educator_id": "00000000-0000-0000-0000-000000000001",
-            "title": "Master of Science in Mathematics",
+            "name": "Master of Science in Mathematics",
             "description": "Advanced degree in pure mathematics",
             "created_at": "2024-02-17T12:00:00Z",
             "created_by": "00000000-0000-0000-0000-000000000000",

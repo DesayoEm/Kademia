@@ -6,6 +6,7 @@ class StaffOrganizationValidators:
     def _init__(self):
         pass
 
+    @staticmethod
     def validate_name(self, value:str) -> str:
         if not value:
             raise EmptyNameError
@@ -15,6 +16,7 @@ class StaffOrganizationValidators:
             raise NameTooShortError
         return value.strip().capitalize()
 
+    @staticmethod
     def validate_description(self, value:str):
         if not value:
             raise EmptyNameError
@@ -22,4 +24,3 @@ class StaffOrganizationValidators:
             raise BlankNameError
         return value.strip().capitalize()
 
-staff_organisation_validators = StaffOrganizationValidators()
