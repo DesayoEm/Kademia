@@ -1,5 +1,6 @@
 from uuid import UUID
 from typing import Optional, List, Type
+from sqlalchemy import or_, desc, asc
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from sqlalchemy.orm import Session, Query
 from V2.app.services.errors.database_errors import (
@@ -58,16 +59,44 @@ class SQLAlchemyRepository(BaseRepository[T]):
             raise TKDatabaseError(error=str(e))
 
 
-    def get_all(self) -> List[T]:
+    def apply_filters(self, query: Query, fields: List,  filters)-> Query:
+        """Apply model-specific filters"""
+        if query is None:
+            query = self.base_query()
+
+        for field, value in filters.model_dump(exclude_unset=True).items():
+            if field in ['limit', 'offset', 'order_by', 'order_dir']:
+                continue
+            if value is not None and hasattr(self.model, field):
+                if isinstance(value, str) and field in fields:
+                    query = query.filter(getattr(self.model, field).ilike(f"%{value}%"))
+                else:
+                    query = query.filter(getattr(self.model, field) == value)
+
+        return query
+
+
+    def get_all(self, filters, fields) -> List[T]:
+        """Get filtered and paginated results"""
         try:
-            result = self.base_query().all()
+            query = self.base_query()
+
+            for field, value in filters.model_dump(exclude_unset=True).items():
+                if field not in ['limit', 'offset', 'order_by', 'order_dir'] and value is not None:
+                    query = self.apply_filters(query, fields,filters)
+            if hasattr(self.model, filters.order_by):
+                order_func = desc if filters.order_dir == 'desc' else asc
+                query = query.order_by(order_func(getattr(self.model, filters.order_by)))
+
+            result = query.offset(filters.offset).limit(filters.limit).all()
+
             if not result:
-                raise EntityNotFoundError(
-                    entity_type=self.model.__name__
-                )
+                raise EntityNotFoundError(entity_type=self.model.__name__)
             return result
+
         except SQLAlchemyError as e:
             raise TKDatabaseError(error=str(e))
+
 
 
     def update(self, id, updated_entity: T) -> T:

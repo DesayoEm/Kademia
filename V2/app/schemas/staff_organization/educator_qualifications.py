@@ -1,5 +1,12 @@
 from ..common_imports import *
 from ..enums import ArchiveReason
+from ..base_filter import *
+
+
+class QualificationFilterParams(BaseFilterParams):
+    name: Optional[str] = None
+    educator_id: Optional[UUID] = None
+    order_by: Literal["name", "created_at"] = "name"
 
 
 class QualificationBase(BaseModel):

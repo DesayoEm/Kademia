@@ -17,7 +17,7 @@ class Repository(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def get_all(self) -> List[T]:
+    def get_all(self, filters, fields) -> List[T]:
         pass
 
     @abstractmethod
