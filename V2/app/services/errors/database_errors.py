@@ -30,6 +30,17 @@ class EntityNotFoundError(DatabaseError):
     def __str__(self):
         return self.user_message
 
+class NoResultsFoundError(DatabaseError):
+    """Raised when a query returns no results"""
+    def __init__(self, entity_type: str, filters: dict | None):
+        self.entity_type = entity_type
+        self.user_message = f"No {entity_type} records found"
+        self.log_message = f"No {entity_type} records found for filters {filters}"
+
+        super().__init__()
+    def __str__(self):
+        return self.user_message
+
 
 class UniqueViolationError(DatabaseError):
     """Raised when attempting to violate a unique constraint"""

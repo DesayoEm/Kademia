@@ -4,7 +4,7 @@ from sqlalchemy import or_, desc, asc
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from sqlalchemy.orm import Session, Query
 from V2.app.services.errors.database_errors import (
-    UniqueViolationError, EntityNotFoundError, TransactionError, RelationshipError)
+    UniqueViolationError, EntityNotFoundError, NoResultsFoundError, RelationshipError)
 from V2.app.services.errors.database_errors import DatabaseError as TKDatabaseError
 from V2.app.database.db_repositories.core_repo import Repository, T
 
@@ -59,11 +59,8 @@ class SQLAlchemyRepository(BaseRepository[T]):
             raise TKDatabaseError(error=str(e))
 
 
-    def apply_filters(self, query: Query, fields: List,  filters)-> Query:
+    def apply_filters(self, query: Query, fields: List, filters) -> Query:
         """Apply model-specific filters"""
-        if query is None:
-            query = self.base_query()
-
         for field, value in filters.model_dump(exclude_unset=True).items():
             if field in ['limit', 'offset', 'order_by', 'order_dir']:
                 continue
@@ -76,26 +73,33 @@ class SQLAlchemyRepository(BaseRepository[T]):
         return query
 
 
-    def get_all(self, filters, fields) -> List[T]:
+    def get_all(self, fields, filters) -> List[T]:  # Removed redundant query param
         """Get filtered and paginated results"""
         try:
             query = self.base_query()
+            query = self.apply_filters(query, fields, filters)
 
-            for field, value in filters.model_dump(exclude_unset=True).items():
-                if field not in ['limit', 'offset', 'order_by', 'order_dir'] and value is not None:
-                    query = self.apply_filters(query, fields,filters)
-            if hasattr(self.model, filters.order_by):
-                order_func = desc if filters.order_dir == 'desc' else asc
-                query = query.order_by(order_func(getattr(self.model, filters.order_by)))
+            # Sorting
+            order_by = getattr(filters, 'order_by', 'created_at')
+            order_dir = getattr(filters, 'order_dir', 'asc')
+            if order_by and hasattr(self.model, order_by):
+                order_func = desc if order_dir == 'desc' else asc
+                query = query.order_by(order_func(getattr(self.model, order_by)))
 
-            result = query.offset(filters.offset).limit(filters.limit).all()
+            # Pagination
+            limit = getattr(filters, 'limit', 100)
+            offset = getattr(filters, 'offset', 0)
+
+            result = query.offset(offset).limit(limit).all()
 
             if not result:
-                raise EntityNotFoundError(entity_type=self.model.__name__)
+                raise NoResultsFoundError(entity_type=self.model.__name__,
+                                          filters = filters.model_dump())
             return result
 
         except SQLAlchemyError as e:
             raise TKDatabaseError(error=str(e))
+
 
 
 
