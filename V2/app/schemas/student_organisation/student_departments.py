@@ -10,10 +10,8 @@ class DepartmentBase(BaseModel):
     student_rep_id: UUID
     assistant_rep_id: UUID
 
-    class Config:
-        from_attributes = True
-
-    json_schema_extra = {
+    model_config = ConfigDict(
+        from_attributes=True,json_schema_extra = {
         "example": {
             "name": "Science",
             "description": "Science Classes",
@@ -21,6 +19,7 @@ class DepartmentBase(BaseModel):
             "student_rep_id": "00000000-0000-0000-0000-000000000000",
             "assistant_rep_id": "00000000-0000-0000-0000-000000000000",
         }}
+        )
 
 class DepartmentUpdate(DepartmentBase):
     """Used for updating class levels"""
@@ -49,7 +48,8 @@ class DepartmentInDB(DepartmentBase):
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
 
-    json_schema_extra = {
+    model_config = ConfigDict(
+        from_attributes=True,json_schema_extra = {
         "example": {
             "id": "00000000-0000-0000-0000-000000000000",
             "name": "Science",
@@ -65,4 +65,5 @@ class DepartmentInDB(DepartmentBase):
             "archived_by": None,
             "archive_reason": None
         }}
+        )
 

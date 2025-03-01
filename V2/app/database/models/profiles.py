@@ -121,12 +121,15 @@ class Staff(ProfileBase):
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))
     phone: Mapped[str] = mapped_column(String(14), unique=True)
-    department_id: Mapped[UUID] = mapped_column(ForeignKey('staff_departments.id',ondelete='RESTRICT',
-            name='fk_staff_staff_departments_department_id')
-        )
-    role_id: Mapped[UUID] = mapped_column(ForeignKey('staff_roles.id',
-            ondelete='RESTRICT',name='fk_staff_staff_roles_role_id')
-        )
+    department_id: Mapped[UUID] = mapped_column(
+        ForeignKey('staff_departments.id', ondelete='RESTRICT', name='fk_staff_staff_departments_department_id'),
+        nullable=True  # Making department_id nullable
+    )
+
+    role_id: Mapped[UUID] = mapped_column(
+        ForeignKey('staff_roles.id', ondelete='RESTRICT', name='fk_staff_staff_roles_role_id'),
+        nullable=True  # Making role_id nullable
+    )
     date_joined: Mapped[date] = mapped_column(Date)
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
 

@@ -1,10 +1,10 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-from V2.app.services.staff_organization.validators import StaffOrganizationValidators
-from V2.app.database.models.staff_organization import StaffDepartments
-from V2.app.database.db_repositories.sqlalchemy_repos.core_repo import SQLAlchemyRepository
-from V2.app.database.models.data_enums import ArchiveReason
+from ....services.staff_organization.validators import StaffOrganizationValidators
+from ....database.models.staff_organization import StaffDepartments
+from ....database.db_repositories.sqlalchemy_repos.core_repo import SQLAlchemyRepository
+from ....database.models.data_enums import ArchiveReason
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
@@ -28,17 +28,20 @@ class StaffDepartmentsFactory:
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
             name=self.validator.validate_name(new_department.name),
-            description=self.validator.validate_name(new_department.description)
+            description=self.validator.validate_name(new_department.description),
+            manager_id=new_department.manager_id
         )
         return self.repository.create(department)
 
 
-    def get_staff_departments(self) -> List[StaffDepartments]:
-        """Get all active staff departments.
+    def get_all_departments(self, filters) -> List[StaffDepartments]:
+        """Get all active departments with filtering.
         Returns:
-            List[StaffDepartments]: List of active department records
+            List[StaffDepartments]: List of active departments
         """
-        return self.repository.get_all()
+        fields = ['name', 'description']
+
+        return self.repository.execute_query(fields, filters)
 
 
     def get_staff_department(self, department_id: UUID) -> StaffDepartments:

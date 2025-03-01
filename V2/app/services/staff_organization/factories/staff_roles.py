@@ -1,13 +1,14 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-from V2.app.services.staff_organization.validators import StaffOrganizationValidators
-from V2.app.database.models.staff_organization import StaffRoles
-from V2.app.database.db_repositories.sqlalchemy_repos.core_repo import SQLAlchemyRepository
-from V2.app.database.models.data_enums import ArchiveReason
+from ....services.staff_organization.validators import StaffOrganizationValidators
+from ....database.models.staff_organization import StaffRoles
+from ....database.db_repositories.sqlalchemy_repos.core_repo import SQLAlchemyRepository
+from ....database.models.data_enums import ArchiveReason
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
+
 
 class StaffRolesFactory:
     """Factory class for managing staff role operations."""
@@ -36,12 +37,14 @@ class StaffRolesFactory:
         )
         return self.repository.create(role)
 
-    def get_all_roles(self) -> List[StaffRoles]:
-        """Get all active staff roles.
+    def get_all_roles(self, filters) -> List[StaffRoles]:
+        """Get all active staff roles with filtering.
         Returns:
             List[StaffRoles]: List of active role records
         """
-        return self.repository.get_all()
+        fields = ['name', 'description']
+
+        return self.repository.execute_query(fields, filters)
 
 
     def get_role(self, role_id: UUID) -> StaffRoles:

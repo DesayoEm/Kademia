@@ -32,12 +32,12 @@
 ### 1. Base Service Layer
 - [x] Base CRUD service implementation
 - [x] Common query filters
-- [ ] Pagination support
+- [x] Pagination support
 - [x] Soft delete handling
 
 ### 2. Organization Services 
-- [ ] Staff departments service
-- [ ] Staff roles service
+- [x] Staff departments service
+- [x] Staff roles service
 - [ ] Academic levels service
 - [ ] Student departments service
 

@@ -1,4 +1,5 @@
 from uuid import UUID
+import re
 from typing import Optional, List, Type
 from sqlalchemy import or_, desc, asc
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
@@ -33,9 +34,13 @@ class SQLAlchemyRepository(BaseRepository[T]):
         except IntegrityError as e:
             self.session.rollback()
             if 'unique constraint' in str(e).lower():
-                raise UniqueViolationError(
-                    field_name=self._extract_constraint_field(str(e))
-                )
+
+                error_message = str(e.orig) if e.orig else str(e)
+                match = re.search(r'(?<=\.).+?(?=[\s,])', error_message)
+                field_name = match.group(0) if match else "unknown_field"
+
+                raise UniqueViolationError(field_name=field_name)
+
             elif 'foreign key constraint' in str(e).lower():
                 raise RelationshipError(operation = "create", detail=str(e))
         except OperationalError as e:

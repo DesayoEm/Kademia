@@ -1,10 +1,11 @@
 from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.staff_departments import (
-    StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse
+    StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
 )
 from ...services.staff_organization.factories.staff_departments import StaffDepartmentsFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
+from typing import List
 
 
 class StaffDepartmentCrud:
@@ -40,12 +41,13 @@ class StaffDepartmentCrud:
         department = self.factory.get_staff_department(department_id)
         return StaffDepartmentResponse.model_validate(department)
 
-    def get_all_departments(self) -> list[StaffDepartmentResponse]:
-        """Get all active departments.
+
+    def get_all_departments(self, filters: DepartmentFilterParams) -> List[StaffDepartmentResponse]:
+        """Get all active educator qualifications.
         Returns:
-            list[StaffDepartmentResponse]: List of active departments
+            List[QualificationResponse]: List of active qualifications
         """
-        departments = self.factory.get_staff_departments()
+        departments = self.factory.get_all_departments(filters)
         return [StaffDepartmentResponse.model_validate(department) for department in departments]
 
 

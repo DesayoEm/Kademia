@@ -1,6 +1,6 @@
 from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.staff_roles import (
-    StaffRoleCreate, StaffRoleUpdate, StaffRoleResponse
+    StaffRoleCreate, StaffRoleUpdate, StaffRoleResponse, RolesFilterParams
 )
 from ...services.staff_organization.factories.staff_roles import StaffRolesFactory
 from sqlalchemy.orm import Session
@@ -30,6 +30,7 @@ class StaffRoleCrud:
         role = self.factory.create_role(data)
         return StaffRoleResponse.model_validate(role)
 
+
     def get_role(self, role_id: UUID) -> StaffRoleResponse:
         """Get a staff role by ID.
         Args:
@@ -41,12 +42,12 @@ class StaffRoleCrud:
         return StaffRoleResponse.model_validate(role)
 
 
-    def get_all_roles(self) -> List[StaffRoleResponse]:
+    def get_all_roles(self, filters: RolesFilterParams) -> List[StaffRoleResponse]:
         """Get all active staff roles.
         Returns:
             List[StaffRoleResponse]: List of active roles
         """
-        roles = self.factory.get_all_roles()
+        roles = self.factory.get_all_roles(filters)
         return [StaffRoleResponse.model_validate(role) for role in roles]
 
 
