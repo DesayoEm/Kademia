@@ -1,6 +1,6 @@
 from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.educator_qualifications import (
-    QualificationCreate, QualificationUpdate, QualificationResponse
+    QualificationCreate, QualificationUpdate, QualificationResponse, QualificationFilterParams
 )
 from ...services.staff_organization.factories.educator_qualifications import QualificationsFactory
 from sqlalchemy.orm import Session
@@ -41,12 +41,12 @@ class QualificationsCrud:
         return QualificationResponse.model_validate(qualification)
 
 
-    def get_all_qualifications(self) -> List[QualificationResponse]:
+    def get_all_qualifications(self, filters: QualificationFilterParams) -> List[QualificationResponse]:
         """Get all active educator qualifications.
         Returns:
             List[QualificationResponse]: List of active qualifications
         """
-        qualifications = self.factory.get_all_qualifications()
+        qualifications = self.factory.get_all_qualifications(filters)
         return [QualificationResponse.model_validate(qualification) for qualification in qualifications]
 
 

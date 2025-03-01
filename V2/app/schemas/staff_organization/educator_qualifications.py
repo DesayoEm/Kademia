@@ -15,17 +15,17 @@ class QualificationBase(BaseModel):
     name: str
     description: str | None = None
 
-    class Config:
-        from_attributes = True
 
-    json_schema_extra = {
-        "example": {
-            "educator_id": "00000000-0000-0000-0000-000000000001",
-            "name": "Master of Science in Mathematics",
-            "description": "Advanced degree in pure mathematics"
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
+            "example": {
+                "educator_id": "00000000-0000-0000-0000-000000000001",
+                "name": "Master of Science in Mathematics",
+                "description": "Advanced degree in pure mathematics"
+            }
         }
-    }
-
+    )
 
 class QualificationCreate(QualificationBase):
     """Used for creating new educator qualifications"""
@@ -55,8 +55,9 @@ class QualificationInDB(QualificationBase):
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
 
-    json_schema_extra = {
-        "example": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "id": "00000000-0000-0000-0000-000000000000",
             "educator_id": "00000000-0000-0000-0000-000000000001",
             "name": "Master of Science in Mathematics",
@@ -69,5 +70,6 @@ class QualificationInDB(QualificationBase):
             "archived_at": None,
             "archived_by": None,
             "archive_reason": None
-        }
-    }
+            }
+
+    )

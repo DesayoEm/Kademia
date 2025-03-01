@@ -1,4 +1,4 @@
-from V2.app.services.errors.staff_organisation_errors import (
+from ...services.errors.staff_organisation_errors import (
     EmptyNameError, BlankNameError, NameTooShortError
 )
 
@@ -7,7 +7,7 @@ class StaffOrganizationValidators:
         pass
 
     @staticmethod
-    def validate_name(self, value:str) -> str:
+    def validate_name(value:str) -> str:
         if not value:
             raise EmptyNameError
         if not value.strip():
@@ -17,7 +17,7 @@ class StaffOrganizationValidators:
         return value.strip().capitalize()
 
     @staticmethod
-    def validate_description(self, value:str):
+    def validate_description(value:str):
         if not value:
             raise EmptyNameError
         if not value.strip():

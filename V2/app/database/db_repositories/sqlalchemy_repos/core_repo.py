@@ -3,10 +3,10 @@ from typing import Optional, List, Type
 from sqlalchemy import or_, desc, asc
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from sqlalchemy.orm import Session, Query
-from V2.app.services.errors.database_errors import (
-    UniqueViolationError, EntityNotFoundError, NoResultsFoundError, RelationshipError)
-from V2.app.services.errors.database_errors import DatabaseError as TKDatabaseError
-from V2.app.database.db_repositories.core_repo import Repository, T
+from ....services.errors.database_errors import (
+    UniqueViolationError, EntityNotFoundError, RelationshipError)
+from ....services.errors.database_errors import DatabaseError as TKDatabaseError
+from ....database.db_repositories.core_repo import Repository, T
 
 
 class BaseRepository(Repository[T]):
@@ -73,8 +73,8 @@ class SQLAlchemyRepository(BaseRepository[T]):
         return query
 
 
-    def get_all(self, fields, filters) -> List[T]:  # Removed redundant query param
-        """Get filtered and paginated results"""
+    def execute_query(self, fields, filters) -> List[T]:
+        """Execute a query with sorting and pagination"""
         try:
             query = self.base_query()
             query = self.apply_filters(query, fields, filters)
@@ -93,8 +93,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
             result = query.offset(offset).limit(limit).all()
 
             if not result:
-                raise NoResultsFoundError(entity_type=self.model.__name__,
-                                          filters = filters.model_dump())
+                return []
             return result
 
         except SQLAlchemyError as e:

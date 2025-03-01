@@ -1,10 +1,10 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-from V2.app.services.staff_organization.validators import StaffOrganizationValidators
-from V2.app.database.models.staff_organization import EducatorQualifications
-from V2.app.database.db_repositories.sqlalchemy_repos.core_repo import SQLAlchemyRepository
-from V2.app.database.models.data_enums import ArchiveReason
+from ....services.staff_organization.validators import StaffOrganizationValidators
+from ....database.models.staff_organization import (EducatorQualifications)
+from ....database.db_repositories.sqlalchemy_repos.core_repo import SQLAlchemyRepository
+from ....database.models.data_enums import ArchiveReason
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
@@ -38,12 +38,14 @@ class QualificationsFactory:
         return self.repository.create(qualification)
 
 
-    def get_all_qualifications(self) -> List[EducatorQualifications]:
-        """Get all active qualifications.
+    def get_all_qualifications(self,filters) -> List[EducatorQualifications]:
+        """Get all active qualifications with filtering.
         Returns:
             List[EducatorQualifications]: List of active qualification records
         """
-        return self.repository.get_all()
+        fields = ['title', 'description']
+
+        return self.repository.execute_query(fields, filters)
 
 
     def get_qualification(self, qualification_id: UUID) -> EducatorQualifications:

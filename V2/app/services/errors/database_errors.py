@@ -12,7 +12,7 @@ class DatabaseError(TrakademikError):
         super().__init__(self.log_message)
 
     def __str__(self):
-        return self.user_message
+        return self.log_message
 
 
 class EntityNotFoundError(DatabaseError):
@@ -27,17 +27,6 @@ class EntityNotFoundError(DatabaseError):
             self.log_message += f" with identifier: {self.identifier}"
         super().__init__()
 
-    def __str__(self):
-        return self.user_message
-
-class NoResultsFoundError(DatabaseError):
-    """Raised when a query returns no results"""
-    def __init__(self, entity_type: str, filters: dict | None):
-        self.entity_type = entity_type
-        self.user_message = f"No {entity_type} records found"
-        self.log_message = f"No {entity_type} records found for filters {filters}"
-
-        super().__init__()
     def __str__(self):
         return self.user_message
 

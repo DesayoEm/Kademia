@@ -17,7 +17,8 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     # Relationships
     manager: Mapped['Staff'] = relationship(foreign_keys='[StaffDepartments.manager_id]')
-    staff: Mapped[List["Staff"]] = relationship(back_populates='department')
+    staff: Mapped[List["Staff"]] = relationship(back_populates='department',
+                    primaryjoin="Staff.department_id == StaffDepartments.id")
 
 
     __table_args__ = (
@@ -37,7 +38,8 @@ class StaffRoles(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     description: Mapped[str] = mapped_column(String(500))
 
     # Relationships
-    staff: Mapped[List["Staff"]] = relationship(back_populates='role')
+    staff: Mapped[List["Staff"]] = relationship(back_populates='role',
+            primaryjoin="Staff.role_id == StaffRoles.id")
 
     __table_args__ = (
         Index('idx_role_name', 'name'),
