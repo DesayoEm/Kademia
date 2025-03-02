@@ -61,11 +61,11 @@
 - [ ] Login/Registration flows
 
 ### 2. Exception Handling
-- [ ] Base exception classes
+- [x] Base exception classes
 - [ ] Authentication exceptions
 - [ ] Resource exceptions
-- [ ] Validation exceptions
-- [ ] Global exception handler
+- [x] Validation exceptions
+- [x] Global exception handler
 
 ## Phase 3: API Routes
 ### 1. Auth Routes

@@ -9,7 +9,7 @@ from typing import List
 
 
 class StaffRoleCrud:
-    """CRUD operations for staff roles."""
+    """CRUD operations for staff roles, including active and archived entities."""
 
     def __init__(self, session: Session):
         """Initialize CRUD service.
@@ -19,7 +19,7 @@ class StaffRoleCrud:
         self.session = session
         self.factory = StaffRolesFactory(session)
 
-
+    # Active role operations
     def create_role(self, data: StaffRoleCreate) -> StaffRoleResponse:
         """Create a new staff role.
         Args:
@@ -44,6 +44,8 @@ class StaffRoleCrud:
 
     def get_all_roles(self, filters: RolesFilterParams) -> List[StaffRoleResponse]:
         """Get all active staff roles.
+        Args:
+            filters: Filter parameters
         Returns:
             List[StaffRoleResponse]: List of active roles
         """
@@ -81,3 +83,42 @@ class StaffRoleCrud:
             role_id: Role UUID
         """
         self.factory.delete_role(role_id)
+
+    # Archived role operations
+    def get_archived_role(self, role_id: UUID) -> StaffRoleResponse:
+        """Get an archived staff role by ID.
+        Args:
+            role_id: Role UUID
+        Returns:
+            StaffRoleResponse: Retrieved archived role
+        """
+        role = self.factory.get_archived_role(role_id)
+        return StaffRoleResponse.model_validate(role)
+
+    def get_all_archived_roles(self, filters: RolesFilterParams) -> List[StaffRoleResponse]:
+        """Get all archived staff roles.
+        Args:
+            filters: Filter parameters
+        Returns:
+            List[StaffRoleResponse]: List of archived roles
+        """
+        roles = self.factory.get_all_archived_roles(filters)
+        return [StaffRoleResponse.model_validate(role) for role in roles]
+
+    def restore_role(self, role_id: UUID) -> StaffRoleResponse:
+        """Restore an archived staff role.
+        Args:
+            role_id: Role UUID
+        Returns:
+            StaffRoleResponse: Restored role
+        """
+        role = self.factory.restore_role(role_id)
+        return StaffRoleResponse.model_validate(role)
+
+
+    def delete_archived_role(self, role_id: UUID) -> None:
+        """Permanently delete an archived staff role.
+        Args:
+            role_id: Role UUID
+        """
+        self.factory.delete_archived_role(role_id)

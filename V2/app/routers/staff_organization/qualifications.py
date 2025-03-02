@@ -15,17 +15,15 @@ router = APIRouter()
 
 
 @router.post("/", response_model= QualificationResponse, status_code=201)
-def create_qualification(
-        data:QualificationCreate,
-        db: Session = Depends(get_db)):
+def create_qualification(data:QualificationCreate,
+                db: Session = Depends(get_db)):
         qualifications_crud = QualificationsCrud(db)
         return qualifications_crud.create_qualification(data)
 
 
 @router.get("/", response_model=list[QualificationResponse])
-def get_qualifications(
-        filters: Annotated[QualificationFilterParams, Query()],
-        db: Session = Depends(get_db)):
+def get_qualifications(filters: Annotated[QualificationFilterParams, Query()],
+                db: Session = Depends(get_db)):
         qualifications_crud = QualificationsCrud(db)
         return qualifications_crud.get_all_qualifications(filters)
 

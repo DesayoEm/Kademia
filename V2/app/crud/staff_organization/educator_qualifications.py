@@ -19,7 +19,7 @@ class QualificationsCrud:
         self.session = session
         self.factory = QualificationsFactory(session)
 
-
+    # Active qualification operations
     def create_qualification(self, data: QualificationCreate) -> QualificationResponse:
         """Create a new qualification.
         Args:
@@ -43,6 +43,8 @@ class QualificationsCrud:
 
     def get_all_qualifications(self, filters: QualificationFilterParams) -> List[QualificationResponse]:
         """Get all active educator qualifications.
+        Args:
+            filters: Filter parameters
         Returns:
             List[QualificationResponse]: List of active qualifications
         """
@@ -73,10 +75,48 @@ class QualificationsCrud:
         qualification = self.factory.archive_qualification(qualification_id, reason)
         return QualificationResponse.model_validate(qualification)
 
-
     def delete_qualification(self, qualification_id: UUID) -> None:
         """Permanently delete a qualification.
         Args:
             qualification_id: Qualification UUID
         """
         self.factory.delete_qualification(qualification_id)
+
+    # Archived qualification operations
+    def get_archived_qualification(self, qualification_id: UUID) -> QualificationResponse:
+        """Get an archived qualification by ID.
+        Args:
+            qualification_id: Qualification UUID
+        Returns:
+            QualificationResponse: Retrieved archived qualification
+        """
+        qualification = self.factory.get_archived_qualification(qualification_id)
+        return QualificationResponse.model_validate(qualification)
+
+    def get_all_archived_qualifications(self, filters: QualificationFilterParams) -> List[QualificationResponse]:
+        """Get all archived educator qualifications.
+        Args:
+            filters: Filter parameters
+        Returns:
+            List[QualificationResponse]: List of archived qualifications
+        """
+        qualifications = self.factory.get_all_archived_qualifications(filters)
+        return [QualificationResponse.model_validate(qualification) for qualification in qualifications]
+
+    def restore_qualification(self, qualification_id: UUID) -> QualificationResponse:
+        """Restore an archived qualification.
+        Args:
+            qualification_id: Qualification UUID
+        Returns:
+            QualificationResponse: Restored qualification
+        """
+        qualification = self.factory.restore_qualification(qualification_id)
+        return QualificationResponse.model_validate(qualification)
+
+
+    def delete_archived_qualification(self, qualification_id: UUID) -> None:
+        """Permanently delete an archived qualification.
+        Args:
+            qualification_id: Qualification UUID
+        """
+        self.factory.delete_archived_qualification(qualification_id)

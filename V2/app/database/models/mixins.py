@@ -97,6 +97,3 @@ class ArchiveMixins:
     def restore(self) -> None:
         """Restores an archived entity"""
         self.is_archived = False
-        self.archived_at = None
-        self.archived_by = None
-        self.archive_reason = None

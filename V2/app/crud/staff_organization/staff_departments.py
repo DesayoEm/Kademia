@@ -80,3 +80,42 @@ class StaffDepartmentCrud:
             department_id: Department UUID
         """
         self.factory.delete_department(department_id)
+
+    # Archived department operations
+    def get_archived_department(self, department_id: UUID) -> StaffDepartmentResponse:
+        """Get an archived department by ID.
+        Args:
+            department_id: department UUID
+        Returns:
+            StaffDepartmentResponse: Retrieved archived department
+        """
+        department = self.factory.get_archived_department(department_id)
+        return StaffDepartmentResponse.model_validate(department)
+
+    def get_all_archived_departments(self, filters: DepartmentFilterParams) -> List[StaffDepartmentResponse]:
+        """Get all archived departments.
+        Args:
+            filters: Filter parameters
+        Returns:
+            List[StaffDepartmentResponse]: List of archived departments
+        """
+        departments = self.factory.get_all_archived_departments(filters)
+        return [StaffDepartmentResponse.model_validate(department) for department in departments]
+
+    def restore_department(self, department_id: UUID) -> StaffDepartmentResponse:
+        """Restore an archived department.
+        Args:
+            department_id: department UUID
+        Returns:
+            StaffDepartmentResponse: Restored department
+        """
+        department = self.factory.restore_department(department_id)
+        return StaffDepartmentResponse.model_validate(department)
+
+
+    def delete_archived_department(self, department_id: UUID) -> None:
+        """Permanently delete an archived department.
+        Args:
+            department_id: department UUID
+        """
+        self.factory.delete_archived_department(department_id)

@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
-
 from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.staff_roles import (
     StaffRoleCreate, StaffRoleUpdate, RolesFilterParams, StaffRoleResponse
@@ -8,24 +7,22 @@ from ...schemas.staff_organization.staff_roles import (
 from fastapi import Depends, APIRouter
 from ...database.session_manager import get_db
 from ...crud.staff_organization.staff_roles import StaffRoleCrud
-from fastapi import HTTPException, Query
+from fastapi import Query
 from typing import Annotated
+
 
 router = APIRouter()
 
 
 @router.post("/", response_model= StaffRoleResponse, status_code = 201)
-def create_role(
-        data:StaffRoleCreate,
-        db: Session = Depends(get_db)):
+def create_role(data:StaffRoleCreate,db: Session = Depends(get_db)):
         roles_crud = StaffRoleCrud(db)
         return roles_crud.create_role(data)
 
 
 @router.get("/", response_model=list[StaffRoleResponse])
-def get_roles(
-        filters: Annotated[RolesFilterParams, Query()],
-        db: Session = Depends(get_db)):
+def get_roles(filters: Annotated[RolesFilterParams, Query()],
+                db: Session = Depends(get_db)):
         roles_crud = StaffRoleCrud(db)
         return roles_crud.get_all_roles(filters)
 

@@ -11,25 +11,21 @@ from ...crud.staff_organization.staff_departments import StaffDepartmentCrud
 from fastapi import HTTPException, Query
 from typing import Annotated
 
-from ...services.errors.database_errors import (
-    EntityNotFoundError, DatabaseError,
-)
+
 router = APIRouter()
 
 
 @router.post("/", response_model= StaffDepartmentResponse, status_code=201)
-def create_staff_department(
-        data:StaffDepartmentCreate,
-        db: Session = Depends(get_db)):
+def create_staff_department(data:StaffDepartmentCreate,
+                db: Session = Depends(get_db)):
         staff_departments_crud = StaffDepartmentCrud(db)
         return staff_departments_crud.create_department(data)
 
 
 
 @router.get("/", response_model=list[StaffDepartmentResponse])
-def get_staff_departments(
-        filters: Annotated[DepartmentFilterParams, Query()],
-        db: Session = Depends(get_db)):
+def get_staff_departments(filters: Annotated[DepartmentFilterParams, Query()],
+                db: Session = Depends(get_db)):
         staff_departments_crud = StaffDepartmentCrud(db)
         return staff_departments_crud.get_all_departments(filters)
 

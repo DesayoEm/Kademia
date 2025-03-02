@@ -499,3 +499,14 @@ Traceback (most recent call last):
     raise TextTooShortError(input = value)
 app.services.errors.staff_organisation_errors.TextTooShortError
 2025-03-02 06:17:23,804 - trakademik - WARNING - TextTooShortError | 06698723-e1e3-41e2-9a9e-8d077e18b79a | Entity creation attempted with short name : h
+2025-03-02 07:19:28,495 - trakademik - INFO - Application started
+2025-03-02 20:46:32,555 - trakademik - INFO - Application started
+2025-03-02 20:46:34,214 - trakademik - INFO - Request started | 242bf6a3-3405-407d-87e9-32acaf26e2e7 | GET /
+2025-03-02 20:46:34,216 - trakademik - INFO - Request completed | 242bf6a3-3405-407d-87e9-32acaf26e2e7 | Status: 200 | Time: 0.002s
+2025-03-02 20:46:34,436 - trakademik - INFO - Request started | 524f8894-37cf-4d02-859f-2ae0ccf762d3 | GET /favicon.ico
+2025-03-02 20:46:34,439 - trakademik - INFO - Request completed | 524f8894-37cf-4d02-859f-2ae0ccf762d3 | Status: 404 | Time: 0.001s
+2025-03-02 20:46:40,554 - trakademik - INFO - Request started | 168b8cd8-4559-4906-8d75-ae3d25a35e70 | GET /docs
+2025-03-02 20:46:40,555 - trakademik - INFO - Request completed | 168b8cd8-4559-4906-8d75-ae3d25a35e70 | Status: 200 | Time: 0.001s
+2025-03-02 20:46:40,688 - trakademik - INFO - Request started | bf83c815-0d0a-4786-b92e-4ac5a4c9f281 | GET /openapi.json
+2025-03-02 20:46:40,788 - trakademik - INFO - Request completed | bf83c815-0d0a-4786-b92e-4ac5a4c9f281 | Status: 200 | Time: 0.100s
+2025-03-02 21:03:20,967 - trakademik - INFO - Application started
