@@ -5,6 +5,8 @@ from ....services.staff_organization.validators import StaffOrganizationValidato
 from ....database.models.staff_organization import StaffDepartments
 from ....database.db_repositories.sqlalchemy_repos.core_repo import SQLAlchemyRepository
 from ....database.models.data_enums import ArchiveReason
+from ....services.errors.database_errors import EntityNotFoundError, UniqueViolationError
+from ....services.errors.staff_organisation_errors import DepartmentNotFoundError, DuplicateDepartmentError
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
@@ -31,7 +33,10 @@ class StaffDepartmentsFactory:
             description=self.validator.validate_name(new_department.description),
             manager_id=new_department.manager_id
         )
-        return self.repository.create(department)
+        try:
+            return self.repository.create(department)
+        except UniqueViolationError as e:
+            raise DuplicateDepartmentError(name=new_department.name, original_error=e)
 
 
     def get_all_departments(self, filters) -> List[StaffDepartments]:
@@ -40,7 +45,6 @@ class StaffDepartmentsFactory:
             List[StaffDepartments]: List of active departments
         """
         fields = ['name', 'description']
-
         return self.repository.execute_query(fields, filters)
 
 
@@ -51,7 +55,10 @@ class StaffDepartmentsFactory:
         Returns:
             StaffDepartments: Retrieved department record
         """
-        return self.repository.get_by_id(department_id)
+        try:
+            return self.repository.get_by_id(department_id)
+        except EntityNotFoundError:
+            raise DepartmentNotFoundError(id=department_id)
 
 
     def update_staff_department(self, department_id: UUID, data: dict) -> StaffDepartments:
@@ -62,14 +69,21 @@ class StaffDepartmentsFactory:
         Returns:
             StaffDepartments: Updated department record
         """
-        existing = self.get_staff_department(department_id)
-        if 'name' in data:
-            existing.name = self.validator.validate_name(data['name'])
-        if 'description' in data:
-            existing.description = self.validator.validate_name(data['description'])
-        existing.last_modified_by = SYSTEM_USER_ID
+        try:
+            existing = self.get_staff_department(department_id)
+            if 'name' in data:
+                existing.name = self.validator.validate_name(data['name'])
+            if 'description' in data:
+                existing.description = self.validator.validate_name(data['description'])
+            existing.last_modified_by = SYSTEM_USER_ID
 
-        return self.repository.update(department_id, existing)
+            return self.repository.update(department_id, existing)
+        except EntityNotFoundError:
+            raise DepartmentNotFoundError(id=department_id)
+        except UniqueViolationError as e:
+            field_name = getattr(e, 'field_name', 'name')
+            field_value = data.get(field_name, '')
+            raise DuplicateDepartmentError(name=field_value, original_error=e)
 
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StaffDepartments:
@@ -80,7 +94,10 @@ class StaffDepartmentsFactory:
         Returns:
             StaffDepartments: Archived department record
         """
-        return self.repository.archive(department_id, SYSTEM_USER_ID, reason)
+        try:
+            return self.repository.archive(department_id, SYSTEM_USER_ID, reason)
+        except EntityNotFoundError:
+            raise DepartmentNotFoundError(id=department_id)
 
 
     def delete_department(self, department_id: UUID) -> None:
@@ -88,4 +105,7 @@ class StaffDepartmentsFactory:
         Args:
             department_id (UUID): ID of department to delete
         """
-        self.repository.delete(department_id)
+        try:
+            self.repository.delete(department_id)
+        except EntityNotFoundError:
+            raise DepartmentNotFoundError(id=department_id)

@@ -2,12 +2,16 @@ from fastapi import Depends, FastAPI
 from .routers.staff_organization import (
     educator_qualifications, staff_departments, staff_roles
 )
+from .middleware.error_handler import ExceptionMiddleware
 
 version = "v1"
 app = FastAPI(
     version = version,
     title = "TraKademik"
 )
+
+app.add_middleware(ExceptionMiddleware)
+
 
 app.include_router(educator_qualifications.router, prefix=f"/api/{version}/staff/qualifications",
                    tags=["Qualifications"])

@@ -5,6 +5,8 @@ from ....services.staff_organization.validators import StaffOrganizationValidato
 from ....database.models.staff_organization import StaffRoles
 from ....database.db_repositories.sqlalchemy_repos.core_repo import SQLAlchemyRepository
 from ....database.models.data_enums import ArchiveReason
+from ....services.errors.database_errors import EntityNotFoundError, UniqueViolationError
+from ....services.errors.staff_organisation_errors import RoleNotFoundError, DuplicateRoleError
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
@@ -35,7 +37,10 @@ class StaffRolesFactory:
             name=self.validator.validate_name(new_role.name),
             description=self.validator.validate_name(new_role.description)
         )
-        return self.repository.create(role)
+        try:
+            return self.repository.create(role)
+        except UniqueViolationError as e:
+            raise DuplicateRoleError(name=new_role.name, original_error=e)
 
     def get_all_roles(self, filters) -> List[StaffRoles]:
         """Get all active staff roles with filtering.
@@ -43,7 +48,6 @@ class StaffRolesFactory:
             List[StaffRoles]: List of active role records
         """
         fields = ['name', 'description']
-
         return self.repository.execute_query(fields, filters)
 
 
@@ -54,7 +58,10 @@ class StaffRolesFactory:
         Returns:
             StaffRoles: Retrieved role record
         """
-        return self.repository.get_by_id(role_id)
+        try:
+            return self.repository.get_by_id(role_id)
+        except EntityNotFoundError:
+            raise RoleNotFoundError(id=role_id)
 
 
     def update_role(self, role_id: UUID, data: dict) -> StaffRoles:
@@ -65,15 +72,21 @@ class StaffRolesFactory:
         Returns:
             StaffRoles: Updated role record
         """
+        try:
+            existing = self.get_role(role_id)
+            if 'name' in data:
+                existing.name = self.validator.validate_name(data['name'])
+            if 'description' in data:
+                existing.description = self.validator.validate_name(data['description'])
+            existing.last_modified_by = SYSTEM_USER_ID
 
-        existing = self.get_role(role_id)
-        if 'name' in data:
-            existing.name = self.validator.validate_name(data['name'])
-        if 'description' in data:
-            existing.description = self.validator.validate_name(data['description'])
-        existing.last_modified_by = SYSTEM_USER_ID
-
-        return self.repository.update(role_id, existing)
+            return self.repository.update(role_id, existing)
+        except EntityNotFoundError:
+            raise RoleNotFoundError(id=role_id)
+        except UniqueViolationError as e:
+            field_name = getattr(e, 'field_name', 'name')
+            field_value = data.get(field_name, '')
+            raise DuplicateRoleError(name=field_value, original_error=e)
 
 
     def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRoles:
@@ -84,7 +97,10 @@ class StaffRolesFactory:
         Returns:
             StaffRoles: Archived role record
         """
-        return self.repository.archive(role_id, SYSTEM_USER_ID, reason)
+        try:
+            return self.repository.archive(role_id, SYSTEM_USER_ID, reason)
+        except EntityNotFoundError:
+            raise RoleNotFoundError(id=role_id)
 
 
     def delete_role(self, role_id: UUID) -> None:
@@ -92,7 +108,7 @@ class StaffRolesFactory:
         Args:
             role_id: ID of role to delete
         """
-        self.repository.delete(role_id)
-
-
-
+        try:
+            self.repository.delete(role_id)
+        except EntityNotFoundError:
+            raise RoleNotFoundError(id=role_id)

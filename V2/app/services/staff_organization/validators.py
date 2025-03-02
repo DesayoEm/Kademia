@@ -1,5 +1,5 @@
 from ...services.errors.staff_organisation_errors import (
-    EmptyNameError, BlankNameError, NameTooShortError
+    EmptyFieldError, BlankFieldError, TextTooShortError
 )
 
 class StaffOrganizationValidators:
@@ -9,18 +9,18 @@ class StaffOrganizationValidators:
     @staticmethod
     def validate_name(value:str) -> str:
         if not value:
-            raise EmptyNameError
+            raise EmptyFieldError(input = value)
         if not value.strip():
-            raise BlankNameError
+            raise BlankFieldError(input = value)
         if len(value.strip()) < 3:
-            raise NameTooShortError
+            raise TextTooShortError(input = value)
         return value.strip().capitalize()
 
     @staticmethod
     def validate_description(value:str):
         if not value:
-            raise EmptyNameError
+            raise EmptyFieldError(input = value)
         if not value.strip():
-            raise BlankNameError
+            raise BlankFieldError(input = value)
         return value.strip().capitalize()
 
