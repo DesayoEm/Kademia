@@ -3,6 +3,7 @@ from .routers.staff_organization import (
     educator_qualifications, staff_departments, staff_roles
 )
 from .middleware.error_handler import ExceptionMiddleware
+from .logging.logger import logger
 
 version = "v1"
 app = FastAPI(
@@ -24,3 +25,5 @@ app.include_router(staff_roles.router, prefix=f"/api/{version}/staff/roles",
 @app.get("/")
 async def root():
     return {"message": "Welcome to TraKademik!"}
+
+logger.info("Application started")
