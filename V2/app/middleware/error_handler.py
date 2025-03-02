@@ -43,10 +43,10 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
             logger.error(f"Unhandled exception | {request_id} | {str(e)}", exc_info=True)
             return self.handle_exception(e, request_id)
 
-    def create_json_response(self, e, status_code, request_id):
+    def create_json_response(self, e, status_code):
         return JSONResponse(
             status_code=status_code,
-            content={"detail": e.user_message, "request_id": request_id}
+            content={"detail": e.user_message}
         )
 
     def handle_exception(self, e, request_id):
@@ -54,16 +54,16 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
             logger.warning(f"HTTPException | {request_id} | {e.detail}")
             return JSONResponse(
                 status_code=e.status_code,
-                content={"detail": e.detail, "request_id": request_id}
+                content={"detail": e.detail}
             )
 
         for error, status_code in self.error_map.items():
             if isinstance(e, error):
                 log_level = logger.warning if status_code < 500 else logger.error
                 log_level(f"{error.__name__} | {request_id} | {e.log_message}")
-                return self.create_json_response(e, status_code, request_id)
+                return self.create_json_response(e, status_code)
 
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={"detail": "An unexpected error occurred", "request_id": request_id}
+            content={"detail": "An unexpected error occurred"}
         )
