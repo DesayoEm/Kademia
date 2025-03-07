@@ -1,5 +1,5 @@
 from uuid import UUID
-from ....app.schemas.staff_organization.educator_qualifications import QualificationCreate
+from ...app.schemas.staff_organization.educator_qualifications import QualificationCreate
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 

@@ -277,7 +277,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
             raise TKDatabaseError(error=str(e))
 
 
-    def apply_archive_filter(self, query: Query, fields: List, filters) -> Query:
+    def apply_archive_filters(self, query: Query, fields: List, filters) -> Query:
         """Apply filters to a query for archived entities.
 
         Args:

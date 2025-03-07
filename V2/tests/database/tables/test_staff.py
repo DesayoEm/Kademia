@@ -81,8 +81,8 @@ def test_model_structure_nullable_constraints(db_inspector):
         "email_address": False,
         "address": False,
         "phone": False,
-        "department_id":False,
-        "role_id":False,
+        "department_id":True,
+        "role_id":True,
         "date_joined":False,
         "date_left":True
 

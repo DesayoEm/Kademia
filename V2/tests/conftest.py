@@ -6,6 +6,11 @@ from ..tests.utils.db_utils import create_test_tables, drop_test_tables
 from ..tests.utils.pytest_utils import pytest_collection_modifyitems
 from .test_db import TEST_DB_URL
 
+from ..app.database.models.profiles import System
+from ..app.database.models.data_enums import Gender, AccessLevel, UserType, StaffType, EmploymentStatus, StaffAvailability
+from uuid import UUID
+
+
 @pytest.fixture(scope='session')
 def test_engine():
     """Create test database engine"""
@@ -24,7 +29,6 @@ def db_session(test_engine):
     drop_test_tables(test_engine)
     session.close()
     test_engine.dispose()
-
 
 @pytest.fixture(autouse=True)
 def cleanup_database(db_session):

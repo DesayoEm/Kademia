@@ -20,10 +20,13 @@ app.include_router(qualifications.router, prefix=f"/api/{version}/staff/qualific
 app.include_router(archived_qualifications.router, prefix=f"/api/{version}/archive/staff/qualifications",
                    tags=["Archived","Qualifications"])
 
-app.include_router(staff_departments.router, prefix=f"/api/{version}/archive/staff/departments",
-                   tags=["Archived", "Staff Departments"])
-app.include_router(archived_staff_departments.router, prefix=f"/api/{version}/staff/departments",
+
+app.include_router(staff_departments.router, prefix=f"/api/{version}/staff/departments",
                    tags=["Staff Departments"])
+app.include_router(archived_staff_departments.router, prefix=f"/api/{version}/archive/staff/departments",
+                   tags=["Archived", "Staff Departments"])
+
+
 
 app.include_router(staff_roles.router, prefix=f"/api/{version}/staff/roles",
                    tags=["Staff Roles"])
