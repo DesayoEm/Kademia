@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.staff_departments import(
     StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
 )
+from ...schemas.shared_models import ArchiveRequest
 from fastapi import Depends, APIRouter
 from ...database.session_manager import get_db
 from ...crud.staff_organization.staff_departments import StaffDepartmentCrud
@@ -44,11 +44,11 @@ def update_staff_department(data: StaffDepartmentUpdate, department_id: UUID,
         return staff_departments_crud.update_department(department_id, data)
 
 
-@router.patch("/{department_id}", response_model=StaffDepartmentResponse)
-def archive_department(department_id: UUID, reason:ArchiveReason,
+@router.patch("/{department_id}",  status_code=204)
+def archive_department(department_id: UUID, reason:ArchiveRequest,
                           db: Session = Depends(get_db)):
         staff_departments_crud = StaffDepartmentCrud(db)
-        return staff_departments_crud.archive_department(department_id, reason)
+        return staff_departments_crud.archive_department(department_id, reason.reason)
 
 
 @router.delete("/{department_id}", status_code=204)

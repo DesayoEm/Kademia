@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, Literal
 from datetime import datetime
 from uuid import UUID
+from .enums import ArchiveReason
 
 
 class BaseFilterParams(BaseModel):
@@ -9,3 +10,6 @@ class BaseFilterParams(BaseModel):
     offset: int = Field(0, ge=0)
     order_by: str = "created_at"
     order_dir: Literal["asc", "desc"] = "desc"
+
+class ArchiveRequest(BaseModel):
+    reason: ArchiveReason

@@ -1,6 +1,6 @@
 from ..common_imports import *
 from ..enums import ArchiveReason
-from ..base_filter import *
+from ..shared_models import *
 
 
 
@@ -19,7 +19,7 @@ class StaffDepartmentBase(BaseModel):
 
     model_config = ConfigDict(
         from_attributes=True,
-        extra="forbid",
+        extra="ignore",
         json_schema_extra = {
             "example": {
                 "name": "Academic Affairs",

@@ -63,7 +63,7 @@ class StaffDepartmentCrud:
         updated_department = self.factory.update_staff_department(department_id, data)
         return StaffDepartmentResponse.model_validate(updated_department)
 
-    def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StaffDepartmentResponse:
+    def archive_department(self, department_id: UUID, reason: ArchiveReason) -> None:
         """Archive a department.
         Args:
             department_id: Department UUID
@@ -71,8 +71,8 @@ class StaffDepartmentCrud:
         Returns:
             StaffDepartmentResponse: Archived department
         """
-        department = self.factory.archive_department(department_id, reason)
-        return StaffDepartmentResponse.model_validate(department)
+        self.factory.archive_department(department_id, reason)
+
 
     def delete_department(self, department_id: UUID) -> None:
         """Permanently delete a department.
@@ -80,6 +80,8 @@ class StaffDepartmentCrud:
             department_id: Department UUID
         """
         self.factory.delete_department(department_id)
+
+
 
     # Archived department operations
     def get_archived_department(self, department_id: UUID) -> StaffDepartmentResponse:

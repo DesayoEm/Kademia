@@ -1,6 +1,6 @@
 from ..common_imports import *
 from ..enums import ArchiveReason
-from ..base_filter import *
+from ..shared_models import *
 
 
 
