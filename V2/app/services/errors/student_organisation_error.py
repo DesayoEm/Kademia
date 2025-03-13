@@ -28,9 +28,9 @@ class StudentTextTooShortError(TextTooShortError):
 
 class DuplicateStudentDepartmentError(StudentOrganizationError, UniqueViolationError):
     """Raised when a duplicate student department is created."""
-    def __init__(self, name: str, original_error: Exception):
-        UniqueViolationError.__init__(self, field_name="name", value=name)
-        self.user_message = f"A student department with name {name} already exists"
+    def __init__(self, input: str, original_error: Exception):
+        UniqueViolationError.__init__(self, field_name="name", value=input)
+        self.user_message = f"A student department with the name {input} already exists"
         self.log_message = f"Duplicate student department creation attempted: {original_error}"
 
 class StudentDepartmentNotFoundError(StudentOrganizationError, EntityNotFoundError):

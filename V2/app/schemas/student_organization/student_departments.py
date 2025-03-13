@@ -1,23 +1,25 @@
 from ..common_imports import *
-from ..enums import ArchiveReason
+from ..shared_models import *
 
+
+class DepartmentFilterParams(BaseFilterParams):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    order_by: Literal["name", "created_at"] = "name"
 
 class DepartmentBase(BaseModel):
     """Base model for class levels"""
     name: str
     description: str
-    mentor_id: UUID
-    student_rep_id: UUID
-    assistant_rep_id: UUID
+    mentor_id: UUID | None = None
+    student_rep_id: UUID | None = None
+    assistant_rep_id: UUID | None = None
 
     model_config = ConfigDict(
         from_attributes=True,json_schema_extra = {
         "example": {
             "name": "Science",
-            "description": "Science Classes",
-            "mentor_id": "00000000-0000-0000-0000-000000000000",
-            "student_rep_id": "00000000-0000-0000-0000-000000000000",
-            "assistant_rep_id": "00000000-0000-0000-0000-000000000000",
+            "description": "Science Classes"
         }}
         )
 

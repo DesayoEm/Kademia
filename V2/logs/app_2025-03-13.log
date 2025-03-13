@@ -1,0 +1,127 @@
+2025-03-13 02:38:08,345 - trakademik - INFO - Application started
+2025-03-13 02:38:11,337 - trakademik - INFO - Request started | 6df3db5f-f621-4e85-9c38-7702075db486 | GET /
+2025-03-13 02:38:11,340 - trakademik - INFO - Request completed | 6df3db5f-f621-4e85-9c38-7702075db486 | Status: 200 | Time: 0.002s
+2025-03-13 02:38:11,536 - trakademik - INFO - Request started | 3b12759a-8d84-4180-ae5a-b142b43d7073 | GET /favicon.ico
+2025-03-13 02:38:11,541 - trakademik - INFO - Request completed | 3b12759a-8d84-4180-ae5a-b142b43d7073 | Status: 404 | Time: 0.001s
+2025-03-13 02:38:14,973 - trakademik - INFO - Request started | 899b20f4-3c98-4b32-95ef-e2a4617b920b | GET /docs
+2025-03-13 02:38:14,975 - trakademik - INFO - Request completed | 899b20f4-3c98-4b32-95ef-e2a4617b920b | Status: 200 | Time: 0.001s
+2025-03-13 02:38:15,442 - trakademik - INFO - Request started | 0cd54d27-d65d-4e4a-a500-83dc717dca52 | GET /openapi.json
+2025-03-13 02:38:15,549 - trakademik - INFO - Request completed | 0cd54d27-d65d-4e4a-a500-83dc717dca52 | Status: 200 | Time: 0.106s
+2025-03-13 02:41:01,892 - trakademik - INFO - Request started | 5398d0eb-a95c-453e-91ca-813ee98a2ad0 | POST /api/v1/students/departments/
+2025-03-13 02:41:02,384 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-13 02:41:02,385 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-13 02:41:02,390 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-13 02:41:02,391 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-13 02:41:02,393 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-13 02:41:02,393 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-13 02:41:02,394 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-13 02:41:02,399 - sqlalchemy.engine.Engine - INFO - INSERT INTO student_departments (id, name, description, mentor_id, student_rep_id, assistant_rep_id, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(mentor_id)s::UUID, %(student_rep_id)s::UUID, %(assistant_rep_id)s::UUID, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING student_departments.created_at, student_departments.last_modified_at
+2025-03-13 02:41:02,400 - sqlalchemy.engine.Engine - INFO - [generated in 0.00159s] {'id': UUID('2a809d6d-9e44-4b65-ab0a-f156218560e4'), 'name': 'Science', 'description': 'Science Classes', 'mentor_id': None, 'student_rep_id': None, 'assistant_rep_id': None, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-13 02:41:02,446 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-13 02:41:02,450 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-13 02:41:02,454 - sqlalchemy.engine.Engine - INFO - SELECT student_departments.id, student_departments.name, student_departments.description, student_departments.mentor_id, student_departments.student_rep_id, student_departments.assistant_rep_id, student_departments.created_by, student_departments.last_modified_by, student_departments.created_at, student_departments.last_modified_at, student_departments.is_archived, student_departments.archived_at, student_departments.archive_reason, student_departments.archived_by 
+FROM student_departments 
+WHERE student_departments.id = %(pk_1)s::UUID
+2025-03-13 02:41:02,455 - sqlalchemy.engine.Engine - INFO - [generated in 0.00082s] {'pk_1': UUID('2a809d6d-9e44-4b65-ab0a-f156218560e4')}
+2025-03-13 02:41:02,459 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-13 02:41:02,461 - trakademik - INFO - Request completed | 5398d0eb-a95c-453e-91ca-813ee98a2ad0 | Status: 201 | Time: 0.569s
+2025-03-13 02:41:26,330 - trakademik - INFO - Request started | 5b6c1870-a900-4023-b6e8-a10416ddb014 | GET /api/v1/students/departments/
+2025-03-13 02:41:26,333 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-13 02:41:26,335 - sqlalchemy.engine.Engine - INFO - SELECT student_departments.id AS student_departments_id, student_departments.name AS student_departments_name, student_departments.description AS student_departments_description, student_departments.mentor_id AS student_departments_mentor_id, student_departments.student_rep_id AS student_departments_student_rep_id, student_departments.assistant_rep_id AS student_departments_assistant_rep_id, student_departments.created_by AS student_departments_created_by, student_departments.last_modified_by AS student_departments_last_modified_by, student_departments.created_at AS student_departments_created_at, student_departments.last_modified_at AS student_departments_last_modified_at, student_departments.is_archived AS student_departments_is_archived, student_departments.archived_at AS student_departments_archived_at, student_departments.archive_reason AS student_departments_archive_reason, student_departments.archived_by AS student_departments_archived_by 
+FROM student_departments 
+WHERE student_departments.is_archived = false AND student_departments.description ILIKE %(description_1)s ORDER BY student_departments.name DESC 
+ LIMIT %(param_1)s OFFSET %(param_2)s
+2025-03-13 02:41:26,336 - sqlalchemy.engine.Engine - INFO - [generated in 0.00116s] {'description_1': '%sci%', 'param_1': 50, 'param_2': 0}
+2025-03-13 02:41:26,347 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-13 02:41:26,353 - trakademik - INFO - Request completed | 5b6c1870-a900-4023-b6e8-a10416ddb014 | Status: 200 | Time: 0.022s
+2025-03-13 02:48:47,862 - trakademik - INFO - Request started | b371abca-0a79-4e67-806b-8fb0760ef76e | POST /api/v1/students/departments/
+2025-03-13 02:48:47,866 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-13 02:48:47,867 - sqlalchemy.engine.Engine - INFO - INSERT INTO student_departments (id, name, description, mentor_id, student_rep_id, assistant_rep_id, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(mentor_id)s::UUID, %(student_rep_id)s::UUID, %(assistant_rep_id)s::UUID, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING student_departments.created_at, student_departments.last_modified_at
+2025-03-13 02:48:47,868 - sqlalchemy.engine.Engine - INFO - [cached since 465.5s ago] {'id': UUID('4cbb6f00-0730-4b3a-88c1-d125a4a82965'), 'name': 'Science', 'description': 'Science Classes', 'mentor_id': None, 'student_rep_id': None, 'assistant_rep_id': None, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-13 02:48:47,879 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-13 02:48:47,894 - trakademik - ERROR - Unhandled exception | b371abca-0a79-4e67-806b-8fb0760ef76e | A student department with name Science already exists
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 36, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\student_departments.py", line 22, in create_staff_department
+    return student_departments_crud.create_department(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\student_departments.py", line 30, in create_department
+    department = self.factory.create_student_department(data)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\student_organization\factories\student_departments.py", line 38, in create_student_department
+    raise DuplicateStudentDepartmentError(input=new_department.name, original_error=e)
+app.services.errors.student_organisation_error.DuplicateStudentDepartmentError: A student department with name Science already exists
+2025-03-13 02:48:48,146 - trakademik - WARNING - UniqueViolationError | b371abca-0a79-4e67-806b-8fb0760ef76e | Duplicate student department creation attempted: An unexpected error occurred
