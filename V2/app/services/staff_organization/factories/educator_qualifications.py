@@ -48,7 +48,7 @@ class QualificationsFactory:
         Returns:
             List[EducatorQualifications]: List of active qualification records
         """
-        fields = ['title', 'description']
+        fields = ['name', 'description']
         return self.repository.execute_query(fields, filters)
 
 
@@ -120,7 +120,7 @@ class QualificationsFactory:
         Returns:
             List[EducatorQualifications]: List of archived qualification records
         """
-        fields = ['title', 'description']
+        fields = ['name', 'description']
         return self.repository.execute_archive_query(fields, filters)
 
 
@@ -145,7 +145,7 @@ class QualificationsFactory:
             EducatorQualifications: Restore qualification record
         """
         try:
-            archived = self.get_archive_qualification(qualification_id)
+            archived = self.get_archived_qualification(qualification_id)
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(qualification_id)
         except EntityNotFoundError:

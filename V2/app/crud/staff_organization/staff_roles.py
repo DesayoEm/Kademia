@@ -65,7 +65,7 @@ class StaffRoleCrud:
         updated_role = self.factory.update_role(role_id, data)
         return StaffRoleResponse.model_validate(updated_role)
 
-    def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRoleResponse:
+    def archive_role(self, role_id: UUID, reason: ArchiveReason) -> None:
         """Archive a staff role.
         Args:
             role_id: Role UUID
@@ -73,8 +73,8 @@ class StaffRoleCrud:
         Returns:
             StaffRoleResponse: Archived role
         """
-        role = self.factory.archive_role(role_id, reason)
-        return StaffRoleResponse.model_validate(role)
+        self.factory.archive_role(role_id, reason)
+
 
 
     def delete_role(self, role_id: UUID) -> None:

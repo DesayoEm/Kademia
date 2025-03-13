@@ -128,8 +128,7 @@ class Staff(ProfileBase):
 
     role_id: Mapped[UUID] = mapped_column(
         ForeignKey('staff_roles.id', ondelete='RESTRICT', name='fk_staff_staff_roles_role_id'),
-        nullable=True  # Making role_id nullable
-    )
+        nullable=True)
     date_joined: Mapped[date] = mapped_column(Date)
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
 

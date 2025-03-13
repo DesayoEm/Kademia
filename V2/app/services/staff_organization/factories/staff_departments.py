@@ -36,7 +36,7 @@ class StaffDepartmentsFactory:
         try:
             return self.repository.create(department)
         except UniqueViolationError as e:
-            raise DuplicateDepartmentError(name=new_department.name, original_error=e)
+            raise DuplicateDepartmentError(input=new_department.name, original_error=e)
 
 
     def get_all_departments(self, filters) -> List[StaffDepartments]:
@@ -83,7 +83,7 @@ class StaffDepartmentsFactory:
         except UniqueViolationError as e:
             field_name = getattr(e, 'field_name', 'name')
             field_value = data.get(field_name, '')
-            raise DuplicateDepartmentError(name=field_value, original_error=e)
+            raise DuplicateDepartmentError(input=field_value, original_error=e)
 
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StaffDepartments:

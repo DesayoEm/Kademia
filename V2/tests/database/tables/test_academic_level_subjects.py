@@ -1,6 +1,5 @@
 from .common_test_imports import *
 
-
 def test_model_structure_column_data_types(db_inspector):
     """Ensure all required columns are present and have the correct data type"""
     table = 'academic_level_subjects'

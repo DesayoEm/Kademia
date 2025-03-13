@@ -8,6 +8,7 @@ from ...schemas.staff_organization.educator_qualifications import(
 from fastapi import Depends, APIRouter
 from ...database.session_manager import get_db
 from ...crud.staff_organization.educator_qualifications import QualificationsCrud
+from ...schemas.shared_models import ArchiveRequest
 from fastapi import Query
 from typing import Annotated
 
@@ -41,11 +42,11 @@ def update_qualification(data: QualificationUpdate, qualification_id: UUID,
         return qualifications_crud.update_qualification(qualification_id, data)
 
 
-@router.patch("/{qualification_id}", response_model=QualificationResponse)
-def archive_qualification(qualification_id: UUID, reason:ArchiveReason,
+@router.patch("/{qualification_id}", status_code=204)
+def archive_qualification(qualification_id: UUID, reason:ArchiveRequest,
                           db: Session = Depends(get_db)):
         qualifications_crud = QualificationsCrud(db)
-        return qualifications_crud.archive_qualification(qualification_id, reason)
+        return qualifications_crud.archive_qualification(qualification_id, reason.reason)
 
 
 @router.delete("/{qualification_id}", status_code=204)

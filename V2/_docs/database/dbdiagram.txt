@@ -1,207 +1,498 @@
-// Users and Authentication
-Table users {
-  profile_id uuid [pk]
-  user_type enum
-  password_hash varchar
-  access_level enum
-  is_active boolean
-  is_verified boolean
+
+Table ProfileBase {
+  id UUID [pk]
+  password_hash varchar(300)
+  first_name varchar(30)
+  last_name varchar(30)
+  gender gender
   last_login timestamp
+  deletion_eligible boolean
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
 }
 
-// Base Profile Tables
-Table students {
-  id uuid [pk]
-  profile_id uuid [ref: > users.profile_id]
-  first_name varchar
-  last_name varchar
-  gender enum
-  access_level enum
-  image_url varchar
-  student_id varchar
-  class_id uuid [ref: > classes.id]
-  department_id uuid [ref: > departments.id]
-  parent_id uuid [ref: > parents.id]
+Table Students {
+  id UUID [pk, ref: - ProfileBase.id]
+  student_id varchar(14) [unique]
+  user_type usertype
+  access_level accesslevel
+  status studentstatus
+  date_of_birth date
+  image_url varchar(200)
+  class_id UUID [ref: > Classes.id]
+  level_id UUID [ref: > AcademicLevel.id]
+  department_id UUID [ref: > StudentDepartments.id]
+  parent_id UUID [ref: > Parents.id]
   is_repeating boolean
   admission_date date
-  leaving_date date
-  is_graduated boolean
+  date_left date
   graduation_date date
-  is_enrolled boolean
-  last_active_date timestamp
-  deletion_eligible boolean
 }
 
-Table parents {
-  id uuid [pk]
-  profile_id uuid [ref: > users.profile_id]
-  first_name varchar
-  last_name varchar
-  gender enum
-  access_level enum
-  image_url varchar
-  email_address varchar
-  address varchar
-  phone varchar
-  has_active_wards boolean
-  last_active_date timestamp
-  deletion_eligible boolean
+Table Parents {
+  id UUID [pk, ref: - ProfileBase.id]
+  access_level accesslevel
+  user_type usertype
+  image_url varchar(225)
+  email_address varchar(255) [unique]
+  address varchar(500)
+  phone varchar(14) [unique]
 }
 
-Table staff {
-  id uuid [pk]
-  profile_id uuid [ref: > users.profile_id]
-  first_name varchar
-  last_name varchar
-  gender enum
-  access_level enum
-  image_url varchar
-  email_address varchar
-  address varchar
-  phone varchar
-  department_id uuid [ref: > staff_departments.id]
-  role_id uuid [ref: > staff_roles.id]
+Table Staff {
+  id UUID [pk, ref: - ProfileBase.id]
+  access_level accesslevel
+  user_type usertype
+  status employmentstatus
+  availability staffavailability
+  staff_type stafftype
+  image_url varchar(200)
+  email_address varchar(255) [unique]
+  address varchar(500)
+  phone varchar(14) [unique]
+  department_id UUID [ref: > StaffDepartments.id]
+  role_id UUID [ref: > StaffRoles.id]
   date_joined date
   date_left date
+}
+
+Table Educator {
+  id UUID [pk, ref: - Staff.id]
+}
+
+Table Operations {
+  id UUID [pk, ref: - Staff.id]
+}
+
+Table Support {
+  id UUID [pk, ref: - Staff.id]
+}
+
+Table System {
+  id UUID [pk, ref: - Staff.id]
+}
+
+// Academic Organization
+
+Table AcademicLevel {
+  id UUID [pk]
+  name varchar(30) [unique]
+  description varchar(500)
+  order integer [unique]
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
+}
+
+Table Classes {
+  id UUID [pk]
+  level_id UUID [ref: > AcademicLevel.id]
+  code classcode
+  mentor_id UUID [ref: > Educator.id]
+  student_rep_id UUID [ref: > Students.id]
+  assistant_rep_id UUID [ref: > Students.id]
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
+}
+
+Table StudentDepartments {
+  id UUID [pk]
+  name varchar(30) [unique]
+  description varchar(500)
+  mentor_id UUID [ref: > Educator.id]
+  student_rep_id UUID [ref: > Students.id]
+  assistant_rep_id UUID [ref: > Students.id]
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
+}
+
+Table StaffDepartments {
+  id UUID [pk]
+  name varchar(100) [unique]
+  description varchar(500)
+  manager_id UUID [ref: > Staff.id]
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
+}
+
+Table StaffRoles {
+  id UUID [pk]
+  name varchar(100) [unique]
+  description varchar(500)
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
+}
+
+// Academic Content
+
+Table Subjects {
+  id UUID [pk]
+  name varchar(30)
+  department_id UUID [ref: > StudentDepartments.id]
+  is_elective boolean
+  syllabus_url varchar(225)
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
+}
+
+Table AcademicLevelSubjects {
+  id UUID [pk]
+  level_id UUID [ref: > AcademicLevel.id]
+  subject_id UUID [ref: > Subjects.id]
+  educator_id UUID [ref: > Educator.id]
+  is_elective boolean
+  academic_year varchar(9)
+  curriculum_url varchar(225)
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
+}
+
+Table StudentSubjects {
+  id UUID [pk]
+  student_id UUID [ref: > Students.id]
+  subject_id UUID [ref: > Subjects.id]
+  academic_year varchar(9)
+  term term
   is_active boolean
-  staff_type enum
-  last_active_date timestamp
-  deletion_eligible boolean
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
 }
 
-// Academic Structure
-Table departments {
-  id uuid [pk]
-  name enum
-  code enum
-  description varchar
-  mentor_id uuid [ref: > educator.id]
+Table SubjectEducators {
+  id UUID [pk]
+  subject_id UUID [ref: > Subjects.id]
+  educator_id UUID [ref: > Educator.id]
+  level_id UUID [ref: > AcademicLevel.id]
+  academic_year varchar(9)
+  term term
+  is_active boolean
+  date_assigned date
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
 }
 
-Table classes {
-  id uuid [pk]
-  level enum
-  code enum
-  mentor_id uuid [ref: > educator.id]
+// Grades & Assessment
+
+Table Grades {
+  id UUID [pk]
+  student_id UUID [ref: > Students.id]
+  subject_id UUID [ref: > Subjects.id]
+  academic_year varchar(9)
+  term term
+  type gradetype
+  score integer
+  file_url varchar(225)
+  feedback varchar(500)
+  graded_by UUID [ref: > Staff.id]
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
 }
 
-// Staff Related Tables
-Table staff_departments {
-  id uuid [pk]
-  name enum
-  description varchar
-  manager_id uuid [ref: > staff.id]
-}
-
-Table staff_roles {
-  id uuid [pk]
-  name varchar
-  description varchar
-}
-
-Table educator {
-  id uuid [pk, ref: > staff.id]
-}
-
-// Academic Records
-Table subjects {
-  id uuid [pk]
-  name varchar
-  class_level enum
-  department_type enum
-  is_compulsory boolean
-}
-
-Table grades {
-  id uuid [pk]
-  student_id uuid [ref: > students.id]
-  subject_id uuid [ref: > subjects.id]
-  department_id uuid [ref: > departments.id]
-  academic_year integer
-  term enum
-  type enum
-  marks integer
-  file_url varchar
-  graded_by uuid [ref: > staff.id]
-}
-
-Table total_grades {
-  id uuid [pk]
-  student_id uuid [ref: > students.id]
-  subject_id uuid [ref: > subjects.id]
-  academic_year integer
-  term enum
-  total_marks float
+Table TotalGrades {
+  id UUID [pk]
+  student_id UUID [ref: > Students.id]
+  subject_id UUID [ref: > Subjects.id]
+  academic_year varchar(9)
+  term term
+  total_score integer
   rank integer
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
 }
 
-Table student_subjects {
-  id uuid [pk]
-  student_id uuid [ref: > students.id]
-  subject_id uuid [ref: > subjects.id]
-  academic_year integer
-  term enum
-  is_active boolean
-  title varchar
-}
+// Student Records
 
-Table educator_subjects {
-  id uuid [pk]
-  educator_id uuid [ref: > educator.id]
-  subject_id uuid [ref: > subjects.id]
-  term enum
+Table StudentClassTransfers {
+  id UUID [pk]
+  student_id UUID [ref: > Students.id]
   academic_year integer
-  is_active boolean
-}
-
-// Student Movement Records
-Table repetitions {
-  id uuid [pk]
-  student_id uuid [ref: > students.id]
-  academic_year integer
-  from_class_level enum
-  to_class_level enum
-  from_class_id uuid [ref: > classes.id]
-  to_class_id uuid [ref: > classes.id]
-  reason varchar
-  status enum
-  status_updated_by uuid [ref: > staff.id]
+  previous_class_id UUID [ref: > Classes.id]
+  new_class_id UUID [ref: > Classes.id]
+  reason varchar(500)
+  status approvalstatus
+  status_updated_by UUID [ref: > Staff.id]
   status_updated_at timestamp
-  rejection_reason varchar
+  rejection_reason varchar(500)
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
 }
 
-Table student_transfers {
-  id uuid [pk]
-  student_id uuid [ref: > students.id]
+Table StudentDepartmentTransfers {
+  id UUID [pk]
+  student_id UUID [ref: > Students.id]
   academic_year integer
-  from_class_level enum
-  to_class_level enum
-  from_department enum
-  to_department enum
-  reason varchar
-  status enum
-  status_updated_by uuid [ref: > staff.id]
+  previous_level_id UUID [ref: > AcademicLevel.id]
+  new_level_id UUID [ref: > AcademicLevel.id]
+  previous_class_id UUID [ref: > Classes.id]
+  new_class_id UUID [ref: > Classes.id]
+  previous_department_id UUID [ref: > StudentDepartments.id]
+  new_department_id UUID [ref: > StudentDepartments.id]
+  reason varchar(500)
+  status approvalstatus
+  status_updated_by UUID [ref: > Staff.id]
   status_updated_at timestamp
-  rejection_reason varchar
+  rejection_reason varchar(500)
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
 }
 
-// Documents
-Table student_documents {
-  id uuid [pk]
-  owner_id uuid [ref: > students.id]
-  title varchar
+Table StudentRepetitions {
+  id UUID [pk]
+  student_id UUID [ref: > Students.id]
   academic_year integer
-  document_type enum
-  file_path varchar
+  previous_level_id UUID [ref: > AcademicLevel.id]
+  new_level_id UUID [ref: > AcademicLevel.id]
+  previous_class_id UUID [ref: > Classes.id]
+  new_class_id UUID [ref: > Classes.id]
+  reason varchar(500)
+  status approvalstatus
+  status_updated_by UUID [ref: > Staff.id]
+  status_updated_at timestamp
+  rejection_reason varchar(500)
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
 }
 
-// Audit tracking
-Table access_level_changes {
-  id uuid [pk]
-  profile_id uuid [ref: > users.profile_id]
-  previous_level enum
-  new_level enum
-  reason varchar
+// Documents & Qualifications
+
+Table StudentDocuments {
+  id UUID [pk]
+  owner_id UUID [ref: > Students.id]
+  title varchar(50)
+  academic_year integer
+  document_type documenttype
+  file_url varchar(225)
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
+}
+
+Table StudentAwards {
+  id UUID [pk]
+  owner_id UUID [ref: > Students.id]
+  title varchar(50)
+  description varchar(225)
+  academic_year integer
+  file_url varchar(225)
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
+}
+
+Table EducatorQualifications {
+  id UUID [pk]
+  educator_id UUID [ref: > Educator.id]
+  name varchar(100) [unique]
+  description varchar(500)
+  created_at timestamp
+  last_modified_at timestamp
+  created_by UUID [ref: > Staff.id]
+  last_modified_by UUID [ref: > Staff.id]
+  is_archived boolean
+  archived_at timestamp
+  archive_reason archiveason
+  archived_by UUID [ref: > Staff.id]
+}
+
+// Audit & Security
+
+Table AccessLevelChanges {
+  id UUID [pk]
+  staff_id UUID [ref: > Staff.id]
+  previous_level accesslevel
+  new_level accesslevel
+  reason varchar(500)
   changed_at timestamp
-  changed_by uuid [ref: > staff.id]
+  changed_by_id UUID [ref: > Staff.id]
+}
+
+// Enums
+Enum gender {
+  MALE
+  FEMALE
+  SYSTEM
+}
+
+Enum usertype {
+  STUDENT
+  PARENT
+  STAFF
+  SYSTEM
+}
+
+Enum documenttype {
+  RESULT
+  ID
+  AWARD
+  CERTIFICATE
+  ARTICLE
+  OTHER
+}
+
+Enum classcode {
+  A
+  B
+  C
+  D
+  E
+  F
+}
+
+Enum term {
+  FIRST
+  SECOND
+  THIRD
+}
+
+Enum gradetype {
+  EXAM
+  TEST
+  ASSIGNMENT
+  PRACTICALS
+  MOCKEXAM
+  EXTRACURRICULAR
+}
+
+Enum approvalstatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+Enum accesslevel {
+  INACTIVE
+  USER
+  ADMIN
+  SUPERUSER
+  SYSTEM
+}
+
+Enum stafftype {
+  EDUCATOR
+  OPERATIONS
+  SUPPORT
+  SYSTEM
+}
+
+Enum staffavailability {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+Enum employmentstatus {
+  ACTIVE
+  LEFT
+}
+
+Enum studentstatus {
+  ENROLLED
+  LEFT
+  GRADUATED
+}
+
+Enum archiveason {
+  ERROR
+  GRADUATED
+  TRANSFERRED
+  WITHDRAWN
+  ADMINISTRATIVE
 }

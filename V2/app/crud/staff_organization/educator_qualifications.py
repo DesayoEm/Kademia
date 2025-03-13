@@ -64,7 +64,7 @@ class QualificationsCrud:
         updated_qualification = self.factory.update_qualification(qualification_id, data)
         return QualificationResponse.model_validate(updated_qualification)
 
-    def archive_qualification(self, qualification_id: UUID, reason: ArchiveReason) -> QualificationResponse:
+    def archive_qualification(self, qualification_id: UUID, reason: ArchiveReason) -> None:
         """Archive a qualification.
         Args:
             qualification_id: Qualification UUID
@@ -72,8 +72,8 @@ class QualificationsCrud:
         Returns:
             QualificationResponse: Archived qualification
         """
-        qualification = self.factory.archive_qualification(qualification_id, reason)
-        return QualificationResponse.model_validate(qualification)
+        self.factory.archive_qualification(qualification_id, reason)
+
 
     def delete_qualification(self, qualification_id: UUID) -> None:
         """Permanently delete a qualification.

@@ -14,7 +14,7 @@ class StaffOrganizationValidators:
             raise BlankFieldError(input = value)
         if len(value.strip()) < 3:
             raise TextTooShortError(input = value)
-        return value.strip().capitalize()
+        return value.strip().title()
 
     @staticmethod
     def validate_description(value:str):

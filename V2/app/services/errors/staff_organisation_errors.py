@@ -1,4 +1,5 @@
 from .base_error import TrakademikError
+from .input_errors import TextTooShortError, EmptyFieldError, BlankFieldError
 from .database_errors import EntityNotFoundError, UniqueViolationError
 from uuid import UUID
 
@@ -7,13 +8,27 @@ class StaffOrganizationError(TrakademikError):
     Base exception class for all exceptions related to staff organization.
     Inherits from TrakademikError.
     """
-    pass
+    DOMAIN = "StaffOrganization"
 
+# Domain-specific extensions of input errors
+class StaffEmptyFieldError(EmptyFieldError):
+    def __init__(self, input: str):
+        super().__init__(input=input, domain=StaffOrganizationError.DOMAIN)
+
+class StaffBlankFieldError(BlankFieldError):
+    def __init__(self, input: str):
+        super().__init__(input=input, domain=StaffOrganizationError.DOMAIN)
+
+class StaffTextTooShortError(TextTooShortError):
+    def __init__(self, input: str, min_length=3):
+        super().__init__(input=input, min_length=min_length, domain=StaffOrganizationError.DOMAIN)
+
+# Original domain-specific errors
 class DuplicateDepartmentError(StaffOrganizationError, UniqueViolationError):
     """Raised when a duplicate department is created."""
-    def __init__(self, name: str, original_error: Exception):
-        UniqueViolationError.__init__(self, field_name="name", value=name)
-        self.user_message = f"A department with name {name} already exists"
+    def __init__(self, input: str, original_error: Exception):
+        UniqueViolationError.__init__(self, field_name="name", value=input)
+        self.user_message = f"A department with name {input} already exists"
         self.log_message = f"Duplicate department creation attempted: {original_error}"
 
 class DepartmentNotFoundError(StaffOrganizationError, EntityNotFoundError):
@@ -51,23 +66,3 @@ class QualificationNotFoundError(StaffOrganizationError, EntityNotFoundError):
         self.user_message = f"Qualification not found!"
         self.log_message = f"Qualification with id:{id} not found"
 
-class EmptyFieldError(StaffOrganizationError):
-    """Raised when a name field is empty."""
-    def __init__(self, input):
-        super().__init__()
-        self.user_message = "Field cannot be empty"
-        self.log_message = f"Entity creation attempted without name : {input}"
-
-class BlankFieldError(StaffOrganizationError):
-    """Raised when a name field is blank (contains only whitespace)."""
-    def __init__(self, input: str):
-        super().__init__()
-        self.user_message = "Field cannot be blank"
-        self.log_message = f"Entity creation attempted with blank name : {input}"
-
-class TextTooShortError(StaffOrganizationError):
-    """Raised when a name is too short, specifically when it has two or fewer characters."""
-    def __init__(self, input: str):
-        super().__init__()
-        self.user_message = "Text has to be three characters or more"
-        self.log_message = f"Entity creation attempted with short name : {input}"

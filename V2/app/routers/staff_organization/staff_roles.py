@@ -7,6 +7,7 @@ from ...schemas.staff_organization.staff_roles import (
 from fastapi import Depends, APIRouter
 from ...database.session_manager import get_db
 from ...crud.staff_organization.staff_roles import StaffRoleCrud
+from ...schemas.shared_models import ArchiveRequest
 from fastapi import Query
 from typing import Annotated
 
@@ -40,11 +41,11 @@ def update_role(data: StaffRoleUpdate, role_id: UUID,
         return roles_crud.update_role(role_id, data)
 
 
-@router.patch("/{role_id}", response_model=StaffRoleResponse)
-def archive_role(role_id: UUID, reason:ArchiveReason,
+@router.patch("/{role_id}", status_code=204)
+def archive_role(role_id: UUID, reason:ArchiveRequest,
                           db: Session = Depends(get_db)):
         roles_crud = StaffRoleCrud(db)
-        return roles_crud.archive_role(role_id, reason)
+        return roles_crud.archive_role(role_id, reason.reason)
 
 
 @router.delete("/{role_id}", status_code=204)
