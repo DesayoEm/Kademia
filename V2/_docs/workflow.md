@@ -38,8 +38,9 @@
 ### 2. Organization Services 
 - [x] Staff departments service
 - [x] Staff roles service
-- [ ] Academic levels service
-- [ ] Student departments service
+- [x] Academic levels service
+- [x] Student departments service
+- [x] Class service
 
 ### 3. User Management Services
 - [ ] Staff service
@@ -48,7 +49,6 @@
 - [ ] Profile service
 
 ### 4. Academic Services
-- [ ] Class management service
 - [ ] Subject management service
 - [ ] Grade management service
 - [ ] Document management service
@@ -77,10 +77,10 @@
 - [ ] Staff routes
 - [ ] Student routes
 - [ ] Parent routes
-- [ ] Department routes
-- [ ] Class routes
-- [ ] Subject routes
-- [ ] Grade routes
+- [x]  Department routes
+- [x]  Class routes
+- [x]  Subject routes
+- [x]  Grade routes
 
 ## Phase 4: Testing & Documentation
 ### 1. Testing

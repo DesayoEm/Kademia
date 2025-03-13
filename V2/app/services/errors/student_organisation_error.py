@@ -54,3 +54,16 @@ class LevelNotFoundError(StudentOrganizationError, EntityNotFoundError):
         self.user_message = f"Academic level not found!"
         self.log_message = f"Academic level with id:{id} not found"
 
+class DuplicateClassError(StudentOrganizationError, UniqueViolationError):
+    """Raised when a duplicate class is created."""
+    def __init__(self, input: str, original_error: Exception):
+        UniqueViolationError.__init__(self, field_name="title", value=input)
+        self.user_message = f"Class {input} already exists for this academic level"
+        self.log_message = f"Duplicate class creation attempted: {original_error}"
+
+class ClassNotFoundError(StudentOrganizationError, EntityNotFoundError):
+    """Raised when a class is not found."""
+    def __init__(self, id: UUID):
+        EntityNotFoundError.__init__(self, entity_type="Role", identifier=str(id))
+        self.user_message = f"Class not found!"
+        self.log_message = f"Class with id:{id} not found"

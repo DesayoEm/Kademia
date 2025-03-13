@@ -3,9 +3,9 @@ from .routers.staff_organization import (
     qualifications, staff_departments, staff_roles, archived_qualifications,
     archived_staff_departments,archived_staff_roles
 )
-
 from .routers.student_organization import (
-    student_departments, archived_student_departments, academic_levels, archived_academic_levels
+    student_departments, archived_student_departments, academic_levels, archived_academic_levels,
+    classes, archived_classes
 )
 from .middleware.error_handler import ExceptionMiddleware
 from .logging.logger import logger
@@ -47,6 +47,13 @@ app.include_router(academic_levels.router, prefix=f"/api/{version}/students/acad
                    tags=["Academic levels"])
 app.include_router(archived_academic_levels.router, prefix=f"/api/{version}/archive/students/academic%20levels",
                    tags=["Archived","Academic levels"])
+
+# Classes
+app.include_router(classes.router, prefix=f"/api/{version}/students/classes",
+                   tags=["Classes"])
+app.include_router(archived_classes.router, prefix=f"/api/{version}/archive/students/classes",
+                   tags=["Archived","Classes"])
+
 
 
 @app.get("/")

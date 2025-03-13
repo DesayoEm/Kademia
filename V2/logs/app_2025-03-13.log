@@ -146,3 +146,37 @@ app.services.errors.student_organisation_error.DuplicateStudentDepartmentError: 
 2025-03-13 04:27:43,155 - trakademik - INFO - Application started
 2025-03-13 04:28:00,940 - trakademik - INFO - Application started
 2025-03-13 04:46:00,067 - trakademik - INFO - Application started
+2025-03-13 05:05:46,743 - trakademik - INFO - Application started
+2025-03-13 05:12:28,608 - trakademik - INFO - Application started
+2025-03-13 05:13:53,095 - trakademik - INFO - Request started | 5e5086a2-d0ef-42d7-8bd3-ae94e463b741 | GET /docs
+2025-03-13 05:13:53,098 - trakademik - INFO - Request completed | 5e5086a2-d0ef-42d7-8bd3-ae94e463b741 | Status: 200 | Time: 0.001s
+2025-03-13 05:13:53,563 - trakademik - INFO - Request started | 08260c29-738b-4e72-b4b4-f5127b3f6dad | GET /openapi.json
+2025-03-13 05:13:53,624 - trakademik - INFO - Request completed | 08260c29-738b-4e72-b4b4-f5127b3f6dad | Status: 200 | Time: 0.060s
+2025-03-13 05:29:12,923 - trakademik - INFO - Application started
+2025-03-13 05:34:36,555 - trakademik - INFO - Application started
+2025-03-13 05:34:51,480 - trakademik - INFO - Application started
+2025-03-13 05:35:47,697 - trakademik - INFO - Application started
+2025-03-13 05:40:06,398 - trakademik - INFO - Application started
+2025-03-13 06:07:21,767 - trakademik - INFO - Application started
+2025-03-13 06:07:55,014 - trakademik - INFO - Application started
+2025-03-13 06:09:08,602 - trakademik - INFO - Application started
+2025-03-13 15:19:41,362 - trakademik - INFO - Application started
+2025-03-13 15:23:27,935 - trakademik - INFO - Application started
+2025-03-13 15:29:02,421 - trakademik - INFO - Application started
+2025-03-13 15:31:19,513 - trakademik - INFO - Application started
+2025-03-13 15:52:08,388 - trakademik - INFO - Application started
+2025-03-13 15:54:34,335 - trakademik - INFO - Application started
+2025-03-13 16:04:46,422 - trakademik - INFO - Application started
+2025-03-13 16:06:06,379 - trakademik - INFO - Application started
+2025-03-13 16:09:53,718 - trakademik - INFO - Application started
+2025-03-13 16:13:23,438 - trakademik - INFO - Application started
+2025-03-13 16:25:26,108 - trakademik - INFO - Application started
+2025-03-13 16:26:56,039 - trakademik - INFO - Application started
+2025-03-13 16:28:53,829 - trakademik - INFO - Application started
+2025-03-13 16:29:33,987 - trakademik - INFO - Application started
+2025-03-13 16:29:54,978 - trakademik - INFO - Application started
+2025-03-13 16:30:10,012 - trakademik - INFO - Application started
+2025-03-13 16:30:51,340 - trakademik - INFO - Application started
+2025-03-13 16:30:53,685 - trakademik - INFO - Application started
+2025-03-13 16:31:34,104 - trakademik - INFO - Application started
+2025-03-13 16:31:48,832 - trakademik - INFO - Application started

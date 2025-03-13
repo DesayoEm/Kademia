@@ -1,14 +1,22 @@
 from ..common_imports import *
+from ..shared_models import *
 from ..enums import ArchiveReason, ClassCode
 
+class ClassCodeRequest(BaseModel):
+    reason: ClassCode
+
+class ClassFilterParams(BaseFilterParams):
+    level_id: UUID | None = None
+    code: str |None = None
+    order_by: Literal["order", "created_at"] = "order"
 
 class ClassBase(BaseModel):
     """Base model for class levels"""
     level_id: UUID
     code: ClassCode
-    mentor_id: UUID
-    student_rep_id: UUID
-    assistant_rep_id: UUID
+    mentor_id: UUID | None = None
+    student_rep_id: UUID | None = None
+    assistant_rep_id: UUID | None = None
     order: int | None = None
 
     model_config = ConfigDict(
@@ -18,9 +26,7 @@ class ClassBase(BaseModel):
         "example": {
             "level_id": "00000000-0000-0000-0000-000000000000",
             "code": "A",
-            "mentor_id": "00000000-0000-0000-0000-000000000000",
-            "student_rep_id": "00000000-0000-0000-0000-000000000000",
-            "assistant_rep_id": "00000000-0000-0000-0000-000000000000",
+            "order": "1"
         }}
     )
 

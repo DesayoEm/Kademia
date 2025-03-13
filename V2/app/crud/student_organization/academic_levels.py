@@ -3,7 +3,7 @@ from ...database.models.student_organization import AcademicLevel
 from ...schemas.student_organization.academic_levels import (
     AcademicLevelCreate, AcademicLevelUpdate, AcademicLevelResponse, AcademicLevelFilterParams
 )
-from ...services.student_organization.factories.academic_levels import AcademicLevelFactory
+from ...services.student_organization.academic_levels.factory import AcademicLevelFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
