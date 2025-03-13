@@ -1,30 +1,45 @@
 from ..common_imports import *
-from ..enums import ArchiveReason
+from ..shared_models import *
+
+
+class AcademicLevelFilterParams(BaseFilterParams):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    order_by: Literal["name", "created_at"] = "name"
+
 
 class AcademicLevelBase(BaseModel):
     """Base model for class levels"""
     name: str
     description: str
 
-    class Config:
-        from_attributes = True
-
-    json_schema_extra = {
-        "example": {
-            "name": "JSS1",
-            "description": "First Level in the Secondary School System",
-        }}
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra = {
+            "json_schema_extra": {
+                "example": {
+                    "name": "JSS1",
+                    "description": "First Level in the Secondary School System"
+                }}
+        }
+    )
 
 class AcademicLevelUpdate(AcademicLevelBase):
     """Used for updating class levels"""
     order: int | None = None
 
-    json_schema_extra = {
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra = {
         "example": {
             "name": "JSS2",
             "description": "Second Level in the Secondary School System",
             "order": "1",
-        }}
+        }
+        }
+    )
 
 class AcademicLevelCreate(AcademicLevelUpdate):
     """Used for creating new class levels"""
@@ -47,7 +62,10 @@ class AcademicLevelInDB(AcademicLevelBase):
     archive_reason: ArchiveReason | None = None
     order: int
 
-    json_schema_extra = {
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra = {
         "example": {
             "name": "JSS2",
             "description": "Second Level in the Secondary School System",
@@ -60,4 +78,6 @@ class AcademicLevelInDB(AcademicLevelBase):
             "archived_at": None,
             "archived_by": None,
             "archive_reason": None
-        }}
+        }
+        }
+    )

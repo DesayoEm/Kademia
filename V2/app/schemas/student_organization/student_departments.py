@@ -16,7 +16,9 @@ class DepartmentBase(BaseModel):
     assistant_rep_id: UUID | None = None
 
     model_config = ConfigDict(
-        from_attributes=True,json_schema_extra = {
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra = {
         "example": {
             "name": "Science",
             "description": "Science Classes"
@@ -51,7 +53,9 @@ class DepartmentInDB(DepartmentBase):
     archive_reason: ArchiveReason | None = None
 
     model_config = ConfigDict(
-        from_attributes=True,json_schema_extra = {
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra = {
         "example": {
             "id": "00000000-0000-0000-0000-000000000000",
             "name": "Science",

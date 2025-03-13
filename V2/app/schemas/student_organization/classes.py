@@ -11,10 +11,10 @@ class ClassBase(BaseModel):
     assistant_rep_id: UUID
     order: int | None = None
 
-    class Config:
-        from_attributes = True
-
-    json_schema_extra = {
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra = {
         "example": {
             "level_id": "00000000-0000-0000-0000-000000000000",
             "code": "A",
@@ -22,6 +22,8 @@ class ClassBase(BaseModel):
             "student_rep_id": "00000000-0000-0000-0000-000000000000",
             "assistant_rep_id": "00000000-0000-0000-0000-000000000000",
         }}
+    )
+
 
 class ClassUpdate(ClassBase):
     """Used for updating class levels"""
@@ -50,7 +52,11 @@ class ClassInDB(ClassBase):
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
 
-    json_schema_extra = {
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra = {
+        "json_schema_extra": {
         "example": {
             "id": "00000000-0000-0000-0000-000000000000",
             "level_id": "00000000-0000-0000-0000-000000000000",
@@ -67,5 +73,6 @@ class ClassInDB(ClassBase):
             "archived_at": None,
             "archived_by": None,
             "archive_reason": None
-        }}
+        }
+        }})
 

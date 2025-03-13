@@ -125,3 +125,24 @@ Traceback (most recent call last):
     raise DuplicateStudentDepartmentError(input=new_department.name, original_error=e)
 app.services.errors.student_organisation_error.DuplicateStudentDepartmentError: A student department with name Science already exists
 2025-03-13 02:48:48,146 - trakademik - WARNING - UniqueViolationError | b371abca-0a79-4e67-806b-8fb0760ef76e | Duplicate student department creation attempted: An unexpected error occurred
+2025-03-13 02:50:01,060 - trakademik - INFO - Application started
+2025-03-13 03:04:56,156 - trakademik - INFO - Application started
+2025-03-13 03:05:01,471 - trakademik - INFO - Application started
+2025-03-13 03:05:31,136 - trakademik - INFO - Application started
+2025-03-13 03:06:37,786 - trakademik - INFO - Application started
+2025-03-13 03:08:59,982 - trakademik - INFO - Application started
+2025-03-13 03:10:24,529 - trakademik - INFO - Application started
+2025-03-13 03:12:57,244 - trakademik - INFO - Application started
+2025-03-13 03:20:44,470 - trakademik - INFO - Application started
+2025-03-13 03:22:47,959 - trakademik - INFO - Application started
+2025-03-13 03:24:11,058 - trakademik - INFO - Application started
+2025-03-13 03:25:54,396 - trakademik - INFO - Application started
+2025-03-13 03:27:32,649 - trakademik - INFO - Application started
+2025-03-13 03:37:16,345 - trakademik - INFO - Application started
+2025-03-13 03:40:05,177 - trakademik - INFO - Application started
+2025-03-13 03:42:20,656 - trakademik - INFO - Application started
+2025-03-13 04:26:00,021 - trakademik - INFO - Application started
+2025-03-13 04:26:57,561 - trakademik - INFO - Application started
+2025-03-13 04:27:43,155 - trakademik - INFO - Application started
+2025-03-13 04:28:00,940 - trakademik - INFO - Application started
+2025-03-13 04:46:00,067 - trakademik - INFO - Application started

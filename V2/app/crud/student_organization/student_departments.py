@@ -2,7 +2,7 @@ from ...database.models.data_enums import ArchiveReason
 from ...schemas.student_organization.student_departments import (
     DepartmentCreate, DepartmentUpdate, DepartmentResponse, DepartmentFilterParams
 )
-from ...services.student_organization.factories.student_departments import StudentDepartmentsFactory
+from ...services.student_organization.factories.student_departments import StudentDepartmentFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
@@ -17,7 +17,7 @@ class DepartmentCrud:
             session: SQLAlchemy database session
         """
         self.session = session
-        self.factory = StudentDepartmentsFactory(session)
+        self.factory = StudentDepartmentFactory(session)
 
 
     def create_department(self, data: DepartmentCreate) -> DepartmentResponse:
@@ -43,9 +43,9 @@ class DepartmentCrud:
 
 
     def get_all_departments(self, filters: DepartmentFilterParams) -> List[DepartmentResponse]:
-        """Get all active educator qualifications.
+        """Get all active departments.
         Returns:
-            List[QualificationResponse]: List of active qualifications
+            List[DepartmentResponse]: List of active departments
         """
         departments = self.factory.get_all_departments(filters)
         return [DepartmentResponse.model_validate(department) for department in departments]

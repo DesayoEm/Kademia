@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from .routers.staff_organization import (
-    qualifications, staff_departments, staff_roles, archived_qualifications, archived_staff_departments,
-    archived_staff_roles
+    qualifications, staff_departments, staff_roles, archived_qualifications,
+    archived_staff_departments,archived_staff_roles
 )
 
 from .routers.student_organization import (
-    student_departments, archived_student_departments
+    student_departments, archived_student_departments, academic_levels, archived_academic_levels
 )
 from .middleware.error_handler import ExceptionMiddleware
 from .logging.logger import logger
@@ -41,6 +41,12 @@ app.include_router(student_departments.router, prefix=f"/api/{version}/students/
                    tags=["Student Departments"])
 app.include_router(archived_student_departments.router, prefix=f"/api/{version}/archive/students/departments",
                    tags=["Archived","Student Departments"])
+
+# Academic Levels
+app.include_router(academic_levels.router, prefix=f"/api/{version}/students/academic%20levels",
+                   tags=["Academic levels"])
+app.include_router(archived_academic_levels.router, prefix=f"/api/{version}/archive/students/academic%20levels",
+                   tags=["Archived","Academic levels"])
 
 
 @app.get("/")

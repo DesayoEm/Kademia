@@ -15,14 +15,14 @@ router = APIRouter()
 
 
 @router.get("/", response_model=list[DepartmentResponse])
-def get_archived_student_departments(filters: Annotated[DepartmentFilterParams, Query()],
+def get_archived_departments(filters: Annotated[DepartmentFilterParams, Query()],
                                    db: Session = Depends(get_db)):
     student_departments_crud = DepartmentCrud(db)
     return student_departments_crud.get_all_archived_departments(filters)
 
 
 @router.get("/{department_id}", response_model=DepartmentResponse)
-def get_archived_staff_department(department_id: UUID, db: Session = Depends(get_db)):
+def get_archived_department(department_id: UUID, db: Session = Depends(get_db)):
     student_departments_crud = DepartmentCrud(db)
     return student_departments_crud.get_archived_department(department_id)
 

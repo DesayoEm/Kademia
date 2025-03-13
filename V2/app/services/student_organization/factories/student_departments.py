@@ -12,7 +12,7 @@ from ....services.errors.student_organisation_error import (
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
-class StudentDepartmentsFactory:
+class StudentDepartmentFactory:
     """Factory class for managing student department operations."""
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(StudentDepartments, session)
