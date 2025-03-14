@@ -5,7 +5,8 @@ from ....services.staff_organization.validators import StaffOrganizationValidato
 from ....database.models.staff_organization import EducatorQualifications
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
 from ....database.models.data_enums import ArchiveReason
-from ....services.errors.database_errors import EntityNotFoundError, UniqueViolationError
+from ....services.errors.database_errors import (
+    EntityNotFoundError, UniqueViolationError, RelationshipError)
 from ....services.errors.staff_organisation_errors import QualificationNotFoundError, DuplicateQualificationError
 
 
@@ -41,6 +42,11 @@ class QualificationsFactory:
             return self.repository.create(qualification)
         except UniqueViolationError as e:
             raise DuplicateQualificationError(name=new_qualification.name, original_error=e)
+        except EntityNotFoundError:
+            raise QualificationNotFoundError(id=new_qualification.educator_id)#needs to be user
+        except RelationshipError:
+            raise QualificationNotFoundError(id=new_qualification.educator_id)#needs to be user
+
 
 
     def get_all_qualifications(self, filters) -> List[EducatorQualifications]:
@@ -77,17 +83,18 @@ class QualificationsFactory:
             existing = self.get_qualification(qualification_id)
             if 'name' in data:
                 existing.name = self.validator.validate_name(data['name'])
-            if 'description' in data:
-                existing.description = self.validator.validate_name(data['description'])
+            if 'name' in data:
+                existing.name = self.validator.validate_name(data['name'])
             existing.last_modified_by = SYSTEM_USER_ID
 
             return self.repository.update(qualification_id, existing)
         except EntityNotFoundError:
-            raise QualificationNotFoundError(id=qualification_id)
+            raise QualificationNotFoundError(id=qualification_id) #Entity could also ba en educator
         except UniqueViolationError as e:
             field_name = getattr(e, 'field_name', 'name')
             field_value = data.get(field_name, '')
             raise DuplicateQualificationError(name=field_value, original_error=e)
+
 
 
     def archive_qualification(self, qualification_id: UUID, reason: ArchiveReason) -> EducatorQualifications:

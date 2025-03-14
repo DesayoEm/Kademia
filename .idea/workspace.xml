@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d49e4f62-7add-4eb8-a665-00ba3b079643" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/TraKademik.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/my_test_package.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/_docs/workflow.md" beforeDir="false" afterPath="$PROJECT_DIR$/V2/_docs/workflow.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/student_organization/academic_levels.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/student_organization/academic_levels.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/db_repositories/sqlalchemy_repos/main_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/db_repositories/sqlalchemy_repos/main_repo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/routers/student_organization/academic_levels.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/student_organization/academic_levels.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/routers/student_organization/student_departments.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/student_organization/student_departments.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/schemas/student_organization/academic_levels.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/student_organization/academic_levels.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/database_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/errors/database_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/student_organisation_error.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/errors/student_organisation_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/factories/educator_qualifications.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/staff_organization/factories/educator_qualifications.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/academic_levels/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/student_organization/academic_levels/factory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/classes/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/student_organization/classes/factory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/departments/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/student_organization/departments/factory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/logs/app_2025-03-13.log" beforeDir="false" afterPath="$PROJECT_DIR$/V2/logs/app_2025-03-13.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/V2/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/setup.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2rokPjSUkJ747LfwxfVK06IDAwk" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Docker.V2.test-db: Compose Deployment.executor": "Run",
+    "Docker.V2: Compose Deployment.executor": "Run",
+    "Python.config.executor": "Run",
+    "Python.env.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.package.executor": "Run",
+    "Python.script.executor": "Run",
+    "Python.setup.executor": "Run",
+    "Python.test_db.executor": "Run",
+    "Python.test_unit_schema_validation_qualifications.executor": "Run",
+    "Python.test_unit_schema_validation_staff_departments.executor": "Run",
+    "Python.test_users.executor": "Run",
+    "Python.write.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/dell/Desktop/Engineering/Projects/Middleware API",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.30804598",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\tests\unit\test_unit_staff_departments" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\staff_organization" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\profiles" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\tests\unit\test_unit_roles" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\tests" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\staff_organization" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d49e4f62-7add-4eb8-a665-00ba3b079643" name="Changes" comment="" />
+      <created>1737232792771</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1737232792771</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.py" />
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.ini" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

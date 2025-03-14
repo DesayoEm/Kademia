@@ -29,7 +29,7 @@ class AcademicLevelCrud:
             AcademicLevelResponse: Created academic level
         """
         level = self.factory.create_academic_level(data)
-        return AcademicLevelResponse.model_validate(AcademicLevel)
+        return AcademicLevelResponse.model_validate(level)
 
 
     def get_level(self, level_id: UUID) -> AcademicLevelResponse:

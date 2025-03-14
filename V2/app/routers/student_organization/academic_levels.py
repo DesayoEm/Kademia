@@ -14,7 +14,6 @@ from typing import Annotated
 
 router = APIRouter()
 
-
 @router.post("/", response_model= AcademicLevelResponse, status_code=201)
 def create_academic_level(data:AcademicLevelCreate,
                             db: Session = Depends(get_db)):

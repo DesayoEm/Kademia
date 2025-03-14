@@ -16,7 +16,7 @@ router = APIRouter()
 
 
 @router.post("/", response_model= DepartmentResponse, status_code=201)
-def create_staff_department(data:DepartmentCreate,
+def create_department(data:DepartmentCreate,
                             db: Session = Depends(get_db)):
     student_departments_crud = DepartmentCrud(db)
     return student_departments_crud.create_department(data)
@@ -24,21 +24,21 @@ def create_staff_department(data:DepartmentCreate,
 
 
 @router.get("/", response_model=list[DepartmentResponse])
-def get_staff_departments(filters: Annotated[DepartmentFilterParams, Query()],
+def get_departments(filters: Annotated[DepartmentFilterParams, Query()],
                           db: Session = Depends(get_db)):
     student_departments_crud = DepartmentCrud(db)
     return student_departments_crud.get_all_departments(filters)
 
 
 @router.get("/{department_id}", response_model=DepartmentResponse)
-def get_staff_department(department_id: UUID, db: Session = Depends(get_db)):
+def get_department(department_id: UUID, db: Session = Depends(get_db)):
     student_departments_crud = DepartmentCrud(db)
     return student_departments_crud.get_department(department_id)
 
 
 
 @router.put("/{department_id}", response_model=DepartmentResponse)
-def update_staff_department(data: DepartmentUpdate, department_id: UUID,
+def update_department(data: DepartmentUpdate, department_id: UUID,
                             db: Session = Depends(get_db)):
     student_departments_crud = DepartmentCrud(db)
     return student_departments_crud.update_department(department_id, data)

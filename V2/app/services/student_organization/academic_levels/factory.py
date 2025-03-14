@@ -6,7 +6,7 @@ from ....database.models.data_enums import ArchiveReason
 from ....services.errors.database_errors import EntityNotFoundError, UniqueViolationError
 from ....services.student_organization.validators import StudentOrganizationValidators
 from ....database.models.student_organization import AcademicLevel
-from ....services.errors.student_organisation_error import (
+from ....services.errors.student_organisation_errors import (
     DuplicateLevelError, LevelNotFoundError
 )
 
@@ -29,13 +29,24 @@ class AcademicLevelFactory:
             id = uuid4(),
             name = self.validator.validate_name(new_academic_level.name),
             description = self.validator.validate_name(new_academic_level.description),
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID
+            order = new_academic_level.order,
+            created_by=SYSTEM_USER_ID,#Placeholder until auth is implemented
+            last_modified_by=SYSTEM_USER_ID#Same
         )
         try:
             return self.repository.create(academic_level)
-        except UniqueViolationError as e:
-            raise DuplicateLevelError(input=new_academic_level.name, original_error=e)
+        except UniqueViolationError as e:#Could either be on name or order
+            error_message = str(e)
+            if "name" in error_message.lower():#Cant extract
+                raise DuplicateLevelError(
+                    input=new_academic_level.name, field = "name",original_error=e)
+            elif "order" in error_message.lower():#Same here
+                raise DuplicateLevelError(
+                    input=str(new_academic_level.order),field = "order",original_error=e)
+            else:#Not helpful
+                raise DuplicateLevelError(
+                    input="unknown field", field = "unknown", original_error=e)
+
 
     def get_academic_level(self, academic_level_id: UUID) -> AcademicLevel:
         """Get a specific academic level by ID.

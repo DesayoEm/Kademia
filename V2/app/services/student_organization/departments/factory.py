@@ -6,7 +6,7 @@ from ....database.models.data_enums import ArchiveReason
 from ....services.errors.database_errors import EntityNotFoundError, UniqueViolationError
 from ....services.student_organization.validators import StudentOrganizationValidators
 from ....database.models.student_organization import StudentDepartments
-from ....services.errors.student_organisation_error import (
+from ....services.errors.student_organisation_errors import (
      DuplicateStudentDepartmentError, StudentDepartmentNotFoundError
     )
 

@@ -1,4 +1,4 @@
-# Academic Management System (AMS) Implementation Workflow
+# Kademia Implementation Workflow
 
 ## Phase 0: Database Setup
 ### 1. PostgreSQL & SQLAlchemy Setup
@@ -46,7 +46,7 @@
 - [ ] Staff service
 - [ ] Parent service
 - [ ] Student service
-- [ ] Profile service
+
 
 ### 4. Academic Services
 - [ ] Subject management service

@@ -1,0 +1,1331 @@
+2025-03-14 00:16:25,173 - trakademik - INFO - Application started
+2025-03-14 00:16:31,439 - trakademik - INFO - Request started | b3bda08b-9aaf-4434-bb4d-274bdb6b5cfe | GET /
+2025-03-14 00:16:31,455 - trakademik - INFO - Request completed | b3bda08b-9aaf-4434-bb4d-274bdb6b5cfe | Status: 200 | Time: 0.007s
+2025-03-14 00:16:31,741 - trakademik - INFO - Request started | e0806864-1d80-4b67-a48c-c7cd5ad1c53b | GET /favicon.ico
+2025-03-14 00:16:31,744 - trakademik - INFO - Request completed | e0806864-1d80-4b67-a48c-c7cd5ad1c53b | Status: 404 | Time: 0.002s
+2025-03-14 00:16:36,731 - trakademik - INFO - Request started | bfe123b2-0b4d-40d7-bae9-f512f40df9ee | GET /docs
+2025-03-14 00:16:36,733 - trakademik - INFO - Request completed | bfe123b2-0b4d-40d7-bae9-f512f40df9ee | Status: 200 | Time: 0.001s
+2025-03-14 00:16:37,122 - trakademik - INFO - Request started | 0c8f9470-067b-4037-8b85-0458ecdc8946 | GET /openapi.json
+2025-03-14 00:16:37,242 - trakademik - INFO - Request completed | 0c8f9470-067b-4037-8b85-0458ecdc8946 | Status: 200 | Time: 0.118s
+2025-03-14 00:17:08,434 - trakademik - INFO - Request started | 50d7072e-e272-4fb9-bb7f-d967e459a63d | POST /api/v1/students/academic levels/
+2025-03-14 00:17:08,435 - trakademik - INFO - Request completed | 50d7072e-e272-4fb9-bb7f-d967e459a63d | Status: 404 | Time: 0.001s
+2025-03-14 00:28:38,523 - trakademik - INFO - Application started
+2025-03-14 00:28:42,710 - trakademik - INFO - Request started | 7bd88f0d-13b4-4b07-8cdb-c5497f650717 | GET /docs
+2025-03-14 00:28:42,712 - trakademik - INFO - Request completed | 7bd88f0d-13b4-4b07-8cdb-c5497f650717 | Status: 200 | Time: 0.002s
+2025-03-14 00:28:42,996 - trakademik - INFO - Request started | 75e252d5-8f8e-42ee-baba-9d7fd8dee895 | GET /openapi.json
+2025-03-14 00:28:43,071 - trakademik - INFO - Request completed | 75e252d5-8f8e-42ee-baba-9d7fd8dee895 | Status: 200 | Time: 0.075s
+2025-03-14 00:30:10,568 - trakademik - INFO - Request started | c2558e4d-b685-437c-bf19-bda12703fb3f | POST /api/v1/students/academic_levels/
+2025-03-14 00:30:10,982 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-14 00:30:10,982 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:30:10,985 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-14 00:30:10,986 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:30:10,989 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-14 00:30:10,989 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:30:10,990 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 00:30:10,993 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 00:30:10,994 - sqlalchemy.engine.Engine - INFO - [generated in 0.00113s] {'id': UUID('490af5ec-f630-4072-9ca7-0437aac8e714'), 'name': 'Jss1', 'description': 'First Level In The Secondary School System', 'order': None, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 00:30:11,007 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 00:30:11,013 - trakademik - ERROR - Unhandled exception | c2558e4d-b685-437c-bf19-bda12703fb3f | 3 validation errors for AcademicLevelResponse
+name
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43D80>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+description
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43BA0>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+order
+  Input should be a valid integer [type=int_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43E20>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/int_type
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 32, in create_level
+    return AcademicLevelResponse.model_validate(AcademicLevel)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\pydantic\main.py", line 627, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for AcademicLevelResponse
+name
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43D80>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+description
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43BA0>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+order
+  Input should be a valid integer [type=int_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43E20>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/int_type
+2025-03-14 00:30:18,472 - trakademik - INFO - Request started | b33e7aa9-8140-4e4c-b48c-d1dc87ad09b9 | POST /api/v1/students/academic_levels/
+2025-03-14 00:30:18,475 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 00:30:18,476 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 00:30:18,476 - sqlalchemy.engine.Engine - INFO - [cached since 7.484s ago] {'id': UUID('9f878162-60e6-43cf-b14d-67815365da6a'), 'name': 'Jss1', 'description': 'First Level In The Secondary School System', 'order': None, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 00:30:18,478 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 00:30:18,481 - trakademik - ERROR - Unhandled exception | b33e7aa9-8140-4e4c-b48c-d1dc87ad09b9 | 3 validation errors for AcademicLevelResponse
+name
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43D80>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+description
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43BA0>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+order
+  Input should be a valid integer [type=int_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43E20>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/int_type
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 32, in create_level
+    return AcademicLevelResponse.model_validate(AcademicLevel)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\pydantic\main.py", line 627, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for AcademicLevelResponse
+name
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43D80>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+description
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43BA0>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+order
+  Input should be a valid integer [type=int_type, input_value=<sqlalchemy.orm.attribute...t at 0x000002579DA43E20>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/int_type
+2025-03-14 00:32:11,696 - trakademik - INFO - Application started
+2025-03-14 00:32:16,346 - trakademik - INFO - Request started | 6dd99ef3-4e35-4ea1-92ed-44717de46650 | GET /docs
+2025-03-14 00:32:16,348 - trakademik - INFO - Request completed | 6dd99ef3-4e35-4ea1-92ed-44717de46650 | Status: 200 | Time: 0.000s
+2025-03-14 00:32:16,485 - trakademik - INFO - Request started | 5d3b1aee-5df5-4d03-b6ee-27e99111eb4d | GET /openapi.json
+2025-03-14 00:32:16,560 - trakademik - INFO - Request completed | 5d3b1aee-5df5-4d03-b6ee-27e99111eb4d | Status: 200 | Time: 0.075s
+2025-03-14 00:34:11,739 - trakademik - INFO - Application started
+2025-03-14 00:34:31,749 - trakademik - INFO - Application started
+2025-03-14 00:34:47,091 - trakademik - INFO - Request started | f08aaf09-aa49-45bf-a113-e6bf81312df1 | GET /docs
+2025-03-14 00:34:47,094 - trakademik - INFO - Request completed | f08aaf09-aa49-45bf-a113-e6bf81312df1 | Status: 200 | Time: 0.001s
+2025-03-14 00:34:47,230 - trakademik - INFO - Request started | 5d675b12-40f7-495b-bd3c-7d1c76c20752 | GET /openapi.json
+2025-03-14 00:34:47,305 - trakademik - INFO - Request completed | 5d675b12-40f7-495b-bd3c-7d1c76c20752 | Status: 200 | Time: 0.075s
+2025-03-14 00:35:45,180 - trakademik - INFO - Application started
+2025-03-14 00:35:46,040 - trakademik - INFO - Request started | 3a91639e-9da1-48df-8f21-d1a53abc47ed | GET /docs
+2025-03-14 00:35:46,041 - trakademik - INFO - Request completed | 3a91639e-9da1-48df-8f21-d1a53abc47ed | Status: 200 | Time: 0.001s
+2025-03-14 00:35:46,183 - trakademik - INFO - Request started | 5ece52eb-d296-425c-8f77-9ec28ad01adf | GET /openapi.json
+2025-03-14 00:35:46,256 - trakademik - INFO - Request completed | 5ece52eb-d296-425c-8f77-9ec28ad01adf | Status: 200 | Time: 0.073s
+2025-03-14 00:37:00,583 - trakademik - INFO - Application started
+2025-03-14 00:37:06,730 - trakademik - INFO - Request started | 593b9536-9e2e-417d-98ed-5413192c3c2d | GET /docs
+2025-03-14 00:37:06,731 - trakademik - INFO - Request completed | 593b9536-9e2e-417d-98ed-5413192c3c2d | Status: 200 | Time: 0.000s
+2025-03-14 00:37:06,892 - trakademik - INFO - Request started | 1f58fda0-9583-4ff5-98a7-200dd2670e46 | GET /openapi.json
+2025-03-14 00:37:06,993 - trakademik - INFO - Request completed | 1f58fda0-9583-4ff5-98a7-200dd2670e46 | Status: 200 | Time: 0.101s
+2025-03-14 00:37:28,823 - trakademik - INFO - Request started | fbf62bbe-f3c2-43d8-850d-be23dae2b50e | POST /api/v1/students/academic_levels/
+2025-03-14 00:37:29,076 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-14 00:37:29,076 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:37:29,077 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-14 00:37:29,077 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:37:29,078 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-14 00:37:29,079 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:37:29,080 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 00:37:29,083 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 00:37:29,083 - sqlalchemy.engine.Engine - INFO - [generated in 0.00066s] {'id': UUID('0cbdda6b-52de-43d8-9a3b-e0c22de9d212'), 'name': 'Jss1', 'description': 'First Level In The Secondary School System', 'order': None, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 00:37:29,086 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 00:37:29,090 - trakademik - ERROR - Unhandled exception | fbf62bbe-f3c2-43d8-850d-be23dae2b50e | 3 validation errors for AcademicLevelResponse
+name
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x00000228D5B83D80>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+description
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x00000228D5B83BA0>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+order
+  Input should be a valid integer [type=int_type, input_value=<sqlalchemy.orm.attribute...t at 0x00000228D5B83E20>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/int_type
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 32, in create_level
+    return AcademicLevelResponse.model_validate(AcademicLevel)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\pydantic\main.py", line 627, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for AcademicLevelResponse
+name
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x00000228D5B83D80>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+description
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x00000228D5B83BA0>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+order
+  Input should be a valid integer [type=int_type, input_value=<sqlalchemy.orm.attribute...t at 0x00000228D5B83E20>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/int_type
+2025-03-14 00:40:44,942 - trakademik - INFO - Application started
+2025-03-14 00:40:46,755 - trakademik - INFO - Request started | 49b73e7d-6662-4fef-9fe1-3a8484e29924 | GET /docs
+2025-03-14 00:40:46,757 - trakademik - INFO - Request completed | 49b73e7d-6662-4fef-9fe1-3a8484e29924 | Status: 200 | Time: 0.001s
+2025-03-14 00:40:46,896 - trakademik - INFO - Request started | 6b82b222-3b49-4077-9cfb-6def06083490 | GET /openapi.json
+2025-03-14 00:40:46,964 - trakademik - INFO - Request completed | 6b82b222-3b49-4077-9cfb-6def06083490 | Status: 200 | Time: 0.067s
+2025-03-14 00:41:09,439 - trakademik - INFO - Application started
+2025-03-14 00:41:10,892 - trakademik - INFO - Request started | cb1ee223-b72f-4862-80fa-65c0c063fb4f | GET /docs
+2025-03-14 00:41:10,893 - trakademik - INFO - Request completed | cb1ee223-b72f-4862-80fa-65c0c063fb4f | Status: 200 | Time: 0.000s
+2025-03-14 00:41:11,070 - trakademik - INFO - Request started | 9792e493-fa69-4dca-a64b-35013f8ea4cc | GET /openapi.json
+2025-03-14 00:41:11,216 - trakademik - INFO - Request completed | 9792e493-fa69-4dca-a64b-35013f8ea4cc | Status: 200 | Time: 0.146s
+2025-03-14 00:41:55,553 - trakademik - INFO - Request started | 07c3389b-cb03-4569-b718-2b6671199ca6 | POST /api/v1/students/academic_levels/
+2025-03-14 00:41:55,931 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-14 00:41:55,932 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:41:55,934 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-14 00:41:55,934 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:41:55,935 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-14 00:41:55,935 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:41:55,937 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 00:41:55,941 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 00:41:55,942 - sqlalchemy.engine.Engine - INFO - [generated in 0.00071s] {'id': UUID('b51b8c50-271c-420e-8a69-73f311e05aa6'), 'name': 'Jss1', 'description': 'First Level In The Secondary School System', 'order': None, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 00:41:55,945 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 00:41:55,946 - trakademik - ERROR - Unhandled exception | 07c3389b-cb03-4569-b718-2b6671199ca6 | 3 validation errors for AcademicLevelResponse
+name
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000001F9914E7D80>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+description
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000001F9914E7BA0>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+order
+  Input should be a valid integer [type=int_type, input_value=<sqlalchemy.orm.attribute...t at 0x000001F9914E7E20>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/int_type
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 32, in create_level
+    return AcademicLevelResponse.model_validate(AcademicLevel)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\pydantic\main.py", line 627, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for AcademicLevelResponse
+name
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000001F9914E7D80>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+description
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x000001F9914E7BA0>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+order
+  Input should be a valid integer [type=int_type, input_value=<sqlalchemy.orm.attribute...t at 0x000001F9914E7E20>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/int_type
+2025-03-14 00:43:46,881 - trakademik - INFO - Application started
+2025-03-14 00:46:31,624 - trakademik - INFO - Request started | 27ab27fa-a464-40ec-9909-f9dc38ec69e7 | GET /docs
+2025-03-14 00:46:31,625 - trakademik - INFO - Request completed | 27ab27fa-a464-40ec-9909-f9dc38ec69e7 | Status: 200 | Time: 0.000s
+2025-03-14 00:46:31,763 - trakademik - INFO - Request started | f29ea81a-984f-4d20-bb7f-139cb28139f7 | GET /openapi.json
+2025-03-14 00:46:31,843 - trakademik - INFO - Request completed | f29ea81a-984f-4d20-bb7f-139cb28139f7 | Status: 200 | Time: 0.080s
+2025-03-14 00:46:45,204 - trakademik - INFO - Request started | 191bc033-929f-4f54-b130-f71d02c6ea65 | POST /api/v1/students/academic_levels/
+2025-03-14 00:46:45,576 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-14 00:46:45,576 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:46:45,577 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-14 00:46:45,578 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:46:45,579 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-14 00:46:45,579 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:46:45,580 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 00:46:45,586 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 00:46:45,587 - sqlalchemy.engine.Engine - INFO - [generated in 0.00100s] {'id': UUID('43140506-5aa6-4e94-9de1-ff5117dddc25'), 'name': 'Jss1', 'description': 'First Level In The Secondary School System', 'order': 1, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 00:46:45,612 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-14 00:46:45,615 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 00:46:45,619 - sqlalchemy.engine.Engine - INFO - SELECT academic_levels.id, academic_levels.name, academic_levels.description, academic_levels."order", academic_levels.created_by, academic_levels.last_modified_by, academic_levels.created_at, academic_levels.last_modified_at, academic_levels.is_archived, academic_levels.archived_at, academic_levels.archive_reason, academic_levels.archived_by 
+FROM academic_levels 
+WHERE academic_levels.id = %(pk_1)s::UUID
+2025-03-14 00:46:45,619 - sqlalchemy.engine.Engine - INFO - [generated in 0.00080s] {'pk_1': UUID('43140506-5aa6-4e94-9de1-ff5117dddc25')}
+2025-03-14 00:46:45,623 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 00:46:45,625 - trakademik - ERROR - Unhandled exception | 191bc033-929f-4f54-b130-f71d02c6ea65 | 3 validation errors for AcademicLevelResponse
+name
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x0000013278947D80>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+description
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x0000013278947BA0>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+order
+  Input should be a valid integer [type=int_type, input_value=<sqlalchemy.orm.attribute...t at 0x0000013278947E20>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/int_type
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 32, in create_level
+    return AcademicLevelResponse.model_validate(AcademicLevel)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\pydantic\main.py", line 627, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for AcademicLevelResponse
+name
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x0000013278947D80>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+description
+  Input should be a valid string [type=string_type, input_value=<sqlalchemy.orm.attribute...t at 0x0000013278947BA0>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+order
+  Input should be a valid integer [type=int_type, input_value=<sqlalchemy.orm.attribute...t at 0x0000013278947E20>, input_type=InstrumentedAttribute]
+    For further information visit https://errors.pydantic.dev/2.10/v/int_type
+2025-03-14 00:51:58,552 - trakademik - INFO - Application started
+2025-03-14 00:52:04,034 - trakademik - INFO - Request started | b86646e4-10e4-400d-b869-04dcc2707a66 | GET /docs
+2025-03-14 00:52:04,035 - trakademik - INFO - Request completed | b86646e4-10e4-400d-b869-04dcc2707a66 | Status: 200 | Time: 0.000s
+2025-03-14 00:52:04,215 - trakademik - INFO - Request started | 5ab5d24c-e925-470c-b066-8a28ea8eb05b | GET /openapi.json
+2025-03-14 00:52:04,307 - trakademik - INFO - Request completed | 5ab5d24c-e925-470c-b066-8a28ea8eb05b | Status: 200 | Time: 0.092s
+2025-03-14 00:53:13,226 - trakademik - INFO - Request started | 3d729002-131e-42b5-9c5a-9d331aa4ff7c | POST /api/v1/students/academic_levels/
+2025-03-14 00:53:13,481 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-14 00:53:13,482 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:53:13,483 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-14 00:53:13,484 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:53:13,484 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-14 00:53:13,485 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 00:53:13,487 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 00:53:13,491 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 00:53:13,491 - sqlalchemy.engine.Engine - INFO - [generated in 0.00071s] {'id': UUID('175d3e35-32ea-42aa-b724-37c12c7ec450'), 'name': 'Jss1', 'description': 'First Level In The Secondary School System', 'order': 1, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 00:53:13,498 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 00:53:13,500 - trakademik - ERROR - Unhandled exception | 3d729002-131e-42b5-9c5a-9d331aa4ff7c | A level with name JSS1 already exists
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 31, in create_level
+    level = self.factory.create_academic_level(data)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\student_organization\academic_levels\factory.py", line 39, in create_academic_level
+    raise DuplicateLevelError(input=new_academic_level.name, original_error=e)
+app.services.errors.student_organisation_errors.DuplicateLevelError: A level with name JSS1 already exists
+2025-03-14 00:53:13,510 - trakademik - WARNING - DuplicateLevelError | 3d729002-131e-42b5-9c5a-9d331aa4ff7c | Duplicate academic level creation attempted: An unexpected error occurred
+2025-03-14 00:53:28,498 - trakademik - INFO - Request started | 082ea5c1-cd65-4413-a88e-ab0195689998 | POST /api/v1/students/academic_levels/
+2025-03-14 00:53:28,500 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 00:53:28,502 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 00:53:28,503 - sqlalchemy.engine.Engine - INFO - [cached since 15.01s ago] {'id': UUID('4de7e1ee-1bca-42c3-a9b7-7d1c71078943'), 'name': 'Jss5', 'description': 'First Level In The Secondary School System', 'order': 1, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 00:53:28,504 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 00:53:28,507 - trakademik - ERROR - Unhandled exception | 082ea5c1-cd65-4413-a88e-ab0195689998 | A level with name JSS5 already exists
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 31, in create_level
+    level = self.factory.create_academic_level(data)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\student_organization\academic_levels\factory.py", line 39, in create_academic_level
+    raise DuplicateLevelError(input=new_academic_level.name, original_error=e)
+app.services.errors.student_organisation_errors.DuplicateLevelError: A level with name JSS5 already exists
+2025-03-14 00:53:28,514 - trakademik - WARNING - DuplicateLevelError | 082ea5c1-cd65-4413-a88e-ab0195689998 | Duplicate academic level creation attempted: An unexpected error occurred
+2025-03-14 00:54:01,349 - trakademik - INFO - Request started | 7931daf1-3fb7-4f78-90d0-9eff41554521 | POST /api/v1/students/academic_levels/
+2025-03-14 00:54:01,353 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 00:54:01,355 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 00:54:01,355 - sqlalchemy.engine.Engine - INFO - [cached since 47.86s ago] {'id': UUID('14952def-1eb2-4d73-89e3-312458ba3010'), 'name': 'Jss9', 'description': 'First Level In The Secondary School System', 'order': 1, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 00:54:01,356 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 00:54:01,358 - trakademik - ERROR - Unhandled exception | 7931daf1-3fb7-4f78-90d0-9eff41554521 | A level with name JSS9 already exists
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 31, in create_level
+    level = self.factory.create_academic_level(data)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\student_organization\academic_levels\factory.py", line 39, in create_academic_level
+    raise DuplicateLevelError(input=new_academic_level.name, original_error=e)
+app.services.errors.student_organisation_errors.DuplicateLevelError: A level with name JSS9 already exists
+2025-03-14 00:54:01,362 - trakademik - WARNING - DuplicateLevelError | 7931daf1-3fb7-4f78-90d0-9eff41554521 | Duplicate academic level creation attempted: An unexpected error occurred
+2025-03-14 00:58:09,821 - trakademik - INFO - Application started
+2025-03-14 01:08:45,522 - trakademik - INFO - Application started
+2025-03-14 01:16:18,697 - trakademik - INFO - Application started
+2025-03-14 01:16:31,618 - trakademik - INFO - Request started | c8a15fb3-2b89-45b7-a59f-3df122aedc1b | GET /docs
+2025-03-14 01:16:31,620 - trakademik - INFO - Request completed | c8a15fb3-2b89-45b7-a59f-3df122aedc1b | Status: 200 | Time: 0.001s
+2025-03-14 01:16:31,777 - trakademik - INFO - Request started | 7328ba6a-30ea-4bdd-9dc0-721319ba50ca | GET /openapi.json
+2025-03-14 01:16:31,861 - trakademik - INFO - Request completed | 7328ba6a-30ea-4bdd-9dc0-721319ba50ca | Status: 200 | Time: 0.084s
+2025-03-14 01:16:47,625 - trakademik - INFO - Request started | 20b32b89-ac43-494b-b303-5461c365f167 | POST /api/v1/students/academic_levels/
+2025-03-14 01:16:47,877 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-14 01:16:47,877 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 01:16:47,878 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-14 01:16:47,879 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 01:16:47,880 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-14 01:16:47,880 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 01:16:47,881 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 01:16:47,886 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 01:16:47,887 - sqlalchemy.engine.Engine - INFO - [generated in 0.00096s] {'id': UUID('bd887d74-25f0-45fa-8d85-cdb40d618c77'), 'name': 'Jss1', 'description': 'First Level In The Secondary School System', 'order': 1, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 01:16:47,889 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 01:16:47,891 - trakademik - ERROR - Unhandled exception | 20b32b89-ac43-494b-b303-5461c365f167 | A level with unknown unknown field already exists
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 31, in create_level
+    level = self.factory.create_academic_level(data)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\student_organization\academic_levels\factory.py", line 47, in create_academic_level
+    raise DuplicateLevelError(
+app.services.errors.student_organisation_errors.DuplicateLevelError: A level with unknown unknown field already exists
+2025-03-14 01:16:47,915 - trakademik - WARNING - DuplicateLevelError | 20b32b89-ac43-494b-b303-5461c365f167 | Duplicate academic level creation attempted: An unexpected error occurred
+2025-03-14 01:57:44,639 - trakademik - INFO - Application started
+2025-03-14 01:57:46,688 - trakademik - INFO - Request started | 728584fc-8bde-45ce-81f6-acd763b2e2ad | GET /
+2025-03-14 01:57:46,692 - trakademik - INFO - Request completed | 728584fc-8bde-45ce-81f6-acd763b2e2ad | Status: 200 | Time: 0.004s
+2025-03-14 01:57:46,910 - trakademik - INFO - Request started | 2eccf944-0a29-487a-8deb-5a35cdeac8f8 | GET /favicon.ico
+2025-03-14 01:57:46,911 - trakademik - INFO - Request completed | 2eccf944-0a29-487a-8deb-5a35cdeac8f8 | Status: 404 | Time: 0.001s
+2025-03-14 01:57:53,486 - trakademik - INFO - Request started | 0bbd67e3-73ff-4ded-b487-7d5853d2033e | GET /docs
+2025-03-14 01:57:53,487 - trakademik - INFO - Request completed | 0bbd67e3-73ff-4ded-b487-7d5853d2033e | Status: 200 | Time: 0.001s
+2025-03-14 01:57:53,683 - trakademik - INFO - Request started | 4ea99211-63a6-4f0d-8185-a6c0779a3290 | GET /openapi.json
+2025-03-14 01:57:53,814 - trakademik - INFO - Request completed | 4ea99211-63a6-4f0d-8185-a6c0779a3290 | Status: 200 | Time: 0.131s
+2025-03-14 01:58:14,386 - trakademik - INFO - Request started | e16628a8-c677-4d20-bbf3-be08de3ed3bc | POST /api/v1/students/academic_levels/
+2025-03-14 01:58:14,868 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-14 01:58:14,869 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 01:58:14,872 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-14 01:58:14,873 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 01:58:14,875 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-14 01:58:14,876 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 01:58:14,879 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 01:58:14,887 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 01:58:14,889 - sqlalchemy.engine.Engine - INFO - [generated in 0.00156s] {'id': UUID('f7dde047-7d61-491c-af30-971aadd13b4b'), 'name': 'Jss1', 'description': 'First Level In The Secondary School System', 'order': 1, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 01:58:14,894 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 01:58:14,898 - trakademik - ERROR - Unhandled exception | e16628a8-c677-4d20-bbf3-be08de3ed3bc | A level with unknown unknown field already exists
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 31, in create_level
+    level = self.factory.create_academic_level(data)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\student_organization\academic_levels\factory.py", line 47, in create_academic_level
+    raise DuplicateLevelError(
+app.services.errors.student_organisation_errors.DuplicateLevelError: A level with unknown unknown field already exists
+2025-03-14 01:58:14,927 - trakademik - WARNING - DuplicateLevelError | e16628a8-c677-4d20-bbf3-be08de3ed3bc | Duplicate academic level creation attempted: Database operation failed on None
+2025-03-14 02:00:21,207 - trakademik - INFO - Application started
+2025-03-14 02:00:27,034 - trakademik - INFO - Request started | 26e57caa-d0fb-4cf3-9463-4e0d7627d3c3 | GET /docs
+2025-03-14 02:00:27,035 - trakademik - INFO - Request completed | 26e57caa-d0fb-4cf3-9463-4e0d7627d3c3 | Status: 200 | Time: 0.001s
+2025-03-14 02:00:27,245 - trakademik - INFO - Request started | ed519c5d-6374-4087-ab1f-323306db837a | GET /openapi.json
+2025-03-14 02:00:27,401 - trakademik - INFO - Request completed | ed519c5d-6374-4087-ab1f-323306db837a | Status: 200 | Time: 0.154s
+2025-03-14 02:00:42,342 - trakademik - INFO - Request started | c3782acf-7696-4abc-bbc2-dea4c4729ac4 | POST /api/v1/students/academic_levels/
+2025-03-14 02:00:42,772 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-14 02:00:42,772 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 02:00:42,775 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-14 02:00:42,776 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 02:00:42,778 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-14 02:00:42,778 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 02:00:42,780 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 02:00:42,787 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 02:00:42,788 - sqlalchemy.engine.Engine - INFO - [generated in 0.00118s] {'id': UUID('2193b1f1-20e2-4c21-a81d-f1939d53349b'), 'name': 'Jss1', 'description': 'First Level In The Secondary School System', 'order': 1, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 02:00:42,792 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 02:00:42,795 - trakademik - ERROR - Unhandled exception | c3782acf-7696-4abc-bbc2-dea4c4729ac4 | A level with unknown unknown field already exists
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 31, in create_level
+    level = self.factory.create_academic_level(data)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\student_organization\academic_levels\factory.py", line 47, in create_academic_level
+    raise DuplicateLevelError(
+app.services.errors.student_organisation_errors.DuplicateLevelError: A level with unknown unknown field already exists
+2025-03-14 02:00:42,815 - trakademik - WARNING - DuplicateLevelError | c3782acf-7696-4abc-bbc2-dea4c4729ac4 | Duplicate academic level creation attempted: Database operation failed on None
+2025-03-14 02:02:12,214 - trakademik - INFO - Application started
+2025-03-14 02:02:16,024 - trakademik - INFO - Request started | 3557910d-fe80-426b-8b71-ed2edc172040 | GET /docs
+2025-03-14 02:02:16,027 - trakademik - INFO - Request completed | 3557910d-fe80-426b-8b71-ed2edc172040 | Status: 200 | Time: 0.001s
+2025-03-14 02:02:16,262 - trakademik - INFO - Request started | ba1421f8-eb22-4b8a-9aac-944b2b91f7e1 | GET /openapi.json
+2025-03-14 02:02:16,438 - trakademik - INFO - Request completed | ba1421f8-eb22-4b8a-9aac-944b2b91f7e1 | Status: 200 | Time: 0.174s
+2025-03-14 02:02:27,989 - trakademik - INFO - Request started | 0a916a26-52bb-4f13-9e34-9e6d71278c2d | POST /api/v1/students/academic_levels/
+2025-03-14 02:02:28,420 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-14 02:02:28,421 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 02:02:28,424 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-14 02:02:28,425 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 02:02:28,427 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-14 02:02:28,428 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-14 02:02:28,430 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-14 02:02:28,436 - sqlalchemy.engine.Engine - INFO - INSERT INTO academic_levels (id, name, description, "order", created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(id)s::UUID, %(name)s, %(description)s, %(order)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING academic_levels.created_at, academic_levels.last_modified_at
+2025-03-14 02:02:28,437 - sqlalchemy.engine.Engine - INFO - [generated in 0.00143s] {'id': UUID('b22a10e1-511f-4ccc-a0e1-b2a23ed8df3d'), 'name': 'Jss1', 'description': 'First Level In The Secondary School System', 'order': 1, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-14 02:02:28,443 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-14 02:02:28,446 - trakademik - ERROR - Unhandled exception | 0a916a26-52bb-4f13-9e34-9e6d71278c2d | A level with unknown unknown field already exists
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\middleware\error_handler.py", line 39, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\starlette\concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\routers\student_organization\academic_levels.py", line 21, in create_academic_level
+    return academic_level_crud.create_level(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\crud\student_organization\academic_levels.py", line 31, in create_level
+    level = self.factory.create_academic_level(data)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\student_organization\academic_levels\factory.py", line 47, in create_academic_level
+
+
+    raise DuplicateLevelError(
+app.services.errors.student_organisation_errors.DuplicateLevelError: A level with unknown unknown field already exists
+
+2025-03-14 02:02:28,473 - WARNING - DuplicateLevelError | 0a916a26-52bb-4f13-9e34-9e6d71278c2d | Duplicate academic level
+                            creation attempted: Unique constraint violation for unknown_field
+
+

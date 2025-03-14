@@ -41,11 +41,15 @@ class StudentDepartmentNotFoundError(StudentOrganizationError, EntityNotFoundErr
         self.log_message = f"Department with id:{id} not found"
 
 class DuplicateLevelError(StudentOrganizationError, UniqueViolationError):
-    """Raised when a duplicate academic level is created."""
-    def __init__(self, input: str, original_error: Exception):
-        UniqueViolationError.__init__(self, field_name="title", value=input)
-        self.user_message = f"A level with name {input} already exists"
-        self.log_message = f"Duplicate academic level creation attempted: {original_error}"
+    """Raised when user attempts a duplicate academic level field."""
+    def __init__(self, input: str, original_error: Exception, field:str):
+        UniqueViolationError.__init__(self, field_name=field, value=input)
+        self.user_message = f"A level with {field} {input} already exists"
+        if hasattr(original_error, 'log_message'):
+            error_details = original_error.log_message
+        else:
+            error_details = str(original_error)
+        self.log_message = f"Duplicate academic level creation attempted: {error_details}"
 
 class LevelNotFoundError(StudentOrganizationError, EntityNotFoundError):
     """Raised when an academic level is not found."""

@@ -5,6 +5,7 @@ import time
 import uuid
 from ..services.errors.database_errors import *
 from ..services.errors.staff_organisation_errors import *
+from ..services.errors.student_organisation_errors import *
 from ..logging.logger import logger
 
 class ExceptionMiddleware(BaseHTTPMiddleware):
@@ -12,6 +13,8 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
     error_map = {
         EntityNotFoundError: status.HTTP_404_NOT_FOUND,
         DepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
+        LevelNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateLevelError: status.HTTP_409_CONFLICT,
         RoleNotFoundError: status.HTTP_404_NOT_FOUND,
         QualificationNotFoundError: status.HTTP_404_NOT_FOUND,
         UniqueViolationError: status.HTTP_409_CONFLICT,

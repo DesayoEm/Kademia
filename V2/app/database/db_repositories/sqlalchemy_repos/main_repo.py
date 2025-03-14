@@ -65,7 +65,6 @@ class SQLAlchemyRepository(BaseRepository[T]):
         except IntegrityError as e:
             self.session.rollback()
             if 'unique constraint' in str(e).lower():
-
                 error_message = str(e.orig) if e.orig else str(e)
                 match = re.search(r'(?<=\.).+?(?=[\s,])', error_message)
                 field_name = match.group(0) if match else "unknown_field"

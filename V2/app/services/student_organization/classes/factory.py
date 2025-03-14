@@ -1,13 +1,16 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
+
+from ...errors.database_errors import RelationshipError
+from ...errors.student_organisation_errors import LevelNotFoundError
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
 from ....database.models.data_enums import ArchiveReason
 from .service import ClassFactoryService
 from ....services.errors.database_errors import EntityNotFoundError, UniqueViolationError
 from ....services.student_organization.validators import StudentOrganizationValidators
 from ....database.models.student_organization import Classes
-from ....services.errors.student_organisation_error import (
+from ....services.errors.student_organisation_errors import (
     DuplicateClassError, ClassNotFoundError
 )
 
@@ -40,8 +43,10 @@ class ClassFactory:
             class_data.order = self.service.create_order(new_class.level_id)
         try:
             return self.repository.create(class_data)
-        except UniqueViolationError as e: #Actually, there's 2 possible types of unique violations here.FIX
+        except UniqueViolationError as e: #Actually, there's 2 possible types of unique violations here.FIX(order/ level_id-code)
             raise DuplicateClassError(input=class_data.code, original_error=e)
+        except RelationshipError:
+            raise LevelNotFoundError(id = new_class.level_id) #Consider the possibility of another relationship error, not related to level_id
 
     def get_class(self, class_id: UUID) -> Classes:
         """Get a specific class by ID.

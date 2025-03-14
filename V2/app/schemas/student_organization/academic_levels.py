@@ -5,49 +5,40 @@ from ..shared_models import *
 class AcademicLevelFilterParams(BaseFilterParams):
     name: Optional[str] = None
     description: Optional[str] = None
-    order_by: Literal["name", "created_at"] = "name"
+    order_by: Literal["order", "created_at"] = "order"
 
 
 class AcademicLevelBase(BaseModel):
     """Base model for class levels"""
     name: str
     description: str
-
-    model_config = ConfigDict(
-        from_attributes=True,
-        extra="ignore",
-        json_schema_extra = {
-            "json_schema_extra": {
-                "example": {
-                    "name": "JSS1",
-                    "description": "First Level in the Secondary School System"
-                }}
-        }
-    )
-
-class AcademicLevelUpdate(AcademicLevelBase):
-    """Used for updating class levels"""
     order: int | None = None
 
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
         json_schema_extra = {
-        "example": {
-            "name": "JSS2",
-            "description": "Second Level in the Secondary School System",
-            "order": "1",
-        }
+                "example": {
+                    "name": "JSS1",
+                    "description": "First Level in the Secondary School System",
+                    "order": 1
+                }
         }
     )
 
-class AcademicLevelCreate(AcademicLevelUpdate):
+class AcademicLevelUpdate(AcademicLevelBase):
+    """Used for updating class levels"""
+    pass
+
+
+
+class AcademicLevelCreate(AcademicLevelBase):
     """Used for creating new class levels"""
     pass
 
 class AcademicLevelResponse(AcademicLevelBase):
     """Response model for class levels"""
-    order: int
+    pass
 
 class AcademicLevelInDB(AcademicLevelBase):
     """Represents stored class levels"""
@@ -60,7 +51,7 @@ class AcademicLevelInDB(AcademicLevelBase):
     archived_at: datetime | None = None
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
-    order: int
+
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -69,7 +60,7 @@ class AcademicLevelInDB(AcademicLevelBase):
         "example": {
             "name": "JSS2",
             "description": "Second Level in the Secondary School System",
-            "order": "1",
+            "order": 1,
             "created_at": "2024-02-17T12:00:00Z",
             "created_by": "00000000-0000-0000-0000-000000000000",
             "last_modified_at": "2024-02-17T12:00:00Z",

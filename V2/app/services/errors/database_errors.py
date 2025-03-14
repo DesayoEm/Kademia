@@ -12,7 +12,7 @@ class DatabaseError(TrakademikError):
         super().__init__(self.log_message)
 
     def __str__(self):
-        return self.log_message
+        return self.user_message
 
 
 class EntityNotFoundError(DatabaseError):
@@ -31,7 +31,7 @@ class EntityNotFoundError(DatabaseError):
         return self.user_message
 
 
-class UniqueViolationError(DatabaseError):
+class UniqueViolationError(TrakademikError):
     """Raised when attempting to violate a unique constraint"""
     def __init__(self, field_name: str, value: str = None):
         self.field_name = field_name
