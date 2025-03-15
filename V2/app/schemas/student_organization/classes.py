@@ -31,9 +31,24 @@ class ClassBase(BaseModel):
     )
 
 
-class ClassUpdate(ClassBase):
+class ClassUpdate(BaseModel):
     """Used for updating class levels"""
-    pass
+    mentor_id: UUID | None = None
+    student_rep_id: UUID | None = None
+    assistant_rep_id: UUID | None = None
+    order: int | None = None
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
+                "mentor_id": "00000000-0000-0000-0000-000000000000",
+                "student_rep_id": "00000000-0000-0000-0000-000000000000",
+                "assistant_rep_id": "00000000-0000-0000-0000-000000000000",
+                "order": "1",
+            }}
+    )
 
 
 class ClassCreate(ClassBase):

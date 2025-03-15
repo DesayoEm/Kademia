@@ -13,7 +13,7 @@ from .logging.logger import logger
 version = "v1"
 app = FastAPI(
     version = version,
-    title = "TraKademik"
+    title = "Kademia"
 )
 
 app.add_middleware(ExceptionMiddleware)
@@ -58,6 +58,6 @@ app.include_router(archived_classes.router, prefix=f"/api/{version}/archive/stud
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to TraKademik!"}
+    return {"message": "Welcome to Kademia!"}
 
 logger.info("Application started")

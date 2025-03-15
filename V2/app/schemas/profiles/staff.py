@@ -1,8 +1,20 @@
 from ..common_imports import *
+from ..shared_models import *
 from ..enums import AccessLevel, UserType, StaffType, StaffAvailability, EmploymentStatus
 from .base import ProfileBase, ProfileInDb
 
+class StaffFilterParams(BaseFilterParams):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    order_by: Literal["name", "created_at"] = "name"
 
+class StaffEnumsRequest(BaseModel):
+    access_level: AccessLevel
+    user_type: UserType
+    staff_type: StaffType
+    staff_availability: StaffAvailability
+    employment_status: EmploymentStatus
+    
 class StaffBase(ProfileBase):
     """Base model for staff"""
     access_level: AccessLevel
@@ -19,11 +31,11 @@ class StaffBase(ProfileBase):
     date_joined: date
     date_left: date | None = None
 
-    class Config:
-        from_attributes = True
-
-    json_schema_extra = {
-        "example": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
             "first_name": "Aina",
             "last_name": "Folu",
             "gender": "FEMALE",
@@ -42,7 +54,7 @@ class StaffBase(ProfileBase):
             "date_joined": "2024-01-15",
             "date_left": None
         }
-    }
+    })
 
 
 class StaffCreate(StaffBase):

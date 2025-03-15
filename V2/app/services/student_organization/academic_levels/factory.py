@@ -31,21 +31,21 @@ class AcademicLevelFactory:
             description = self.validator.validate_name(new_academic_level.description),
             order = new_academic_level.order,
             created_by=SYSTEM_USER_ID,#Placeholder until auth is implemented
-            last_modified_by=SYSTEM_USER_ID#Same
+            last_modified_by=SYSTEM_USER_ID
         )
         try:
             return self.repository.create(academic_level)
         except UniqueViolationError as e:#Could either be on name or order
             error_message = str(e)
-            if "name" in error_message.lower():#Cant extract
+            if "academic_levels_name_key" in error_message.lower():
                 raise DuplicateLevelError(
-                    input=new_academic_level.name, field = "name",original_error=e)
-            elif "order" in error_message.lower():#Same here
+                    input_value=new_academic_level.name, field = "name",detail=error_message)
+            elif "academic_levels_order_key" in error_message.lower():
                 raise DuplicateLevelError(
-                    input=str(new_academic_level.order),field = "order",original_error=e)
-            else:#Not helpful
+                    input_value=str(new_academic_level.order),field = "order",detail=error_message)
+            else:#edge case idk
                 raise DuplicateLevelError(
-                    input="unknown field", field = "unknown", original_error=e)
+                    input_value="unknown field", field = "unknown", detail=error_message)
 
 
     def get_academic_level(self, academic_level_id: UUID) -> AcademicLevel:
@@ -88,10 +88,17 @@ class AcademicLevelFactory:
             return self.repository.update(academic_level_id, existing)
         except EntityNotFoundError:
             raise LevelNotFoundError(id=academic_level_id)
-        except UniqueViolationError as e:
-            field_name = getattr(e, 'field_name', 'name or academic_level')
-            field_value = data.get(field_name, '')
-            raise DuplicateLevelError(input=field_value, original_error=e)
+        except UniqueViolationError as e:  # Could either be on name or order
+            error_message = str(e)
+            if "academic_levels_name_key" in error_message.lower():
+                raise DuplicateLevelError(
+                    input_value=data['name'], field="name", detail=error_message)
+            elif "academic_levels_order_key" in error_message.lower():
+                raise DuplicateLevelError(
+                    input_value=str(data['order']), field="order", detail=error_message)
+            else:
+                raise DuplicateLevelError(
+                    input_value="unknown field", field="unknown", detail=error_message)
 
 
     def archive_academic_level(self, academic_level_id: UUID, reason: ArchiveReason) -> AcademicLevel:

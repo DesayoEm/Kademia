@@ -32,20 +32,21 @@ class QualificationsFactory:
         """
         qualification = EducatorQualifications(
             id=uuid4(),
-            educator_id=SYSTEM_USER_ID,
+            name=self.validator.validate_name(new_qualification.name),
+            description=self.validator.validate_name(new_qualification.description),
+            educator_id=SYSTEM_USER_ID,#Placeholder
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
-            name=self.validator.validate_name(new_qualification.name),
-            description=self.validator.validate_name(new_qualification.description)
+
         )
         try:
             return self.repository.create(qualification)
-        except UniqueViolationError as e:
-            raise DuplicateQualificationError(name=new_qualification.name, original_error=e)
-        except EntityNotFoundError:
-            raise QualificationNotFoundError(id=new_qualification.educator_id)#needs to be user
         except RelationshipError:
-            raise QualificationNotFoundError(id=new_qualification.educator_id)#needs to be user
+            raise QualificationNotFoundError(id=new_qualification.educator_id)#needs to be user(educator) not found
+        except UniqueViolationError as e:
+            raise DuplicateQualificationError(#name is the only field with a unique constraint
+                input_value=new_qualification.name, detail=str(e), field = 'name'
+            )
 
 
 
@@ -89,13 +90,13 @@ class QualificationsFactory:
 
             return self.repository.update(qualification_id, existing)
         except EntityNotFoundError:
-            raise QualificationNotFoundError(id=qualification_id) #Entity could also ba en educator
+            raise QualificationNotFoundError(id=qualification_id)
+        except RelationshipError: #Edge case. What if educator is deleted or archived while update is going on
+            pass
         except UniqueViolationError as e:
-            field_name = getattr(e, 'field_name', 'name')
-            field_value = data.get(field_name, '')
-            raise DuplicateQualificationError(name=field_value, original_error=e)
-
-
+            raise DuplicateQualificationError(  # name is the only field with a unique constraint
+                input_value=data['name'], detail=str(e), field='name'
+            )
 
     def archive_qualification(self, qualification_id: UUID, reason: ArchiveReason) -> EducatorQualifications:
         """Archive a qualification.
@@ -120,6 +121,7 @@ class QualificationsFactory:
             self.repository.delete(qualification_id)
         except EntityNotFoundError:
             raise QualificationNotFoundError(id=qualification_id)
+
 
     # Archive factory methods
     def get_all_archived_qualifications(self, filters) -> List[EducatorQualifications]:

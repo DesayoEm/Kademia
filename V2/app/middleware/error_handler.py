@@ -13,6 +13,8 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
     error_map = {
         EntityNotFoundError: status.HTTP_404_NOT_FOUND,
         DepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
+        ClassNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateClassError: status.HTTP_409_CONFLICT,
         LevelNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateLevelError: status.HTTP_409_CONFLICT,
         RoleNotFoundError: status.HTTP_404_NOT_FOUND,

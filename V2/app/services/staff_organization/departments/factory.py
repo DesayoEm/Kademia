@@ -36,8 +36,9 @@ class StaffDepartmentsFactory:
         try:
             return self.repository.create(department)
         except UniqueViolationError as e:
-            raise DuplicateDepartmentError(input=new_department.name, original_error=e)
-
+            raise DuplicateDepartmentError(
+                input_value=new_department.name, detail=str(e), field = 'name'
+            )
 
     def get_staff_department(self, department_id: UUID) -> StaffDepartments:
         """Get a specific staff department by ID.
@@ -75,16 +76,15 @@ class StaffDepartmentsFactory:
                 existing.name = self.validator.validate_name(data['name'])
             if 'description' in data:
                 existing.description = self.validator.validate_name(data['description'])
-            existing.last_modified_by = SYSTEM_USER_ID
+            existing.last_modified_by = SYSTEM_USER_ID #Placeholder
 
             return self.repository.update(department_id, existing)
         except EntityNotFoundError:
             raise DepartmentNotFoundError(id=department_id)
         except UniqueViolationError as e:
-            field_name = getattr(e, 'field_name', 'name')
-            field_value = data.get(field_name, '')
-            raise DuplicateDepartmentError(input=field_value, original_error=e)
-
+            raise DuplicateDepartmentError(#name is the only field with a unique constraint
+                input_value=data['name'], detail=str(e), field = 'name'
+            )
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StaffDepartments:
         """Archive a staff department.

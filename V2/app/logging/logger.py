@@ -20,6 +20,6 @@ def setup_logging():
     logging.getLogger('uvicorn.access').setLevel(logging.WARNING)
     logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 
-    return logging.getLogger('trakademik')
+    return logging.getLogger('kademia')
 
 logger = setup_logging()

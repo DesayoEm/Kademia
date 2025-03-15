@@ -43,10 +43,19 @@ class ClassFactory:
             class_data.order = self.service.create_order(new_class.level_id)
         try:
             return self.repository.create(class_data)
-        except UniqueViolationError as e: #Actually, there's 2 possible types of unique violations here.FIX(order/ level_id-code)
-            raise DuplicateClassError(input=class_data.code, original_error=e)
+        except UniqueViolationError as e:  # Could either be code or order
+            error_message = str(e)
+            if "uq_class_level_code" in error_message.lower():
+                raise DuplicateClassError(
+                    input_value=class_data.code, field="None", detail=error_message)#None is a filler attr hare
+            elif "classes_order_key" in error_message.lower():
+                raise DuplicateClassError(
+                    input_value=str(class_data.order), field="order", detail=error_message)
+            else:
+                raise DuplicateClassError(
+                    input_value="unknown field", field="unknown", detail=error_message)
         except RelationshipError:
-            raise LevelNotFoundError(id = new_class.level_id) #Consider the possibility of another relationship error, not related to level_id
+            raise LevelNotFoundError(id = new_class.level_id) #Edge case: the possibility of another relationship error, not related to level_id
 
     def get_class(self, class_id: UUID) -> Classes:
         """Get a specific class by ID.
@@ -84,14 +93,17 @@ class ClassFactory:
             if 'code' in data:
                 existing.code = data['code']
             existing.last_modified_by = SYSTEM_USER_ID
-
             return self.repository.update(class_id, existing)
         except EntityNotFoundError:
             raise ClassNotFoundError(id=class_id)
         except UniqueViolationError as e:
-            field_name = getattr(e, 'field_name', 'name')
-            field_value = data.get(field_name, '')
-            raise DuplicateClassError(input=field_value, original_error=e)
+            error_message= str(e)
+            if "classes_order_key" in error_message.lower():
+                raise DuplicateClassError(
+                    input_value=str(data['order']), field="order", detail=error_message)
+            else:
+                raise DuplicateClassError(
+                    input_value="unknown field", field="unknown", detail=error_message)
 
 
     def archive_class(self, class_id: UUID, reason: ArchiveReason) -> Classes:

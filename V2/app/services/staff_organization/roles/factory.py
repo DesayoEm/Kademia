@@ -32,15 +32,18 @@ class StaffRolesFactory:
         """
         role = StaffRoles(
             id=uuid4(),
+            name=self.validator.validate_name(new_role.name),
+            description=self.validator.validate_name(new_role.description),
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
-            name=self.validator.validate_name(new_role.name),
-            description=self.validator.validate_name(new_role.description)
+
         )
         try:
             return self.repository.create(role)
-        except UniqueViolationError as e:
-            raise DuplicateRoleError(name=new_role.name, original_error=e)
+        except UniqueViolationError as e:#name is the only field with a UC
+            raise DuplicateRoleError(
+                input_value=new_role.name, detail=str(e), field='name'
+            )
 
     def get_all_roles(self, filters) -> List[StaffRoles]:
         """Get all active staff roles with filtering.
@@ -83,11 +86,10 @@ class StaffRolesFactory:
             return self.repository.update(role_id, existing)
         except EntityNotFoundError:
             raise RoleNotFoundError(id=role_id)
-        except UniqueViolationError as e:
-            field_name = getattr(e, 'field_name', 'name')
-            field_value = data.get(field_name, '')
-            raise DuplicateRoleError(name=field_value, original_error=e)
-
+        except UniqueViolationError as e:  # name is the only field with a UC
+            raise DuplicateRoleError(
+                input_value=data['name'], detail=str(e), field='name'
+            )
 
     def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRoles:
         """Archive a role.

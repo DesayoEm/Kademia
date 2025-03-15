@@ -7,7 +7,6 @@ class AcademicLevelFilterParams(BaseFilterParams):
     description: Optional[str] = None
     order_by: Literal["order", "created_at"] = "order"
 
-
 class AcademicLevelBase(BaseModel):
     """Base model for class levels"""
     name: str

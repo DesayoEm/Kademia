@@ -35,7 +35,8 @@ class StudentDepartmentFactory:
         try:
             return self.repository.create(department)
         except UniqueViolationError as e:
-            raise DuplicateStudentDepartmentError(input=new_department.name, original_error=e)
+            raise DuplicateStudentDepartmentError(
+                input_value=new_department.name, detail=str(e), field = 'name')
 
     def get_student_department(self, department_id: UUID) -> StudentDepartments:
         """Get a specific student department by ID.
@@ -78,9 +79,8 @@ class StudentDepartmentFactory:
         except EntityNotFoundError:
             raise StudentDepartmentNotFoundError(id=department_id)
         except UniqueViolationError as e:
-            field_name = getattr(e, 'field_name', 'name or department')
-            field_value = data.get(field_name, '')
-            raise DuplicateStudentDepartmentError(input=field_value, original_error=e)
+            raise DuplicateStudentDepartmentError(
+                input_value=data['name'], detail=str(e), field='name')
 
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StudentDepartments:

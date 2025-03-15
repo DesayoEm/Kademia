@@ -1,3 +1,3 @@
-class TrakademikError(Exception):
+class KademiaError(Exception):
     """Base exception class for all application errors"""
 

@@ -1,9 +1,9 @@
-from .base_error import TrakademikError
+from .base_error import KademiaError
 from .database_errors import EntityNotFoundError, UniqueViolationError
 from uuid import UUID
 from .input_errors import EmptyFieldError, BlankFieldError, TextTooShortError
 
-class StudentOrganizationError(TrakademikError):
+class StudentOrganizationError(KademiaError):
     """
     Base exception class for all exceptions related to student organization.
     Inherits from TrakademikError.
@@ -12,26 +12,26 @@ class StudentOrganizationError(TrakademikError):
 
 # Domain-specific extensions of validation errors
 class StudentEmptyFieldError(EmptyFieldError):
-    def __init__(self, input: str):
-        super().__init__(input=input, domain=StudentOrganizationError.DOMAIN)
+    def __init__(self, input_value: str):
+        super().__init__(data=input_value, domain=StudentOrganizationError.DOMAIN)
 
 class StudentBlankFieldError(BlankFieldError):
-    def __init__(self, input: str):
-        super().__init__(input=input, domain=StudentOrganizationError.DOMAIN)
+    def __init__(self, input_value: str):
+        super().__init__(data=input_value, domain=StudentOrganizationError.DOMAIN)
 
 class StudentTextTooShortError(TextTooShortError):
-    def __init__(self, input: str, min_length=3):
-        super().__init__(input=input, min_length=min_length, domain=StudentOrganizationError.DOMAIN)
+    def __init__(self, input_value: str, min_length=3):
+        super().__init__(data=input_value, min_length=min_length, domain=StudentOrganizationError.DOMAIN)
 
 
 # Original domain-specific errors
 
 class DuplicateStudentDepartmentError(StudentOrganizationError, UniqueViolationError):
     """Raised when a duplicate student department is created."""
-    def __init__(self, input: str, original_error: Exception):
-        UniqueViolationError.__init__(self, field_name="name", value=input)
-        self.user_message = f"A student department with the name {input} already exists"
-        self.log_message = f"Duplicate student department creation attempted: {original_error}"
+    def __init__(self, input_value: str, detail: str, field: str = "name"):
+        UniqueViolationError.__init__(self, error=detail)
+        self.user_message = f"A student department with the {field} {input_value} already exists"
+        self.log_message = f"Duplicate student department creation attempted: {detail}"
 
 class StudentDepartmentNotFoundError(StudentOrganizationError, EntityNotFoundError):
     """Raised when a department is not found."""
@@ -42,14 +42,10 @@ class StudentDepartmentNotFoundError(StudentOrganizationError, EntityNotFoundErr
 
 class DuplicateLevelError(StudentOrganizationError, UniqueViolationError):
     """Raised when user attempts a duplicate academic level field."""
-    def __init__(self, input: str, original_error: Exception, field:str):
-        UniqueViolationError.__init__(self, field_name=field, value=input)
-        self.user_message = f"A level with {field} {input} already exists"
-        if hasattr(original_error, 'log_message'):
-            error_details = original_error.log_message
-        else:
-            error_details = str(original_error)
-        self.log_message = f"Duplicate academic level creation attempted: {error_details}"
+    def __init__(self, input_value: str, detail: str, field: str ):
+        UniqueViolationError.__init__(self, error=detail)
+        self.user_message = f"A level with {field} {input_value} already exists"
+        self.log_message = f"Duplicate level creation attempted: {detail}"
 
 class LevelNotFoundError(StudentOrganizationError, EntityNotFoundError):
     """Raised when an academic level is not found."""
@@ -60,10 +56,10 @@ class LevelNotFoundError(StudentOrganizationError, EntityNotFoundError):
 
 class DuplicateClassError(StudentOrganizationError, UniqueViolationError):
     """Raised when a duplicate class is created."""
-    def __init__(self, input: str, original_error: Exception):
-        UniqueViolationError.__init__(self, field_name="title", value=input)
-        self.user_message = f"Class {input} already exists for this academic level"
-        self.log_message = f"Duplicate class creation attempted: {original_error}"
+    def __init__(self, input_value: str, detail: str, field: str):
+        UniqueViolationError.__init__(self, error=detail)
+        self.user_message = f"Class with {field} {input_value} already exists for academic level"
+        self.log_message = f"Duplicate class creation attempted: {detail}"
 
 class ClassNotFoundError(StudentOrganizationError, EntityNotFoundError):
     """Raised when a class is not found."""

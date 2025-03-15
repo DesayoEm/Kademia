@@ -1,11 +1,10 @@
 from uuid import UUID
-import re
 from typing import Optional, List, Type
 from sqlalchemy import or_, desc, asc
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from sqlalchemy.orm import Session, Query
 from ....services.errors.database_errors import (
-    UniqueViolationError, EntityNotFoundError, RelationshipError)
+    UniqueViolationError, EntityNotFoundError, RelationshipError, DBConnectionError)
 from ....services.errors.database_errors import DatabaseError as TKDatabaseError
 from ....database.db_repositories.main_repo import Repository, T
 
@@ -64,18 +63,14 @@ class SQLAlchemyRepository(BaseRepository[T]):
             return entity
         except IntegrityError as e:
             self.session.rollback()
-            if 'unique constraint' in str(e).lower():
-                error_message = str(e.orig) if e.orig else str(e)
-                match = re.search(r'(?<=\.).+?(?=[\s,])', error_message)
-                field_name = match.group(0) if match else "unknown_field"
-
-                raise UniqueViolationError(field_name=field_name)
-
+            details = str(e).lower()
+            if 'unique constraint' in details:
+                raise UniqueViolationError(error= details)
             elif 'foreign key constraint' in str(e).lower():
-                raise RelationshipError(operation = "create", detail=str(e))
+                raise RelationshipError(operation = "create", error=str(e))
         except OperationalError as e:
             self.session.rollback()
-            raise ConnectionError(details=str(e))
+            raise DBConnectionError(error=str(e))
         except SQLAlchemyError as e:
             self.session.rollback()
             raise TKDatabaseError(error=str(e))
@@ -189,8 +184,11 @@ class SQLAlchemyRepository(BaseRepository[T]):
 
         except IntegrityError as e:
             self.session.rollback()
-            raise UniqueViolationError(
-                field_name=self._extract_constraint_field(str(e)))
+            details = str(e).lower()
+            if 'unique constraint' in details:
+                raise UniqueViolationError(error=details)
+            elif 'foreign key constraint' in str(e).lower():
+                raise RelationshipError(operation="create", error=str(e))
         except SQLAlchemyError as e:
             self.session.rollback()
             raise TKDatabaseError(error=str(e))

@@ -1,9 +1,10 @@
-from .base_error import TrakademikError
+from .base_error import KademiaError
 from .input_errors import TextTooShortError, EmptyFieldError, BlankFieldError
 from .database_errors import EntityNotFoundError, UniqueViolationError
+
 from uuid import UUID
 
-class StaffOrganizationError(TrakademikError):
+class StaffOrganizationError(KademiaError):
     """
     Base exception class for all exceptions related to staff organization.
     Inherits from TrakademikError.
@@ -12,24 +13,24 @@ class StaffOrganizationError(TrakademikError):
 
 # Domain-specific extensions of input errors
 class StaffEmptyFieldError(EmptyFieldError):
-    def __init__(self, input: str):
-        super().__init__(input=input, domain=StaffOrganizationError.DOMAIN)
+    def __init__(self, input_value: str):
+        super().__init__(data=input_value, domain=StaffOrganizationError.DOMAIN)
 
 class StaffBlankFieldError(BlankFieldError):
-    def __init__(self, input: str):
-        super().__init__(input=input, domain=StaffOrganizationError.DOMAIN)
+    def __init__(self, input_value: str):
+        super().__init__(data=input_value, domain=StaffOrganizationError.DOMAIN)
 
 class StaffTextTooShortError(TextTooShortError):
-    def __init__(self, input: str, min_length=3):
-        super().__init__(input=input, min_length=min_length, domain=StaffOrganizationError.DOMAIN)
+    def __init__(self, input_value: str, min_length=3):
+        super().__init__(data=input_value, min_length=min_length, domain=StaffOrganizationError.DOMAIN)
 
 # Original domain-specific errors
 class DuplicateDepartmentError(StaffOrganizationError, UniqueViolationError):
     """Raised when a duplicate department is created."""
-    def __init__(self, input: str, original_error: Exception):
-        UniqueViolationError.__init__(self, field_name="name", value=input)
-        self.user_message = f"A department with name {input} already exists"
-        self.log_message = f"Duplicate department creation attempted: {original_error}"
+    def __init__(self, input_value: str, detail: str, field: str):
+        UniqueViolationError.__init__(self, error=detail)
+        self.user_message = f"A department with {field} {input_value} already exists"
+        self.log_message = f"Duplicate department creation attempted: {detail}"
 
 class DepartmentNotFoundError(StaffOrganizationError, EntityNotFoundError):
     """Raised when a department is not found."""
@@ -40,10 +41,10 @@ class DepartmentNotFoundError(StaffOrganizationError, EntityNotFoundError):
 
 class DuplicateRoleError(StaffOrganizationError, UniqueViolationError):
     """Raised when a duplicate role is created."""
-    def __init__(self, name: str, original_error: Exception):
-        UniqueViolationError.__init__(self, field_name="title", value=name)
-        self.user_message = f"A role with name {name} already exists"
-        self.log_message = f"Duplicate role creation attempted: {original_error}"
+    def __init__(self, input_value: str, detail: str, field: str):
+        UniqueViolationError.__init__(self, error=detail)
+        self.user_message = f"A role with {field} {input_value} already exists"
+        self.log_message = f"Duplicate role creation attempted: {detail}"
 
 class RoleNotFoundError(StaffOrganizationError, EntityNotFoundError):
     """Raised when a role is not found."""
@@ -54,10 +55,10 @@ class RoleNotFoundError(StaffOrganizationError, EntityNotFoundError):
 
 class DuplicateQualificationError(StaffOrganizationError, UniqueViolationError):
     """Raised when a duplicate qualification is created."""
-    def __init__(self, name: str, original_error: Exception):
-        UniqueViolationError.__init__(self, field_name="title", value=name)
-        self.user_message = f"A qualification with name {name} for this educator already exists"
-        self.log_message = f"Duplicate qualification creation attempted: {original_error}"
+    def __init__(self, input_value: str, detail: str, field: str):
+        UniqueViolationError.__init__(self, error=detail)
+        self.user_message = f"A qualification with {field} {input_value} for this educator already exists"
+        self.log_message = f"Duplicate qualification creation attempted: {detail}"
 
 class QualificationNotFoundError(StaffOrganizationError, EntityNotFoundError):
     """Raised when a qualification is not found."""
