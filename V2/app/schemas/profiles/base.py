@@ -3,7 +3,7 @@ from ..enums import Gender,  ArchiveReason
 
 
 class ProfileBase(BaseModel):
-    """Base model for creating new user"""
+    """Base model for creating new users"""
     first_name: str
     last_name: str
     gender: Gender

@@ -49,9 +49,9 @@ app.include_router(archived_academic_levels.router, prefix=f"/api/{version}/arch
                    tags=["Archived","Academic levels"])
 
 # Classes
-app.include_router(classes.router, prefix=f"/api/{version}/students/classes",
+app.include_router(classes.router, prefix=f"/api/{version}/students/student_organization",
                    tags=["Classes"])
-app.include_router(archived_classes.router, prefix=f"/api/{version}/archive/students/classes",
+app.include_router(archived_classes.router, prefix=f"/api/{version}/archive/students/student_organization",
                    tags=["Archived","Classes"])
 
 

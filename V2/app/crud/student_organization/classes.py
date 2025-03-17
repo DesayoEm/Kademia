@@ -2,14 +2,14 @@ from ...database.models.data_enums import ArchiveReason
 from ...schemas.student_organization.classes import (
     ClassCreate, ClassUpdate, ClassResponse, ClassFilterParams
 )
-from ...services.student_organization.classes.factory import ClassFactory
+from V2.app.core.factories.student_organization.classes import ClassFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
 
 
 class ClassCrud:
-    """CRUD operations for classes."""
+    """CRUD operations for student_organization."""
 
     def __init__(self, session: Session):
         """Initialize CRUD service.
@@ -45,7 +45,7 @@ class ClassCrud:
     def get_all_classes(self, filters: ClassFilterParams) -> List[ClassResponse]:
         """Get all active class.
         Returns:
-            List[QualificationResponse]: List of active classes
+            List[QualificationResponse]: List of active student_organization
         """
         classes = self.factory.get_all_classes(filters)
         return [ClassResponse.model_validate(a_class) for a_class in classes]
@@ -94,11 +94,11 @@ class ClassCrud:
         return ClassResponse.model_validate(class_response)
 
     def get_all_archived_classes(self, filters: ClassFilterParams) -> List[ClassResponse]:
-        """Get all archived classes.
+        """Get all archived student_organization.
         Args:
             filters: Filter parameters
         Returns:
-            List[ClassResponse]: List of archived classes
+            List[ClassResponse]: List of archived student_organization
         """
         classes = self.factory.get_all_archived_classes(filters)
         return [ClassResponse.model_validate(a_class) for a_class in classes]

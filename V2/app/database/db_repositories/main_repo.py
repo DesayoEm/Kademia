@@ -78,7 +78,7 @@ class Repository(ABC, Generic[T]):
         Archive an active entity (soft delete).
         Args:
             id: The UUID of the entity to archive
-            archived_by_id: The UUID of the user performing the archive
+            archived_by_id: The UUID of the users performing the archive
             reason: The reason for archiving
         Returns:
             The archived entity

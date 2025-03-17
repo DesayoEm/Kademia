@@ -77,7 +77,7 @@ def test_model_structure_nullable_constraints(db_inspector):
         "availability": False,
         "user_type": False,
         "staff_type": False,
-        "image_url": False,
+        "image_url": True,
         "email_address": False,
         "address": False,
         "phone": False,

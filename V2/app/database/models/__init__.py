@@ -1,6 +1,6 @@
 from .common_imports import Base
 
-from .profiles import Students, Parents, Staff, Educator, Operations, Support, System
+from .users import Students, Guardians, Staff, Educator, Operations, Support, System
 from .documents import StudentDocuments
 from .auth_models import AccessLevelChanges
 from .staff_organization import StaffDepartments, StaffRoles, EducatorQualifications
@@ -11,7 +11,7 @@ from .academic import (Subjects, Grades, TotalGrades, StudentSubjects, AcademicL
 __all__ = [
     "Base",
     "Students",
-    "Parents",
+    "Guardians",
     "Staff",
     "Educator",
     "Operations",

@@ -20,17 +20,17 @@ def refresh_student_grade_data():
 option=""
 def see_all_students() ->None:
     """
-    This function prompts the user to either display a list of students and their scores or exit.
-    It handles the input validation, ensuring the user can only enter 'Y' or 'N'.
-    If input is neither 'y' nor 'n', it then provides feedback to the user about the invalid input
+    This function prompts the users to either display a list of students and their scores or exit.
+    It handles the input validation, ensuring the users can only enter 'Y' or 'N'.
+    If input is neither 'y' nor 'n', it then provides feedback to the users about the invalid input
 
     :return: None
     """
-    #Infinite loop to repeatedly prompt the user until valid input is received (or until they exit)
+    #Infinite loop to repeatedly prompt the users until valid input is received (or until they exit)
     while True:
         option=input("Enter 'Y' to see a list of students and their scores or enter 'N' to exit: ").casefold()
 
-        #If user inputs 'y', iterate over the dictionary, print the names of students and their subject-score pairs, and exit the loop.
+        #If users inputs 'y', iterate over the dictionary, print the names of students and their subject-score pairs, and exit the loop.
         if option=="y":
             print("\nSTUDENT SCORES")
             for student, grades in student_grade_data_original.items():
@@ -39,16 +39,16 @@ def see_all_students() ->None:
                     for each_subject, result in score.items():
                            print( "\t", each_subject, result, sep = " | ")
             break
-        #If user inputs 'n', exit the loop
+        #If users inputs 'n', exit the loop
         elif option == "n":
             break
-        #If input is neither 'y' nor 'n', provide feedback to the user about the invalid input
+        #If input is neither 'y' nor 'n', provide feedback to the users about the invalid input
         else:
             print("Invalid input, please enter 'Y' or 'N'.")
 
 def validate_score(subject: int):
     """
-    This function validate the value of an integer and notified the user of an error
+    This function validate the value of an integer and notified the users of an error
     if the value is less than 0, or greater than 100
     :param subject:
     :return:int
@@ -69,7 +69,7 @@ def validate_score(subject: int):
 def add_student():
     """
     This function adds a student and their scores for three subjects (Math, Science, History).
-    It prompts the user to enter the student's name and valid scores for each subject.
+    It prompts the users to enter the student's name and valid scores for each subject.
     Name must not contain numbers and must be separated by a space
     Scores must be integers between 0 and 100.
     :return:None

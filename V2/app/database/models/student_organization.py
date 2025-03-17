@@ -45,7 +45,7 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     assistant_rep_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
             ondelete='SET NULL', name='fk_classes_students_assistant_rep'), nullable=True
         )
-    order: Mapped[int] = mapped_column(Integer, unique=True)
+    order: Mapped[int] = mapped_column(Integer, unique=True, nullable=True)
 
     # Relationships
     students: Mapped[List['Students']] = relationship(

@@ -21,7 +21,7 @@ def test_model_structure_column_data_types(db_inspector):
         "class_id": UUID,
         "level_id": UUID,
         "department_id": UUID,
-        "parent_id": UUID,
+        "guardian_id": UUID,
         "is_repeating": Boolean,
         "admission_date": Date,
         "date_left": Date,
@@ -82,7 +82,7 @@ def test_model_structure_nullable_constraints(db_inspector):
         "class_id": False,
         "level_id": False,
         "department_id": False,
-        "parent_id": False,
+        "guardian_id": False,
         "is_repeating": False,
         "admission_date":False,
         "date_left":True,
@@ -105,7 +105,7 @@ def test_model_structure_default_values(db_inspector):
         'id', "password_hash", "first_name", "last_name", "gender", "status",'level_id',
         "last_login","created_at","last_modified_at","is_archived", "archived_at",
         "archived_by", "archive_reason", "created_by","last_modified_by", "access_level","user_type",
-        "student_id","image_url","date_of_birth","class_id","department_id","deletion_eligible", "parent_id",
+        "student_id","image_url","date_of_birth","class_id","department_id","deletion_eligible", "guardian_id",
         "is_repeating", "admission_date", "date_left",  "graduation_date",
     ]
 
@@ -156,8 +156,8 @@ def test_model_structure_foreign_keys(db_inspector):
         (fk for fk in foreign_keys if fk['constrained_columns'] == ['department_id']),
         None
     )
-    parent_fk = next(
-        (fk for fk in foreign_keys if fk['constrained_columns'] == ['parent_id']),
+    guardian_fk = next(
+        (fk for fk in foreign_keys if fk['constrained_columns'] == ['guardian_id']),
         None
     )
     assert class_fk is not None, "Missing foreign key for class_id"
@@ -172,9 +172,9 @@ def test_model_structure_foreign_keys(db_inspector):
     assert department_fk['options']['ondelete'].upper() == 'RESTRICT', \
         "department_id should RESTRICT on delete"
 
-    assert parent_fk is not None, "Missing foreign key for parent_id"
-    assert parent_fk['options']['ondelete'].upper() == 'RESTRICT', \
-        "parent_id should RESTRICT on delete"
+    assert guardian_fk is not None, "Missing foreign key for guardian_id"
+    assert guardian_fk['options']['ondelete'].upper() == 'RESTRICT', \
+        "guardian_id should RESTRICT on delete"
 
 
 

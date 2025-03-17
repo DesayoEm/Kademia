@@ -3,7 +3,7 @@ from .data_enums import AccessLevel
 
 
 class AccessLevelChanges(Base):
-    """Tracks changes to user access levels for audit purposes"""
+    """Tracks changes to users access levels for audit purposes"""
     __tablename__ = 'access_level_changes'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)

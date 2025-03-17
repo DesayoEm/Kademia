@@ -2,7 +2,7 @@ from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.educator_qualifications import (
     QualificationCreate, QualificationUpdate, QualificationResponse, QualificationFilterParams
 )
-from ...services.staff_organization.qualifications.factory import QualificationsFactory
+from V2.app.core.factories.staff_organization.qualification import QualificationsFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List

@@ -2,7 +2,7 @@ from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.staff_departments import (
     StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
 )
-from ...services.staff_organization.departments.factory import StaffDepartmentsFactory
+from V2.app.core.factories.staff_organization.department import StaffDepartmentsFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List

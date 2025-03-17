@@ -22,10 +22,10 @@ class TimeStampMixins:
 
 class AuditMixins:
     """
-    Provides audit attributes for tracking the user who created and last modified a record.
+    Provides audit attributes for tracking the users who created and last modified a record.
     Attributes:
-        created_by (UUID): ID of the user who created the record.
-        last_modified_by (UUID): ID of the user who last modified the record.
+        created_by (UUID): ID of the users who created the record.
+        last_modified_by (UUID): ID of the users who last modified the record.
     """
     @declared_attr
     def created_by(cls):

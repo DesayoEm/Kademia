@@ -3,9 +3,9 @@ from typing import Optional, List, Type
 from sqlalchemy import or_, desc, asc
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from sqlalchemy.orm import Session, Query
-from ....services.errors.database_errors import (
+from ....core.errors.database_errors import (
     UniqueViolationError, EntityNotFoundError, RelationshipError, DBConnectionError)
-from ....services.errors.database_errors import DatabaseError as TKDatabaseError
+from ....core.errors.database_errors import DatabaseError as TKDatabaseError
 from ....database.db_repositories.main_repo import Repository, T
 
 
@@ -199,7 +199,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
 
         Args:
             id: The UUID of the entity to archive
-            archived_by_id: The UUID of the user performing the archive
+            archived_by_id: The UUID of the users performing the archive
             reason: The reason for archiving
         Returns:
             T: The archived entity

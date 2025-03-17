@@ -3,9 +3,9 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 import time
 import uuid
-from ..services.errors.database_errors import *
-from ..services.errors.staff_organisation_errors import *
-from ..services.errors.student_organisation_errors import *
+from ..core.errors.database_errors import *
+from ..core.errors.staff_organisation_errors import *
+from ..core.errors.student_organisation_errors import *
 from ..logging.logger import logger
 
 class ExceptionMiddleware(BaseHTTPMiddleware):

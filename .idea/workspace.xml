@@ -6,25 +6,99 @@
   <component name="ChangeListManager">
     <list default="true" id="d49e4f62-7add-4eb8-a665-00ba3b079643" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V1/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/V1/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/_docs/todos-md.md" beforeDir="false" afterPath="$PROJECT_DIR$/V2/_docs/todos-md.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/profiles/parents.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/profiles/staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/profiles/staff.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/profiles/students.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/profiles/students.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/educator_qualifications.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/educator_qualifications.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_departments.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_departments.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_roles.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_roles.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/crud/student_organization/academic_levels.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/student_organization/academic_levels.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/student_organization/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/student_organization/classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/student_organization/student_departments.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/student_organization/student_departments.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/db_repositories/main_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/db_repositories/main_repo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/db_repositories/sqlalchemy_repos/main_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/db_repositories/sqlalchemy_repos/main_repo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/models/auth_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/auth_models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/database/models/data_enums.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/data_enums.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/database/models/mixins.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/mixins.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/database/models/profiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/profiles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/models/profiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/models/student_organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/student_organization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/script.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/script.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/routers/student_organization/archived_academic_levels.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/student_organization/archived_academic_levels.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/routers/profiles/students/students.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/profiles/students/students.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/routers/profiles/students/students_archive.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/profiles/students/students_archive.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/schemas/profiles/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/profiles/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/schemas/profiles/staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/profiles/staff.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/security/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/security/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/educator_qualifications.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/exceptions.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/staff/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/profiles/staff/factory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/staff/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/profiles/staff/service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/staff/validators.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/staff_departments.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/staff_roles.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/validators.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/profiles/validators.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/academic_levels/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/student_organization/academic_levels/factory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/classes/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/services/student_organization/classes/factory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/schemas/profiles/parents.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/profiles/guardians.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/security/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/security/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/academic/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/auth/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/academic/exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/profiles/guardians.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/academic/validators.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/auth/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/student_organization/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/auth/exceptions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/auth/validators.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/documents/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/core/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/documents/exceptions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/documents/validators.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/core/factories/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/all_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/all_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/base_error.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/base_error.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/database_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/database_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/input_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/input_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/staff_organisation_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/staff_organisation_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/staff_profile_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/staff_profile_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/student_organisation_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/student_organisation_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/errors/student_profile.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/student_profile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/core/validators/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/parents/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/staff/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/staff/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/users/staff.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/staff/service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/students/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/students/students.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/profiles/validators.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/departments/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/departments/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/department.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/departments/service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/qualifications/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/qualifications/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/qualification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/qualifications/service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/roles/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/roles/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/role.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/roles/service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/staff_organization/validators.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/validators/staff_organization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/academic_levels/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/academic_levels/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/academic_level.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/academic_levels/service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/classes/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/classes/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/classes/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/student_organization/classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/departments/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/departments/factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/departments.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/departments/service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/services/student_organization/validators.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/validators/student_organization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/scripts/setup.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/conftest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/database/tables/common_test_imports.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/database/tables/common_test_imports.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/database/tables/test_all_tables.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/database/tables/test_all_tables.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/database/tables/test_classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/database/tables/test_classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/database/tables/test_parents.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/database/tables/test_guardians.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/database/tables/test_staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/database/tables/test_staff.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/database/tables/test_students.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/database/tables/test_students.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/services/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/services/factories/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/services/factories/test_factory_educator_qualifications.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/core/factories/test_factory_educator_qualifications.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/services/factories/test_factory_staff_departments.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/core/factories/test_factory_staff_departments.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/services/factories/test_factory_staff_roles.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/core/factories/test_factory_staff_roles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/services/validators/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/tests/services/validators/test_validators_staff_organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/tests/core/validators/test_validators_staff_organization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,35 +126,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Docker.V2.test-db: Compose Deployment.executor": "Run",
-    "Docker.V2: Compose Deployment.executor": "Run",
-    "Python.config.executor": "Run",
-    "Python.env.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.package.executor": "Run",
-    "Python.script.executor": "Run",
-    "Python.service.executor": "Run",
-    "Python.setup.executor": "Run",
-    "Python.test_db.executor": "Run",
-    "Python.test_unit_schema_validation_qualifications.executor": "Run",
-    "Python.test_unit_schema_validation_staff_departments.executor": "Run",
-    "Python.test_users.executor": "Run",
-    "Python.utils.executor": "Run",
-    "Python.write.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/dell/Desktop/Engineering/Projects/Middleware API",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.30804598",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Docker.V2.test-db: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.V2: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Python.config.executor&quot;: &quot;Run&quot;,
+    &quot;Python.env.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.package.executor&quot;: &quot;Run&quot;,
+    &quot;Python.script.executor&quot;: &quot;Run&quot;,
+    &quot;Python.service.executor&quot;: &quot;Run&quot;,
+    &quot;Python.setup.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_db.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_unit_schema_validation_qualifications.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_unit_schema_validation_staff_departments.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_users.executor&quot;: &quot;Run&quot;,
+    &quot;Python.utils.executor&quot;: &quot;Run&quot;,
+    &quot;Python.write.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/dell/Desktop/Engineering/Projects/Middleware API&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.30804598&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\tests\unit\test_unit_staff_departments" />
@@ -88,11 +162,11 @@
       <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\profiles" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\services\staff_organization\departments" />
-      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\tests\unit\test_unit_roles" />
-      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2" />
-      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik" />
-      <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\tests" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\factories\staff_organization" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\validators" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\factories\student_organization" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\services\student_organization" />
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\factories\users" />
     </key>
   </component>
   <component name="RunManager">
@@ -135,5 +209,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/V2/app/database/models/users.py</url>
+          <line>57</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

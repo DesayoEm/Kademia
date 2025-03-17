@@ -7,7 +7,7 @@ class Gender(str, Enum):
 
 class UserType(str, Enum):
     STUDENT = 'STUDENT'
-    PARENT = 'PARENT'
+    GUARDIAN = 'GUARDIAN'
     STAFF = 'STAFF'
     SYSTEM = 'SYSTEM'
 

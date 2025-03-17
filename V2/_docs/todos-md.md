@@ -46,7 +46,7 @@
 
 1. Mark temporary solutions with TODO comments:
 ```python
-# TODO(AUTH-123): Replace system user with actual user context
+# TODO(AUTH-123): Replace system users with actual users context
 self.current_user_id = SYSTEM_USER_ID
 ```
 
