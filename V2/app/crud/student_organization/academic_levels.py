@@ -91,7 +91,7 @@ class AcademicLevelCrud:
         Returns:
             AcademicLevelResponse: Retrieved archived academic level
         """
-        level = self.factory.get_academic_level(level_id)
+        level = self.factory.get_archived_academic_level(level_id)
         return AcademicLevelResponse.model_validate(level)
 
     def get_all_archived_levels(self, filters: AcademicLevelFilterParams) -> List[AcademicLevelResponse]:

@@ -16,7 +16,8 @@ class TimeStampMixins:
         last_modified_at (datetime): Timestamp when the record was last modified.
     """
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=func.now())
-    last_modified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=func.now(), onupdate=func.now())
+    last_modified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False,
+                                                       default=func.now(), onupdate=func.now())
 
 
 class AuditMixins:

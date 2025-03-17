@@ -92,7 +92,8 @@ class ApprovalStatus(str, Enum):
 
 class AccessLevel(str, Enum):
     INACTIVE = 'INACTIVE'
-    USER = 'USER'
+    READ = 'READ'
+    EDUCATOR = 'EDUCATOR'
     ADMIN = 'ADMIN'
     SUPERUSER = 'SUPERUSER'
     SYSTEM = 'SYSTEM'

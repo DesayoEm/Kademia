@@ -68,7 +68,14 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
                 log_level(f"{error.__name__} | {request_id} | {e.log_message}")
                 return self.create_json_response(e, status_code)
 
+        log_message = f"Unhandled exception | {request_id} | {str(e)}"
+
+       #Uncaught errors
+        logger.error(log_message, exc_info=True)
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={"detail": "An unexpected error occurred"}
+            content={
+                "detail": "An unexpected error occurred.",
+                "error": str(e)
+            }
         )

@@ -83,6 +83,9 @@ class AcademicLevelFactory:
                 existing.name = self.validator.validate_name(data['name'])
             if 'description' in data:
                 existing.description = self.validator.validate_name(data['description'])
+            if 'order' in data:
+                existing.order = int(data['order'])
+
             existing.last_modified_by = SYSTEM_USER_ID
 
             return self.repository.update(academic_level_id, existing)

@@ -1,18 +1,18 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-
 from ...errors.database_errors import RelationshipError
 from ...errors.student_organisation_errors import LevelNotFoundError
-from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
-from ....database.models.data_enums import ArchiveReason
-from .service import ClassFactoryService
-from ....services.errors.database_errors import EntityNotFoundError, UniqueViolationError
-from ....services.student_organization.validators import StudentOrganizationValidators
-from ....database.models.student_organization import Classes
 from ....services.errors.student_organisation_errors import (
     DuplicateClassError, ClassNotFoundError
 )
+from ....services.errors.database_errors import EntityNotFoundError, UniqueViolationError
+from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
+from ....database.models.data_enums import ArchiveReason
+from .service import ClassFactoryService
+from ....services.student_organization.validators import StudentOrganizationValidators
+from ....database.models.student_organization import Classes
+
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
@@ -23,6 +23,7 @@ class ClassFactory:
         self.repository = SQLAlchemyRepository(Classes, session)
         self.validator = StudentOrganizationValidators()
         self.service = ClassFactoryService(session)
+
 
     def create_class(self, new_class) -> Classes:
         """Create a new class.

@@ -28,7 +28,7 @@ class Students(ProfileBase):
 
     student_id: Mapped[str] = mapped_column(String(14), unique=True)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.STUDENT)
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.USER)
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)
     status: Mapped[StudentStatus] = mapped_column(Enum(StudentStatus, name='studentstatus'), default=StudentStatus.ENROLLED)
     date_of_birth: Mapped[date] = mapped_column(Date)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
@@ -84,7 +84,7 @@ class Parents(ProfileBase):
     """
     __tablename__ = 'parents'
 
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.USER)
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.PARENT)
     image_url: Mapped[str] = mapped_column(String(225), nullable=True)
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
@@ -112,18 +112,18 @@ class Staff(ProfileBase):
     """
     __tablename__ = 'staff'
 
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.ADMIN)
+    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.STAFF)
     status: Mapped[EmploymentStatus] = mapped_column(Enum(EmploymentStatus, name='employmentstatus'), default=EmploymentStatus.ACTIVE)
     availability: Mapped[StaffAvailability] = mapped_column(Enum(StaffAvailability, name='staffavailability'), default=StaffAvailability.AVAILABLE)
     staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType, name='stafftype'))
-    image_url: Mapped[str] = mapped_column(String(200))
+    image_url: Mapped[str] = mapped_column(String(200), nullable = True)
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))
     phone: Mapped[str] = mapped_column(String(14), unique=True)
     department_id: Mapped[UUID] = mapped_column(
         ForeignKey('staff_departments.id', ondelete='RESTRICT', name='fk_staff_staff_departments_department_id'),
-        nullable=True  # Making department_id nullable
+        nullable=True
     )
 
     role_id: Mapped[UUID] = mapped_column(

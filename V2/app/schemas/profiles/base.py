@@ -9,8 +9,6 @@ class ProfileBase(BaseModel):
     gender: Gender
 
 
-
-
 class ProfileInDb(BaseModel):
     """Represents stored profile data"""
     id: UUID
