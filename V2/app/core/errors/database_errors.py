@@ -5,14 +5,13 @@ class DBError(KademiaError):
 
 class EntityNotFoundError(DBError):
     """Raised when an entity cannot be found in the database"""
-    def __init__(self, entity_type: str, identifier: str = None):
+    def __init__(self, entity_type: str, identifier: str, error: str ):
         self.entity_type = entity_type
         self.identifier = identifier
+        self.error = error
 
         self.user_message = f"Record not found"
-        self.log_message = f"{entity_type} not found"
-        if self.identifier:
-            self.log_message += f" with identifier: {self.identifier}"
+        self.log_message = f"{entity_type} not with id {identifier} not found. DETAIL: {error}"
         super().__init__()
 
     def __str__(self):
@@ -33,9 +32,9 @@ class UniqueViolationError(DBError):
 
 class RelationshipError(DBError):
     """Raised when a foreign key constraint is violated during data operations"""
-    def __init__(self, error: str, operation: str):
+    def __init__(self, error: str, operation: str, entity: str):
         self.error = error
-        self.user_message = f"Cannot {operation} record because related record does not exist" #Too generic
+        self.user_message = f"Cannot {operation} record because related {entity} does not exist"
         self.log_message = f"Foreign key constraint violation during {operation} operation. Detail: {error}"
 
         super().__init__()

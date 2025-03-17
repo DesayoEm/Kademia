@@ -1,6 +1,8 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
+
+from V2.app.core.errors.profile_errors import RelatedEducatorNotFoundError
 from V2.app.core.validators.staff_organization import StaffOrganizationValidators
 from V2.app.database.models.staff_organization import EducatorQualifications
 from V2.app.database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
@@ -41,13 +43,22 @@ class QualificationsFactory:
         )
         try:
             return self.repository.create(qualification)
-        except RelationshipError:
-            raise QualificationNotFoundError(id=new_qualification.educator_id)#needs to be users(educator) not found
         except UniqueViolationError as e:
             raise DuplicateQualificationError(#name is the only field with a unique constraint
                 input_value=new_qualification.name, detail=str(e), field = 'name'
             )
-
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'educator_id': RelatedEducatorNotFoundError,
+            }
+            for field, error_class in fk_error_mapping.items():
+                if field in error_message:
+                    if hasattr(new_qualification, field):
+                        entity_id = getattr(new_qualification, field)
+                        raise error_class(id=entity_id, detail=str(e), action='create')
+                    else:
+                        raise RelationshipError(error=str(e), operation='create', entity='unknown')
 
 
     def get_all_qualifications(self, filters) -> List[EducatorQualifications]:
@@ -68,9 +79,9 @@ class QualificationsFactory:
         """
         try:
             return self.repository.get_by_id(qualification_id)
-        except EntityNotFoundError:
-            raise QualificationNotFoundError(id=qualification_id)
-
+        except EntityNotFoundError as e:
+            error_message = str(e)
+            raise QualificationNotFoundError(id=qualification_id, detail = error_message)
 
     def update_qualification(self, qualification_id: UUID, data: dict) -> EducatorQualifications:
         """Update a qualification's information.
@@ -82,21 +93,37 @@ class QualificationsFactory:
         """
         try:
             existing = self.get_qualification(qualification_id)
+            educator_id = existing.educator_id  # store separately for error handling
+
             if 'name' in data:
                 existing.name = self.validator.validate_name(data['name'])
-            if 'name' in data:
-                existing.name = self.validator.validate_name(data['name'])
+            if 'description' in data:
+                existing.description = self.validator.validate_name(data['description'])
             existing.last_modified_by = SYSTEM_USER_ID
 
             return self.repository.update(qualification_id, existing)
-        except EntityNotFoundError:
-            raise QualificationNotFoundError(id=qualification_id)
-        except RelationshipError: #Edge case. What if educator is deleted or archived while update is going on
-            pass
-        except UniqueViolationError as e:
-            raise DuplicateQualificationError(  # name is the only field with a unique constraint
-                input_value=data['name'], detail=str(e), field='name'
+        except EntityNotFoundError as e:
+            raise QualificationNotFoundError(id=qualification_id, detail=str(e))
+
+        except UniqueViolationError as e:  # name is the only field with a unique constraint
+            raise DuplicateQualificationError(
+                input_value=data.get('name', ''), detail=str(e), field='name'
             )
+        except RelationshipError as e:  # edge case-educator is deleted(race condition)
+            error_message = str(e)
+            fk_error_mapping = {
+                'educator_id': RelatedEducatorNotFoundError,
+            }
+            for field, error_class in fk_error_mapping.items():
+                if field in error_message:
+                    if field in data:
+                        entity_id = data[field]
+                    elif field == 'educator_id' and 'educator_id' in locals():
+                        entity_id = educator_id
+                    else:
+                        raise RelationshipError(error=str(e), operation='update', entity='unknown_entity')
+                    raise error_class(id=entity_id, detail=str(e), action='update')
+
 
     def archive_qualification(self, qualification_id: UUID, reason: ArchiveReason) -> EducatorQualifications:
         """Archive a qualification.
@@ -108,8 +135,8 @@ class QualificationsFactory:
         """
         try:
             return self.repository.archive(qualification_id, SYSTEM_USER_ID, reason)
-        except EntityNotFoundError:
-            raise QualificationNotFoundError(id=qualification_id)
+        except EntityNotFoundError as e:
+            raise QualificationNotFoundError(id=qualification_id, detail = str(e))
 
 
     def delete_qualification(self, qualification_id: UUID) -> None:
@@ -119,8 +146,9 @@ class QualificationsFactory:
         """
         try:
             self.repository.delete(qualification_id)
-        except EntityNotFoundError:
-            raise QualificationNotFoundError(id=qualification_id)
+        except EntityNotFoundError as e:
+            raise QualificationNotFoundError(id=qualification_id, detail = str(e))
+        #Raise relationship errors on deletion
 
 
     # Archive factory methods
@@ -142,8 +170,8 @@ class QualificationsFactory:
         """
         try:
             return self.repository.get_archive_by_id(qualification_id)
-        except EntityNotFoundError:
-            raise QualificationNotFoundError(id=qualification_id)
+        except EntityNotFoundError as e:
+            raise QualificationNotFoundError(id=qualification_id, detail = str(e))
 
 
     def restore_qualification(self, qualification_id: UUID) -> EducatorQualifications:
@@ -157,8 +185,8 @@ class QualificationsFactory:
             archived = self.get_archived_qualification(qualification_id)
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(qualification_id)
-        except EntityNotFoundError:
-            raise QualificationNotFoundError(id=qualification_id)
+        except EntityNotFoundError as e:
+            raise QualificationNotFoundError(id=qualification_id, detail = str(e))
 
 
     def delete_archived_qualification(self, qualification_id: UUID) -> None:
@@ -168,5 +196,5 @@ class QualificationsFactory:
         """
         try:
             self.repository.delete_archive(qualification_id)
-        except EntityNotFoundError:
-            raise QualificationNotFoundError(id=qualification_id)
+        except EntityNotFoundError as e:
+            raise QualificationNotFoundError(id=qualification_id, detail = str(e))

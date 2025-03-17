@@ -9,7 +9,8 @@ class PasswordService:
         pass
 
     @staticmethod
-    def generate_random_password(length):
+    def generate_random_password():
+        length = 10
         characters = list(string.ascii_letters + string.digits + "!@#$%&")
         random.shuffle(characters)
         password = []

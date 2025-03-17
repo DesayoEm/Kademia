@@ -1,4 +1,5 @@
 from .base_error import KademiaError
+from datetime import date
 
 class InputError(KademiaError):
     """Base exception class for input-related errors."""
@@ -26,3 +27,12 @@ class TextTooShortError(InputError):
         domain_prefix = f"[{domain}] " if domain else ""
         self.user_message = f"Text has to be {min_length} characters or more"
         self.log_message = f"{domain_prefix}Creation attempted with short text: {data}"
+
+class DateError(InputError):
+    def __init__(self, date_input: date, domain=None):
+        super().__init__()
+        domain_prefix = f"[{domain}] " if domain else ""
+        self.user_message = f"Date cannot be in the future"
+        self.log_message = f"{domain_prefix}Creation attempted with future date: {date_input}"
+
+

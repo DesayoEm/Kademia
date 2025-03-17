@@ -1,9 +1,11 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
+
+from V2.app.core.errors.profile_errors import RelatedStudentNotFoundError
 from V2.app.database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
 from V2.app.database.models.data_enums import ArchiveReason
-from V2.app.core.errors.database_errors import EntityNotFoundError, UniqueViolationError
+from V2.app.core.errors.database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
 from V2.app.core.validators.student_organization import StudentOrganizationValidators
 from V2.app.database.models.student_organization import StudentDepartments
 from V2.app.core.errors.student_organisation_errors import (
@@ -29,14 +31,37 @@ class StudentDepartmentFactory:
             id = uuid4(),
             name = self.validator.validate_name(new_department.name),
             description = self.validator.validate_name(new_department.description),
+            student_rep_id = new_department.student_rep_id,
+            assistant_rep_id = new_department.assistant_rep_id,
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID
         )
         try:
             return self.repository.create(department)
         except UniqueViolationError as e:
-            raise DuplicateStudentDepartmentError(
-                input_value=new_department.name, detail=str(e), field = 'name')
+            error_message = str(e).lower()
+            if "department_name_key" in error_message:
+                raise DuplicateStudentDepartmentError(
+                    input_value=new_department.name, detail=str(e), field = 'name'
+                )
+            else:
+                raise DuplicateStudentDepartmentError(
+                    input_value="unknown field", field="unknown", detail=error_message)
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'student_rep_id': RelatedStudentNotFoundError,
+                'assistant_rep_id': RelatedStudentNotFoundError,
+                }
+            for field, error_class in fk_error_mapping.items():
+                if field in error_message:
+                    if hasattr(new_department, field):
+                        entity_id = getattr(new_department, field)
+                        raise error_class(id=entity_id, detail=str(e), action='create')
+                    else:
+                        raise RelationshipError(error=str(e), operation='create', entity='unknown')
+
+
 
     def get_student_department(self, department_id: UUID) -> StudentDepartments:
         """Get a specific student department by ID.
@@ -47,8 +72,8 @@ class StudentDepartmentFactory:
         """
         try:
             return self.repository.get_by_id(department_id)
-        except EntityNotFoundError:
-            raise StudentDepartmentNotFoundError(id=department_id)
+        except EntityNotFoundError as e:
+            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
 
 
     def get_all_departments(self, filters) -> List[StudentDepartments]:
@@ -70,17 +95,33 @@ class StudentDepartmentFactory:
         try:
             existing = self.get_student_department(department_id)
             if 'name' in data:
-                existing.name = self.validator.validate_name(data['name'])
+                existing.name = self.validator.validate_name(data.pop('name'))
             if 'description' in data:
-                existing.description = self.validator.validate_name(data['description'])
+                existing.description = self.validator.validate_name(data.pop('description'))
+            for key, value in data.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
             existing.last_modified_by = SYSTEM_USER_ID
 
             return self.repository.update(department_id, existing)
-        except EntityNotFoundError:
-            raise StudentDepartmentNotFoundError(id=department_id)
+        except EntityNotFoundError as e:
+            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
         except UniqueViolationError as e:
             raise DuplicateStudentDepartmentError(
                 input_value=data['name'], detail=str(e), field='name')
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'student_rep_id': RelatedStudentNotFoundError,
+                'assistant_rep_id': RelatedStudentNotFoundError,
+            }
+            for field, error_class in fk_error_mapping.items():
+                if field in error_message:
+                    if field in data:
+                        entity_id = data[field]
+                        raise error_class(id=entity_id, detail=str(e), action='update')
+                    else:
+                        raise RelationshipError(error=str(e), operation='update', entity='unknown')
 
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StudentDepartments:
@@ -93,9 +134,8 @@ class StudentDepartmentFactory:
         """
         try:
             return self.repository.archive(department_id, SYSTEM_USER_ID, reason)
-        except EntityNotFoundError:
-            raise StudentDepartmentNotFoundError(id=department_id)
-
+        except EntityNotFoundError as e:
+            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
 
     def delete_department(self, department_id: UUID) -> None:
         """Permanently delete a student department.
@@ -104,8 +144,8 @@ class StudentDepartmentFactory:
         """
         try:
             self.repository.delete(department_id)
-        except EntityNotFoundError:
-            raise StudentDepartmentNotFoundError(id=department_id)
+        except EntityNotFoundError as e:
+            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
 
 
     def get_all_archived_departments(self, filters) -> List[StudentDepartments]:
@@ -126,8 +166,8 @@ class StudentDepartmentFactory:
         """
         try:
             return self.repository.get_archive_by_id(department_id)
-        except EntityNotFoundError:
-            raise StudentDepartmentNotFoundError(id=department_id)
+        except EntityNotFoundError as e:
+            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
 
     def restore_department(self, department_id: UUID) -> StudentDepartments:
         """Restore an archived department.
@@ -140,9 +180,8 @@ class StudentDepartmentFactory:
             archived = self.get_archived_department(department_id)
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(department_id)
-        except EntityNotFoundError:
-            raise StudentDepartmentNotFoundError(id=department_id)
-
+        except EntityNotFoundError as e:
+            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
 
     def delete_archived_department(self, department_id: UUID) -> None:
         """Permanently delete an archived department.
@@ -151,6 +190,5 @@ class StudentDepartmentFactory:
         """
         try:
             self.repository.delete_archive(department_id)
-        except EntityNotFoundError:
-            raise StudentDepartmentNotFoundError(id=department_id)
-
+        except EntityNotFoundError as e:
+            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))

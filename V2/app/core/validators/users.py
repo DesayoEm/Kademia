@@ -1,9 +1,9 @@
 from datetime import date
 import re
-from ...core.errors.staff_profile_errors import TextTooShortError, DateError
+from ...core.errors.profile_errors import TextTooShortError, DateError
 
 
-class ProfileValidators:
+class UserValidators:
 
     @staticmethod
     def validate_name(value: str):

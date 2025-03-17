@@ -1,6 +1,8 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
+
+from V2.app.core.services.student_organization.academic_levels import AcademicLevelService
 from V2.app.database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
 from V2.app.database.models.data_enums import ArchiveReason
 from V2.app.core.errors.database_errors import EntityNotFoundError, UniqueViolationError
@@ -17,6 +19,7 @@ class AcademicLevelFactory:
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(AcademicLevel, session)
         self.validator = StudentOrganizationValidators()
+        self.service = AcademicLevelService(session)
 
     def create_academic_level(self, new_academic_level) -> AcademicLevel:
         """Create a new academic level.
@@ -33,17 +36,19 @@ class AcademicLevelFactory:
             created_by=SYSTEM_USER_ID,#Placeholder until auth is implemented
             last_modified_by=SYSTEM_USER_ID
         )
+        if not new_academic_level.order:
+            new_academic_level.order = self.service.create_order(new_academic_level.level_id)
         try:
             return self.repository.create(academic_level)
         except UniqueViolationError as e:#Could either be on name or order
-            error_message = str(e)
-            if "academic_levels_name_key" in error_message.lower():
+            error_message = str(e).lower()
+            if "academic_levels_name_key" in error_message:
                 raise DuplicateLevelError(
                     input_value=new_academic_level.name, field = "name",detail=error_message)
-            elif "academic_levels_order_key" in error_message.lower():
+            elif "academic_levels_order_key" in error_message:
                 raise DuplicateLevelError(
                     input_value=str(new_academic_level.order),field = "order",detail=error_message)
-            else:#edge case idk
+            else:
                 raise DuplicateLevelError(
                     input_value="unknown field", field = "unknown", detail=error_message)
 
@@ -57,8 +62,8 @@ class AcademicLevelFactory:
         """
         try:
             return self.repository.get_by_id(academic_level_id)
-        except EntityNotFoundError:
-            raise LevelNotFoundError(id=academic_level_id)
+        except EntityNotFoundError as e:
+            raise LevelNotFoundError(id=academic_level_id, detail= str(e))
 
 
     def get_all_academic_levels(self, filters) -> List[AcademicLevel]:
@@ -80,17 +85,18 @@ class AcademicLevelFactory:
         try:
             existing = self.get_academic_level(academic_level_id)
             if 'name' in data:
-                existing.name = self.validator.validate_name(data['name'])
+                existing.name = self.validator.validate_name(data.pop('name'))
             if 'description' in data:
-                existing.description = self.validator.validate_name(data['description'])
-            if 'order' in data:
-                existing.order = int(data['order'])
-
+                existing.description = self.validator.validate_name(data.pop('description'))
+            for key, value in data.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
             existing.last_modified_by = SYSTEM_USER_ID
 
             return self.repository.update(academic_level_id, existing)
-        except EntityNotFoundError:
-            raise LevelNotFoundError(id=academic_level_id)
+
+        except EntityNotFoundError as e:
+            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
         except UniqueViolationError as e:  # Could either be on name or order
             error_message = str(e)
             if "academic_levels_name_key" in error_message.lower():
@@ -114,8 +120,8 @@ class AcademicLevelFactory:
         """
         try:
             return self.repository.archive(academic_level_id, SYSTEM_USER_ID, reason)
-        except EntityNotFoundError:
-            raise LevelNotFoundError(id=academic_level_id)
+        except EntityNotFoundError as e:
+            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
 
 
     def delete_academic_level(self, academic_level_id: UUID) -> None:
@@ -125,8 +131,8 @@ class AcademicLevelFactory:
         """
         try:
             self.repository.delete(academic_level_id)
-        except EntityNotFoundError:
-            raise LevelNotFoundError(id=academic_level_id)
+        except EntityNotFoundError as e:
+            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
 
 
     def get_all_archived_academic_levels(self, filters) -> List[AcademicLevel]:
@@ -147,8 +153,8 @@ class AcademicLevelFactory:
         """
         try:
             return self.repository.get_archive_by_id(academic_level_id)
-        except EntityNotFoundError:
-            raise LevelNotFoundError(id=academic_level_id)
+        except EntityNotFoundError as e:
+            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
 
     def restore_academic_level(self, academic_level_id: UUID) -> AcademicLevel:
         """Restore an archived academic_level.
@@ -161,8 +167,8 @@ class AcademicLevelFactory:
             archived = self.get_archived_academic_level(academic_level_id)
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(academic_level_id)
-        except EntityNotFoundError:
-            raise LevelNotFoundError(id=academic_level_id)
+        except EntityNotFoundError as e:
+            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
 
 
     def delete_archived_academic_level(self, academic_level_id: UUID) -> None:
@@ -172,6 +178,6 @@ class AcademicLevelFactory:
         """
         try:
             self.repository.delete_archive(academic_level_id)
-        except EntityNotFoundError:
-            raise LevelNotFoundError(id=academic_level_id)
+        except EntityNotFoundError as e:
+            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
 

@@ -2,7 +2,8 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 from V2.app.core.errors.database_errors import RelationshipError
-from V2.app.core.errors.student_organisation_errors import LevelNotFoundError
+from V2.app.core.errors.profile_errors import RelatedEducatorNotFoundError, RelatedStudentNotFoundError
+from V2.app.core.errors.student_organisation_errors import  RelatedLevelNotFoundError
 from V2.app.core.errors.student_organisation_errors import (
     DuplicateClassError, ClassNotFoundError
 )
@@ -55,8 +56,21 @@ class ClassFactory:
             else:
                 raise DuplicateClassError(
                     input_value="unknown field", field="unknown", detail=error_message)
-        except RelationshipError:
-            raise LevelNotFoundError(id = new_class.level_id) #Edge case: the possibility of another relationship error, not related to level_id
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'level_id': RelatedLevelNotFoundError,
+                'mentor_id': RelatedEducatorNotFoundError,
+                'student_rep_id': RelatedStudentNotFoundError,
+                'assistant_rep_id': RelatedStudentNotFoundError
+                }
+            for field, error_class in fk_error_mapping.items():
+                if field in error_message:
+                    if hasattr(new_class, field):
+                        entity_id = getattr(new_class, field)
+                        raise error_class(id=entity_id, detail=str(e), action='create')
+                    else:
+                        raise RelationshipError(error=str(e), operation='create', entity='unknown')
 
     def get_class(self, class_id: UUID) -> Classes:
         """Get a specific class by ID.
@@ -67,8 +81,8 @@ class ClassFactory:
         """
         try:
             return self.repository.get_by_id(class_id)
-        except EntityNotFoundError:
-            raise ClassNotFoundError(id=class_id)
+        except EntityNotFoundError as e:
+            raise ClassNotFoundError(id=class_id, detail = str(e))
 
 
     def get_all_classes(self, filters) -> List[Classes]:
@@ -89,22 +103,37 @@ class ClassFactory:
         """
         try:
             existing = self.get_class(class_id)
-            if 'level_id' in data:
-                existing.level_id = data['level_id']
-            if 'code' in data:
-                existing.code = data['code']
+            for key, value in data.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
             existing.last_modified_by = SYSTEM_USER_ID
+
             return self.repository.update(class_id, existing)
-        except EntityNotFoundError:
-            raise ClassNotFoundError(id=class_id)
+        except EntityNotFoundError as e:
+            raise ClassNotFoundError(id=class_id, detail = str(e))
         except UniqueViolationError as e:
             error_message= str(e)
             if "classes_order_key" in error_message.lower():
                 raise DuplicateClassError(
-                    input_value=str(data['order']), field="order", detail=error_message)
+                    input_value=str(data.get('order', 'unknown')), field="order", detail=error_message)
             else:
                 raise DuplicateClassError(
                     input_value="unknown field", field="unknown", detail=error_message)
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'level_id': RelatedLevelNotFoundError,
+                'mentor_id': RelatedEducatorNotFoundError,
+                'student_rep_id': RelatedStudentNotFoundError,
+                'assistant_rep_id': RelatedStudentNotFoundError
+            }
+            for field, error_class in fk_error_mapping.items():
+                if field in error_message:
+                    if field in data:
+                        entity_id = data[field]
+                        raise error_class(id=entity_id, detail=str(e), action='update')
+                    else:
+                        raise RelationshipError(error=str(e), operation='update', entity='unknown')
 
 
     def archive_class(self, class_id: UUID, reason: ArchiveReason) -> Classes:
@@ -117,8 +146,8 @@ class ClassFactory:
         """
         try:
             return self.repository.archive(class_id, SYSTEM_USER_ID, reason)
-        except EntityNotFoundError:
-            raise ClassNotFoundError(id=class_id)
+        except EntityNotFoundError as e:
+            raise ClassNotFoundError(id=class_id, detail = str(e))
 
 
     def delete_class(self, class_id: UUID) -> None:
@@ -128,8 +157,8 @@ class ClassFactory:
         """
         try:
             self.repository.delete(class_id)
-        except EntityNotFoundError:
-            raise ClassNotFoundError(id=class_id)
+        except EntityNotFoundError as e:
+            raise ClassNotFoundError(id=class_id, detail = str(e))
 
 
     def get_all_archived_classes(self, filters) -> List[Classes]:
@@ -150,8 +179,8 @@ class ClassFactory:
         """
         try:
             return self.repository.get_archive_by_id(class_id)
-        except EntityNotFoundError:
-            raise ClassNotFoundError(id=class_id)
+        except EntityNotFoundError as e:
+            raise ClassNotFoundError(id=class_id, detail = str(e))
 
     def restore_class(self, class_id: UUID) -> Classes:
         """Restore an archived class.
@@ -164,8 +193,8 @@ class ClassFactory:
             archived = self.get_archived_class(class_id)
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(class_id)
-        except EntityNotFoundError:
-            raise ClassNotFoundError(id=class_id)
+        except EntityNotFoundError as e:
+            raise ClassNotFoundError(id=class_id, detail = str(e))
 
 
     def delete_archived_class(self, class_id: UUID) -> None:
@@ -175,6 +204,6 @@ class ClassFactory:
         """
         try:
             self.repository.delete_archive(class_id)
-        except EntityNotFoundError:
-            raise ClassNotFoundError(id=class_id)
+        except EntityNotFoundError as e:
+            raise ClassNotFoundError(id=class_id, detail = str(e))
 

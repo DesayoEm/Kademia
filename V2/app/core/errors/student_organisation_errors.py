@@ -1,5 +1,5 @@
 from .base_error import KademiaError
-from .database_errors import EntityNotFoundError, UniqueViolationError
+from .database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
 from uuid import UUID
 from .input_errors import EmptyFieldError, BlankFieldError, TextTooShortError
 
@@ -35,10 +35,10 @@ class DuplicateStudentDepartmentError(StudentOrganizationError, UniqueViolationE
 
 class StudentDepartmentNotFoundError(StudentOrganizationError, EntityNotFoundError):
     """Raised when a department is not found."""
-    def __init__(self, id: UUID):
-        EntityNotFoundError.__init__(self, entity_type="Department", identifier=str(id))
+    def __init__(self, id: UUID, detail: str):
+        EntityNotFoundError.__init__(self, entity_type="Department", identifier=str(id), error = detail)
         self.user_message = f"Department not found!"
-        self.log_message = f"Department with id:{id} not found"
+        self.log_message = f"Department with id:{id} not found. DETAIL: {detail}"
 
 class DuplicateLevelError(StudentOrganizationError, UniqueViolationError):
     """Raised when users attempts a duplicate academic level field."""
@@ -49,10 +49,17 @@ class DuplicateLevelError(StudentOrganizationError, UniqueViolationError):
 
 class LevelNotFoundError(StudentOrganizationError, EntityNotFoundError):
     """Raised when an academic level is not found."""
-    def __init__(self, id: UUID):
-        EntityNotFoundError.__init__(self, entity_type="Role", identifier=str(id))
+    def __init__(self, id: UUID, detail: str):
+        EntityNotFoundError.__init__(self, entity_type="Department", identifier=str(id), error=detail)
         self.user_message = f"Academic level not found!"
-        self.log_message = f"Academic level with id:{id} not found"
+        self.log_message = f"Academic level with id:{id} not found. DETAIL: {detail}"
+
+class RelatedLevelNotFoundError(StudentOrganizationError, RelationshipError):
+    """Raised when an academic level is not found during fk insertion"""
+    def __init__(self, id: UUID, detail: str, action: str):
+        RelationshipError.__init__(self, error = detail, operation=action, entity="Academic Level")
+        self.user_message = f"Related academic level not found!"
+        self.log_message = f"Error during during fk insertion of Academic Level with id:{id} during {action} operation. Detail {detail}"
 
 class DuplicateClassError(StudentOrganizationError, UniqueViolationError):
     """Raised when a duplicate class is created."""
@@ -63,7 +70,7 @@ class DuplicateClassError(StudentOrganizationError, UniqueViolationError):
 
 class ClassNotFoundError(StudentOrganizationError, EntityNotFoundError):
     """Raised when a class is not found."""
-    def __init__(self, id: UUID):
-        EntityNotFoundError.__init__(self, entity_type="Role", identifier=str(id))
+    def __init__(self, id: UUID, detail: str):
+        EntityNotFoundError.__init__(self, entity_type="Department", identifier=str(id), error=detail)
         self.user_message = f"Class not found!"
-        self.log_message = f"Class with id:{id} not found"
+        self.log_message = f"Class with id:{id} not found. DETAIL: {detail}"

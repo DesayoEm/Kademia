@@ -36,7 +36,6 @@ class StaffRolesFactory:
             description=self.validator.validate_name(new_role.description),
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
-
         )
         try:
             return self.repository.create(role)
@@ -63,8 +62,8 @@ class StaffRolesFactory:
         """
         try:
             return self.repository.get_by_id(role_id)
-        except EntityNotFoundError:
-            raise RoleNotFoundError(id=role_id)
+        except EntityNotFoundError as e:
+            raise RoleNotFoundError(id=role_id, detail = str(e))
 
 
     def update_role(self, role_id: UUID, data: dict) -> StaffRoles:
@@ -84,8 +83,8 @@ class StaffRolesFactory:
             existing.last_modified_by = SYSTEM_USER_ID
 
             return self.repository.update(role_id, existing)
-        except EntityNotFoundError:
-            raise RoleNotFoundError(id=role_id)
+        except EntityNotFoundError as e:
+            raise RoleNotFoundError(id=role_id, detail = str(e))
         except UniqueViolationError as e:  # name is the only field with a UC
             raise DuplicateRoleError(
                 input_value=data['name'], detail=str(e), field='name'
@@ -101,8 +100,8 @@ class StaffRolesFactory:
         """
         try:
             return self.repository.archive(role_id, SYSTEM_USER_ID, reason)
-        except EntityNotFoundError:
-            raise RoleNotFoundError(id=role_id)
+        except EntityNotFoundError as e:
+            raise RoleNotFoundError(id=role_id, detail = str(e))
 
 
     def delete_role(self, role_id: UUID) -> None:
@@ -112,8 +111,8 @@ class StaffRolesFactory:
         """
         try:
             self.repository.delete(role_id)
-        except EntityNotFoundError:
-            raise RoleNotFoundError(id=role_id)
+        except EntityNotFoundError as e :
+            raise RoleNotFoundError(id=role_id, detail = str(e))
 
     def get_all_archived_roles(self, filters) -> List[StaffRoles]:
         """Get all archived staff roles with filtering.
@@ -133,8 +132,8 @@ class StaffRolesFactory:
         """
         try:
             return self.repository.get_archive_by_id(role_id)
-        except EntityNotFoundError:
-            raise RoleNotFoundError(id=role_id)
+        except EntityNotFoundError as e:
+            raise RoleNotFoundError(id=role_id, detail = str(e))
 
     def restore_role(self, role_id: UUID) -> StaffRoles:
         """Restore an archived role.
@@ -147,8 +146,8 @@ class StaffRolesFactory:
             archived = self.get_archived_role(role_id)
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(role_id)
-        except EntityNotFoundError:
-            raise RoleNotFoundError(id=role_id)
+        except EntityNotFoundError as e:
+            raise RoleNotFoundError(id=role_id, detail = str(e))
 
 
     def delete_archived_role(self, role_id: UUID) -> None:
@@ -158,5 +157,5 @@ class StaffRolesFactory:
         """
         try:
             self.repository.delete_archive(role_id)
-        except EntityNotFoundError:
-            raise RoleNotFoundError(id=role_id)
+        except EntityNotFoundError as e:
+            raise RoleNotFoundError(id=role_id, detail = str(e))
