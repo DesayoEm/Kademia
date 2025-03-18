@@ -23,10 +23,10 @@ class DocumentType(str, Enum):
 
 
 class StaffType(str, Enum):
-    EDUCATOR = 'EDUCATOR'
-    OPERATIONS = 'OPERATIONS'
-    SUPPORT = 'SUPPORT'
-    SYSTEM = 'SYSTEM'
+    EDUCATOR = 'Educator'
+    OPERATIONS = 'Operations'
+    SUPPORT = 'Support'
+    SYSTEM = 'System'
 
 
 class StaffAvailability(str, Enum):

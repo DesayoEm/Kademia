@@ -36,7 +36,7 @@ class QualificationsFactory:
             id=uuid4(),
             name=self.validator.validate_name(new_qualification.name),
             description=self.validator.validate_name(new_qualification.description),
-            educator_id=SYSTEM_USER_ID,#Placeholder
+            educator_id=new_qualification.educator_id,
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
 
@@ -47,18 +47,8 @@ class QualificationsFactory:
             raise DuplicateQualificationError(#name is the only field with a unique constraint
                 input_value=new_qualification.name, detail=str(e), field = 'name'
             )
-        except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'educator_id': RelatedEducatorNotFoundError,
-            }
-            for field, error_class in fk_error_mapping.items():
-                if field in error_message:
-                    if hasattr(new_qualification, field):
-                        entity_id = getattr(new_qualification, field)
-                        raise error_class(id=entity_id, detail=str(e), action='create')
-                    else:
-                        raise RelationshipError(error=str(e), operation='create', entity='unknown')
+        except RelationshipError as e:#Needs to be dynamic
+            raise RelatedEducatorNotFoundError(id=new_qualification.educator_id, detail=str(e), action='create')
 
 
     def get_all_qualifications(self, filters) -> List[EducatorQualifications]:

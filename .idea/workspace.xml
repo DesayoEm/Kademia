@@ -6,30 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="d49e4f62-7add-4eb8-a665-00ba3b079643" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/errors/profile_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/profile_errors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/errors/student_organisation_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/student_organisation_errors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/department.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/department.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/qualification.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/qualification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/role.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/role.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/student_organization/academic_level.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/academic_level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/student_organization/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/classes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/student_organization/department.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/department.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/factories/users/staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/users/staff.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/services/student_organization/academic_levels.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/student_organization/academic_levels.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/services/student_organization/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/student_organization/classes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/validators/staff_organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/validators/staff_organization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/validators/student_organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/validators/student_organization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/crud/profiles/staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/profiles/staff.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/educator_qualifications.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/educator_qualifications.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_departments.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_departments.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_roles.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_roles.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/crud/student_organization/academic_levels.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/student_organization/academic_levels.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/crud/student_organization/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/student_organization/classes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/crud/student_organization/student_departments.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/student_organization/student_departments.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/db_repositories/sqlalchemy_repos/main_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/db_repositories/sqlalchemy_repos/main_repo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/models/data_enums.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/data_enums.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/script.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/script.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/routers/profiles/staff/staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/profiles/staff/staff.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/schemas/enums.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/enums.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/schemas/profiles/staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/profiles/staff.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/logs/app_2025-03-18.log" beforeDir="false" afterPath="$PROJECT_DIR$/V2/logs/app_2025-03-18.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/app_2025-03-10.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/app_2025-03-17.log" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,35 +44,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Docker.V2.test-db: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.V2: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Python.config.executor&quot;: &quot;Run&quot;,
-    &quot;Python.env.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.package.executor&quot;: &quot;Run&quot;,
-    &quot;Python.script.executor&quot;: &quot;Run&quot;,
-    &quot;Python.service.executor&quot;: &quot;Run&quot;,
-    &quot;Python.setup.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test_db.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test_unit_schema_validation_qualifications.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test_unit_schema_validation_staff_departments.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test_users.executor&quot;: &quot;Run&quot;,
-    &quot;Python.utils.executor&quot;: &quot;Run&quot;,
-    &quot;Python.write.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/dell/Desktop/Engineering/Projects/Middleware API&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.30804598&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Docker.V2.test-db: Compose Deployment.executor": "Run",
+    "Docker.V2: Compose Deployment.executor": "Run",
+    "Python.config.executor": "Run",
+    "Python.env.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.package.executor": "Run",
+    "Python.qualification.executor": "Run",
+    "Python.script.executor": "Run",
+    "Python.service.executor": "Run",
+    "Python.setup.executor": "Run",
+    "Python.test_db.executor": "Run",
+    "Python.test_unit_schema_validation_qualifications.executor": "Run",
+    "Python.test_unit_schema_validation_staff_departments.executor": "Run",
+    "Python.test_users.executor": "Run",
+    "Python.utils.executor": "Run",
+    "Python.write.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/dell/Desktop/Engineering/Projects/Middleware API",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.30804598",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\tests\unit\test_unit_staff_departments" />

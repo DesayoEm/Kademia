@@ -9,7 +9,7 @@ from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRe
 from ....database.models.data_enums import ArchiveReason
 from ....core.validators.users import UserValidators
 from ....core.services.auth.password_service import PasswordService
-from ....database.models.users import Staff
+from ....database.models.users import Staff, Educator, Support, Operations
 
 
 
@@ -32,28 +32,41 @@ class StaffFactory:
             Staff: Created staff record
         """
         password = self.password_service.generate_random_password()
-        new_staff = Staff(
-            id = uuid4(),
-            first_name = self.validator.validate_name(staff_data.first_name),
-            last_name = self.validator.validate_name(staff_data.last_name),
-            password_hash = self.password_service.hash_password(password),
-            gender = staff_data.gender,
-            access_level = staff_data.access_level,
-            status = staff_data.status,
-            availability =  staff_data.availability,
-            staff_type = staff_data.staff_type,
-            email_address =  self.validator.validate_staff_email(staff_data.email_address),
-            address =  self.validator.validate_address(staff_data.address),
-            phone =  self.validator.validate_phone(staff_data.phone),
-            department_id =  staff_data.department_id,
-            role_id = staff_data.role_id,
-            date_joined =  self.validator.validate_date(staff_data.date_joined),
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID,
-        )
+
+        def create_staff_instance(data):
+            common_attrs = {
+                "id": uuid4(),
+                "first_name": self.validator.validate_name(data.first_name),
+                "last_name": self.validator.validate_name(data.last_name),
+                "password_hash": self.password_service.hash_password(password),
+                "gender": data.gender,
+                "status": data.status,
+                "availability": data.availability,
+                "email_address": self.validator.validate_staff_email(data.email_address),
+                "address": self.validator.validate_address(data.address),
+                "phone": self.validator.validate_phone(data.phone),
+                "department_id": data.department_id,
+                "role_id": data.role_id,
+                "date_joined": self.validator.validate_date(data.date_joined),
+                "created_by": SYSTEM_USER_ID,
+                "last_modified_by": SYSTEM_USER_ID,
+            }
+
+            if data.staff_type == "Educator":
+                return Educator(**common_attrs)
+            elif data.staff_type == "Operations":
+                return Operations(**common_attrs)
+            elif data.staff_type == "Support":
+                return Support(**common_attrs)
+            else:
+                valid_types = ["Educator", "Operations", "Support"]
+                raise ValueError(f"Invalid staff_type: {data.staff_type}. Valid types are: {valid_types}")
+
+        new_staff = create_staff_instance(staff_data)
+
         try:
             return self.repository.create(new_staff)
-        except UniqueViolationError as e:  # Could either be email or phone
+        except UniqueViolationError as e:  #email or phone
             error_message = str(e).lower()
             if "staff_phone_key" in error_message:
                 raise DuplicateStaffError(

@@ -31,10 +31,10 @@ class AcademicLevel(str, Enum):
     ALEVELS = 'ALEVELS'
 
 class StaffType(str, Enum):
-    EDUCATOR = 'EDUCATOR'
-    OPERATIONS = 'OPERATIONS'
-    SUPPORT = 'SUPPORT'
-    SYSTEM = 'SYSTEM'
+    Educator = 'Educator'
+    Operations = 'Operations'
+    Support = 'Support'
+    System = 'System'
 
 
 class StaffAvailability(str, Enum):

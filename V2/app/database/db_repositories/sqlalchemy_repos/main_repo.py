@@ -66,8 +66,10 @@ class SQLAlchemyRepository(BaseRepository[T]):
             details = str(e).lower()
             if 'unique constraint' in details:
                 raise UniqueViolationError(error= details)
-            elif 'foreign key constraint' in str(e).lower():
-                raise RelationshipError(operation = "create", error=str(e))
+            elif 'foreign key constraint' in details:
+                raise RelationshipError(operation = "create", error=str(e), entity ='Unknown')
+            else:
+                raise TKDatabaseError(error=f"Database integrity error: {details}")
         except OperationalError as e:
             self.session.rollback()
             raise DBConnectionError(error=str(e))
@@ -175,7 +177,8 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not existing:
                 raise EntityNotFoundError(
                     entity_type=self.model.__name__,
-                    identifier=str(id)
+                    identifier=str(id),
+                    error = 'object not found'
                 )
             self.session.merge(updated_entity)
             self.session.commit()
@@ -188,7 +191,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if 'unique constraint' in details:
                 raise UniqueViolationError(error=details)
             elif 'foreign key constraint' in str(e).lower():
-                raise RelationshipError(operation="create", error=str(e))
+                raise RelationshipError(operation="create", error=str(e), entity ='Unknown')
         except SQLAlchemyError as e:
             self.session.rollback()
             raise TKDatabaseError(error=str(e))
@@ -214,7 +217,8 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_type=self.model.__name__,
-                    identifier=str(id)
+                    identifier=str(id),
+                    error='object not found'
                 )
 
             entity.archive(archived_by_id, reason)
@@ -240,7 +244,8 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_type=self.model.__name__,
-                    identifier=str(id)
+                    identifier=str(id),
+                    error='object not found'
                 )
 
             self.session.delete(entity)
@@ -267,7 +272,8 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_type=self.model.__name__,
-                    identifier=str(id)
+                    identifier=str(id),
+                    error='object not found'
                 )
             return entity
         except SQLAlchemyError as e:
@@ -345,7 +351,8 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_type=self.model.__name__,
-                    identifier=str(id)
+                    identifier=str(id),
+                    error='object not found'
                 )
             entity.is_archived = False
             self.session.commit()
@@ -369,7 +376,8 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_type=self.model.__name__,
-                    identifier=str(id)
+                    identifier=str(id),
+                    error='object not found'
                 )
             self.session.delete(entity)
             self.session.commit()

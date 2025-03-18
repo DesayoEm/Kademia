@@ -31,7 +31,7 @@ try:
             department_id=None,
             role_id=None,
             user_type=UserType.SYSTEM,
-            staff_type=StaffType.SYSTEM,
+            staff_type=StaffType.System,
             status=EmploymentStatus.ACTIVE,
             availability=StaffAvailability.AVAILABLE,
             email_address='system@kademia.com',
