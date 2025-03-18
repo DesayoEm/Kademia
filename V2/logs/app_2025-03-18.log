@@ -1,0 +1,9 @@
+2025-03-18 00:20:27,182 - kademia - INFO - Application started
+2025-03-18 00:20:40,704 - kademia - INFO - Request started | 2a8022b8-bd46-494e-a006-bf22f4b848d0 | GET /
+2025-03-18 00:20:40,705 - kademia - INFO - Request completed | 2a8022b8-bd46-494e-a006-bf22f4b848d0 | Status: 200 | Time: 0.001s
+2025-03-18 00:20:40,922 - kademia - INFO - Request started | 4510bfc5-543a-42ff-b80d-4b5a6e17624b | GET /favicon.ico
+2025-03-18 00:20:40,924 - kademia - INFO - Request completed | 4510bfc5-543a-42ff-b80d-4b5a6e17624b | Status: 404 | Time: 0.001s
+2025-03-18 00:20:44,325 - kademia - INFO - Request started | 9bf5ef33-047d-43b4-858d-3ff6bb91e2fb | GET /docs
+2025-03-18 00:20:44,326 - kademia - INFO - Request completed | 9bf5ef33-047d-43b4-858d-3ff6bb91e2fb | Status: 200 | Time: 0.000s
+2025-03-18 00:20:44,794 - kademia - INFO - Request started | 64c249a1-5507-4c98-9270-362ba9c2ad6b | GET /openapi.json
+2025-03-18 00:20:44,885 - kademia - INFO - Request completed | 64c249a1-5507-4c98-9270-362ba9c2ad6b | Status: 200 | Time: 0.091s

@@ -4,8 +4,8 @@ from ..enums import AccessLevel, UserType, StaffType, StaffAvailability, Employm
 from .base import ProfileBase, ProfileInDb
 
 class StaffFilterParams(BaseFilterParams):
-    name: Optional[str] = None
-    description: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
     order_by: Literal["name", "created_at"] = "name"
 
 class StaffEnumsRequest(BaseModel):
@@ -26,7 +26,6 @@ class StaffBase(ProfileBase):
     department_id: UUID
     role_id: UUID
     date_joined: date
-
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -58,7 +57,6 @@ class StaffCreate(StaffBase):
 class StaffUpdate(BaseModel):
     """Used for updating staff"""
     date_left: date | None = None
-
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -92,8 +90,11 @@ class StaffResponse(StaffBase):
 class StaffInDB(StaffBase, ProfileInDb):
     """Represents stored staff"""
 
-    json_schema_extra = {
-        "example": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
             #Base Profile fields
             "first_name": "Aina",
             "last_name": "Folu",
@@ -126,4 +127,4 @@ class StaffInDB(StaffBase, ProfileInDb):
             "archived_by": None,
             "archive_reason": None
         }
-    }
+    })

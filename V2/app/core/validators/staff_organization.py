@@ -1,4 +1,4 @@
-from V2.app.core.errors.staff_organisation_errors import (
+from ...core.errors.staff_organisation_errors import (
     EmptyFieldError, BlankFieldError, TextTooShortError
 )
 

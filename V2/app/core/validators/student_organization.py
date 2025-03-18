@@ -1,4 +1,4 @@
-from V2.app.core.errors.input_errors import (
+from ...core.errors.input_errors import (
     EmptyFieldError, BlankFieldError, TextTooShortError
 )
 

@@ -16,11 +16,9 @@ class ProfileEmptyFieldError(EmptyFieldError):
     def __init__(self, input_value: str):
         super().__init__(data=input_value, domain=ProfileError.DOMAIN)
 
-
 class ProfileBlankFieldError(BlankFieldError):
     def __init__(self, input_value: str):
         super().__init__(data=input_value, domain=ProfileError.DOMAIN)
-
 
 class ProfileTextTooShortError(TextTooShortError):
     def __init__(self, input_value: str, min_length=None):

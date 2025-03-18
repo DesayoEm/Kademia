@@ -2,7 +2,7 @@ from ...database.models.data_enums import ArchiveReason
 from ...schemas.student_organization.classes import (
     ClassCreate, ClassUpdate, ClassResponse, ClassFilterParams
 )
-from V2.app.core.factories.student_organization.classes import ClassFactory
+from ...core.factories.student_organization.classes import ClassFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List

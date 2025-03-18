@@ -40,6 +40,14 @@ class StudentDepartmentNotFoundError(StudentOrganizationError, EntityNotFoundErr
         self.user_message = f"Department not found!"
         self.log_message = f"Department with id:{id} not found. DETAIL: {detail}"
 
+class RelatedStudentDepartmentNotFoundError(StudentOrganizationError, RelationshipError):
+    """Raised when a department is not found during fk insertion"""
+    def __init__(self, id: UUID, detail: str, action: str):
+        RelationshipError.__init__(self, error = detail, operation=action, entity="Department")
+        self.user_message = f"Related department not found!"
+        self.log_message = f"Error during during fk insertion of department with id:{id} during {action} operation. Detail {detail}"
+
+
 class DuplicateLevelError(StudentOrganizationError, UniqueViolationError):
     """Raised when users attempts a duplicate academic level field."""
     def __init__(self, input_value: str, detail: str, field: str ):

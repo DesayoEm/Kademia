@@ -2,7 +2,7 @@ from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.staff_roles import (
     StaffRoleCreate, StaffRoleUpdate, StaffRoleResponse, RolesFilterParams
 )
-from V2.app.core.factories.staff_organization.role import StaffRolesFactory
+from ...core.factories.staff_organization.role import StaffRolesFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List

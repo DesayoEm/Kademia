@@ -6,28 +6,68 @@ import uuid
 from ..core.errors.database_errors import *
 from ..core.errors.staff_organisation_errors import *
 from ..core.errors.student_organisation_errors import *
+from ..core.errors.profile_errors import *
 from ..logging.logger import logger
 
 class ExceptionMiddleware(BaseHTTPMiddleware):
 
     error_map = {
+        #Generic database errors
+        DatabaseError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         EntityNotFoundError: status.HTTP_404_NOT_FOUND,
-        DepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
-        ClassNotFoundError: status.HTTP_404_NOT_FOUND,
-        DuplicateClassError: status.HTTP_409_CONFLICT,
-        LevelNotFoundError: status.HTTP_404_NOT_FOUND,
-        DuplicateLevelError: status.HTTP_409_CONFLICT,
-        RoleNotFoundError: status.HTTP_404_NOT_FOUND,
-        QualificationNotFoundError: status.HTTP_404_NOT_FOUND,
         UniqueViolationError: status.HTTP_409_CONFLICT,
-        DuplicateDepartmentError: status.HTTP_409_CONFLICT,
-        DuplicateRoleError: status.HTTP_409_CONFLICT,
-        DuplicateQualificationError: status.HTTP_409_CONFLICT,
         RelationshipError: status.HTTP_400_BAD_REQUEST,
+        TransactionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+        DBConnectionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+
+        # Generic input errors
+        TextTooShortError: status.HTTP_400_BAD_REQUEST,
+        DateError: status.HTTP_400_BAD_REQUEST,
         EmptyFieldError: status.HTTP_400_BAD_REQUEST,
         BlankFieldError: status.HTTP_400_BAD_REQUEST,
-        TextTooShortError: status.HTTP_400_BAD_REQUEST,
-        DatabaseError: status.HTTP_500_INTERNAL_SERVER_ERROR
+
+        #Staff organization errors
+        StaffEmptyFieldError: status.HTTP_400_BAD_REQUEST,
+        StaffBlankFieldError: status.HTTP_400_BAD_REQUEST,
+        StaffTextTooShortError: status.HTTP_400_BAD_REQUEST,
+
+        DepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateDepartmentError: status.HTTP_409_CONFLICT,
+        RelatedDepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
+
+        RoleNotFoundError: status.HTTP_404_NOT_FOUND,
+        RelatedRoleNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateRoleError: status.HTTP_409_CONFLICT,
+
+        QualificationNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateQualificationError: status.HTTP_409_CONFLICT,
+
+        # Student organization errors
+        ClassNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateClassError: status.HTTP_409_CONFLICT,
+
+        LevelNotFoundError: status.HTTP_404_NOT_FOUND,
+        RelatedLevelNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateLevelError: status.HTTP_409_CONFLICT,
+
+        StudentDepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
+        RelatedStudentDepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateStudentDepartmentError: status.HTTP_409_CONFLICT,
+
+        #Profile errors
+        ProfileTextTooShortError: status.HTTP_400_BAD_REQUEST,
+        ProfileDateError: status.HTTP_400_BAD_REQUEST,
+        ProfileEmptyFieldError: status.HTTP_400_BAD_REQUEST,
+        ProfileBlankFieldError: status.HTTP_400_BAD_REQUEST,
+
+        StaffNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateStaffError: status.HTTP_409_CONFLICT,
+        RelatedStaffNotFoundError: status.HTTP_404_NOT_FOUND,
+        RelatedEducatorNotFoundError: status.HTTP_404_NOT_FOUND,
+
+        StudentNotFoundError: status.HTTP_404_NOT_FOUND,
+        RelatedStudentNotFoundError: status.HTTP_404_NOT_FOUND,
+
     }
 
     async def dispatch(self, request: Request, call_next):

@@ -7,6 +7,8 @@ from .routers.student_organization import (
     student_departments, archived_student_departments, academic_levels, archived_academic_levels,
     classes, archived_classes
 )
+from .routers.profiles.staff import staff, archived_staff
+
 from .middleware.error_handler import ExceptionMiddleware
 from .logging.logger import logger
 
@@ -54,7 +56,11 @@ app.include_router(classes.router, prefix=f"/api/{version}/students/student_orga
 app.include_router(archived_classes.router, prefix=f"/api/{version}/archive/students/student_organization",
                    tags=["Archived","Classes"])
 
-
+# Staff
+app.include_router(staff.router, prefix=f"/api/{version}/staff",
+                   tags=["Staff"])
+app.include_router(archived_staff.router, prefix=f"/api/{version}/archive/staff",
+                   tags=["Archived","Staff"])
 
 @app.get("/")
 async def root():

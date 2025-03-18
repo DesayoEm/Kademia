@@ -2,14 +2,14 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from V2.app.core.errors.profile_errors import RelatedEducatorNotFoundError
-from V2.app.core.validators.staff_organization import StaffOrganizationValidators
-from V2.app.database.models.staff_organization import EducatorQualifications
-from V2.app.database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
-from V2.app.database.models.data_enums import ArchiveReason
-from V2.app.core.errors.database_errors import (
+from ....core.errors.profile_errors import RelatedEducatorNotFoundError
+from ....core.validators.staff_organization import StaffOrganizationValidators
+from ....database.models.staff_organization import EducatorQualifications
+from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
+from ....database.models.data_enums import ArchiveReason
+from ....core.errors.database_errors import (
     EntityNotFoundError, UniqueViolationError, RelationshipError)
-from V2.app.core.errors.staff_organisation_errors import QualificationNotFoundError, DuplicateQualificationError
+from ....core.errors.staff_organisation_errors import QualificationNotFoundError, DuplicateQualificationError
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')

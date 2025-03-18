@@ -1,9 +1,9 @@
 from sqlalchemy import func
 from uuid import UUID
 from sqlalchemy.orm import Session
-from V2.app.database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
-from V2.app.core.validators.student_organization import StudentOrganizationValidators
-from V2.app.database.models.student_organization import Classes
+from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
+from ....core.validators.student_organization import StudentOrganizationValidators
+from ....database.models.student_organization import Classes
 
 class ClassService:
     def __init__(self, session: Session):

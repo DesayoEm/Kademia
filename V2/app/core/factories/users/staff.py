@@ -9,7 +9,7 @@ from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRe
 from ....database.models.data_enums import ArchiveReason
 from ....core.validators.users import UserValidators
 from ....core.services.auth.password_service import PasswordService
-from V2.app.database.models.users import Staff
+from ....database.models.users import Staff
 
 
 

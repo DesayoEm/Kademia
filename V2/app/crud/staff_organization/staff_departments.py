@@ -2,7 +2,7 @@ from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.staff_departments import (
     StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
 )
-from V2.app.core.factories.staff_organization.department import StaffDepartmentsFactory
+from ...core.factories.staff_organization.department import StaffDepartmentsFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
@@ -43,9 +43,9 @@ class StaffDepartmentCrud:
 
 
     def get_all_departments(self, filters: DepartmentFilterParams) -> List[StaffDepartmentResponse]:
-        """Get all active educator qualifications.
+        """Get all active departments.
         Returns:
-            List[QualificationResponse]: List of active qualifications
+            List[StaffDepartmentResponse]: List of active departments
         """
         departments = self.factory.get_all_departments(filters)
         return [StaffDepartmentResponse.model_validate(department) for department in departments]

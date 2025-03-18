@@ -2,13 +2,13 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from V2.app.core.services.student_organization.academic_levels import AcademicLevelService
-from V2.app.database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
-from V2.app.database.models.data_enums import ArchiveReason
-from V2.app.core.errors.database_errors import EntityNotFoundError, UniqueViolationError
-from V2.app.core.validators.student_organization import StudentOrganizationValidators
-from V2.app.database.models.student_organization import AcademicLevel
-from V2.app.core.errors.student_organisation_errors import (
+from ....core.services.student_organization.academic_levels import AcademicLevelService
+from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
+from ....database.models.data_enums import ArchiveReason
+from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError
+from ....core.validators.student_organization import StudentOrganizationValidators
+from ....database.models.student_organization import AcademicLevel
+from ....core.errors.student_organisation_errors import (
     DuplicateLevelError, LevelNotFoundError
 )
 
