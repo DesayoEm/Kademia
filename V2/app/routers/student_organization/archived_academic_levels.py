@@ -28,13 +28,13 @@ def get_archived_level(level_id: UUID, db: Session = Depends(get_db)):
 
 
 @router.patch("/{level_id}", response_model=AcademicLevelResponse)
-def restore_department(level_id: UUID,db: Session = Depends(get_db)):
+def restore_level(level_id: UUID,db: Session = Depends(get_db)):
     academic_levels_crud = AcademicLevelCrud(db)
     return academic_levels_crud.restore_level(level_id)
 
 
 @router.delete("/{level_id}", status_code=204)
-def delete_archived_department(department_id: UUID, db: Session = Depends(get_db)):
+def delete_archived_level(department_id: UUID, db: Session = Depends(get_db)):
     academic_levels_crud = AcademicLevelCrud(db)
     return academic_levels_crud.delete_archived_level(department_id)
 

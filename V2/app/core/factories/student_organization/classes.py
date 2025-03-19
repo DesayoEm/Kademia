@@ -37,19 +37,21 @@ class ClassFactory:
             id = uuid4(),
             level_id = new_class.level_id,
             code = new_class.code,
+            supervisor_id = new_class.supervisor_id,
+            student_rep_id =  new_class.student_rep_id,
+            assistant_rep_id = new_class.assistant_rep_id,
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
-            order = new_class.order
+
         )
-        if not class_data.order:
-            class_data.order = self.service.create_order(new_class.level_id)
+        class_data.order = self.service.create_order(new_class.level_id)
         try:
             return self.repository.create(class_data)
         except UniqueViolationError as e:  # Could either be code or order
             error_message = str(e)
             if "uq_class_level_code" in error_message.lower():
                 raise DuplicateClassError(
-                    input_value=class_data.code, field="None", detail=error_message)#None is a filler attr hare
+                    input_value=class_data.code.value, field="", detail=error_message)#None is a filler attr hare
             elif "classes_order_key" in error_message.lower():
                 raise DuplicateClassError(
                     input_value=str(class_data.order), field="order", detail=error_message)
@@ -60,7 +62,7 @@ class ClassFactory:
             error_message = str(e)
             fk_error_mapping = {
                 'level_id': RelatedLevelNotFoundError,
-                'mentor_id': RelatedEducatorNotFoundError,
+                'supervisor_id': RelatedEducatorNotFoundError,
                 'student_rep_id': RelatedStudentNotFoundError,
                 'assistant_rep_id': RelatedStudentNotFoundError
                 }
@@ -101,6 +103,7 @@ class ClassFactory:
         Returns:
             Classes: Updated class record
         """
+        original = data.copy()
         try:
             existing = self.get_class(class_id)
             for key, value in data.items():
@@ -115,7 +118,7 @@ class ClassFactory:
             error_message= str(e)
             if "classes_order_key" in error_message.lower():
                 raise DuplicateClassError(
-                    input_value=str(data.get('order', 'unknown')), field="order", detail=error_message)
+                    input_value=str(original.get('order', 'unknown')), field="order", detail=error_message)
             else:
                 raise DuplicateClassError(
                     input_value="unknown field", field="unknown", detail=error_message)
@@ -123,7 +126,7 @@ class ClassFactory:
             error_message = str(e)
             fk_error_mapping = {
                 'level_id': RelatedLevelNotFoundError,
-                'mentor_id': RelatedEducatorNotFoundError,
+                'supervisor_id': RelatedEducatorNotFoundError,
                 'student_rep_id': RelatedStudentNotFoundError,
                 'assistant_rep_id': RelatedStudentNotFoundError
             }

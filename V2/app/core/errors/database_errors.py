@@ -15,7 +15,7 @@ class EntityNotFoundError(DBError):
         super().__init__()
 
     def __str__(self):
-        return self.user_message
+       return self.log_message
 
 
 class UniqueViolationError(DBError):
@@ -40,7 +40,7 @@ class RelationshipError(DBError):
         super().__init__()
 
     def __str__(self):
-        return self.user_message
+        return self.log_message
 
 
 class TransactionError(DBError):
@@ -55,7 +55,7 @@ class TransactionError(DBError):
         super().__init__()
 
     def __str__(self):
-        return self.user_message
+       return self.log_message
 
 class DBConnectionError(DBError):
     """Raised when database connection fails"""
@@ -67,7 +67,7 @@ class DBConnectionError(DBError):
         super().__init__()
 
     def __str__(self):
-        return self.user_message
+       return self.log_message
 
 
 class DatabaseError(DBError):
@@ -79,4 +79,4 @@ class DatabaseError(DBError):
         super().__init__(self.log_message)
 
     def __str__(self):
-        return self.user_message
+       return self.log_message

@@ -43,19 +43,13 @@
 - [x] Class service
 
 ### 3. User Management Services
-- [ ] Staff service
+- [x] Staff service
 - [ ] Parent service
 - [ ] Student service
 
-
-### 4. Academic Services
-- [ ] Subject management service
-- [ ] Grade management service
-- [ ] Document management service
-
 ## Phase 2: Authentication & Security
 ### 1. Authentication
-- [ ] Password hashing service
+- [x] Password hashing service
 - [ ] JWT token service
 - [ ] Authentication service
 - [ ] Login/Registration flows
@@ -67,7 +61,7 @@
 - [x] Validation exceptions
 - [x] Global exception handler
 
-## Phase 3: API Routes
+## Phase 3: API Routes and Academic services
 ### 1. Auth Routes
 - [ ] Login endpoints
 - [ ] Registration endpoints
@@ -79,8 +73,14 @@
 - [ ] Parent routes
 - [x]  Department routes
 - [x]  Class routes
-- [x]  Subject routes
-- [x]  Grade routes
+- [ ]  Subject routes
+- [ ]  Grade routes
+
+### 4. Academic Services
+- [ ] Subject management service
+- [ ] Grade management service
+- [ ] Document management service
+
 
 ## Phase 4: Testing & Documentation
 ### 1. Testing

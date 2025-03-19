@@ -36,6 +36,16 @@ class QualificationUpdate(BaseModel):
     name: str
     description: str | None
 
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
+            "example": {
+                "name": "Master of Science in Geology",
+                "description": "Advanced degree in stuff"
+            }
+        }
+    )
+
 
 class QualificationResponse(QualificationBase):
     """Response model for educator qualifications"""

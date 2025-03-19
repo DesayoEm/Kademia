@@ -14,10 +14,10 @@ class ClassBase(BaseModel):
     """Base model for class levels"""
     level_id: UUID
     code: ClassCode
-    mentor_id: UUID | None = None
+    supervisor_id: UUID | None = None
     student_rep_id: UUID | None = None
     assistant_rep_id: UUID | None = None
-    order: int | None = None
+
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -25,15 +25,15 @@ class ClassBase(BaseModel):
         json_schema_extra = {
         "example": {
             "level_id": "00000000-0000-0000-0000-000000000000",
-            "code": "A",
-            "order": "1"
+            "code": "A"
+
         }}
     )
 
 
 class ClassUpdate(BaseModel):
     """Used for updating class levels"""
-    mentor_id: UUID | None = None
+    supervisor_id: UUID | None = None
     student_rep_id: UUID | None = None
     assistant_rep_id: UUID | None = None
     order: int | None = None
@@ -43,7 +43,7 @@ class ClassUpdate(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "mentor_id": "00000000-0000-0000-0000-000000000000",
+                "supervisor_id": "00000000-0000-0000-0000-000000000000",
                 "student_rep_id": "00000000-0000-0000-0000-000000000000",
                 "assistant_rep_id": "00000000-0000-0000-0000-000000000000",
                 "order": "1",
@@ -82,7 +82,7 @@ class ClassInDB(ClassBase):
             "id": "00000000-0000-0000-0000-000000000000",
             "level_id": "00000000-0000-0000-0000-000000000000",
             "code": "A",
-            "mentor_id": "00000000-0000-0000-0000-000000000000",
+            "supervisor_id": "00000000-0000-0000-0000-000000000000",
             "student_rep_id": "00000000-0000-0000-0000-000000000000",
             "assistant_rep_id": "00000000-0000-0000-0000-000000000000",
             "order": "1",

@@ -36,7 +36,7 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             ondelete='RESTRICT', name='fk_classes_academic_levels_level_id')
         )
     code: Mapped[ClassCode] = mapped_column(Enum(ClassCode, name='classcode'))
-    mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
+    supervisor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
             ondelete='RESTRICT', name='fk_classes_educators_mentor_id'), nullable = True
         )
     student_rep_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
@@ -55,8 +55,8 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     academic_level: Mapped['AcademicLevel'] = relationship(
         back_populates='classes', foreign_keys='[Classes.level_id]'
     )
-    mentor: Mapped['Educator'] = relationship(
-        back_populates='mentored_class', foreign_keys='[Classes.mentor_id]'
+    supervisor: Mapped['Educator'] = relationship(
+        back_populates='supervised_class', foreign_keys='[Classes.supervisor_id]'
     )
     student_rep: Mapped['Students'] = relationship(foreign_keys='[Classes.student_rep_id]')
     assistant_rep: Mapped['Students'] = relationship(foreign_keys='[Classes.assistant_rep_id]')
@@ -64,12 +64,12 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __table_args__ = (
         UniqueConstraint('level_id', 'code', name='uq_class_level_code'),
         Index('idx_class_level_code', 'level_id', 'code'),
-        Index('idx_class_mentor', 'mentor_id'),
+        Index('idx_class_supervisor', 'supervisor_id'),
         Index('idx_class_reps', 'student_rep_id', 'assistant_rep_id')
     )
 
     def __repr__(self) -> str:
-        return f"Class(level={self.level_id}, code={self.code}, mentor={self.mentor_id})"
+        return f"Class(level={self.level_id}, code={self.code}, mentor={self.supervisor_id})"
 
 
 

@@ -82,6 +82,7 @@ class AcademicLevelFactory:
         Returns:
             AcademicLevel: Updated academic_level record
         """
+        original = data.copy()
         try:
             existing = self.get_academic_level(academic_level_id)
             if 'name' in data:
@@ -101,10 +102,10 @@ class AcademicLevelFactory:
             error_message = str(e)
             if "academic_levels_name_key" in error_message.lower():
                 raise DuplicateLevelError(
-                    input_value=data['name'], field="name", detail=error_message)
+                    input_value=original.get('name', 'unknown'), field="name", detail=error_message)
             elif "academic_levels_order_key" in error_message.lower():
                 raise DuplicateLevelError(
-                    input_value=str(data['order']), field="order", detail=error_message)
+                    input_value=original.get('order', 'unknown'), field="order", detail=error_message)
             else:
                 raise DuplicateLevelError(
                     input_value="unknown field", field="unknown", detail=error_message)

@@ -81,6 +81,7 @@ class QualificationsFactory:
         Returns:
             EducatorQualifications: Updated qualification record
         """
+        original = data.copy()
         try:
             existing = self.get_qualification(qualification_id)
             educator_id = existing.educator_id  # store separately for error handling
@@ -97,7 +98,7 @@ class QualificationsFactory:
 
         except UniqueViolationError as e:  # name is the only field with a unique constraint
             raise DuplicateQualificationError(
-                input_value=data.get('name', ''), detail=str(e), field='name'
+                input_value=original.get('name', 'unknown'), detail=str(e), field='name'
             )
         except RelationshipError as e:  # edge case-educator is deleted(race condition)
             error_message = str(e)

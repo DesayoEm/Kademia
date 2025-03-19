@@ -77,6 +77,6 @@ class RelatedStudentNotFoundError(ProfileError, RelationshipError):
     """Raised when a staff account is not found during fk insertion"""
     def __init__(self, id: UUID, detail: str, action: str):
         RelationshipError.__init__(self, error = detail, operation=action, entity="Staff")
-        self.user_message = f"Related staff not found!"
-        self.log_message = f"Error during during fk insertion of Staff with id:{id} during {action} operation. Detail {detail}"
+        self.user_message = f"Related student not found!"
+        self.log_message = f"Error during during fk insertion of student with id:{id} during {action} operation. Detail {detail}"
 

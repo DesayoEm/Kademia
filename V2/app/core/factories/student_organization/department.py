@@ -2,6 +2,7 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
+from ...errors.profile_errors import RelatedEducatorNotFoundError
 from ....core.errors.profile_errors import RelatedStudentNotFoundError
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
 from ....database.models.data_enums import ArchiveReason
@@ -40,7 +41,7 @@ class StudentDepartmentFactory:
             return self.repository.create(department)
         except UniqueViolationError as e:
             error_message = str(e).lower()
-            if "department_name_key" in error_message:
+            if "student_departments_name_key" in error_message:
                 raise DuplicateStudentDepartmentError(
                     input_value=new_department.name, detail=str(e), field = 'name'
                 )
@@ -92,6 +93,7 @@ class StudentDepartmentFactory:
         Returns:
             StudentDepartments: Updated department record
         """
+        original = data.copy()
         try:
             existing = self.get_student_department(department_id)
             if 'name' in data:
@@ -108,20 +110,20 @@ class StudentDepartmentFactory:
             raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
         except UniqueViolationError as e:
             raise DuplicateStudentDepartmentError(
-                input_value=data['name'], detail=str(e), field='name')
+                input_value=original.get('name', 'unknown'), detail=str(e), field='name')
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
                 'student_rep_id': RelatedStudentNotFoundError,
                 'assistant_rep_id': RelatedStudentNotFoundError,
+                'mentor_id': RelatedEducatorNotFoundError,
             }
             for field, error_class in fk_error_mapping.items():
                 if field in error_message:
                     if field in data:
                         entity_id = data[field]
                         raise error_class(id=entity_id, detail=str(e), action='update')
-                    else:
-                        raise RelationshipError(error=str(e), operation='update', entity='unknown')
+            raise RelationshipError(error=str(e), operation='update', entity='unknown')
 
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StudentDepartments:

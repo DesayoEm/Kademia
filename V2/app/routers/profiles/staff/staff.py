@@ -21,7 +21,7 @@ def create_staff(data:StaffCreate,
 
 
 @router.get("/", response_model=list[StaffResponse])
-def get_staffs(filters: Annotated[StaffFilterParams, Query()],
+def get_staff(filters: Annotated[StaffFilterParams, Query()],
                 db: Session = Depends(get_db)):
         staff_crud = StaffCrud(db)
         return staff_crud.get_all_staff(filters)

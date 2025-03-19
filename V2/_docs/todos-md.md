@@ -1,5 +1,16 @@
 # Technical Debt & TODOS
 
+## Foreign key custom validation
+**Priority: High**  
+**Target Resolution: Before Production**
+
+### Current Implementation
+- Current behavior allows invalid UUIDs to be saved
+- Add validation for manager_id to ensure it references an existing staff record
+even though it's nullable
+
+Also affects relationships in student departments
+
 ## Authentication & Audit Trail
 **Priority: High**  
 **Target Resolution: Before Production**
@@ -9,17 +20,13 @@
 - Affects created_by and last_modified_by fields across all models
 
 ### Required Changes
-1. Implement authentication system
-   - JWT token handling
-   - User session management
-   - Password hashing and validation
 
-2. Service Layer Refactoring
+1. Service Layer Refactoring
    - Inject user context into service constructors
    - Update BaseService to use real user IDs
    - Add permission validation hooks
 
-3. Database Considerations
+2. Database Considerations
    - Will require full database reset before production
 
 
@@ -34,13 +41,6 @@
 - Resource-level access control
 - UI considerations for role-based content display
 
-### Audit Trail Enhancement
-**Priority: Low**  
-**Target: Post-RBAC**
-
-- Consider audit trail versioning
-- Add reason tracking for modifications
-- Implement audit log querying system
 
 ## Development Guidelines
 
@@ -55,5 +55,4 @@ self.current_user_id = SYSTEM_USER_ID
 - RBAC-456: Design and implement role-based access control
 - AUDIT-789: Enhance audit trail system
 
----
-*Remember to update this document as new technical debt is identified or existing items are resolved.*
+ document as new technical debt is identified or existing items are resolved.*

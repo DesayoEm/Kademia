@@ -15,41 +15,41 @@ from typing import Annotated
 router = APIRouter()
 
 @router.post("/", response_model= AcademicLevelResponse, status_code=201)
-def create_academic_level(data:AcademicLevelCreate,
+def create_level(data:AcademicLevelCreate,
                             db: Session = Depends(get_db)):
     academic_level_crud = AcademicLevelCrud(db)
     return academic_level_crud.create_level(data)
 
 
 @router.get("/", response_model=list[AcademicLevelResponse])
-def get_academic_levels(filters: Annotated[AcademicLevelFilterParams, Query()],
+def get_levels(filters: Annotated[AcademicLevelFilterParams, Query()],
                           db: Session = Depends(get_db)):
     academic_level_crud = AcademicLevelCrud(db)
     return academic_level_crud.get_all_levels(filters)
 
 
 @router.get("/{level_id}", response_model=AcademicLevelResponse)
-def get_academic_level(level_id: UUID, db: Session = Depends(get_db)):
+def get_level(level_id: UUID, db: Session = Depends(get_db)):
     academic_level_crud = AcademicLevelCrud(db)
     return academic_level_crud.get_level(level_id)
 
 
 @router.put("/{level_id}", response_model=AcademicLevelResponse)
-def update_academic_level(data: AcademicLevelUpdate, level_id: UUID,
+def update_level(data: AcademicLevelUpdate, level_id: UUID,
                             db: Session = Depends(get_db)):
     academic_level_crud = AcademicLevelCrud(db)
     return academic_level_crud.update_level(level_id, data)
 
 
 @router.patch("/{level_id}",  status_code=204)
-def archive_academic_level(level_id: UUID, reason:ArchiveRequest,
+def archive_level(level_id: UUID, reason:ArchiveRequest,
                        db: Session = Depends(get_db)):
     academic_level_crud = AcademicLevelCrud(db)
     return academic_level_crud.archive_level(level_id, reason.reason)
 
 
 @router.delete("/{level_id}", status_code=204)
-def delete_academic_level(level_id: UUID, db: Session = Depends(get_db)):
+def delete_level(level_id: UUID, db: Session = Depends(get_db)):
     academic_level_crud = AcademicLevelCrud(db)
     return academic_level_crud.delete_level(level_id)
 

@@ -73,7 +73,7 @@ class DuplicateClassError(StudentOrganizationError, UniqueViolationError):
     """Raised when a duplicate class is created."""
     def __init__(self, input_value: str, detail: str, field: str):
         UniqueViolationError.__init__(self, error=detail)
-        self.user_message = f"Class with {field} {input_value} already exists for academic level"
+        self.user_message = f"Class {input_value} already exists for academic level"
         self.log_message = f"Duplicate class creation attempted: {detail}"
 
 class ClassNotFoundError(StudentOrganizationError, EntityNotFoundError):

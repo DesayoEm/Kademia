@@ -7,6 +7,7 @@ class DepartmentFilterParams(BaseFilterParams):
     description: Optional[str] = None
     order_by: Literal["name", "created_at"] = "name"
 
+
 class DepartmentBase(BaseModel):
     """Base model for class levels"""
     name: str
@@ -21,7 +22,10 @@ class DepartmentBase(BaseModel):
         json_schema_extra = {
         "example": {
             "name": "Science",
-            "description": "Science Classes"
+            "description": "Science Classes",
+            "mentor_id": None,
+            "student_rep_id": None,
+            "assistant_rep_id":  None
         }}
         )
 

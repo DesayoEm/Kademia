@@ -122,6 +122,7 @@ class StaffFactory:
         Returns:
             Staff: Updated staff record
         """
+        original = data.copy()
         try:
             existing = self.get_staff(staff_id)
 
@@ -140,9 +141,9 @@ class StaffFactory:
         except UniqueViolationError as e:
             error_message = str(e).lower()
             if "staff_phone_key" in error_message:
-                raise DuplicateStaffError(input_value=data.get('phone'), field="phone", detail=error_message)
+                raise DuplicateStaffError(input_value=original.get('phone', 'unknown'), field="phone", detail=error_message)
             if "staff_email_address_key" in error_message:
-                raise DuplicateStaffError(input_value=data.get('email_address'), field="email address",
+                raise DuplicateStaffError(input_value=original.get('email_address', 'unknown'), field="email address",
                                           detail=error_message)
             raise DuplicateStaffError(input_value="unknown field", field="unknown", detail=error_message)
 

@@ -164,7 +164,7 @@ class Educator(Staff):
         - qualifications
         - subjects: Subjects the educator is responsible for.
         - mentored_department (Departments): The department the educator mentors.
-        - mentored_class (Classes): The class level the educator mentors.
+        - supervised_class (Classes): The class level the educator supervises.
     """
     __tablename__ = 'educators'
 
@@ -184,7 +184,7 @@ class Educator(Staff):
     qualifications: Mapped[List['EducatorQualifications']] = relationship(back_populates='educator')
     subject_assignments: Mapped[List['SubjectEducators']] = relationship(back_populates='teacher')
     mentored_department: Mapped[List['StudentDepartments']] = relationship(back_populates='mentor')
-    mentored_class: Mapped['Classes'] = relationship(back_populates='mentor')
+    supervised_class: Mapped['Classes'] = relationship(back_populates='supervisor')
 
     def __repr__(self) -> str:
         return f"Educator(name={self.first_name} {self.last_name})"

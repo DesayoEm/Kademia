@@ -74,6 +74,7 @@ class StaffRolesFactory:
         Returns:
             StaffRoles: Updated role record
         """
+        original = data.copy()
         try:
             existing = self.get_role(role_id)
             if 'name' in data:
@@ -87,7 +88,7 @@ class StaffRolesFactory:
             raise RoleNotFoundError(id=role_id, detail = str(e))
         except UniqueViolationError as e:  # name is the only field with a UC
             raise DuplicateRoleError(
-                input_value=data['name'], detail=str(e), field='name'
+                input_value=original.get('name', 'unknown'), detail=str(e), field='name'
             )
 
     def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRoles:

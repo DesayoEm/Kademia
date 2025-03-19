@@ -94,7 +94,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_type=self.model.__name__,
-                    identifier=str(id))
+                    identifier=str(id), error = 'Record not found')
             return entity
         except SQLAlchemyError as e:
             raise TKDatabaseError(error=str(e))

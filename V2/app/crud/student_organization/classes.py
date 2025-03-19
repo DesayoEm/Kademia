@@ -120,4 +120,4 @@ class ClassCrud:
         Args:
             class_id: class UUID
         """
-        self.factory.delete_class(class_id)
+        self.factory.delete_archived_class(class_id)

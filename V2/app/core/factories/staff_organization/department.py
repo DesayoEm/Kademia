@@ -85,6 +85,7 @@ class StaffDepartmentsFactory:
         Returns:
             StaffDepartments: Updated department record
         """
+        original = data.copy()
         try:
             existing = self.get_staff_department(department_id)
             if 'name' in data:
@@ -101,7 +102,7 @@ class StaffDepartmentsFactory:
             raise DepartmentNotFoundError(id=department_id, detail = str(e))
         except UniqueViolationError as e:
             raise DuplicateDepartmentError(#name is the only field with a unique constraint
-                input_value=data['name'], detail=str(e), field = 'name'
+                input_value=original.get('name', 'unknown'), detail=str(e), field = 'name'
             )
         except RelationshipError as e:
             error_message = str(e)
