@@ -4823,3 +4823,1061 @@ WHERE %(param_1)s::UUID = students.class_id
 2025-03-19 02:50:12,015 - sqlalchemy.engine.Engine - INFO - COMMIT
 2025-03-19 02:50:12,019 - kademia - INFO - Request completed | e1275db7-150f-423b-8abe-e2481623f73a | Status: 204 | Time: 0.016s
 2025-03-19 02:51:39,041 - kademia - INFO - Application started
+2025-03-19 05:28:04,330 - kademia - INFO - Application started
+2025-03-19 05:30:31,627 - kademia - INFO - Application started
+2025-03-19 05:30:52,522 - kademia - INFO - Application started
+2025-03-19 05:32:47,341 - kademia - INFO - Application started
+2025-03-19 05:32:55,899 - kademia - INFO - Request started | 56ff4d65-a7f9-43c5-bd40-a18896dae70c | GET /docs
+2025-03-19 05:32:55,901 - kademia - INFO - Request completed | 56ff4d65-a7f9-43c5-bd40-a18896dae70c | Status: 200 | Time: 0.001s
+2025-03-19 05:32:56,023 - kademia - INFO - Request started | cc66e47a-dc38-4a5e-bebb-936b62832124 | GET /openapi.json
+2025-03-19 05:32:56,173 - kademia - INFO - Request completed | cc66e47a-dc38-4a5e-bebb-936b62832124 | Status: 200 | Time: 0.149s
+2025-03-19 05:33:50,837 - kademia - INFO - Application started
+2025-03-19 05:33:52,918 - kademia - INFO - Request started | 40993d22-fcc1-418f-83cd-3498ffb4637f | GET /docs
+2025-03-19 05:33:52,918 - kademia - INFO - Request completed | 40993d22-fcc1-418f-83cd-3498ffb4637f | Status: 200 | Time: 0.000s
+2025-03-19 05:33:53,047 - kademia - INFO - Request started | f7fdbfcf-a7bf-40c2-8ebc-af2762bfc098 | GET /openapi.json
+2025-03-19 05:33:53,200 - kademia - INFO - Request completed | f7fdbfcf-a7bf-40c2-8ebc-af2762bfc098 | Status: 200 | Time: 0.153s
+2025-03-19 05:34:23,182 - kademia - INFO - Request started | afe97c63-c49a-4f79-aeeb-fa2a71622469 | POST /api/v1/token
+2025-03-19 05:34:23,184 - kademia - INFO - Request completed | afe97c63-c49a-4f79-aeeb-fa2a71622469 | Status: 200 | Time: 0.002s
+2025-03-19 05:37:57,289 - kademia - INFO - Application started
+2025-03-19 05:39:26,534 - kademia - INFO - Request started | 5063d498-5b03-4c1f-ace2-fc38baaa9c30 | GET /docs
+2025-03-19 05:39:26,537 - kademia - INFO - Request completed | 5063d498-5b03-4c1f-ace2-fc38baaa9c30 | Status: 200 | Time: 0.001s
+2025-03-19 05:39:26,661 - kademia - INFO - Request started | f3bd1b42-961e-4490-880c-99e33f29e268 | GET /openapi.json
+2025-03-19 05:39:26,805 - kademia - INFO - Request completed | f3bd1b42-961e-4490-880c-99e33f29e268 | Status: 200 | Time: 0.142s
+2025-03-19 05:41:47,274 - kademia - INFO - Request started | 735b513d-ee19-4fd8-b4bd-c1eeb8eaff30 | GET /docs
+2025-03-19 05:41:47,275 - kademia - INFO - Request completed | 735b513d-ee19-4fd8-b4bd-c1eeb8eaff30 | Status: 200 | Time: 0.000s
+2025-03-19 05:41:47,536 - kademia - INFO - Request started | 8ac1b05b-b0a8-4a0c-9c24-5c87accc4863 | GET /openapi.json
+2025-03-19 05:41:47,549 - kademia - INFO - Request completed | 8ac1b05b-b0a8-4a0c-9c24-5c87accc4863 | Status: 200 | Time: 0.007s
+2025-03-19 05:41:58,604 - kademia - INFO - Request started | 71c760c1-b3e5-4dda-bd0c-ac6133a338aa | POST /api/v1/token
+2025-03-19 05:41:58,606 - kademia - INFO - Request completed | 71c760c1-b3e5-4dda-bd0c-ac6133a338aa | Status: 200 | Time: 0.002s
+2025-03-19 05:42:45,798 - kademia - INFO - Request started | a8d49e84-7409-4dbc-a5e1-cc16a57f3721 | GET /docs
+2025-03-19 05:42:45,799 - kademia - INFO - Request completed | a8d49e84-7409-4dbc-a5e1-cc16a57f3721 | Status: 200 | Time: 0.000s
+2025-03-19 05:42:45,945 - kademia - INFO - Request started | 7f889edc-c397-46f4-91d6-60faa4656ec5 | GET /openapi.json
+2025-03-19 05:42:45,947 - kademia - INFO - Request completed | 7f889edc-c397-46f4-91d6-60faa4656ec5 | Status: 200 | Time: 0.002s
+2025-03-19 05:45:15,676 - kademia - INFO - Request started | 86e54501-d7b1-4cbb-bac2-595bdd1a0a10 | GET /docs
+2025-03-19 05:45:15,677 - kademia - INFO - Request completed | 86e54501-d7b1-4cbb-bac2-595bdd1a0a10 | Status: 200 | Time: 0.000s
+2025-03-19 05:45:15,824 - kademia - INFO - Request started | 0ea4b995-cae6-4985-8ad9-727e88d6b3e8 | GET /openapi.json
+2025-03-19 05:45:15,826 - kademia - INFO - Request completed | 0ea4b995-cae6-4985-8ad9-727e88d6b3e8 | Status: 200 | Time: 0.001s
+2025-03-19 05:46:02,193 - kademia - INFO - Request started | 7a148997-610e-468a-9752-ae2c4fc91804 | GET /docs
+2025-03-19 05:46:02,194 - kademia - INFO - Request completed | 7a148997-610e-468a-9752-ae2c4fc91804 | Status: 200 | Time: 0.000s
+2025-03-19 05:46:02,332 - kademia - INFO - Request started | 0fc214a6-29b4-43ef-b8f6-4f4791333cfd | GET /openapi.json
+2025-03-19 05:46:02,334 - kademia - INFO - Request completed | 0fc214a6-29b4-43ef-b8f6-4f4791333cfd | Status: 200 | Time: 0.001s
+2025-03-19 05:46:39,298 - kademia - INFO - Application started
+2025-03-19 05:46:46,231 - kademia - INFO - Request started | 436ee0e8-4337-4128-9f1f-a1186141e4d3 | GET /docs
+2025-03-19 05:46:46,232 - kademia - INFO - Request completed | 436ee0e8-4337-4128-9f1f-a1186141e4d3 | Status: 200 | Time: 0.001s
+2025-03-19 05:46:46,417 - kademia - INFO - Request started | 1e32631a-8859-476a-910b-23257bdf2f3e | GET /openapi.json
+2025-03-19 05:46:46,540 - kademia - INFO - Request completed | 1e32631a-8859-476a-910b-23257bdf2f3e | Status: 200 | Time: 0.123s
+2025-03-19 05:46:59,120 - kademia - INFO - Request started | cf6094ff-42e7-4ff2-a04c-1238850c610e | POST /api/v1/auth/token
+2025-03-19 05:46:59,126 - kademia - INFO - Request completed | cf6094ff-42e7-4ff2-a04c-1238850c610e | Status: 200 | Time: 0.006s
+2025-03-19 05:54:45,148 - kademia - INFO - Application started
+2025-03-19 05:57:23,799 - kademia - INFO - Application started
+2025-03-19 06:04:25,207 - kademia - INFO - Application started
+2025-03-19 06:05:17,775 - kademia - INFO - Request started | 0828366d-0af9-46f0-aea2-d2dfc53a6f49 | GET /docs
+2025-03-19 06:05:17,777 - kademia - INFO - Request completed | 0828366d-0af9-46f0-aea2-d2dfc53a6f49 | Status: 200 | Time: 0.001s
+2025-03-19 06:05:17,930 - kademia - INFO - Request started | 5598f942-f293-4221-9ccf-5e543a17c15e | GET /openapi.json
+2025-03-19 06:05:18,077 - kademia - INFO - Request completed | 5598f942-f293-4221-9ccf-5e543a17c15e | Status: 200 | Time: 0.146s
+2025-03-19 06:05:35,656 - kademia - INFO - Request started | ace54c8a-6385-48a9-9f29-121dc2906838 | POST /api/v1/auth/token
+2025-03-19 06:05:35,662 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 06:05:35,668 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-19 06:05:35,670 - sqlalchemy.engine.Engine - INFO - [generated in 0.00143s] {'email_address_1': 'string', 'param_1': 1}
+2025-03-19 06:05:35,682 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 06:05:35,684 - kademia - INFO - Request completed | ace54c8a-6385-48a9-9f29-121dc2906838 | Status: 200 | Time: 0.027s
+2025-03-19 06:06:12,387 - kademia - INFO - Request started | 255e6ef8-4ae4-4f98-8d35-1bd935b4d564 | GET /docs
+2025-03-19 06:06:12,388 - kademia - INFO - Request completed | 255e6ef8-4ae4-4f98-8d35-1bd935b4d564 | Status: 200 | Time: 0.001s
+2025-03-19 06:06:12,530 - kademia - INFO - Request started | 11ad2836-c3b2-4a67-803c-fe1ee128361a | GET /openapi.json
+2025-03-19 06:06:12,533 - kademia - INFO - Request completed | 11ad2836-c3b2-4a67-803c-fe1ee128361a | Status: 200 | Time: 0.002s
+2025-03-19 06:06:15,395 - kademia - INFO - Request started | 1989903d-e706-4cae-95d8-3de0b916ee75 | GET /docs
+2025-03-19 06:06:15,396 - kademia - INFO - Request completed | 1989903d-e706-4cae-95d8-3de0b916ee75 | Status: 200 | Time: 0.000s
+2025-03-19 06:06:15,482 - kademia - INFO - Request started | d8842aa9-0503-45d4-a1bd-facd6cac262f | GET /openapi.json
+2025-03-19 06:06:15,485 - kademia - INFO - Request completed | d8842aa9-0503-45d4-a1bd-facd6cac262f | Status: 200 | Time: 0.003s
+2025-03-19 06:08:09,079 - kademia - INFO - Application started
+2025-03-19 06:08:11,832 - kademia - INFO - Request started | 639fe77f-ab21-44cf-9a05-6984b72ec89c | GET /docs
+2025-03-19 06:08:11,834 - kademia - INFO - Request completed | 639fe77f-ab21-44cf-9a05-6984b72ec89c | Status: 200 | Time: 0.001s
+2025-03-19 06:08:11,970 - kademia - INFO - Request started | a2c02eda-9a42-4877-a2dc-936185b4ac20 | GET /openapi.json
+2025-03-19 06:08:12,040 - kademia - INFO - Request completed | a2c02eda-9a42-4877-a2dc-936185b4ac20 | Status: 200 | Time: 0.070s
+2025-03-19 06:08:14,388 - kademia - INFO - Request started | cce4439b-3c27-4691-80ea-acf126b17872 | GET /docs
+2025-03-19 06:08:14,390 - kademia - INFO - Request completed | cce4439b-3c27-4691-80ea-acf126b17872 | Status: 200 | Time: 0.000s
+2025-03-19 06:08:14,491 - kademia - INFO - Request started | fc3abf7f-f763-4804-9235-bf83de154cab | GET /openapi.json
+2025-03-19 06:08:14,495 - kademia - INFO - Request completed | fc3abf7f-f763-4804-9235-bf83de154cab | Status: 200 | Time: 0.004s
+2025-03-19 06:08:46,815 - kademia - INFO - Request started | aac16d38-efc4-4f7a-9d36-69fb6ad11e23 | GET /docs
+2025-03-19 06:08:46,816 - kademia - INFO - Request completed | aac16d38-efc4-4f7a-9d36-69fb6ad11e23 | Status: 200 | Time: 0.000s
+2025-03-19 06:08:46,958 - kademia - INFO - Request started | 2ed39c01-f669-43b8-96be-02e79ed84296 | GET /openapi.json
+2025-03-19 06:08:46,959 - kademia - INFO - Request completed | 2ed39c01-f669-43b8-96be-02e79ed84296 | Status: 200 | Time: 0.001s
+2025-03-19 06:08:48,306 - kademia - INFO - Request started | 434389d8-257f-4dcb-87b7-6b8621fee4a0 | GET /docs
+2025-03-19 06:08:48,307 - kademia - INFO - Request completed | 434389d8-257f-4dcb-87b7-6b8621fee4a0 | Status: 200 | Time: 0.001s
+2025-03-19 06:08:48,428 - kademia - INFO - Request started | c21bab97-e1e0-4e8f-9e1a-95e7695e8771 | GET /openapi.json
+2025-03-19 06:08:48,432 - kademia - INFO - Request completed | c21bab97-e1e0-4e8f-9e1a-95e7695e8771 | Status: 200 | Time: 0.003s
+2025-03-19 06:11:48,820 - kademia - INFO - Application started
+2025-03-19 06:11:49,473 - kademia - INFO - Request started | 307af7d4-fda7-41a5-bf26-ec02a436a258 | GET /
+2025-03-19 06:11:49,476 - kademia - INFO - Request completed | 307af7d4-fda7-41a5-bf26-ec02a436a258 | Status: 200 | Time: 0.002s
+2025-03-19 06:11:49,713 - kademia - INFO - Request started | c57011f3-4803-4160-a045-7bab5e2424b5 | GET /favicon.ico
+2025-03-19 06:11:49,715 - kademia - INFO - Request completed | c57011f3-4803-4160-a045-7bab5e2424b5 | Status: 404 | Time: 0.001s
+2025-03-19 06:11:56,555 - kademia - INFO - Request started | d6eb36cd-e061-4763-afc1-516fe9a7d294 | GET /
+2025-03-19 06:11:56,556 - kademia - INFO - Request completed | d6eb36cd-e061-4763-afc1-516fe9a7d294 | Status: 200 | Time: 0.001s
+2025-03-19 06:12:00,463 - kademia - INFO - Request started | 9a8aa401-975e-4e3a-a774-86133f590da6 | GET /docs
+2025-03-19 06:12:00,464 - kademia - INFO - Request completed | 9a8aa401-975e-4e3a-a774-86133f590da6 | Status: 200 | Time: 0.000s
+2025-03-19 06:12:00,676 - kademia - INFO - Request started | 37ac7278-67f7-4463-a4e1-18112be0bebc | GET /openapi.json
+2025-03-19 06:12:00,871 - kademia - INFO - Request completed | 37ac7278-67f7-4463-a4e1-18112be0bebc | Status: 200 | Time: 0.195s
+2025-03-19 06:13:03,656 - kademia - INFO - Request started | 50ea999f-955c-4d0e-9438-f474428bbb02 | POST /api/v1/staff/
+2025-03-19 06:13:04,034 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 06:13:04,040 - sqlalchemy.engine.Engine - INFO - INSERT INTO staff (access_level, user_type, status, availability, staff_type, image_url, email_address, address, phone, department_id, role_id, date_joined, date_left, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(access_level)s, %(user_type)s, %(status)s, %(availability)s, %(staff_type)s, %(image_url)s, %(email_address)s, %(address)s, %(phone)s, %(department_id)s::UUID, %(role_id)s::UUID, %(date_joined)s, %(date_left)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING staff.created_at, staff.last_modified_at
+2025-03-19 06:13:04,043 - sqlalchemy.engine.Engine - INFO - [generated in 0.00363s] {'access_level': 'READ', 'user_type': 'STAFF', 'status': 'ACTIVE', 'availability': 'AVAILABLE', 'staff_type': 'Educator', 'image_url': None, 'email_address': 'Aina.Folu@Example.Com', 'address': '456 Allen Avenue, Lagos', 'phone': '08087654321', 'department_id': UUID('00000000-0000-0000-0000-000000000001'), 'role_id': UUID('00000000-0000-0000-0000-000000000002'), 'date_joined': datetime.date(2024, 1, 15), 'date_left': None, 'id': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac'), 'password_hash': '$2b$12$ryvujImhTB50/BV5g9zTZeqTkrMjcQjxHYitN1r4m6./DnbHQ9PPW', 'first_name': 'Aina', 'last_name': 'Folu', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-19 06:13:04,049 - sqlalchemy.engine.Engine - INFO - INSERT INTO educators (id) VALUES (%(id)s::UUID)
+2025-03-19 06:13:04,049 - sqlalchemy.engine.Engine - INFO - [generated in 0.00073s] {'id': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:13:04,063 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-19 06:13:04,067 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 06:13:04,077 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level, staff.user_type, staff.status, staff.availability, staff.staff_type, staff.image_url, staff.email_address, staff.address, staff.phone, staff.department_id, staff.role_id, staff.date_joined, staff.date_left, educators.id, staff.id AS id_1, staff.password_hash, staff.first_name, staff.last_name, staff.gender, staff.last_login, staff.deletion_eligible, staff.created_by, staff.last_modified_by, staff.created_at, staff.last_modified_at, staff.is_archived, staff.archived_at, staff.archive_reason, staff.archived_by 
+FROM staff JOIN educators ON educators.id = staff.id 
+WHERE staff.id = %(pk_1)s::UUID
+2025-03-19 06:13:04,091 - sqlalchemy.engine.Engine - INFO - [generated in 0.01481s] {'pk_1': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:13:04,099 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 06:13:04,101 - kademia - INFO - Request completed | 50ea999f-955c-4d0e-9438-f474428bbb02 | Status: 201 | Time: 0.444s
+2025-03-19 06:13:58,920 - kademia - INFO - Application started
+2025-03-19 06:14:54,718 - kademia - INFO - Application started
+2025-03-19 06:15:54,803 - kademia - INFO - Request started | 7c3ee9ad-b930-40fa-b00e-1b53a906cbd4 | DELETE /api/v1/staff/609165b6-a1d6-4087-bf14-7de586e6d1ac
+2025-03-19 06:15:54,809 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 06:15:54,817 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.is_archived = false AND staff.id = %(id_1)s::UUID 
+ LIMIT %(param_1)s
+2025-03-19 06:15:54,818 - sqlalchemy.engine.Engine - INFO - [generated in 0.00094s] {'id_1': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac'), 'param_1': 1}
+2025-03-19 06:15:54,830 - sqlalchemy.engine.Engine - INFO - SELECT educator_qualifications.id AS educator_qualifications_id, educator_qualifications.educator_id AS educator_qualifications_educator_id, educator_qualifications.name AS educator_qualifications_name, educator_qualifications.description AS educator_qualifications_description, educator_qualifications.created_by AS educator_qualifications_created_by, educator_qualifications.last_modified_by AS educator_qualifications_last_modified_by, educator_qualifications.created_at AS educator_qualifications_created_at, educator_qualifications.last_modified_at AS educator_qualifications_last_modified_at, educator_qualifications.is_archived AS educator_qualifications_is_archived, educator_qualifications.archived_at AS educator_qualifications_archived_at, educator_qualifications.archive_reason AS educator_qualifications_archive_reason, educator_qualifications.archived_by AS educator_qualifications_archived_by 
+FROM educator_qualifications 
+WHERE %(param_1)s::UUID = educator_qualifications.educator_id
+2025-03-19 06:15:54,831 - sqlalchemy.engine.Engine - INFO - [generated in 0.00079s] {'param_1': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:15:54,845 - sqlalchemy.engine.Engine - INFO - SELECT subject_educators.id AS subject_educators_id, subject_educators.subject_id AS subject_educators_subject_id, subject_educators.educator_id AS subject_educators_educator_id, subject_educators.level_id AS subject_educators_level_id, subject_educators.academic_year AS subject_educators_academic_year, subject_educators.term AS subject_educators_term, subject_educators.is_active AS subject_educators_is_active, subject_educators.date_assigned AS subject_educators_date_assigned, subject_educators.created_by AS subject_educators_created_by, subject_educators.last_modified_by AS subject_educators_last_modified_by, subject_educators.created_at AS subject_educators_created_at, subject_educators.last_modified_at AS subject_educators_last_modified_at, subject_educators.is_archived AS subject_educators_is_archived, subject_educators.archived_at AS subject_educators_archived_at, subject_educators.archive_reason AS subject_educators_archive_reason, subject_educators.archived_by AS subject_educators_archived_by 
+FROM subject_educators 
+WHERE %(param_1)s::UUID = subject_educators.educator_id
+2025-03-19 06:15:54,846 - sqlalchemy.engine.Engine - INFO - [generated in 0.00086s] {'param_1': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:15:54,855 - sqlalchemy.engine.Engine - INFO - SELECT student_departments.id AS student_departments_id, student_departments.name AS student_departments_name, student_departments.description AS student_departments_description, student_departments.mentor_id AS student_departments_mentor_id, student_departments.student_rep_id AS student_departments_student_rep_id, student_departments.assistant_rep_id AS student_departments_assistant_rep_id, student_departments.created_by AS student_departments_created_by, student_departments.last_modified_by AS student_departments_last_modified_by, student_departments.created_at AS student_departments_created_at, student_departments.last_modified_at AS student_departments_last_modified_at, student_departments.is_archived AS student_departments_is_archived, student_departments.archived_at AS student_departments_archived_at, student_departments.archive_reason AS student_departments_archive_reason, student_departments.archived_by AS student_departments_archived_by 
+FROM student_departments 
+WHERE %(param_1)s::UUID = student_departments.mentor_id
+2025-03-19 06:15:54,855 - sqlalchemy.engine.Engine - INFO - [generated in 0.00096s] {'param_1': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:15:54,865 - sqlalchemy.engine.Engine - INFO - SELECT classes.id AS classes_id, classes.level_id AS classes_level_id, classes.code AS classes_code, classes.supervisor_id AS classes_supervisor_id, classes.student_rep_id AS classes_student_rep_id, classes.assistant_rep_id AS classes_assistant_rep_id, classes."order" AS classes_order, classes.created_by AS classes_created_by, classes.last_modified_by AS classes_last_modified_by, classes.created_at AS classes_created_at, classes.last_modified_at AS classes_last_modified_at, classes.is_archived AS classes_is_archived, classes.archived_at AS classes_archived_at, classes.archive_reason AS classes_archive_reason, classes.archived_by AS classes_archived_by 
+FROM classes 
+WHERE %(param_1)s::UUID = classes.supervisor_id
+2025-03-19 06:15:54,866 - sqlalchemy.engine.Engine - INFO - [generated in 0.00086s] {'param_1': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:15:54,875 - sqlalchemy.engine.Engine - INFO - SELECT access_level_changes.id AS access_level_changes_id, access_level_changes.staff_id AS access_level_changes_staff_id, access_level_changes.previous_level AS access_level_changes_previous_level, access_level_changes.new_level AS access_level_changes_new_level, access_level_changes.reason AS access_level_changes_reason, access_level_changes.changed_at AS access_level_changes_changed_at, access_level_changes.changed_by_id AS access_level_changes_changed_by_id 
+FROM access_level_changes 
+WHERE %(param_1)s::UUID = access_level_changes.staff_id
+2025-03-19 06:15:54,877 - sqlalchemy.engine.Engine - INFO - [generated in 0.00086s] {'param_1': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:15:54,884 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE %(param_1)s::UUID = staff.created_by
+2025-03-19 06:15:54,884 - sqlalchemy.engine.Engine - INFO - [generated in 0.00097s] {'param_1': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:15:54,889 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE %(param_1)s::UUID = staff.last_modified_by
+2025-03-19 06:15:54,889 - sqlalchemy.engine.Engine - INFO - [generated in 0.00088s] {'param_1': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:15:54,894 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE %(param_1)s::UUID = staff.archived_by
+2025-03-19 06:15:54,894 - sqlalchemy.engine.Engine - INFO - [generated in 0.00084s] {'param_1': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:15:54,898 - sqlalchemy.engine.Engine - INFO - DELETE FROM educators WHERE educators.id = %(id)s::UUID
+2025-03-19 06:15:54,899 - sqlalchemy.engine.Engine - INFO - [generated in 0.00052s] {'id': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:15:54,906 - sqlalchemy.engine.Engine - INFO - DELETE FROM staff WHERE staff.id = %(id)s::UUID
+2025-03-19 06:15:54,907 - sqlalchemy.engine.Engine - INFO - [generated in 0.00052s] {'id': UUID('609165b6-a1d6-4087-bf14-7de586e6d1ac')}
+2025-03-19 06:15:54,908 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-19 06:15:54,912 - kademia - INFO - Request completed | 7c3ee9ad-b930-40fa-b00e-1b53a906cbd4 | Status: 204 | Time: 0.109s
+2025-03-19 06:16:11,454 - kademia - INFO - Request started | 2b3b3d0e-2460-49d8-8bf4-07fb5a9ed06b | POST /api/v1/staff/
+2025-03-19 06:16:11,752 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 06:16:11,754 - sqlalchemy.engine.Engine - INFO - INSERT INTO staff (access_level, user_type, status, availability, staff_type, image_url, email_address, address, phone, department_id, role_id, date_joined, date_left, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(access_level)s, %(user_type)s, %(status)s, %(availability)s, %(staff_type)s, %(image_url)s, %(email_address)s, %(address)s, %(phone)s, %(department_id)s::UUID, %(role_id)s::UUID, %(date_joined)s, %(date_left)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING staff.created_at, staff.last_modified_at
+2025-03-19 06:16:11,756 - sqlalchemy.engine.Engine - INFO - [generated in 0.00167s] {'access_level': 'READ', 'user_type': 'STAFF', 'status': 'ACTIVE', 'availability': 'AVAILABLE', 'staff_type': 'Educator', 'image_url': None, 'email_address': 'Aina.Folu@Example.Com', 'address': '456 Allen Avenue, Lagos', 'phone': '08087654321', 'department_id': UUID('00000000-0000-0000-0000-000000000001'), 'role_id': UUID('00000000-0000-0000-0000-000000000002'), 'date_joined': datetime.date(2024, 1, 15), 'date_left': None, 'id': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b'), 'password_hash': '$2b$12$KMaBOyy6xEZUHAkrxbXlD.PeFjz4oVnaG0gofU96KIaQAsa9rI3bO', 'first_name': 'Aina', 'last_name': 'pIEG0%FvRa', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-19 06:16:11,760 - sqlalchemy.engine.Engine - INFO - INSERT INTO educators (id) VALUES (%(id)s::UUID)
+2025-03-19 06:16:11,760 - sqlalchemy.engine.Engine - INFO - [generated in 0.00093s] {'id': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 06:16:11,762 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-19 06:16:11,764 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 06:16:11,767 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level, staff.user_type, staff.status, staff.availability, staff.staff_type, staff.image_url, staff.email_address, staff.address, staff.phone, staff.department_id, staff.role_id, staff.date_joined, staff.date_left, educators.id, staff.id AS id_1, staff.password_hash, staff.first_name, staff.last_name, staff.gender, staff.last_login, staff.deletion_eligible, staff.created_by, staff.last_modified_by, staff.created_at, staff.last_modified_at, staff.is_archived, staff.archived_at, staff.archive_reason, staff.archived_by 
+FROM staff JOIN educators ON educators.id = staff.id 
+WHERE staff.id = %(pk_1)s::UUID
+2025-03-19 06:16:11,768 - sqlalchemy.engine.Engine - INFO - [generated in 0.00105s] {'pk_1': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 06:16:11,771 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 06:16:11,772 - kademia - INFO - Request completed | 2b3b3d0e-2460-49d8-8bf4-07fb5a9ed06b | Status: 201 | Time: 0.318s
+2025-03-19 06:17:52,187 - kademia - INFO - Request started | b4913d56-be0c-43e0-87e2-7f1e2a9c20b3 | POST /api/v1/auth/login
+2025-03-19 06:17:52,193 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 06:17:52,196 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-19 06:17:52,197 - sqlalchemy.engine.Engine - INFO - [generated in 0.00113s] {'email_address_1': 'Aina.Folu@Example.Com', 'param_1': 1}
+2025-03-19 06:17:52,458 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 06:17:52,459 - kademia - INFO - Request completed | b4913d56-be0c-43e0-87e2-7f1e2a9c20b3 | Status: 200 | Time: 0.273s
+2025-03-19 06:57:34,087 - kademia - INFO - Application started
+2025-03-19 06:58:28,434 - kademia - INFO - Application started
+2025-03-19 07:00:10,071 - kademia - INFO - Application started
+2025-03-19 07:01:45,360 - kademia - INFO - Application started
+2025-03-19 07:07:45,644 - kademia - INFO - Application started
+2025-03-19 07:09:56,520 - kademia - INFO - Application started
+2025-03-19 07:10:16,752 - kademia - INFO - Application started
+2025-03-19 07:10:28,540 - kademia - INFO - Application started
+2025-03-19 07:11:27,755 - kademia - INFO - Application started
+2025-03-19 07:21:56,459 - kademia - INFO - Application started
+2025-03-19 07:22:59,256 - kademia - INFO - Application started
+2025-03-19 07:23:22,979 - kademia - INFO - Application started
+2025-03-19 07:23:53,977 - kademia - INFO - Application started
+2025-03-19 07:24:09,189 - kademia - INFO - Application started
+2025-03-19 07:25:18,548 - kademia - INFO - Application started
+2025-03-19 07:25:38,508 - kademia - INFO - Application started
+2025-03-19 07:27:51,189 - kademia - INFO - Application started
+2025-03-19 07:28:09,526 - kademia - INFO - Application started
+2025-03-19 07:28:34,150 - kademia - INFO - Application started
+2025-03-19 07:30:54,638 - kademia - INFO - Application started
+2025-03-19 07:32:58,256 - kademia - INFO - Application started
+2025-03-19 07:33:28,418 - kademia - INFO - Application started
+2025-03-19 07:36:27,433 - kademia - INFO - Application started
+2025-03-19 07:37:08,562 - kademia - INFO - Application started
+2025-03-19 07:37:31,611 - kademia - INFO - Application started
+2025-03-19 07:38:41,323 - kademia - INFO - Application started
+2025-03-19 07:40:44,874 - kademia - INFO - Application started
+2025-03-19 07:43:15,544 - kademia - INFO - Application started
+2025-03-19 07:43:35,365 - kademia - INFO - Application started
+2025-03-19 07:47:31,318 - kademia - INFO - Application started
+2025-03-19 07:48:20,121 - kademia - INFO - Application started
+2025-03-19 07:48:46,915 - kademia - INFO - Application started
+2025-03-19 07:50:50,450 - kademia - INFO - Application started
+2025-03-19 07:52:00,341 - kademia - INFO - Application started
+2025-03-19 07:53:28,464 - kademia - INFO - Application started
+2025-03-19 07:54:59,467 - kademia - INFO - Application started
+2025-03-19 07:56:20,030 - kademia - INFO - Application started
+2025-03-19 07:58:05,210 - kademia - INFO - Application started
+2025-03-19 07:58:21,516 - kademia - INFO - Application started
+2025-03-19 07:58:55,649 - kademia - INFO - Application started
+2025-03-19 07:59:08,001 - kademia - INFO - Application started
+2025-03-19 07:59:23,405 - kademia - INFO - Application started
+2025-03-19 07:59:27,285 - kademia - INFO - Application started
+2025-03-19 08:00:45,499 - kademia - INFO - Application started
+2025-03-19 08:02:01,213 - kademia - INFO - Application started
+2025-03-19 08:02:08,202 - kademia - INFO - Application started
+2025-03-19 08:04:59,469 - kademia - INFO - Application started
+2025-03-19 08:05:18,411 - kademia - INFO - Application started
+2025-03-19 08:06:04,577 - kademia - INFO - Application started
+2025-03-19 08:11:00,632 - kademia - INFO - Application started
+2025-03-19 08:12:02,560 - kademia - INFO - Application started
+2025-03-19 08:12:31,095 - kademia - INFO - Application started
+2025-03-19 08:13:29,067 - kademia - INFO - Application started
+2025-03-19 08:19:03,846 - kademia - INFO - Application started
+2025-03-19 08:21:04,613 - kademia - INFO - Application started
+2025-03-19 08:38:41,545 - kademia - INFO - Application started
+2025-03-19 09:22:07,316 - kademia - INFO - Application started
+2025-03-19 09:22:58,355 - kademia - INFO - Application started
+2025-03-19 09:23:40,335 - kademia - INFO - Request started | 9c722ac1-2455-439a-ac00-05a05318a98f | POST /api/v1/auth/login
+2025-03-19 09:23:40,342 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 09:23:40,354 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-19 09:23:40,357 - sqlalchemy.engine.Engine - INFO - [generated in 0.00275s] {'email_address_1': 'Aina.Folu@Example.Com', 'param_1': 1}
+2025-03-19 09:23:40,921 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 09:23:40,923 - kademia - INFO - Request completed | 9c722ac1-2455-439a-ac00-05a05318a98f | Status: 200 | Time: 0.588s
+2025-03-19 09:23:42,191 - kademia - INFO - Request started | a26b5cec-64bd-48f1-9820-3f26d3c9e048 | GET /docs
+2025-03-19 09:23:42,193 - kademia - INFO - Request completed | a26b5cec-64bd-48f1-9820-3f26d3c9e048 | Status: 200 | Time: 0.001s
+2025-03-19 09:23:42,388 - kademia - INFO - Request started | e1badb29-6b44-47c9-a136-125b514696ec | GET /openapi.json
+2025-03-19 09:23:42,540 - kademia - INFO - Request completed | e1badb29-6b44-47c9-a136-125b514696ec | Status: 200 | Time: 0.152s
+2025-03-19 09:24:21,381 - kademia - INFO - Application started
+2025-03-19 09:24:21,552 - kademia - INFO - Application started
+2025-03-19 09:24:23,323 - kademia - INFO - Request started | d2349f52-656a-450e-be75-6ecc63789f84 | POST /api/v1/auth/login
+2025-03-19 09:24:23,329 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 09:24:23,336 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-19 09:24:23,337 - sqlalchemy.engine.Engine - INFO - [generated in 0.00192s] {'email_address_1': 'aina.folu@example.com', 'param_1': 1}
+2025-03-19 09:24:23,350 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 09:24:23,353 - kademia - INFO - Request completed | d2349f52-656a-450e-be75-6ecc63789f84 | Status: 401 | Time: 0.030s
+2025-03-19 09:25:53,157 - kademia - INFO - Request started | 1416c3b5-39c8-4d93-abcb-33f754b33a49 | POST /api/v1/auth/login
+2025-03-19 09:25:53,159 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 09:25:53,160 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-19 09:25:53,161 - sqlalchemy.engine.Engine - INFO - [cached since 89.83s ago] {'email_address_1': 'Aina.Folu@Example.Com', 'param_1': 1}
+2025-03-19 09:25:53,572 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 09:25:53,573 - kademia - ERROR - Unhandled exception | 1416c3b5-39c8-4d93-abcb-33f754b33a49 | 'bool' object has no attribute 'email'
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 88, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 32, in login
+    'email': staff.email,
+             ^^^^^^^^^^^
+AttributeError: 'bool' object has no attribute 'email'
+2025-03-19 09:25:53,593 - kademia - ERROR - Unhandled exception | 1416c3b5-39c8-4d93-abcb-33f754b33a49 | 'bool' object has no attribute 'email'
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 88, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 32, in login
+    'email': staff.email,
+             ^^^^^^^^^^^
+AttributeError: 'bool' object has no attribute 'email'
+2025-03-19 09:26:53,498 - kademia - INFO - Application started
+2025-03-19 09:26:53,699 - kademia - INFO - Application started
+2025-03-19 09:27:11,111 - kademia - INFO - Request started | 054dc2bc-f72b-4897-8922-f6373a1f67ad | GET /docs
+2025-03-19 09:27:11,112 - kademia - INFO - Request completed | 054dc2bc-f72b-4897-8922-f6373a1f67ad | Status: 200 | Time: 0.001s
+2025-03-19 09:27:11,246 - kademia - INFO - Request started | edd9e4b4-339c-4c08-91ed-c6945e30ced8 | GET /openapi.json
+2025-03-19 09:27:11,420 - kademia - INFO - Request completed | edd9e4b4-339c-4c08-91ed-c6945e30ced8 | Status: 200 | Time: 0.173s
+2025-03-19 09:27:25,001 - kademia - INFO - Request started | a318227d-f645-449b-adff-6b171f5a4b79 | POST /api/v1/auth/login
+2025-03-19 09:27:25,005 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 09:27:25,010 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-19 09:27:25,011 - sqlalchemy.engine.Engine - INFO - [generated in 0.00093s] {'email_address_1': 'Aina.Folu@Example.Com', 'param_1': 1}
+2025-03-19 09:27:25,481 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 09:27:25,484 - kademia - ERROR - Unhandled exception | a318227d-f645-449b-adff-6b171f5a4b79 | 'bool' object has no attribute 'email_address'
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 88, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 32, in login
+    'email': staff.email_address,
+             ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'bool' object has no attribute 'email_address'
+2025-03-19 09:27:25,507 - kademia - ERROR - Unhandled exception | a318227d-f645-449b-adff-6b171f5a4b79 | 'bool' object has no attribute 'email_address'
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 88, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 32, in login
+    'email': staff.email_address,
+             ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'bool' object has no attribute 'email_address'
+2025-03-19 09:28:09,822 - kademia - INFO - Application started
+2025-03-19 09:28:10,011 - kademia - INFO - Application started
+2025-03-19 09:28:17,234 - kademia - INFO - Request started | 35a38374-1051-4c29-88a6-58395b16c923 | GET /docs
+2025-03-19 09:28:17,236 - kademia - INFO - Request completed | 35a38374-1051-4c29-88a6-58395b16c923 | Status: 200 | Time: 0.001s
+2025-03-19 09:28:17,350 - kademia - INFO - Request started | bbbd733e-aed1-455a-9791-6602feabfa67 | GET /openapi.json
+2025-03-19 09:28:17,541 - kademia - INFO - Request completed | bbbd733e-aed1-455a-9791-6602feabfa67 | Status: 200 | Time: 0.191s
+2025-03-19 09:28:56,709 - kademia - INFO - Request started | 8327e5c1-1252-4d78-964a-e85d159d2c59 | POST /api/v1/auth/login
+2025-03-19 09:28:56,714 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 09:28:56,720 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-19 09:28:56,720 - sqlalchemy.engine.Engine - INFO - [generated in 0.00114s] {'email_address_1': 'Aina.Folu@Example.Com', 'param_1': 1}
+2025-03-19 09:28:57,270 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 09:28:57,272 - kademia - ERROR - Unhandled exception | 8327e5c1-1252-4d78-964a-e85d159d2c59 | 'bool' object has no attribute 'uid'
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 88, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 33, in login
+    'user_uid': str(staff.uid)
+                    ^^^^^^^^^
+AttributeError: 'bool' object has no attribute 'uid'
+2025-03-19 09:28:57,288 - kademia - ERROR - Unhandled exception | 8327e5c1-1252-4d78-964a-e85d159d2c59 | 'bool' object has no attribute 'uid'
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 88, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 33, in login
+    'user_uid': str(staff.uid)
+                    ^^^^^^^^^
+AttributeError: 'bool' object has no attribute 'uid'
+2025-03-19 09:29:28,414 - kademia - INFO - Application started
+2025-03-19 09:29:28,592 - kademia - INFO - Application started
+2025-03-19 09:29:31,564 - kademia - INFO - Request started | d4a931a3-3778-4dd1-b400-0c7e6925303d | GET /docs
+2025-03-19 09:29:31,566 - kademia - INFO - Request completed | d4a931a3-3778-4dd1-b400-0c7e6925303d | Status: 200 | Time: 0.001s
+2025-03-19 09:29:31,802 - kademia - INFO - Request started | 50ccdae3-aac9-4a99-a89a-c8eb8821a510 | GET /openapi.json
+2025-03-19 09:29:32,008 - kademia - INFO - Request completed | 50ccdae3-aac9-4a99-a89a-c8eb8821a510 | Status: 200 | Time: 0.206s
+2025-03-19 09:29:44,376 - kademia - INFO - Request started | 992aa42a-2f88-4538-bb35-874293845460 | POST /api/v1/auth/login
+2025-03-19 09:29:44,380 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 09:29:44,387 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-19 09:29:44,388 - sqlalchemy.engine.Engine - INFO - [generated in 0.00120s] {'email_address_1': 'Aina.Folu@Example.Com', 'param_1': 1}
+2025-03-19 09:29:44,806 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 09:29:44,808 - kademia - ERROR - Unhandled exception | 992aa42a-2f88-4538-bb35-874293845460 | 'StaffLogin' object has no attribute 'uid'
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 88, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 33, in login
+    'user_uid': str(login_data.uid)
+                    ^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\pydantic\main.py", line 892, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'StaffLogin' object has no attribute 'uid'
+2025-03-19 09:29:44,828 - kademia - ERROR - Unhandled exception | 992aa42a-2f88-4538-bb35-874293845460 | 'StaffLogin' object has no attribute 'uid'
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 88, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 33, in login
+    'user_uid': str(login_data.uid)
+                    ^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\pydantic\main.py", line 892, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'StaffLogin' object has no attribute 'uid'
+2025-03-19 09:32:23,776 - kademia - INFO - Application started
+2025-03-19 09:32:23,980 - kademia - INFO - Application started
+2025-03-19 09:32:32,812 - kademia - INFO - Request started | 9ce95dcb-529e-45ec-8f87-2eda10045ca3 | GET /docs
+2025-03-19 09:32:32,813 - kademia - INFO - Request completed | 9ce95dcb-529e-45ec-8f87-2eda10045ca3 | Status: 200 | Time: 0.001s
+2025-03-19 09:32:33,011 - kademia - INFO - Request started | 98581007-1151-4af3-b7bd-972e6610e84f | GET /openapi.json
+2025-03-19 09:32:33,227 - kademia - INFO - Request completed | 98581007-1151-4af3-b7bd-972e6610e84f | Status: 200 | Time: 0.214s
+2025-03-19 09:32:46,669 - kademia - INFO - Request started | ef8e5ca4-a1c6-4930-857c-b3b5d8624d98 | POST /api/v1/auth/login
+2025-03-19 09:32:46,674 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 09:32:46,678 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-19 09:32:46,679 - sqlalchemy.engine.Engine - INFO - [generated in 0.00092s] {'email_address_1': 'Aina.Folu@Example.Com', 'param_1': 1}
+2025-03-19 09:32:47,107 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 09:32:47,109 - kademia - INFO - Request completed | ef8e5ca4-a1c6-4930-857c-b3b5d8624d98 | Status: 200 | Time: 0.438s
+2025-03-19 10:09:12,138 - kademia - INFO - Application started
+2025-03-19 10:09:12,379 - kademia - INFO - Application started
+2025-03-19 10:16:08,628 - kademia - INFO - Application started
+2025-03-19 10:17:37,608 - kademia - INFO - Request started | 345b0dad-360e-4152-a78d-99d451f3a215 | GET /
+2025-03-19 10:17:37,610 - kademia - INFO - Request completed | 345b0dad-360e-4152-a78d-99d451f3a215 | Status: 200 | Time: 0.002s
+2025-03-19 10:17:37,842 - kademia - INFO - Request started | c76cf0a8-133d-4019-9d24-aac2fa6519e9 | GET /favicon.ico
+2025-03-19 10:17:37,844 - kademia - INFO - Request completed | c76cf0a8-133d-4019-9d24-aac2fa6519e9 | Status: 404 | Time: 0.001s
+2025-03-19 10:17:46,155 - kademia - INFO - Application started
+2025-03-19 10:17:46,167 - kademia - INFO - Request started | fb541e84-3bfc-4cc6-8d45-e1ae3682b56a | GET /docs
+2025-03-19 10:17:46,167 - kademia - INFO - Request completed | fb541e84-3bfc-4cc6-8d45-e1ae3682b56a | Status: 200 | Time: 0.000s
+2025-03-19 10:17:46,323 - kademia - INFO - Request started | 9d04c50c-1605-46bd-9712-1347e190974b | GET /openapi.json
+2025-03-19 10:17:46,498 - kademia - INFO - Request completed | 9d04c50c-1605-46bd-9712-1347e190974b | Status: 200 | Time: 0.173s
+2025-03-19 10:18:19,541 - kademia - INFO - Request started | 485ceef5-c168-4acb-a5c3-debb71585c0a | DELETE /api/v1/staff/555898c3-bb19-4c60-9f91-7d0a5166c49b
+2025-03-19 10:18:19,544 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 10:18:19,548 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.is_archived = false AND staff.id = %(id_1)s::UUID 
+ LIMIT %(param_1)s
+2025-03-19 10:18:19,549 - sqlalchemy.engine.Engine - INFO - [generated in 0.00108s] {'id_1': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b'), 'param_1': 1}
+2025-03-19 10:18:19,566 - sqlalchemy.engine.Engine - INFO - SELECT educator_qualifications.id AS educator_qualifications_id, educator_qualifications.educator_id AS educator_qualifications_educator_id, educator_qualifications.name AS educator_qualifications_name, educator_qualifications.description AS educator_qualifications_description, educator_qualifications.created_by AS educator_qualifications_created_by, educator_qualifications.last_modified_by AS educator_qualifications_last_modified_by, educator_qualifications.created_at AS educator_qualifications_created_at, educator_qualifications.last_modified_at AS educator_qualifications_last_modified_at, educator_qualifications.is_archived AS educator_qualifications_is_archived, educator_qualifications.archived_at AS educator_qualifications_archived_at, educator_qualifications.archive_reason AS educator_qualifications_archive_reason, educator_qualifications.archived_by AS educator_qualifications_archived_by 
+FROM educator_qualifications 
+WHERE %(param_1)s::UUID = educator_qualifications.educator_id
+2025-03-19 10:18:19,572 - sqlalchemy.engine.Engine - INFO - [generated in 0.00644s] {'param_1': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 10:18:19,584 - sqlalchemy.engine.Engine - INFO - SELECT subject_educators.id AS subject_educators_id, subject_educators.subject_id AS subject_educators_subject_id, subject_educators.educator_id AS subject_educators_educator_id, subject_educators.level_id AS subject_educators_level_id, subject_educators.academic_year AS subject_educators_academic_year, subject_educators.term AS subject_educators_term, subject_educators.is_active AS subject_educators_is_active, subject_educators.date_assigned AS subject_educators_date_assigned, subject_educators.created_by AS subject_educators_created_by, subject_educators.last_modified_by AS subject_educators_last_modified_by, subject_educators.created_at AS subject_educators_created_at, subject_educators.last_modified_at AS subject_educators_last_modified_at, subject_educators.is_archived AS subject_educators_is_archived, subject_educators.archived_at AS subject_educators_archived_at, subject_educators.archive_reason AS subject_educators_archive_reason, subject_educators.archived_by AS subject_educators_archived_by 
+FROM subject_educators 
+WHERE %(param_1)s::UUID = subject_educators.educator_id
+2025-03-19 10:18:19,585 - sqlalchemy.engine.Engine - INFO - [generated in 0.00137s] {'param_1': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 10:18:19,595 - sqlalchemy.engine.Engine - INFO - SELECT student_departments.id AS student_departments_id, student_departments.name AS student_departments_name, student_departments.description AS student_departments_description, student_departments.mentor_id AS student_departments_mentor_id, student_departments.student_rep_id AS student_departments_student_rep_id, student_departments.assistant_rep_id AS student_departments_assistant_rep_id, student_departments.created_by AS student_departments_created_by, student_departments.last_modified_by AS student_departments_last_modified_by, student_departments.created_at AS student_departments_created_at, student_departments.last_modified_at AS student_departments_last_modified_at, student_departments.is_archived AS student_departments_is_archived, student_departments.archived_at AS student_departments_archived_at, student_departments.archive_reason AS student_departments_archive_reason, student_departments.archived_by AS student_departments_archived_by 
+FROM student_departments 
+WHERE %(param_1)s::UUID = student_departments.mentor_id
+2025-03-19 10:18:19,596 - sqlalchemy.engine.Engine - INFO - [generated in 0.00127s] {'param_1': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 10:18:19,605 - sqlalchemy.engine.Engine - INFO - SELECT classes.id AS classes_id, classes.level_id AS classes_level_id, classes.code AS classes_code, classes.supervisor_id AS classes_supervisor_id, classes.student_rep_id AS classes_student_rep_id, classes.assistant_rep_id AS classes_assistant_rep_id, classes."order" AS classes_order, classes.created_by AS classes_created_by, classes.last_modified_by AS classes_last_modified_by, classes.created_at AS classes_created_at, classes.last_modified_at AS classes_last_modified_at, classes.is_archived AS classes_is_archived, classes.archived_at AS classes_archived_at, classes.archive_reason AS classes_archive_reason, classes.archived_by AS classes_archived_by 
+FROM classes 
+WHERE %(param_1)s::UUID = classes.supervisor_id
+2025-03-19 10:18:19,606 - sqlalchemy.engine.Engine - INFO - [generated in 0.00094s] {'param_1': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 10:18:19,617 - sqlalchemy.engine.Engine - INFO - SELECT access_level_changes.id AS access_level_changes_id, access_level_changes.staff_id AS access_level_changes_staff_id, access_level_changes.previous_level AS access_level_changes_previous_level, access_level_changes.new_level AS access_level_changes_new_level, access_level_changes.reason AS access_level_changes_reason, access_level_changes.changed_at AS access_level_changes_changed_at, access_level_changes.changed_by_id AS access_level_changes_changed_by_id 
+FROM access_level_changes 
+WHERE %(param_1)s::UUID = access_level_changes.staff_id
+2025-03-19 10:18:19,618 - sqlalchemy.engine.Engine - INFO - [generated in 0.00120s] {'param_1': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 10:18:19,626 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE %(param_1)s::UUID = staff.created_by
+2025-03-19 10:18:19,628 - sqlalchemy.engine.Engine - INFO - [generated in 0.00203s] {'param_1': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 10:18:19,632 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE %(param_1)s::UUID = staff.last_modified_by
+2025-03-19 10:18:19,633 - sqlalchemy.engine.Engine - INFO - [generated in 0.00119s] {'param_1': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 10:18:19,637 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE %(param_1)s::UUID = staff.archived_by
+2025-03-19 10:18:19,638 - sqlalchemy.engine.Engine - INFO - [generated in 0.00138s] {'param_1': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 10:18:19,645 - sqlalchemy.engine.Engine - INFO - DELETE FROM educators WHERE educators.id = %(id)s::UUID
+2025-03-19 10:18:19,645 - sqlalchemy.engine.Engine - INFO - [generated in 0.00092s] {'id': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 10:18:19,656 - sqlalchemy.engine.Engine - INFO - DELETE FROM staff WHERE staff.id = %(id)s::UUID
+2025-03-19 10:18:19,656 - sqlalchemy.engine.Engine - INFO - [generated in 0.00079s] {'id': UUID('555898c3-bb19-4c60-9f91-7d0a5166c49b')}
+2025-03-19 10:18:19,660 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-19 10:18:19,666 - kademia - INFO - Request completed | 485ceef5-c168-4acb-a5c3-debb71585c0a | Status: 204 | Time: 0.125s
+2025-03-19 10:18:45,082 - kademia - INFO - Request started | 68280463-7d4b-40f4-a271-64217cab6699 | POST /api/v1/staff/
+2025-03-19 10:18:45,684 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 10:18:45,688 - sqlalchemy.engine.Engine - INFO - INSERT INTO staff (access_level, user_type, status, availability, staff_type, image_url, email_address, address, phone, department_id, role_id, date_joined, date_left, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(access_level)s, %(user_type)s, %(status)s, %(availability)s, %(staff_type)s, %(image_url)s, %(email_address)s, %(address)s, %(phone)s, %(department_id)s::UUID, %(role_id)s::UUID, %(date_joined)s, %(date_left)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING staff.created_at, staff.last_modified_at
+2025-03-19 10:18:45,689 - sqlalchemy.engine.Engine - INFO - [generated in 0.00188s] {'access_level': 'READ', 'user_type': 'STAFF', 'status': 'ACTIVE', 'availability': 'AVAILABLE', 'staff_type': 'Educator', 'image_url': None, 'email_address': 'aina.folu@example.com', 'address': '456 Allen Avenue, Lagos', 'phone': '08087654321', 'department_id': UUID('00000000-0000-0000-0000-000000000001'), 'role_id': UUID('00000000-0000-0000-0000-000000000002'), 'date_joined': datetime.date(2024, 1, 15), 'date_left': None, 'id': UUID('0dc12a6d-80ca-481b-84fe-991cc5a3db4e'), 'password_hash': '$2b$12$px6jLMjulmGgZEGO8HM8UekOzwX.5lwZEBxKdMildHStSFyQDo56K', 'first_name': 'Aina', 'last_name': 'ASDduP1ud2', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-19 10:18:45,695 - sqlalchemy.engine.Engine - INFO - INSERT INTO educators (id) VALUES (%(id)s::UUID)
+2025-03-19 10:18:45,695 - sqlalchemy.engine.Engine - INFO - [generated in 0.00094s] {'id': UUID('0dc12a6d-80ca-481b-84fe-991cc5a3db4e')}
+2025-03-19 10:18:45,699 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-19 10:18:45,705 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 10:18:45,709 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level, staff.user_type, staff.status, staff.availability, staff.staff_type, staff.image_url, staff.email_address, staff.address, staff.phone, staff.department_id, staff.role_id, staff.date_joined, staff.date_left, educators.id, staff.id AS id_1, staff.password_hash, staff.first_name, staff.last_name, staff.gender, staff.last_login, staff.deletion_eligible, staff.created_by, staff.last_modified_by, staff.created_at, staff.last_modified_at, staff.is_archived, staff.archived_at, staff.archive_reason, staff.archived_by 
+FROM staff JOIN educators ON educators.id = staff.id 
+WHERE staff.id = %(pk_1)s::UUID
+2025-03-19 10:18:45,711 - sqlalchemy.engine.Engine - INFO - [generated in 0.00172s] {'pk_1': UUID('0dc12a6d-80ca-481b-84fe-991cc5a3db4e')}
+2025-03-19 10:18:45,718 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 10:18:45,720 - kademia - INFO - Request completed | 68280463-7d4b-40f4-a271-64217cab6699 | Status: 201 | Time: 0.638s
+2025-03-19 10:19:19,231 - kademia - INFO - Request started | 7995f683-166f-4bd9-a065-8aab0dfec223 | POST /api/v1/staff/
+2025-03-19 10:19:19,782 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 10:19:19,784 - sqlalchemy.engine.Engine - INFO - INSERT INTO staff (access_level, user_type, status, availability, staff_type, image_url, email_address, address, phone, department_id, role_id, date_joined, date_left, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(access_level)s, %(user_type)s, %(status)s, %(availability)s, %(staff_type)s, %(image_url)s, %(email_address)s, %(address)s, %(phone)s, %(department_id)s::UUID, %(role_id)s::UUID, %(date_joined)s, %(date_left)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING staff.created_at, staff.last_modified_at
+2025-03-19 10:19:19,785 - sqlalchemy.engine.Engine - INFO - [cached since 34.1s ago] {'access_level': 'READ', 'user_type': 'STAFF', 'status': 'ACTIVE', 'availability': 'AVAILABLE', 'staff_type': 'Educator', 'image_url': None, 'email_address': 'aina.ceemos@example.com', 'address': '456 Allen Avenue, Lagos', 'phone': '08087654371', 'department_id': UUID('00000000-0000-0000-0000-000000000001'), 'role_id': UUID('00000000-0000-0000-0000-000000000002'), 'date_joined': datetime.date(2024, 1, 15), 'date_left': None, 'id': UUID('8288f484-4b4b-45cb-8244-24da1355dd9a'), 'password_hash': '$2b$12$p6iH1GjionM4uPZ8.dSNH.AwcViMHSxVinks8nAX.IVdjYoxdYeJW', 'first_name': 'Ceemos', 'last_name': 'M!W9oJFDh0', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-19 10:19:19,789 - sqlalchemy.engine.Engine - INFO - INSERT INTO educators (id) VALUES (%(id)s::UUID)
+2025-03-19 10:19:19,791 - sqlalchemy.engine.Engine - INFO - [cached since 34.1s ago] {'id': UUID('8288f484-4b4b-45cb-8244-24da1355dd9a')}
+2025-03-19 10:19:19,793 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-03-19 10:19:19,799 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-19 10:19:19,800 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level, staff.user_type, staff.status, staff.availability, staff.staff_type, staff.image_url, staff.email_address, staff.address, staff.phone, staff.department_id, staff.role_id, staff.date_joined, staff.date_left, educators.id, staff.id AS id_1, staff.password_hash, staff.first_name, staff.last_name, staff.gender, staff.last_login, staff.deletion_eligible, staff.created_by, staff.last_modified_by, staff.created_at, staff.last_modified_at, staff.is_archived, staff.archived_at, staff.archive_reason, staff.archived_by 
+FROM staff JOIN educators ON educators.id = staff.id 
+WHERE staff.id = %(pk_1)s::UUID
+2025-03-19 10:19:19,802 - sqlalchemy.engine.Engine - INFO - [cached since 34.09s ago] {'pk_1': UUID('8288f484-4b4b-45cb-8244-24da1355dd9a')}
+2025-03-19 10:19:19,807 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-19 10:19:19,809 - kademia - INFO - Request completed | 7995f683-166f-4bd9-a065-8aab0dfec223 | Status: 201 | Time: 0.578s
+2025-03-19 10:20:57,967 - kademia - INFO - Application started

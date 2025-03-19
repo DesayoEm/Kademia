@@ -7,11 +7,18 @@ from ..core.errors.database_errors import *
 from ..core.errors.staff_organisation_errors import *
 from ..core.errors.student_organisation_errors import *
 from ..core.errors.profile_errors import *
-from ..logging.logger import logger
+from ..core.errors.auth_errors import *
+from ..log_service.logger import logger
 
 class ExceptionMiddleware(BaseHTTPMiddleware):
 
     error_map = {
+
+        # Token errors
+        TokenError: status.HTTP_401_UNAUTHORIZED,
+        TokenExpiredError: status.HTTP_401_UNAUTHORIZED,
+        TokenInvalidError: status.HTTP_401_UNAUTHORIZED,
+
         #Generic database errors
         DatabaseError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         EntityNotFoundError: status.HTTP_404_NOT_FOUND,

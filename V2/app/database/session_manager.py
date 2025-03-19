@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from typing import Generator
-from .config import SessionFactory
+from .db_config import SessionFactory
 
 def get_db() -> Generator:
     db = SessionFactory()

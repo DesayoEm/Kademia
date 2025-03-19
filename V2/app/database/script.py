@@ -1,12 +1,12 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from V2.app.database.models import StaffDepartments, StaffRoles
-from V2.app.database.models.users import System, Staff
-from V2.app.database.models.data_enums import (
+from ..database.models import StaffDepartments, StaffRoles
+from ..database.models.users import System, Staff
+from ..database.models.data_enums import (
     AccessLevel, EmploymentStatus, StaffAvailability, Gender, UserType, StaffType
 )
-from config import engine
+from .db_config import engine
 from uuid import UUID
 
 KADEMIA_ID = UUID('00000000-0000-0000-0000-000000000000')

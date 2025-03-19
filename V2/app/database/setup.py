@@ -1,4 +1,4 @@
-from config import engine
+from db_config import engine
 from V2.app.database.models.common_imports import Base
 from V2.app.database.models.users import ProfileBase,Students, Guardians, Staff, Educator, Support, System
 from V2.app.database.models.academic import Subjects, Grades, TotalGrades, StudentSubjects,StudentRepetitions, SubjectEducators, AcademicLevelSubjects, StudentAwards

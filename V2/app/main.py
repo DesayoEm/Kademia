@@ -1,4 +1,13 @@
+from pathlib import Path
+from dotenv import load_dotenv
+current_dir = Path(__file__).resolve().parent
+env_path = current_dir / ".env"
+load_dotenv(dotenv_path=env_path)
+
 from fastapi import FastAPI
+
+app = FastAPI()
+
 from .routers.staff_organization import (
     qualifications, staff_departments, staff_roles, archived_qualifications,
     archived_staff_departments,archived_staff_roles
@@ -8,9 +17,9 @@ from .routers.student_organization import (
     classes, archived_classes
 )
 from .routers.profiles.staff import staff, archived_staff
-
+from .routers.auth import staff_auth
 from .middleware.error_handler import ExceptionMiddleware
-from .logging.logger import logger
+from .log_service.logger import logger
 
 version = "v1"
 app = FastAPI(
@@ -20,12 +29,14 @@ app = FastAPI(
 
 app.add_middleware(ExceptionMiddleware)
 
-# Qualifications
-app.include_router(qualifications.router, prefix=f"/api/{version}/staff/qualifications",
-                   tags=["Qualifications"])
-app.include_router(archived_qualifications.router, prefix=f"/api/{version}/archive/staff/qualifications",
-                   tags=["Archived","Qualifications"])
-
+# Staff auth
+app.include_router(staff_auth.router, prefix=f"/api/{version}/auth",
+                   tags=["Auth"])
+# Staff
+app.include_router(staff.router, prefix=f"/api/{version}/staff",
+                   tags=["Staff"])
+app.include_router(archived_staff.router, prefix=f"/api/{version}/archive/staff",
+                   tags=["Archived","Staff"])
 # Staff Departments
 app.include_router(staff_departments.router, prefix=f"/api/{version}/staff/departments",
                    tags=["Staff Departments"])
@@ -37,6 +48,12 @@ app.include_router(staff_roles.router, prefix=f"/api/{version}/staff/roles",
                    tags=["Staff Roles"])
 app.include_router(archived_staff_roles.router, prefix=f"/api/{version}/archive/staff/roles",
                    tags=["Archived","Staff Roles"])
+
+# Qualifications
+app.include_router(qualifications.router, prefix=f"/api/{version}/staff/qualifications",
+                   tags=["Qualifications"])
+app.include_router(archived_qualifications.router, prefix=f"/api/{version}/archive/staff/qualifications",
+                   tags=["Archived","Qualifications"])
 
 # Student Departments
 app.include_router(student_departments.router, prefix=f"/api/{version}/students/departments",
@@ -56,11 +73,11 @@ app.include_router(classes.router, prefix=f"/api/{version}/students/student_orga
 app.include_router(archived_classes.router, prefix=f"/api/{version}/archive/students/student_organization",
                    tags=["Archived","Classes"])
 
-# Staff
-app.include_router(staff.router, prefix=f"/api/{version}/staff",
-                   tags=["Staff"])
-app.include_router(archived_staff.router, prefix=f"/api/{version}/archive/staff",
-                   tags=["Archived","Staff"])
+
+
+
+
+
 
 @app.get("/")
 async def root():
