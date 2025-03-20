@@ -1,0 +1,503 @@
+2025-03-20 21:38:22,795 - kademia - INFO - Application started
+2025-03-20 21:38:42,785 - kademia - INFO - Request started | 51476bda-4795-4cef-8d49-e622b3394dd2 | GET /
+2025-03-20 21:38:42,787 - kademia - INFO - Request completed | 51476bda-4795-4cef-8d49-e622b3394dd2 | Status: 200 | Time: 0.002s
+2025-03-20 21:38:42,916 - kademia - INFO - Request started | c1dad797-ff43-402b-b730-b185f7cdea31 | GET /favicon.ico
+2025-03-20 21:38:42,917 - kademia - INFO - Request completed | c1dad797-ff43-402b-b730-b185f7cdea31 | Status: 404 | Time: 0.000s
+2025-03-20 21:38:56,116 - kademia - INFO - Request started | 629682a7-e687-4db7-80f5-b5419695f386 | GET /docs
+2025-03-20 21:38:56,117 - kademia - INFO - Request completed | 629682a7-e687-4db7-80f5-b5419695f386 | Status: 200 | Time: 0.001s
+2025-03-20 21:38:56,597 - kademia - INFO - Request started | e7d58d43-ae63-4e44-93c4-d6c1e61f8a88 | GET /openapi.json
+2025-03-20 21:38:56,688 - kademia - INFO - Request completed | e7d58d43-ae63-4e44-93c4-d6c1e61f8a88 | Status: 200 | Time: 0.091s
+2025-03-20 21:43:05,463 - kademia - INFO - Application started
+2025-03-20 21:44:07,920 - kademia - INFO - Request started | 7867ee2b-b829-45ea-81c6-22cc9565669c | GET /docs
+2025-03-20 21:44:07,922 - kademia - INFO - Request completed | 7867ee2b-b829-45ea-81c6-22cc9565669c | Status: 200 | Time: 0.001s
+2025-03-20 21:44:08,289 - kademia - INFO - Request started | 0129e8a9-18c9-4cd3-b46d-3dbb8c3bd366 | GET /openapi.json
+2025-03-20 21:44:08,369 - kademia - INFO - Request completed | 0129e8a9-18c9-4cd3-b46d-3dbb8c3bd366 | Status: 200 | Time: 0.079s
+2025-03-20 21:44:25,501 - kademia - INFO - Request started | 6eefc679-2be6-41eb-b37f-fb46f82febf9 | POST /api/v1/auth/login
+2025-03-20 21:44:25,928 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-20 21:44:25,929 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-20 21:44:25,931 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-20 21:44:25,931 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-20 21:44:25,934 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-20 21:44:25,934 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-20 21:44:25,935 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-20 21:44:25,944 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-20 21:44:25,945 - sqlalchemy.engine.Engine - INFO - [generated in 0.00150s] {'email_address_1': 'aina.folu@example.com', 'param_1': 1}
+2025-03-20 21:44:26,451 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-20 21:44:26,452 - kademia - ERROR - Unhandled exception | 6eefc679-2be6-41eb-b37f-fb46f82febf9 | 
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 90, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 23, in login
+    staff = auth.authenticate_staff(login_data.email_address, login_data.password)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\services\auth\auth_service.py", line 16, in authenticate_staff
+    raise InvalidUserError(email_address=email_address)
+app.core.errors.auth_errors.InvalidUserError
+2025-03-20 21:44:26,473 - kademia - WARNING - InvalidUserError | 6eefc679-2be6-41eb-b37f-fb46f82febf9 | Login attempted with Invalid email or password: User aina.Folu@example.com 
+2025-03-20 21:45:42,470 - kademia - INFO - Request started | cb44bda9-abfd-4811-9468-b6963dc32459 | POST /api/v1/auth/login
+2025-03-20 21:45:42,472 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-20 21:45:42,473 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-20 21:45:42,474 - sqlalchemy.engine.Engine - INFO - [cached since 76.53s ago] {'email_address_1': 'aina.folu@example.com', 'param_1': 1}
+2025-03-20 21:45:42,732 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-20 21:45:42,733 - kademia - ERROR - Unhandled exception | cb44bda9-abfd-4811-9468-b6963dc32459 | Object of type UUID is not JSON serializable
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 90, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 26, in login
+    access_token = token_service.create_access_token(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\services\auth\token_service.py", line 23, in create_access_token
+    token = jwt.encode(
+            ^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\jwt\api_jwt.py", line 72, in encode
+    json_payload = self._encode_payload(
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\jwt\api_jwt.py", line 99, in _encode_payload
+    return json.dumps(
+           ^^^^^^^^^^^
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python312\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python312\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python312\Lib\json\encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python312\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type UUID is not JSON serializable
+2025-03-20 21:45:42,770 - kademia - ERROR - Unhandled exception | cb44bda9-abfd-4811-9468-b6963dc32459 | Object of type UUID is not JSON serializable
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 90, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 26, in login
+    access_token = token_service.create_access_token(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\services\auth\token_service.py", line 23, in create_access_token
+    token = jwt.encode(
+            ^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\jwt\api_jwt.py", line 72, in encode
+    json_payload = self._encode_payload(
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\jwt\api_jwt.py", line 99, in _encode_payload
+    return json.dumps(
+           ^^^^^^^^^^^
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python312\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python312\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python312\Lib\json\encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python312\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type UUID is not JSON serializable
+2025-03-20 21:47:51,711 - kademia - INFO - Application started
+2025-03-20 21:48:01,348 - kademia - INFO - Request started | 940c5f23-4a48-46cb-8aef-f5b656b5ccfb | GET /docs
+2025-03-20 21:48:01,349 - kademia - INFO - Request completed | 940c5f23-4a48-46cb-8aef-f5b656b5ccfb | Status: 200 | Time: 0.001s
+2025-03-20 21:48:01,491 - kademia - INFO - Request started | 2837fd1f-977a-41c2-9acf-910f8a28fac1 | GET /openapi.json
+2025-03-20 21:48:01,622 - kademia - INFO - Request completed | 2837fd1f-977a-41c2-9acf-910f8a28fac1 | Status: 200 | Time: 0.131s
+2025-03-20 21:48:31,263 - kademia - INFO - Request started | 2b6c328f-1579-49b5-99d1-bfd4e9a8f3ea | POST /api/v1/auth/login
+2025-03-20 21:48:31,753 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-20 21:48:31,753 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-20 21:48:31,756 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-20 21:48:31,756 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-20 21:48:31,757 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-20 21:48:31,758 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-20 21:48:31,759 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-20 21:48:31,764 - sqlalchemy.engine.Engine - INFO - SELECT staff.access_level AS staff_access_level, staff.user_type AS staff_user_type, staff.status AS staff_status, staff.availability AS staff_availability, staff.staff_type AS staff_staff_type, staff.image_url AS staff_image_url, staff.email_address AS staff_email_address, staff.address AS staff_address, staff.phone AS staff_phone, staff.department_id AS staff_department_id, staff.role_id AS staff_role_id, staff.date_joined AS staff_date_joined, staff.date_left AS staff_date_left, staff.id AS staff_id, staff.password_hash AS staff_password_hash, staff.first_name AS staff_first_name, staff.last_name AS staff_last_name, staff.gender AS staff_gender, staff.last_login AS staff_last_login, staff.deletion_eligible AS staff_deletion_eligible, staff.created_by AS staff_created_by, staff.last_modified_by AS staff_last_modified_by, staff.created_at AS staff_created_at, staff.last_modified_at AS staff_last_modified_at, staff.is_archived AS staff_is_archived, staff.archived_at AS staff_archived_at, staff.archive_reason AS staff_archive_reason, staff.archived_by AS staff_archived_by 
+FROM staff 
+WHERE staff.email_address = %(email_address_1)s 
+ LIMIT %(param_1)s
+2025-03-20 21:48:31,765 - sqlalchemy.engine.Engine - INFO - [generated in 0.00099s] {'email_address_1': 'aina.folu@example.com', 'param_1': 1}
+2025-03-20 21:48:32,119 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-20 21:48:32,119 - kademia - ERROR - Unhandled exception | 2b6c328f-1579-49b5-99d1-bfd4e9a8f3ea | 'StaffLogin' object is not subscriptable
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 90, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 28, in login
+    'email': login_data['email_address'],
+             ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+TypeError: 'StaffLogin' object is not subscriptable
+2025-03-20 21:48:32,129 - kademia - ERROR - Unhandled exception | 2b6c328f-1579-49b5-99d1-bfd4e9a8f3ea | 'StaffLogin' object is not subscriptable
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 90, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\auth\staff_auth.py", line 28, in login
+    'email': login_data['email_address'],
+             ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+TypeError: 'StaffLogin' object is not subscriptable
+2025-03-20 21:49:08,931 - kademia - INFO - Application started
+2025-03-20 21:49:16,658 - kademia - INFO - Request started | 7aa4b6e5-5d7a-46a8-a5fb-5d47d665f193 | GET /docs
+2025-03-20 21:49:16,659 - kademia - INFO - Request completed | 7aa4b6e5-5d7a-46a8-a5fb-5d47d665f193 | Status: 200 | Time: 0.000s
+2025-03-20 21:49:16,781 - kademia - INFO - Request started | 42dd3334-3c88-4772-ba1a-71dfe4189ef7 | GET /openapi.json
+2025-03-20 21:49:16,867 - kademia - INFO - Request completed | 42dd3334-3c88-4772-ba1a-71dfe4189ef7 | Status: 200 | Time: 0.086s

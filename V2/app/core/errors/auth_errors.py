@@ -1,6 +1,17 @@
-from jwt.exceptions import PyJWTError, ExpiredSignatureError, InvalidTokenError
+from .base_error import KademiaError
 
-class TokenError(Exception):
+class AuthError(KademiaError):
+    """Base exception for all authorization and authentication-related errors"""
+
+class InvalidUserError(AuthError):
+    def __init__(self, email_address: str):
+        self.user_message = "Invalid email or password"
+        self.log_message = f"Login attempted with Invalid email or password: User {email_address} "
+        super().__init__()
+
+
+#Token related errors
+class TokenError(AuthError):
     """Base exception for all token-related errors"""
 
 class TokenExpiredError(TokenError):

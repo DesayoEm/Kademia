@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-
 from .password_service import bcrypt_context
+from ...errors.auth_errors import InvalidUserError
 from ....database.models.users import Staff, Guardians, Students
 
 class AuthService:
@@ -8,10 +8,10 @@ class AuthService:
         self.session = session
 
     def authenticate_staff(self, email_address: str, password: str):
-        staff = self.session.query(Staff).filter(Staff.email_address == email_address
+        staff = self.session.query(Staff).filter(Staff.email_address == email_address.lower()
                         ).first()
         if not staff:
-            return False
+            raise InvalidUserError(email_address=email_address)
         if not bcrypt_context.verify(password, staff.password_hash):
-            return False
-        return True
+            raise InvalidUserError(email_address=email_address)
+        return staff

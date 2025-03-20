@@ -18,7 +18,7 @@ class UserValidators:
         return value.title()
 
     @staticmethod
-    def validate_staff_email(value: str):
+    def validate_staff_email(value: str):# FIX. Add more constraints
         if len(value.strip()) < 10:
             raise TextTooShortError
         return value.lower()

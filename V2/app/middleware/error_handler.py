@@ -14,7 +14,9 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
     error_map = {
 
-        # Token errors
+        # Auth errors
+        InvalidUserError: status.HTTP_401_UNAUTHORIZED,
+
         TokenError: status.HTTP_401_UNAUTHORIZED,
         TokenExpiredError: status.HTTP_401_UNAUTHORIZED,
         TokenInvalidError: status.HTTP_401_UNAUTHORIZED,

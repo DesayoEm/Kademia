@@ -1,10 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import timedelta
-from fastapi.security import OAuth2PasswordRequestForm
-from ...database.script import session
 from fastapi import Depends, APIRouter
 from ...database.session_manager import get_db
-from ...crud.student_organization.academic_levels import AcademicLevelCrud
 from ...core.services.auth.auth_service import AuthService
 from ...core.services.auth.token_service import TokenService
 from ...schemas.auth.staff_auth import StaffLogin
@@ -22,26 +19,29 @@ def login(
         db: Session = Depends(get_db)
 ):
     auth = AuthService(db)
+    #Authenticate
     staff = auth.authenticate_staff(login_data.email_address, login_data.password)
 
-    if not staff:
-        return JSONResponse(content={"message": "Failed authentication"}, status_code=401)
-
+    #Generate tokens
     access_token = token_service.create_access_token(
         user_data={
             'email': login_data.email_address,
-            'user_uid': "tr(login_data.uid)"
-            # 'user_uid': str(login_data.uid)
+            'user_id': str(staff.id),
+            'user_type':staff.user_type,
+            'staff_type':staff.staff_type,
+            'access_level':staff.access_level,
         }
     )
     refresh_token = token_service.create_access_token(
         user_data={
             'email': login_data.email_address,
-            'user_uid': "tr(login_data.uid)"
-            # 'user_uid': str(login_data.uid)
+            'user_id': str(staff.id),
+            'user_type': staff.user_type,
+            'staff_type': staff.staff_type,
+            'access_level': staff.access_level,
         },
         refresh=True,
-        expiry=timedelta(days=2)
+        expiry=timedelta(days=1)
     )
 
     return JSONResponse(
