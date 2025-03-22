@@ -22,7 +22,7 @@ class UserValidator:
         return value.title()
 
     @staticmethod
-    def validate_address(self, value:str):
+    def validate_address(value:str):
         if not value:
             raise EmptyFieldError(entry=value, domain=self.domain)
         if not value.strip():
@@ -43,8 +43,18 @@ class UserValidator:
 
         return value.lower()
 
+    def validate_email_address(self, value:str):# FIX. Add more constraints
+        if not value:
+            raise EmptyFieldError(entry=value, domain=self.domain)
+        if not value.strip():
+            raise BlankFieldError(entry=value, domain=self.domain)
+        if len(value.strip()) < 12:
+            raise TextTooShortError(entry=value, domain=self.domain, min_length=12)
+
+        return value.lower()
+
     @staticmethod
-    def validate_phone(self, value:str) -> str:
+    def validate_phone(value:str) -> str:
         """
         Validate that a phone number contains exactly 10 -11 digits and an optional
         '+' with a 2- digit country code.

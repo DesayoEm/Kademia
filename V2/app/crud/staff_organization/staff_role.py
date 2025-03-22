@@ -2,7 +2,7 @@ from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.role import (
     StaffRoleCreate, StaffRoleUpdate, StaffRoleResponse, RolesFilterParams
 )
-from ...core.factories.staff_organization.role import StaffRolesFactory
+from ...core.factories.staff_organization.role import StaffRoleFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
@@ -17,7 +17,7 @@ class StaffRoleCrud:
             session: SQLAlchemy database session
         """
         self.session = session
-        self.factory = StaffRolesFactory(session)
+        self.factory = StaffRoleFactory(session)
 
     # Active role operations
     def create_role(self, data: StaffRoleCreate) -> StaffRoleResponse:

@@ -1,66 +1,63 @@
 from ..common_imports import *
-from ..enums import ArchiveReason, AccessLevel, UserType
 from .base import UserBase, ProfileInDb
+from ..shared_models import *
+
+class GuardianFilterParams(BaseFilterParams):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
 
 
-class GuardiansBase(UserBase):
+class GuardianBase(UserBase):
     """Base model for a Guardian"""
-    access_level: AccessLevel
-    user_type: UserType
-    image_url: str | None = None
     email_address: str
     address: str
     phone: str
 
-
-    class Config:
-        from_attributes = True
-
-    json_schema_extra = {
-        "example": {
-            "first_name": "Bola",
-            "last_name": "Coker",
-            "gender": "MALE",
-            #Guardian specific fields
-            "access_level": "USER",
-            "image_url": "https://example.com/images/john-smith.jpg",
-            "email_address": "bola.coker@example.com",
-            "address": "123 Akala Express Ibadan",
-            "phone": "08012345678"
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
+                "first_name": "Bola",
+                "last_name": "Coker",
+                "gender": "MALE",
+                "email_address": "bola.coker@example.com",
+                "address": "123 Akala Express Ibadan",
+                "phone": "08012345678"
         }
         }
+    )
 
 
 
-class GuardianCreate(GuardiansBase):
+class GuardianCreate(GuardianBase):
     """Used for creating a new  Guardian"""
     pass
 
 
-class GuardiansUpdate(BaseModel):
+class GuardianUpdate(GuardianBase):
     """Used for updating a Guardian"""
     pass
 
 
-class GuardiansResponse(GuardiansBase):
+class GuardianResponse(GuardianBase):
     """Response model for a Guardian"""
     pass
 
 
-class GuardiansInDB(GuardiansBase, ProfileInDb):
+class GuardiansInDB(GuardianBase, ProfileInDb):
     """Represents a stored Guardian"""
 
-
-    json_schema_extra = {
-        "example": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
             #Base Profile fields
             "first_name": "Bola",
             "last_name": "Coker",
             "gender": "MALE",
             #Guardian specific fields
-            "access_level": "USER",
-            "user_type": "Guardian",
-            "image_url": "https://example.com/images/john-smith.jpg",
             "email_address": "bola.coker@example.com",
             "address": "123 Akala Express Ibadan",
             "phone": "08012345678",
@@ -78,4 +75,4 @@ class GuardiansInDB(GuardiansBase, ProfileInDb):
             "archived_by": None,
             "archive_reason": None
         }
-    }
+    })

@@ -2,13 +2,13 @@ from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.educator_qualification import (
     QualificationCreate, QualificationUpdate, QualificationResponse, QualificationFilterParams
 )
-from ...core.factories.staff_organization.qualification import QualificationsFactory
+from ...core.factories.staff_organization.qualification import QualificationFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
 
 
-class QualificationsCrud:
+class QualificationCrud:
     """CRUD operations for educator qualifications."""
 
     def __init__(self, session: Session):
@@ -17,7 +17,7 @@ class QualificationsCrud:
             session: SQLAlchemy database session
         """
         self.session = session
-        self.factory = QualificationsFactory(session)
+        self.factory = QualificationFactory(session)
 
     # Active qualification operations
     def create_qualification(self, data: QualificationCreate) -> QualificationResponse:

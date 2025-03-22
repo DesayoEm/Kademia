@@ -2,7 +2,7 @@ from ...database.models.data_enums import ArchiveReason
 from ...schemas.staff_organization.department import (
     StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
 )
-from ...core.factories.staff_organization.department import StaffDepartmentsFactory
+from ...core.factories.staff_organization.department import StaffDepartmentFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
@@ -17,7 +17,7 @@ class StaffDepartmentCrud:
             session: SQLAlchemy database session
         """
         self.session = session
-        self.factory = StaffDepartmentsFactory(session)
+        self.factory = StaffDepartmentFactory(session)
 
 
     def create_department(self, data: StaffDepartmentCreate) -> StaffDepartmentResponse:

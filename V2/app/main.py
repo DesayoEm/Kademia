@@ -16,7 +16,9 @@ from .routers.student_organization import (
     student_departments, archived_student_departments, academic_levels, archived_academic_levels,
     classes, archived_classes
 )
-from .routers.profiles.staff import staff, archived_staff
+from .routers.users.staff import staff, archived_staff
+from .routers.users.student import student, archived_student
+from .routers.users.guardian import guardian, archived_guardian
 from .routers.auth import staff_auth
 from .middleware.error_handler import ExceptionMiddleware
 from .log_service.logger import logger
@@ -36,14 +38,25 @@ app.include_router(staff_auth.router, prefix=f"/api/{version}/staff/auth",
 # /api/educators/
 # /api/support-staff/
 # /api/administrative-staff
-# /api/educators/
-# /api/support-staff/
-# /api/administrative-staff
+
 # Staff
 app.include_router(staff.router, prefix=f"/api/{version}/admin/staff",
                    tags=["Staff", "Admin"])
 app.include_router(archived_staff.router, prefix=f"/api/{version}/admin/archive/staff",
-                   tags=["Archived","Staff"])
+                   tags=["Archived","Staff", "Admin"])
+
+# Students
+app.include_router(student.router, prefix=f"/api/{version}/admin/students",
+                   tags=["Students", "Admin"])
+app.include_router(archived_student.router, prefix=f"/api/{version}/admin/archive/students",
+                   tags=["Archived","Students", "Admin"])
+
+# Guardians
+app.include_router(guardian.router, prefix=f"/api/{version}/admin/guardians",
+                   tags=["Guardians", "Admin"])
+app.include_router(archived_guardian.router, prefix=f"/api/{version}/admin/archive/guardians",
+                   tags=["Archived","Guardians", "Admin"])
+
 
 
 # Staff Departments

@@ -5,6 +5,7 @@ import time
 import uuid
 from ..core.errors.database_errors import *
 from ..core.errors.staff_organisation_errors import *
+from ..core.errors.input_validation_errors import *
 from ..core.errors.student_organisation_errors import *
 from ..core.errors.user_profile_errors import *
 from ..core.errors.auth_errors import *
@@ -34,6 +35,10 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         DateError: status.HTTP_400_BAD_REQUEST,
         EmptyFieldError: status.HTTP_400_BAD_REQUEST,
         BlankFieldError: status.HTTP_400_BAD_REQUEST,
+        InvalidCharacterError: status.HTTP_400_BAD_REQUEST,
+        InvalidCodeError: status.HTTP_400_BAD_REQUEST,
+        InvalidPhoneError: status.HTTP_400_BAD_REQUEST,
+        InvalidSessionYearError: status.HTTP_400_BAD_REQUEST,
 
         #Staff organization errors
         StaffEmptyFieldError: status.HTTP_400_BAD_REQUEST,
@@ -64,10 +69,6 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         DuplicateStudentDepartmentError: status.HTTP_409_CONFLICT,
 
         #Profile errors
-        ProfileTextTooShortError: status.HTTP_400_BAD_REQUEST,
-        ProfileDateError: status.HTTP_400_BAD_REQUEST,
-        ProfileEmptyFieldError: status.HTTP_400_BAD_REQUEST,
-        ProfileBlankFieldError: status.HTTP_400_BAD_REQUEST,
 
         StaffNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateStaffError: status.HTTP_409_CONFLICT,
@@ -76,6 +77,12 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
         StudentNotFoundError: status.HTTP_404_NOT_FOUND,
         RelatedStudentNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateStudentError: status.HTTP_409_CONFLICT,
+        DuplicateStudentIDError: status.HTTP_409_CONFLICT,
+
+        GuardianNotFoundError: status.HTTP_404_NOT_FOUND,
+        RelatedGuardianNotFoundError: status.HTTP_404_NOT_FOUND,
+        DuplicateGuardianError: status.HTTP_409_CONFLICT,
 
     }
 

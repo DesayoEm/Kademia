@@ -15,7 +15,6 @@ class StudentBase(UserBase):
 
 class StudentCreate(StudentBase):
     """Used for creating new students"""
-    student_id: str
     date_of_birth: date
     class_id: UUID
     level_id: UUID
@@ -59,7 +58,7 @@ class StudentUpdate(StudentBase):
 
 class StudentResponse(StudentCreate):
     """Response model for students"""
-    pass
+    student_id: str
 
 
 class StudentInDB(StudentBase, ProfileInDb):
