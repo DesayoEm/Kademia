@@ -49,7 +49,7 @@ class InvalidPhoneError(InputValidationError):
     """Raised when an input contains a numeric value."""
     def __init__(self, entry: str):
         super().__init__()
-        self.user_message = f"Field cannot contain a numeric character!"
+        self.user_message = f"Phone number must be in the following format: +[country code][number] (e.g., +2348056794506)"
         self.log_message = f"Phone number entry attempted with invalid format: {entry}"
 
 

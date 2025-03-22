@@ -7,7 +7,7 @@ from V2.app.main import app
 from V2.app.schemas.staff_organization.educator_qualification import(
     QualificationCreate, QualificationUpdate, QualificationResponse
 )
-from V2.app.database.models.data_enums import ArchiveReason
+from V2.app.database.models.enums import ArchiveReason
 
 client = TestClient(app)
 

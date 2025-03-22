@@ -1,6 +1,6 @@
 from .common_imports import *
 from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
-from .data_enums import ClassCode, ApprovalStatus
+from .enums import ClassCode, ApprovalStatus
 
 
 class AcademicLevel(Base, AuditMixins, TimeStampMixins, ArchiveMixins):

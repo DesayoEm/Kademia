@@ -6,6 +6,7 @@ class StudentFilterParams(BaseFilterParams):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     student_id: Optional[str] = None
+    order_by: Literal["last_name", "student_id"] = "last_name"
 
 class StudentBase(UserBase):
     """Base model for students"""

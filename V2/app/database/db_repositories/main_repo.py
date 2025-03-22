@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, List, Optional
 from uuid import UUID
 from ...database.models.common_imports import Base
-from ...database.models.data_enums import ArchiveReason
+from ...database.models.enums import ArchiveReason
 
 T = TypeVar('T', bound=Base)
 

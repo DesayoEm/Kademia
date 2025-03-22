@@ -8,7 +8,7 @@ from V2.app.schemas.staff_organization.department import (
     StaffDepartmentUpdate,
     DepartmentFilterParams
 )
-from V2.app.database.models.data_enums import ArchiveReason
+from V2.app.database.models.enums import ArchiveReason
 
 @pytest.fixture
 def mock_factory():

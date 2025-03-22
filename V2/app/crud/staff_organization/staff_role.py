@@ -1,4 +1,4 @@
-from ...database.models.data_enums import ArchiveReason
+from ...database.models.enums import ArchiveReason
 from ...schemas.staff_organization.role import (
     StaffRoleCreate, StaffRoleUpdate, StaffRoleResponse, RolesFilterParams
 )

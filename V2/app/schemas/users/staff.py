@@ -1,12 +1,12 @@
 from ..common_imports import *
 from ..shared_models import *
-from ..enums import AccessLevel, UserType, StaffType, StaffAvailability, EmploymentStatus
+from ..enums import UserType, StaffType, StaffAvailability, EmploymentStatus
 from .base import UserBase, ProfileInDb
 
 class StaffFilterParams(BaseFilterParams):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
-    order_by: Literal["name", "created_at"] = "name"
+    order_by: Literal["last_name", "created_at"] = "last_name"
 
 class StaffEnumsRequest(BaseModel):
     user_type: UserType
@@ -18,7 +18,6 @@ class StaffBase(UserBase):
     """Base model for staff"""
     user_type: UserType
     status: EmploymentStatus
-    availability: StaffAvailability
     staff_type: StaffType
     email_address: str
     address: str
@@ -38,11 +37,10 @@ class StaffBase(UserBase):
             # Staff specific fields
             "user_type": "STAFF",
             "status": "ACTIVE",
-            "availability": "AVAILABLE",
             "staff_type": "Educator",
             "email_address": "aina.folu@example.com",
             "address": "456 Allen Avenue, Lagos",
-            "phone": "08087654321",
+            "phone": "+2348056794345",
             "department_id": "00000000-0000-0000-0000-000000000001",
             "role_id": "00000000-0000-0000-0000-000000000002",
             "date_joined": "2024-01-15",
@@ -63,17 +61,16 @@ class StaffUpdate(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "first_name": "Aina",
-                "last_name": "Folu",
+                "first_name": "Silver",
+                "last_name": "Kincaid",
                 "gender": "FEMALE",
                 # Staff specific fields
                 "user_type": "STAFF",
                 "status": "ACTIVE",
-                "availability": "AVAILABLE",
-                "staff_type": "Operations",
-                "email_address": "aina.folu@example.com",
+                "staff_type": "Admin",
+                "email_address": "aina.kincaid@example.com",
                 "address": "456 Allen Avenue, Lagos",
-                "phone": "08087654321",
+                "phone": "+2348056794506",
                 "department_id": "00000000-0000-0000-0000-000000000001",
                 "role_id": "00000000-0000-0000-0000-000000000002",
                 "date_joined": "2024-01-15",

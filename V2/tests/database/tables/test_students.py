@@ -81,7 +81,7 @@ def test_model_structure_nullable_constraints(db_inspector):
         "image_url": True,
         "class_id": False,
         "level_id": False,
-        "department_id": False,
+        "department_id": True,
         "guardian_id": False,
         "is_repeating": False,
         "admission_date":False,

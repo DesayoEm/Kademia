@@ -1,5 +1,5 @@
 from .common_imports import *
-from .data_enums import AccessLevel
+from .enums import AccessLevel
 
 
 class AccessLevelChange(Base):

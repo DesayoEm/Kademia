@@ -44,20 +44,20 @@
 
 ### 3. User Management Services
 - [x] Staff service
-- [ ] Parent service
-- [ ] Student service
+- [x] Parent service
+- [x] Student service
 
 ## Phase 2: Authentication & Security
 ### 1. Authentication
 - [x] Password hashing service
-- [ ] JWT token service
-- [ ] Authentication service
+- [x] JWT token service
+- [x] Authentication service
 - [ ] Login/Registration flows
 
 ### 2. Exception Handling
 - [x] Base exception classes
-- [ ] Authentication exceptions
-- [ ] Resource exceptions
+- [x] Authentication exceptions
+- [x] Resource exceptions
 - [x] Validation exceptions
 - [x] Global exception handler
 
@@ -68,13 +68,13 @@
 - [ ] Profile management endpoints
 
 ### 2. Core Routes
-- [ ] Staff routes
-- [ ] Student routes
-- [ ] Parent routes
+- [x] Staff routes
+- [x] Student routes
+- [x] Parent routes
 - [x]  Department routes
 - [x]  Class routes
-- [ ]  Subject routes
-- [ ]  Grade routes
+- [x]  Subject routes
+- [x]  Grade routes
 
 ### 4. Academic Services
 - [ ] Subject management service

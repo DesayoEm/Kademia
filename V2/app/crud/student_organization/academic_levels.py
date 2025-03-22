@@ -1,4 +1,4 @@
-from ...database.models.data_enums import ArchiveReason
+from ...database.models.enums import ArchiveReason
 from ...schemas.student_organization.academic_level import (
     AcademicLevelCreate, AcademicLevelUpdate, AcademicLevelResponse, AcademicLevelFilterParams
 )

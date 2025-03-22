@@ -6,6 +6,7 @@ def test_model_structure_column_data_types(db_inspector):
     expected_types = {
         "id": UUID,
         "name": String,
+        "code": String,
         "description": String,
         "mentor_id": UUID,
         "student_rep_id": UUID,
@@ -67,7 +68,7 @@ def test_model_structure_default_values(db_inspector):
     fields_without_defaults = [
         'id', 'created_at', 'created_by', 'student_rep_id', 'assistant_rep_id',
         'last_modified_at', 'last_modified_by','is_archived', 'archived_at',
-        'archive_reason','name', 'description', 'mentor_id'
+        'archive_reason','name', 'description', 'mentor_id', "code"
     ]
 
     for field in fields_without_defaults:
@@ -80,6 +81,7 @@ def test_model_structure_string_column_length(db_inspector):
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     assert columns['name']['type'].length == 30
+    assert columns['code']['type'].length == 3
     assert columns['description']['type'].length == 500
 
 

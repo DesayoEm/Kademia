@@ -2,7 +2,7 @@ from .common_test_imports import *
 
 def test_model_structure_column_data_types(db_inspector):
     """Ensure all required columns are present and have the correct data type"""
-    table ='student_repetitions'
+    table ='repetitions'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
         "id": UUID,
@@ -39,7 +39,7 @@ def test_model_structure_column_data_types(db_inspector):
 
 def test_model_structure_nullable_constraints(db_inspector):
     """Ensure correctness of  nullable and not nullable fields"""
-    table = 'student_repetitions'
+    table = 'repetitions'
     columns = db_inspector.get_columns(table)
 
     expected_nullable = {
@@ -73,7 +73,7 @@ def test_model_structure_nullable_constraints(db_inspector):
 def test_model_structure_default_values(db_inspector):
     """Ensure no default values are set at database level since they're handled
    at the application level"""
-    table = 'student_repetitions'
+    table = 'repetitions'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     fields_without_defaults = [
@@ -89,7 +89,7 @@ def test_model_structure_default_values(db_inspector):
 
 def test_model_structure_string_column_length(db_inspector):
     """Ensure columns with String type have the correct max lengths"""
-    table = 'student_repetitions'
+    table = 'repetitions'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     assert columns['reason']['type'].length == 500
@@ -98,7 +98,7 @@ def test_model_structure_string_column_length(db_inspector):
 
 def test_model_structure_foreign_keys(db_inspector):
     """Ensure that column foreign keys are correctly defined"""
-    table = 'student_repetitions'
+    table = 'repetitions'
     foreign_keys = db_inspector.get_foreign_keys(table)
     student_fk = next(
         (fk for fk in foreign_keys if fk['constrained_columns'] == ['student_id']),

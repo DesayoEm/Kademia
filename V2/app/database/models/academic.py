@@ -1,5 +1,5 @@
 from .common_imports import *
-from .data_enums import (Term, ApprovalStatus, GradeType)
+from .enums import (Term, ApprovalStatus, GradeType)
 from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 
 

@@ -2,7 +2,7 @@ from .common_test_imports import *
 
 def test_model_structure_column_data_types(db_inspector):
     """Ensure all required columns are present and have the correct data type"""
-    table = 'operations'
+    table = 'support_staff'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
     expected_types = {
         "id": UUID
@@ -11,9 +11,10 @@ def test_model_structure_column_data_types(db_inspector):
         assert isinstance(columns[column]['type'], expected_type), f"{column} has incorrect type"
 
 
+
 def test_model_structure_nullable_constraints(db_inspector):
     """Ensure correctness of  nullable and not nullable fields"""
-    table = 'operations'
+    table = 'support_staff'
     columns = db_inspector.get_columns(table)
 
     expected_nullable = {
@@ -27,8 +28,8 @@ def test_model_structure_nullable_constraints(db_inspector):
 
 def test_model_structure_default_values(db_inspector):
     """Ensure no default values are set at database level since they're handled
-    at the application level"""
-    table = 'operations'
+      at the application level"""
+    table = 'support_staff'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}
 
     fields_without_defaults = [
@@ -38,9 +39,10 @@ def test_model_structure_default_values(db_inspector):
     for field in fields_without_defaults:
         assert columns[field]['default'] is None, f"{field} should not have a default value"
 
+
 def test_model_structure_foreign_keys(db_inspector):
     """Ensure that column foreign keys are correctly defined"""
-    table = 'operations'
+    table = 'support_staff'
     foreign_keys = db_inspector.get_foreign_keys(table)
     id_fk = next(
         (fk for fk in foreign_keys if fk['constrained_columns'] == ['id']),

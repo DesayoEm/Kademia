@@ -1,5 +1,5 @@
 from .common_imports import *
-from .data_enums import DocumentType
+from .enums import DocumentType
 from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 
 

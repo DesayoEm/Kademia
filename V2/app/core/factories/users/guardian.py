@@ -5,7 +5,7 @@ from ....core.errors.database_errors import RelationshipError, UniqueViolationEr
 from ...errors.user_profile_errors import DuplicateGuardianError,GuardianNotFoundError
 from ...services.auth.password_service import PasswordService
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
-from ....database.models.data_enums import ArchiveReason
+from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....database.models.users import Guardian
 

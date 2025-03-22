@@ -1,5 +1,5 @@
 from .common_imports import *
-from .data_enums import StaffType, Gender, UserType, AccessLevel, StudentStatus, StaffAvailability, EmploymentStatus
+from .enums import StaffType, Gender, UserType, AccessLevel, StudentStatus, StaffAvailability, EmploymentStatus
 from .mixins import AuditMixins, TimeStampMixins, ArchiveMixins
 
 
@@ -43,7 +43,7 @@ class Student(UserBase):
             ondelete='RESTRICT',name='fk_students_classes_class_id')
         )
     department_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True),ForeignKey('student_departments.id',
-            ondelete='RESTRICT',name='fk_students_student_departments_department_id')
+            ondelete='RESTRICT',name='fk_students_student_departments_department_id'),  nullable = True
         )
     is_repeating: Mapped[bool] = mapped_column(Boolean, default=False)
     session_start_year: Mapped[int] = mapped_column(Integer)
@@ -123,13 +123,11 @@ class Staff(UserBase):
     address: Mapped[str] = mapped_column(String(500))
     phone: Mapped[str] = mapped_column(String(14), unique=True)
     department_id: Mapped[UUID] = mapped_column(
-        ForeignKey('staff_departments.id', ondelete='RESTRICT', name='fk_staff_staff_departments_department_id'),
-        nullable=True
+        ForeignKey('staff_departments.id', ondelete='RESTRICT', name='fk_staff_staff_departments_department_id')
     )
-
     role_id: Mapped[UUID] = mapped_column(
         ForeignKey('staff_roles.id', ondelete='RESTRICT', name='fk_staff_staff_roles_role_id'),
-        nullable=True)
+    )
     date_joined: Mapped[date] = mapped_column(Date)
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
 
@@ -191,18 +189,18 @@ class Educator(Staff):
         return f"Educator(name={self.first_name} {self.last_name})"
 
 
-class OperationStaff(Staff):
+class AdminStaff(Staff):
     """
     Represents an operations staff member, inheriting from Staff.
     """
-    __tablename__ = 'operations_staff'
+    __tablename__ = 'admin_staff'
 
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
             name='fk_operations_staff_id'),primary_key=True
         )
 
     __mapper_args__ = {
-        'polymorphic_identity': 'Operations',
+        'polymorphic_identity': 'Admin',
         'inherit_condition': (id == Staff.id)
     }
 

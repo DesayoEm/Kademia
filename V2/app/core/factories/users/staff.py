@@ -4,12 +4,12 @@ from sqlalchemy.orm import Session
 
 from ...errors.staff_organisation_errors import RelatedRoleNotFoundError, RelatedDepartmentNotFoundError
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
-from ....core.errors.user_profile_errors import DuplicateStaffError, StaffNotFoundError
+from ....core.errors.user_profile_errors import DuplicateStaffError, StaffNotFoundError, StaffTypeError
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
-from ....database.models.data_enums import ArchiveReason
+from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....core.services.auth.password_service import PasswordService
-from ....database.models.users import Staff, Educator, SupportStaff, OperationStaff
+from ....database.models.users import Staff, Educator, SupportStaff, AdminStaff
 
 
 
@@ -41,7 +41,6 @@ class StaffFactory:
                 "password_hash": self.password_service.hash_password(password),
                 "gender": data.gender,
                 "status": data.status,
-                "availability": data.availability,
                 "email_address": self.validator.validate_staff_email(data.email_address),
                 "address": self.validator.validate_address(data.address),
                 "phone": self.validator.validate_phone(data.phone),
@@ -54,14 +53,15 @@ class StaffFactory:
 
             if data.staff_type == "Educator":
                 return Educator(**common_attrs)
-            elif data.staff_type == "Operations":
-                return OperationStaff(**common_attrs)
+            elif data.staff_type == "Admin":
+                return AdminStaff(**common_attrs)
             elif data.staff_type == "Support":
                 return SupportStaff(**common_attrs)
             else:
-                valid_types = ["Educator", "Operations", "Support"]
-                raise ValueError(f"Invalid staff_type: {data.staff_type}. Valid types are: {valid_types}")
-
+                raise StaffTypeError(
+                    valid_types=["Educator", "Admin", "Support"],
+                    input_value=data.staff_type
+                )
         new_staff = create_staff_instance(staff_data)
 
         try:

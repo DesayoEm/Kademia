@@ -32,7 +32,7 @@ class AcademicLevel(str, Enum):
 
 class StaffType(str, Enum):
     Educator = 'Educator'
-    Operations = 'Operations'
+    Admin = 'Admin'
     Support = 'Support'
     System = 'System'
 

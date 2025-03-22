@@ -1,6 +1,6 @@
 from .common_imports import Base
 
-from .users import Student, Guardian, Staff, Educator, OperationStaff, SupportStaff, System
+from .users import Student, Guardian, Staff, Educator, AdminStaff, SupportStaff, System
 from .documents import StudentDocument
 from .auth_models import AccessLevelChange
 from .staff_organization import StaffDepartment, StaffRole, EducatorQualification
@@ -14,7 +14,7 @@ __all__ = [
     "Guardian",
     "Staff",
     "Educator",
-    "OperationStaff",
+    "AdminStaff",
     "SupportStaff",
     "System",
     "StudentDocument",

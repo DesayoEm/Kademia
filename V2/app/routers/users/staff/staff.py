@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from ....database.models.data_enums import ArchiveReason
+from ....database.models.enums import ArchiveReason
 from ....schemas.users.staff import StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams
 from fastapi import Depends, APIRouter
 from ....database.session_manager import get_db

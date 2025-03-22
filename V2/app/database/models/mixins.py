@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from sqlalchemy import Boolean, DateTime, String, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column
 from uuid import UUID
-from .data_enums import ArchiveReason
+from .enums import ArchiveReason
 from sqlalchemy import Enum
 
 

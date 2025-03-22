@@ -7,7 +7,7 @@ from ..tests.utils.pytest_utils import pytest_collection_modifyitems
 from .test_db import TEST_DB_URL
 
 from ..app.database.models.users import System
-from ..app.database.models.data_enums import Gender, AccessLevel, UserType, StaffType, EmploymentStatus, StaffAvailability
+from ..app.database.models.enums import Gender, AccessLevel, UserType, StaffType, EmploymentStatus, StaffAvailability
 from uuid import UUID
 
 

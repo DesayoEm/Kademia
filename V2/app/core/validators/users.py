@@ -21,8 +21,8 @@ class UserValidator:
 
         return value.title()
 
-    @staticmethod
-    def validate_address(value:str):
+
+    def validate_address(self, value:str):
         if not value:
             raise EmptyFieldError(entry=value, domain=self.domain)
         if not value.strip():
@@ -32,7 +32,7 @@ class UserValidator:
 
         return value.title()
 
-    @staticmethod
+
     def validate_staff_email(self, value:str):# FIX. Add more constraints
         if not value:
             raise EmptyFieldError(entry=value, domain=self.domain)
@@ -54,22 +54,30 @@ class UserValidator:
         return value.lower()
 
     @staticmethod
-    def validate_phone(value:str) -> str:
+    def validate_phone(value: str) -> str:
         """
-        Validate that a phone number contains exactly 10 -11 digits and an optional
-        '+' with a 2- digit country code.
+        Validates phone numbers in E.164 format.
+        All phone numbers must include the country code with a '+' prefix.
+        Args:
+            value: Phone number input to validate
+        Returns:
+            Cleaned phone number string in E.164 format
+        Raises:
+            InvalidPhoneError: If the phone number format is invalid
         """
-        phone_pattern = re.compile(r"^(?:\+?\d{2})?\d{10,11}$")
-        if not phone_pattern.match(value.strip()):
+        cleaned_number = re.sub(r'[\s\-\(\)]', '', value.strip())
+        e164_pattern = re.compile(r'^\+\d{1,3}\d{8,12}$')
+
+        if e164_pattern.match(cleaned_number):
+            return cleaned_number
+        else:
             raise InvalidPhoneError(entry=value)
 
-        return value
 
-    @staticmethod
-    def validate_date(date_input: date) -> date:
+    def validate_date(self, date_input: date) -> date:
         """Validate that date is not in the future."""
         if date_input > date.today():
-            raise DateError
+            raise DateError(date_input=date_input, domain = self.domain)
         return date_input
 
     @staticmethod

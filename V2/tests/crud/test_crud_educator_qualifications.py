@@ -6,7 +6,7 @@ from V2.app.crud.staff_organization.staff_role import StaffRoleCrud
 from V2.app.schemas.staff_organization.role import (
     StaffRoleCreate, StaffRoleUpdate, RolesFilterParams, StaffRoleResponse
 )
-from V2.app.database.models.data_enums import ArchiveReason
+from V2.app.database.models.enums import ArchiveReason
 
 @pytest.fixture
 def mock_factory():

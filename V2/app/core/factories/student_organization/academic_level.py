@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from ....core.services.student_organization.academic_level import AcademicLevelService
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
-from ....database.models.data_enums import ArchiveReason
+from ....database.models.enums import ArchiveReason
 from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError
 from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import AcademicLevel

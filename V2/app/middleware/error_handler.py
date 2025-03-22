@@ -70,6 +70,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
         #Profile errors
 
+        StaffTypeError: status.HTTP_400_BAD_REQUEST,
         StaffNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateStaffError: status.HTTP_409_CONFLICT,
         RelatedStaffNotFoundError: status.HTTP_404_NOT_FOUND,

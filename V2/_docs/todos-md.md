@@ -1,5 +1,17 @@
 # Technical Debt & TODOS
 
+## Phone number validation and unique constraints
+**Priority: Medium**
+**Target Resolution: Before Production**
+
+### Current Implementation
+- There are 2 phone number formats(With and without country code)
+- The same number can be entered into the db with different formats
+
+**Status: Complete**  
+
+
+
 ## Foreign key custom validation
 **Priority: High**  
 **Target Resolution: Before Production**

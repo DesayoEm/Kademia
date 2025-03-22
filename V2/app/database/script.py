@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from V2.app.database.models import StaffDepartment, StaffRole
 from V2.app.database.models.users import System
-from V2.app.database.models.data_enums import (
+from V2.app.database.models.enums import (
     AccessLevel, EmploymentStatus, StaffAvailability, Gender, UserType, StaffType
 )
 from V2.app.database.db_config import engine

@@ -37,6 +37,16 @@ class RelatedEducatorNotFoundError(UserProfileError, RelationshipError):
         self.user_message = f"Related educator not found!"
         self.log_message = f"Error during during fk insertion of Educator with id:{id} during {action} operation. Detail {detail}"
 
+class StaffTypeError(UserProfileError):
+    """Raised when an invalid staff type is entered"""
+    valid_types = ["Educator", "Admin", "Support"]
+    def __init__(self, valid_types: list, input_value: str):
+        self.user_message = f"Invalid staff_type: {input_value}. Valid types are: {valid_types}"
+        self.log_message = f"Invalid staff type entered: {input_value}."
+
+
+
+
 # Student-specific errors
 class DuplicateStudentIDError(UserProfileError, UniqueViolationError):
     def __init__(self, stu_id: str, detail: str):
@@ -53,7 +63,7 @@ class DuplicateStudentError(UserProfileError, UniqueViolationError):
 class StudentNotFoundError(UserProfileError, EntityNotFoundError):
     """Raised when a staff account is not found."""
     def __init__(self, id: UUID, detail: str):
-        EntityNotFoundError.__init__(self, entity_type="Staff", identifier=str(id), error = detail)
+        EntityNotFoundError.__init__(self, entity_type="Student", identifier=str(id), error = detail)
         self.user_message = f"Student not found!"
         self.log_message = f"Student with id:{id} not found. Detail {detail}"
 
@@ -82,6 +92,6 @@ class DuplicateGuardianError(UserProfileError, UniqueViolationError):
 class GuardianNotFoundError(UserProfileError, EntityNotFoundError):
     """Raised when a staff account is not found."""
     def __init__(self, id: UUID, detail: str):
-        EntityNotFoundError.__init__(self, entity_type="Staff", identifier=str(id), error = detail)
+        EntityNotFoundError.__init__(self, entity_type="Guardian", identifier=str(id), error = detail)
         self.user_message = f"Guardian not found!"
         self.log_message = f"Guardian with id:{id} not found. Detail {detail}"

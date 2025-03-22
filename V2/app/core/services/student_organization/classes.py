@@ -2,13 +2,13 @@ from sqlalchemy import func
 from uuid import UUID
 from sqlalchemy.orm import Session
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
-from ....core.validators.student_organization import StudentOrganizationValidators
+from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import Classes
 
 class ClassService:
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(Classes, session)
-        self.validator = StudentOrganizationValidators()
+        self.validator = StudentOrganizationValidator()
 
     def create_order(self, level_id: UUID) -> int:
         """Create a new order value by getting the max order + 1 for the given level"""
