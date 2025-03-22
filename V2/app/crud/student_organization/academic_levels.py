@@ -1,5 +1,5 @@
 from ...database.models.data_enums import ArchiveReason
-from ...schemas.student_organization.academic_levels import (
+from ...schemas.student_organization.academic_level import (
     AcademicLevelCreate, AcademicLevelUpdate, AcademicLevelResponse, AcademicLevelFilterParams
 )
 from ...core.factories.student_organization.academic_level import AcademicLevelFactory

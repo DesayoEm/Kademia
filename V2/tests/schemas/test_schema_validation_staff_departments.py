@@ -1,4 +1,4 @@
-from ...app.schemas.staff_organization.staff_departments import StaffDepartmentCreate
+from ...app.schemas.staff_organization.department import StaffDepartmentCreate
 
 def test_unit_schema_qualification_validation():
     valid_data = {"name":"Education",

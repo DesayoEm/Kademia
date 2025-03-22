@@ -2,12 +2,12 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 
 from ...database.models.data_enums import ArchiveReason
-from ...schemas.staff_organization.educator_qualifications import(
+from ...schemas.staff_organization.educator_qualification import(
     QualificationCreate, QualificationUpdate, QualificationResponse, QualificationFilterParams
 )
 from fastapi import Depends, APIRouter
 from ...database.session_manager import get_db
-from ...crud.staff_organization.educator_qualifications import QualificationsCrud
+from ...crud.staff_organization.educator_qualification import QualificationsCrud
 from ...schemas.shared_models import ArchiveRequest
 from fastapi import Query
 from typing import Annotated

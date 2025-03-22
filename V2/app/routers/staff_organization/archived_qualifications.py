@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
-from ...schemas.staff_organization.educator_qualifications import QualificationResponse, QualificationFilterParams
+from ...schemas.staff_organization.educator_qualification import QualificationResponse, QualificationFilterParams
 from fastapi import Depends, APIRouter
 from ...database.session_manager import get_db
-from ...crud.staff_organization.educator_qualifications import QualificationsCrud
+from ...crud.staff_organization.educator_qualification import QualificationsCrud
 from fastapi import Query
 from typing import Annotated
 

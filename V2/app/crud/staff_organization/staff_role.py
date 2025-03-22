@@ -1,5 +1,5 @@
 from ...database.models.data_enums import ArchiveReason
-from ...schemas.staff_organization.staff_roles import (
+from ...schemas.staff_organization.role import (
     StaffRoleCreate, StaffRoleUpdate, StaffRoleResponse, RolesFilterParams
 )
 from ...core.factories.staff_organization.role import StaffRolesFactory

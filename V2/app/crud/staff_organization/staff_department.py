@@ -1,5 +1,5 @@
 from ...database.models.data_enums import ArchiveReason
-from ...schemas.staff_organization.staff_departments import (
+from ...schemas.staff_organization.department import (
     StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
 )
 from ...core.factories.staff_organization.department import StaffDepartmentsFactory

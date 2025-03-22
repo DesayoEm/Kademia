@@ -4,12 +4,12 @@ from sqlalchemy.orm import Session
 
 from ...errors.staff_organisation_errors import RelatedRoleNotFoundError, RelatedDepartmentNotFoundError
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
-from ....core.errors.profile_errors import DuplicateStaffError, StaffNotFoundError
+from ....core.errors.user_profile_errors import DuplicateStaffError, StaffNotFoundError
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
 from ....database.models.data_enums import ArchiveReason
-from ....core.validators.users import UserValidators
+from ....core.validators.users import UserValidator
 from ....core.services.auth.password_service import PasswordService
-from ....database.models.users import Staff, Educator, Support, Operations
+from ....database.models.users import Staff, Educator, SupportStaff, OperationStaff
 
 
 
@@ -21,7 +21,7 @@ class StaffFactory:
 
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(Staff, session)
-        self.validator = UserValidators()
+        self.validator = UserValidator()
         self.password_service = PasswordService()
 
     def create_staff(self, staff_data) -> Staff:
@@ -55,9 +55,9 @@ class StaffFactory:
             if data.staff_type == "Educator":
                 return Educator(**common_attrs)
             elif data.staff_type == "Operations":
-                return Operations(**common_attrs)
+                return OperationStaff(**common_attrs)
             elif data.staff_type == "Support":
-                return Support(**common_attrs)
+                return SupportStaff(**common_attrs)
             else:
                 valid_types = ["Educator", "Operations", "Support"]
                 raise ValueError(f"Invalid staff_type: {data.staff_type}. Valid types are: {valid_types}")

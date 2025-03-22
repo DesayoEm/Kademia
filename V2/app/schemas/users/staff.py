@@ -1,7 +1,7 @@
 from ..common_imports import *
 from ..shared_models import *
 from ..enums import AccessLevel, UserType, StaffType, StaffAvailability, EmploymentStatus
-from .base import ProfileBase, ProfileInDb
+from .base import UserBase, ProfileInDb
 
 class StaffFilterParams(BaseFilterParams):
     first_name: Optional[str] = None
@@ -14,7 +14,7 @@ class StaffEnumsRequest(BaseModel):
     staff_availability: StaffAvailability
     status: EmploymentStatus
     
-class StaffBase(ProfileBase):
+class StaffBase(UserBase):
     """Base model for staff"""
     user_type: UserType
     status: EmploymentStatus

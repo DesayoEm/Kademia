@@ -1,5 +1,5 @@
 from ...database.models.data_enums import ArchiveReason
-from ...schemas.staff_organization.educator_qualifications import (
+from ...schemas.staff_organization.educator_qualification import (
     QualificationCreate, QualificationUpdate, QualificationResponse, QualificationFilterParams
 )
 from ...core.factories.staff_organization.qualification import QualificationsFactory

@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
-from ...schemas.staff_organization.staff_departments import StaffDepartmentResponse, DepartmentFilterParams
+from ...schemas.staff_organization.department import StaffDepartmentResponse, DepartmentFilterParams
 from fastapi import Depends, APIRouter
 from ...database.session_manager import get_db
-from ...crud.staff_organization.staff_departments import StaffDepartmentCrud
+from ...crud.staff_organization.staff_department import StaffDepartmentCrud
 from fastapi import Query
 from typing import Annotated
 

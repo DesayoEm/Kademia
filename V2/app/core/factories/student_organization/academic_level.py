@@ -2,11 +2,11 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ....core.services.student_organization.academic_levels import AcademicLevelService
+from ....core.services.student_organization.academic_level import AcademicLevelService
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
 from ....database.models.data_enums import ArchiveReason
 from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError
-from ....core.validators.student_organization import StudentOrganizationValidators
+from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import AcademicLevel
 from ....core.errors.student_organisation_errors import (
     DuplicateLevelError, LevelNotFoundError
@@ -18,7 +18,7 @@ class AcademicLevelFactory:
     """Factory class for managing academic level operations."""
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(AcademicLevel, session)
-        self.validator = StudentOrganizationValidators()
+        self.validator = StudentOrganizationValidator()
         self.service = AcademicLevelService(session)
 
     def create_academic_level(self, new_academic_level) -> AcademicLevel:

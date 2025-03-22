@@ -1,155 +1,214 @@
-from sqlalchemy import func
-from sqlalchemy.exc import IntegrityError
-from uuid import uuid4
-
-from .exceptions.profiles import NoArchiveRecords
-from ..database.models.data_enums import ArchiveReason
-from ..schemas.profiles import NewStudent, UpdateStudent, Student
-from ..database.models.profiles import Students
+from typing import List
+from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-from ..services.profile_validation import profile_validator
-from ..services.exceptions.profiles import DuplicateStudentIDError, StudentNotFoundError, ArchivedStudentNotFound
-from ..services.base import CrudService
-SYSTEM_USER_ID="00000000-0000-0000-0000-000000000000"
+from ...errors.student_organisation_errors import(
+RelatedLevelNotFoundError, RelatedClassNotFoundError,
+RelatedStudentDepartmentNotFoundError as RelatedDepartmentNotFoundError,
+    )
+from ....core.errors.database_errors import (
+    RelationshipError, UniqueViolationError,EntityNotFoundError
+    )
+from ...errors.user_profile_errors import (
+    DuplicateStudentIDError, DuplicateStudentError, RelatedGuardianNotFoundError, StudentNotFoundError
+)
+from ...services.auth.password_service import PasswordService
+from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
+from ....database.models.data_enums import ArchiveReason
+from ....core.validators.users import UserValidator
+from ....core.services.users.student_service import StudentService
+from ....database.models.users import Student
+
+SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
 
-class StudentService(CrudService):
-    def __init__(self, db:Session):
-        super().__init__(db, Students)
-        self.profile_validator = profile_validator
+class StudentFactory:
+    """Factory class for managing student operations."""
 
-    def create_student(self, new_student:NewStudent):
-        data = new_student.model_dump()
-        data['id'] = uuid4()
-        student_id = data['student_id'].strip()
-        student_id  = self.profile_validator.validate_student_id(student_id)
-
-        new_student = Students(**data)
-        try:
-            self.db.add(new_student)
-            self.db.commit()
-            return Student.model_validate(new_student)
-        except IntegrityError:
-            self.db.rollback()
-            raise DuplicateStudentIDError(student_id)
+    def __init__(self, session: Session):
+        self.repository = SQLAlchemyRepository(Student, session)
+        self.validator = UserValidator()
+        self.password_service = PasswordService()
+        self.student_service = StudentService(session)
 
 
-    def get_active_students(self) -> list[Student]:
-        students = (self.base_query()
-                    .filter(Students.is_graduated == False)
-                    .order_by(Students.first_name).all())
-        return [Student.model_validate(student) for student in students]
-
-
-    def get_active_student(self, student_id: str) -> dict:
-        student = (
-            self.base_query()
-            .filter(func.lower(Students.student_id) == student_id.strip().lower())
-            .first()
+    def create_student(self, student_data) -> Student:
+        """Create a new student.
+        Args:
+            student_data: student data
+        Returns:
+            student: Created student record
+        """
+        password = student_data.last_name.title()
+        from uuid import uuid4
+        new_student = Student(
+            id=uuid4(),
+            first_name=self.validator.validate_name(student_data.first_name),
+            last_name=self.validator.validate_name(student_data.last_name),
+            password_hash=self.password_service.hash_password(password),
+            guardian_id=student_data.guardian_id,
+            student_id = self.student_service.generate_student_id(),#Think
+            gender=student_data.gender,
+            date_of_birth = self.validator.validate_date(student_data.date_of_birth),#Think. does student DOB need more constraints
+            level_id=student_data.level_id,
+            class_id=student_data.class_id,
+            department_id=student_data.department_id,
+            session_start_year=self.validator.validate_session_start_year(student_data.session_start_year),
         )
-        if not student:
-            raise StudentNotFoundError
-        return student
-        # student_model = Student.model_validate(student)
-        # return student_model.model_dump(exclude={"is_active", "last_login", "is_soft_deleted",
-        #                                    "deleted_at", "deleted_by", "deletion_reason",
-        #                                    "deletion_eligible"})
-
-
-
-
-    def update_active_student(self, student_id:str, data:UpdateStudent):
-        student= self.get_student(student_id)
         try:
-            for key,value in data.model_dump(exclude_unset=True).items():
-                setattr(student, key, value)
-            self.db.commit()
-            self.db.refresh(student)
-            return student
-        except IntegrityError:
-            self.db.rollback()
-            raise DuplicateStudentIDError(data['student_id'])
+            return self.repository.create(new_student)
+        except UniqueViolationError as e:
+            error_message = str(e).lower()
+            if "students_student_id_key" in error_message:
+                raise DuplicateStudentIDError(
+                    stu_id=new_student.student_id, detail=error_message
+                )
+            else:
+                raise DuplicateStudentError(
+                    input_value="unknown field",detail=error_message)
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'guardian_id': RelatedGuardianNotFoundError,
+                'department_id': RelatedDepartmentNotFoundError,
+                'level_id': RelatedLevelNotFoundError,
+                'class_id': RelatedClassNotFoundError,
+                }
+            for field, error_class in fk_error_mapping.items():
+                if field in error_message:
+                    if hasattr(student_data, field):
+                        entity_id = getattr(student_data, field)
+                        raise error_class(id=entity_id, detail=str(e), action='create')
+                    else:
+                        raise RelationshipError(error=str(e), operation='create', entity='unknown_entity')
 
 
-    def archive_active_student(self, student_id:str, reason: ArchiveReason):
-        student= self.get_active_student(student_id)
-        #archive all related records first
-        for doc in student.documents_owned:
-            doc.archive(SYSTEM_USER_ID, reason)
-
-        for grade in student.grades:
-            grade.archive(SYSTEM_USER_ID, reason)
-
-        for total_grade in student.total_grades:
-            total_grade.archive(SYSTEM_USER_ID, reason)
-
-        for transfer in student.transfers:
-            transfer.archive(SYSTEM_USER_ID, reason)
-
-        for repetition in student.classes_repeated:
-            repetition.archive(SYSTEM_USER_ID, reason)
-
-        student.archive(SYSTEM_USER_ID, reason)
-
-        self.db.commit()
-        self.db.refresh(student)
-        return student
-
-    def delete_active_student(self, student_id:str):
-        student= self.get_student(student_id)
-        self.db.delete(student)
-        self.db.commit()
+    def get_student(self, student_id: UUID) -> Student:
+        """Get a specific student by ID.
+        Args:
+            student_id (UUID): ID of student to retrieve
+        Returns:
+            student: Retrieved student record
+        """
+        try:
+            return self.repository.get_by_id(student_id)
+        except EntityNotFoundError as e:
+            raise StudentNotFoundError(id=student_id, detail = str(e))
 
 
-class ArchivedStudentService():
-    def __init__(self, db:Session):
-        self.db = db
-
-    def get_archived_students(self):
-        students = self.db.query(Students).filter(Students.is_archived == True).all()
-        if not students:
-            raise NoArchiveRecords
-        return students
+    def get_all_students(self, filters) -> List[Student]:
+        """Get all active student with filtering.
+        Returns:
+            List[student]: List of active students
+        """
+        fields = ['first_name','last_name', 'student_id']
+        return self.repository.execute_query(fields, filters)
 
 
-    def get_archived_student(self, student_id):
-        student =  (self.db.query(Students)
-                    .filter(Students.is_archived == True)
-                    .filter(Students.student_id == student_id)
-                    .first())
-        if not student:
-            raise ArchivedStudentNotFound
-        return student
+    def update_student(self, student_id: UUID, data: dict) -> Student:
+        """Update a student profile information.
+        Args:
+            student_id (UUID): ID of student to update
+            data (dict): Dictionary containing fields to update
+        Returns:
+            student: Updated student record
+        """
+        try:
+            existing = self.get_student(student_id)
+
+            if 'first_name' in data:
+                existing.first_name = self.validator.validate_name(data.pop('first_name'))
+            if 'last_name' in data:
+                existing.last_name = self.validator.validate_name(data.pop('last_name'))
+            if 'date_of_birth' in data:
+                existing.date_of_birth = self.validator.validate_date(data.pop('date_of_birth'))
+            if 'session_start_year' in data:
+                existing.session_start_year = self.validator.validate_session_start_year(data.pop('session_start_year'))
+
+            for key, value in data.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
+
+            existing.last_modified_by = SYSTEM_USER_ID
+            return self.repository.update(student_id, existing)
+
+        except UniqueViolationError as e:
+            raise DuplicateStudentError(input_value="unknown",  detail=str(e))
+
+        except RelationshipError as e:
+            raise RelationshipError(error=str(e), operation='update', entity='unknown')
 
 
-    def restore_student(self, student_id:str):
-        student= self.get_archived_student(student_id)
+    def archive_student(self, student_id: UUID, reason: ArchiveReason) -> Student:
+            """Archive student.
+            Args:
+                student_id (UUID): ID of student to archive
+                reason (ArchiveReason): Reason for archiving
+            Returns:
+                student: Archived student record
+            """
+            try:
+                return self.repository.archive(student_id, SYSTEM_USER_ID, reason)
+            except EntityNotFoundError as e:
+                raise StudentNotFoundError(id=student_id, detail = str(e))
 
-        for doc in student.documents_owned:
-            doc.restore()
 
-        for grade in student.grades:
-            grade.restore()
+    def delete_student(self, student_id: UUID) -> None:
+        """Permanently delete a student.
+        Args:
+            student_id (UUID): ID of student to delete
+        """
+        try:
+            self.repository.delete(student_id)
+        except EntityNotFoundError as e:
+            raise StudentNotFoundError(id=student_id, detail = str(e))
 
-        for total_grade in student.total_grades:
-            total_grade.restore()
 
-        for transfer in student.transfers:
-            transfer.restore()
+    def get_all_archived_students(self, filters) -> List[Student]:
+        """Get all archived student with filtering.
+        Returns:
+            List[student]: List of archived student records
+        """
+        fields = ['first_name','last_name', 'student_id']
+        return self.repository.execute_archive_query(fields, filters)
 
-        for repetition in student.classes_repeated:
-            repetition.restore()
 
-        student.restore()
+    def get_archived_student(self, student_id: UUID) -> Student:
+        """Get an archived student by ID.
+        Args:
+            student_id: ID of student to retrieve
+        Returns:
+            student: Retrieved student record
+        """
+        try:
+            return self.repository.get_archive_by_id(student_id)
+        except EntityNotFoundError as e:
+            raise StudentNotFoundError(id=student_id, detail = str(e))
 
-        self.db.commit()
-        self.db.refresh(student)
-        return student
+    def restore_student(self, student_id: UUID) -> Student:
+        """Restore an archived student.
+        Args:
+            student_id: ID of student to restore
+        Returns:
+            student: Restored student record
+        """
+        try:
+            archived = self.get_archived_student(student_id)
+            archived.last_modified_by = SYSTEM_USER_ID
+            return self.repository.restore(student_id)
+        except EntityNotFoundError as e:
+            raise StudentNotFoundError(id=student_id, detail = str(e))
 
-    def delete_archived_student(self, student_id):
-        student =  self.get_archived_student(student_id)
-        self.db.delete(student)
-        self.db.commit()
+
+    def delete_archived_student(self, student_id: UUID) -> None:
+        """Permanently delete an archived student.
+        Args:
+            student_id: ID of student to delete
+        """
+        try:
+            self.repository.delete_archive(student_id)
+        except EntityNotFoundError as e:
+            raise StudentNotFoundError(id=student_id, detail = str(e))
+
 
 
 

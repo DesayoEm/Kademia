@@ -1,5 +1,5 @@
 from .base_error import KademiaError
-from .input_errors import TextTooShortError, EmptyFieldError, BlankFieldError
+from .input_validation_errors import TextTooShortError, EmptyFieldError, BlankFieldError, InvalidCharacterError
 from .database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
 
 from uuid import UUID
@@ -11,7 +11,7 @@ class StaffOrganizationError(KademiaError):
     """
     DOMAIN = "StaffOrganization"
 
-# Domain-specific extensions of input errors
+# Domain-specific extensions of input validation errors
 class StaffEmptyFieldError(EmptyFieldError):
     def __init__(self, input_value: str):
         super().__init__(data=input_value, domain=StaffOrganizationError.DOMAIN)
@@ -23,6 +23,11 @@ class StaffBlankFieldError(BlankFieldError):
 class StaffTextTooShortError(TextTooShortError):
     def __init__(self, input_value: str, min_length=3):
         super().__init__(data=input_value, min_length=min_length, domain=StaffOrganizationError.DOMAIN)
+
+class StaffInvalidCharacterError(InvalidCharacterError):
+    def __init__(self, input_value: str):
+        super().__init__(data=input_value, domain=StaffOrganizationError.DOMAIN)
+
 
 
 # Original domain-specific errors

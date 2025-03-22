@@ -2,7 +2,7 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 from ....core.errors.database_errors import RelationshipError
-from ....core.errors.profile_errors import RelatedEducatorNotFoundError, RelatedStudentNotFoundError
+from ....core.errors.user_profile_errors import RelatedEducatorNotFoundError, RelatedStudentNotFoundError
 from ....core.errors.student_organisation_errors import  RelatedLevelNotFoundError
 from ....core.errors.student_organisation_errors import (
     DuplicateClassError, ClassNotFoundError
@@ -11,7 +11,7 @@ from ....core.errors.database_errors import EntityNotFoundError, UniqueViolation
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
 from ....database.models.data_enums import ArchiveReason
 from ....core.services.student_organization.classes import ClassService
-from ....core.validators.student_organization import StudentOrganizationValidators
+from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import Classes
 
 
@@ -22,7 +22,7 @@ class ClassFactory:
     """Factory class for managing class operations."""
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(Classes, session)
-        self.validator = StudentOrganizationValidators()
+        self.validator = StudentOrganizationValidator()
         self.service = ClassService(session)
 
 

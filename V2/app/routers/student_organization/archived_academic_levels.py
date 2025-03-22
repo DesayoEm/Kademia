@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from ...schemas.student_organization.academic_levels import(
+from ...schemas.student_organization.academic_level import(
     AcademicLevelFilterParams, AcademicLevelResponse
 )
 from fastapi import Depends, APIRouter

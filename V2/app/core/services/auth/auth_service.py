@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from .password_service import bcrypt_context
 from ...errors.auth_errors import InvalidUserError
-from ....database.models.users import Staff, Guardians, Students
+from ....database.models.users import Staff, Guardian, Student
 
 class AuthService:
     def __init__(self, session: Session):

@@ -2,7 +2,7 @@ from .common_imports import *
 from .data_enums import AccessLevel
 
 
-class AccessLevelChanges(Base):
+class AccessLevelChange(Base):
     """Tracks changes to users access levels for audit purposes"""
     __tablename__ = 'access_level_changes'
 
@@ -21,7 +21,7 @@ class AccessLevelChanges(Base):
         )
 
     # Relationships
-    user: Mapped['Staff'] = relationship(back_populates='access_changes', foreign_keys="[AccessLevelChanges.staff_id]")
+    user: Mapped['Staff'] = relationship(back_populates='access_changes', foreign_keys="[AccessLevelChange.staff_id]")
 
     __table_args__ = (
         Index('idx_staff_id', 'staff_id'),

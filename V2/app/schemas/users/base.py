@@ -2,7 +2,7 @@ from ..common_imports import *
 from ..enums import Gender,  ArchiveReason
 
 
-class ProfileBase(BaseModel):
+class UserBase(BaseModel):
     """Base model for creating new users"""
     first_name: str
     last_name: str

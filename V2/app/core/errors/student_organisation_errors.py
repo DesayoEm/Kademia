@@ -1,30 +1,13 @@
 from .base_error import KademiaError
 from .database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
 from uuid import UUID
-from .input_errors import EmptyFieldError, BlankFieldError, TextTooShortError
+
 
 class StudentOrganizationError(KademiaError):
     """
     Base exception class for all exceptions related to student organization.
-    Inherits from TrakademikError.
+    Inherits from KademiaError.
     """
-    DOMAIN = "StudentOrganization"
-
-# Domain-specific extensions of validation errors
-class StudentEmptyFieldError(EmptyFieldError):
-    def __init__(self, input_value: str):
-        super().__init__(data=input_value, domain=StudentOrganizationError.DOMAIN)
-
-class StudentBlankFieldError(BlankFieldError):
-    def __init__(self, input_value: str):
-        super().__init__(data=input_value, domain=StudentOrganizationError.DOMAIN)
-
-class StudentTextTooShortError(TextTooShortError):
-    def __init__(self, input_value: str, min_length=3):
-        super().__init__(data=input_value, min_length=min_length, domain=StudentOrganizationError.DOMAIN)
-
-
-# Original domain-specific errors
 
 class DuplicateStudentDepartmentError(StudentOrganizationError, UniqueViolationError):
     """Raised when a duplicate student department is created."""
@@ -82,3 +65,10 @@ class ClassNotFoundError(StudentOrganizationError, EntityNotFoundError):
         EntityNotFoundError.__init__(self, entity_type="Department", identifier=str(id), error=detail)
         self.user_message = f"Class not found!"
         self.log_message = f"Class with id:{id} not found. DETAIL: {detail}"
+
+class RelatedClassNotFoundError(StudentOrganizationError, RelationshipError):
+    """Raised when a class is not found during fk insertion"""
+    def __init__(self, id: UUID, detail: str, action: str):
+        RelationshipError.__init__(self, error = detail, operation=action, entity="Class")
+        self.user_message = f"Related class not found!"
+        self.log_message = f"Error during during fk insertion of Academic Level with id:{id} during {action} operation. Detail {detail}"

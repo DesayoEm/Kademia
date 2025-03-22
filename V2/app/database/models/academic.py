@@ -3,7 +3,7 @@ from .data_enums import (Term, ApprovalStatus, GradeType)
 from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 
 
-class Subjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class Subject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents an educational subject with attributes like name, class level,
     department, and compulsory status. Includes relationships to grades, students,
@@ -21,11 +21,11 @@ class Subjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     syllabus_url: Mapped[str] = mapped_column(String(225), nullable=True)
 
     # Relationships
-    students: Mapped[List['StudentSubjects']] = relationship(back_populates='subject')
-    educators: Mapped[List['SubjectEducators']] = relationship(back_populates='subject')
-    academic_levels: Mapped[List['AcademicLevelSubjects']] = relationship(back_populates='subject')
-    grades: Mapped[List['Grades']] = relationship(back_populates='subject')
-    total_grades: Mapped[List['TotalGrades']] = relationship(back_populates='subject')
+    students: Mapped[List['StudentSubject']] = relationship(back_populates='subject')
+    educators: Mapped[List['SubjectEducator']] = relationship(back_populates='subject')
+    academic_levels: Mapped[List['AcademicLevelSubject']] = relationship(back_populates='subject')
+    grades: Mapped[List['Grade']] = relationship(back_populates='subject')
+    total_grades: Mapped[List['TotalGrade']] = relationship(back_populates='subject')
 
     __table_args__ = (
         Index('idx_subject_name', 'name'),
@@ -33,7 +33,7 @@ class Subjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class AcademicLevelSubjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """Associates subjects with academic levels, defining the standard curriculum"""
     __tablename__ = 'academic_level_subjects'
 
@@ -52,8 +52,8 @@ class AcademicLevelSubjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     curriculum_url: Mapped[str] = mapped_column(String(225))
 
     # Relationships
-    subject: Mapped['Subjects'] = relationship(back_populates='academic_levels', foreign_keys='[AcademicLevelSubjects.subject_id]')
-    level: Mapped['AcademicLevel'] = relationship(back_populates='subjects', foreign_keys='[AcademicLevelSubjects.level_id]')
+    subject: Mapped['Subject'] = relationship(back_populates='academic_levels', foreign_keys='[AcademicLevelSubject.subject_id]')
+    level: Mapped['AcademicLevel'] = relationship(back_populates='subjects', foreign_keys='[AcademicLevelSubject.level_id]')
 
     __table_args__ = (
         UniqueConstraint('level_id', 'subject_id', 'academic_year', 'educator_id'),
@@ -62,7 +62,7 @@ class AcademicLevelSubjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class StudentSubjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class StudentSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """Association table representing a student's enrollment in a subject for a specific academic year and term."""
     __tablename__ = 'student_subjects'
 
@@ -79,8 +79,8 @@ class StudentSubjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     # Relationships
-    subject: Mapped['Subjects'] = relationship(back_populates='students', foreign_keys='[StudentSubjects.subject_id]')
-    student: Mapped['Students'] = relationship(back_populates='subjects_taken', foreign_keys='[StudentSubjects.student_id]')
+    subject: Mapped['Subject'] = relationship(back_populates='students', foreign_keys='[StudentSubject.subject_id]')
+    student: Mapped['Student'] = relationship(back_populates='subjects_taken', foreign_keys='[StudentSubject.student_id]')
 
     __table_args__ = (
         UniqueConstraint('student_id', 'subject_id', 'academic_year', 'term'),
@@ -88,7 +88,7 @@ class StudentSubjects(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class SubjectEducators(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """Association table representing a teacher assignment to a subject for a specific academic year and term."""
     __tablename__ = 'subject_educators'
 
@@ -108,8 +108,8 @@ class SubjectEducators(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     date_assigned: Mapped[Date] = mapped_column(Date)
 
     # Relationships
-    subject: Mapped['Subjects'] = relationship(back_populates='educators', foreign_keys='[SubjectEducators.subject_id]')
-    teacher: Mapped['Educator'] = relationship(back_populates='subject_assignments', foreign_keys='[SubjectEducators.educator_id]')
+    subject: Mapped['Subject'] = relationship(back_populates='educators', foreign_keys='[SubjectEducator.subject_id]')
+    teacher: Mapped['Educator'] = relationship(back_populates='subject_assignments', foreign_keys='[SubjectEducator.educator_id]')
 
     __table_args__ = (
         UniqueConstraint('educator_id', 'subject_id', 'academic_year', 'term', 'level_id'),
@@ -117,7 +117,7 @@ class SubjectEducators(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class Grades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class Grade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents student grades, linking students, subjects, departments, and educators.
     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
@@ -141,9 +141,9 @@ class Grades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
 
     # Relationships
-    subject: Mapped['Subjects'] = relationship(back_populates='grades', foreign_keys='[Grades.subject_id]')
-    student: Mapped['Students'] = relationship(back_populates='grades', foreign_keys='[Grades.student_id]')
-    grader: Mapped['Educator'] = relationship(foreign_keys="[Grades.graded_by]")
+    subject: Mapped['Subject'] = relationship(back_populates='grades', foreign_keys='[Grade.subject_id]')
+    student: Mapped['Student'] = relationship(back_populates='grades', foreign_keys='[Grade.student_id]')
+    grader: Mapped['Educator'] = relationship(foreign_keys="[Grade.graded_by]")
 
     __table_args__ = (
         Index('idx_subject_id', 'subject_id'),
@@ -155,7 +155,7 @@ class Grades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class TotalGrades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class TotalGrade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents total grades for a student in a subject, including total score, rank,
     academic year, and term. Links students and subjects with unique constraints on
@@ -178,8 +178,8 @@ class TotalGrades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     rank: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     # Relationships
-    student: Mapped['Students'] = relationship(back_populates='total_grades', foreign_keys='[TotalGrades.student_id]')
-    subject: Mapped['Subjects'] = relationship(back_populates='total_grades', foreign_keys='[TotalGrades.subject_id]')
+    student: Mapped['Student'] = relationship(back_populates='total_grades', foreign_keys='[TotalGrade.student_id]')
+    subject: Mapped['Subject'] = relationship(back_populates='total_grades', foreign_keys='[TotalGrade.subject_id]')
 
     __table_args__ = (
         UniqueConstraint('student_id', 'subject_id', 'academic_year', 'term'),
@@ -189,7 +189,7 @@ class TotalGrades(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class StudentRepetitions(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class Repetition(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents a student's repetition of a class, including details like class level change,
     reason for repetition, approval status, and class assignments.
@@ -223,12 +223,12 @@ class StudentRepetitions(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Relationships
-    repeating_student: Mapped['Students'] = relationship(back_populates='classes_repeated', foreign_keys='[StudentRepetitions.student_id]')
-    previous_level: Mapped['AcademicLevel'] = relationship(foreign_keys='[StudentRepetitions.previous_level_id]')
-    new_level:Mapped['AcademicLevel'] =  relationship( foreign_keys='[StudentRepetitions.new_level_id]')
-    previous_class: Mapped['Classes'] = relationship(foreign_keys='[StudentRepetitions.previous_class_id]')
-    new_class:Mapped['Classes'] =  relationship( foreign_keys='[StudentRepetitions.new_class_id]')
-    status_updated_staff:Mapped['Staff'] =  relationship(foreign_keys='[StudentRepetitions.status_updated_by]')
+    repeating_student: Mapped['Student'] = relationship(back_populates='classes_repeated', foreign_keys='[Repetition.student_id]')
+    previous_level: Mapped['AcademicLevel'] = relationship(foreign_keys='[Repetition.previous_level_id]')
+    new_level:Mapped['AcademicLevel'] =  relationship( foreign_keys='[Repetition.new_level_id]')
+    previous_class: Mapped['Classes'] = relationship(foreign_keys='[Repetition.previous_class_id]')
+    new_class:Mapped['Classes'] =  relationship( foreign_keys='[Repetition.new_class_id]')
+    status_updated_staff:Mapped['Staff'] =  relationship(foreign_keys='[Repetition.status_updated_by]')
 
     __table_args__ = (
         Index('idx_student_repetition_status', 'student_id', 'status'),
@@ -242,7 +242,7 @@ class StudentRepetitions(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
 
 
-class StudentAwards(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents an award earned by a student
     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
@@ -258,7 +258,7 @@ class StudentAwards(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     file_url: Mapped[str] = mapped_column(String(225))
 
     # Relationships
-    owner: Mapped['Students'] = relationship(back_populates='awards_earned', foreign_keys='[StudentAwards.owner_id]')
+    owner: Mapped['Student'] = relationship(back_populates='awards_earned', foreign_keys='[StudentAward.owner_id]')
 
     __table_args__ = (
         Index('idx_owner_title', 'owner_id', 'title'),

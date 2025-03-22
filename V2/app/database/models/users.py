@@ -3,9 +3,10 @@ from .data_enums import StaffType, Gender, UserType, AccessLevel, StudentStatus,
 from .mixins import AuditMixins, TimeStampMixins, ArchiveMixins
 
 
-class ProfileBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class UserBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
-    Abstract base class for users profiles, including personal details, activity status, and eligibility for deletion.
+
+    Abstract base class for users, including personal details, activity status, and eligibility for deletion.
     Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
     """
     __abstract__ = True
@@ -19,7 +20,7 @@ class ProfileBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
-class Students(ProfileBase):
+class Student(UserBase):
     """
     Represents a student, including personal details, enrollment information, academic status, and relationships with other entities.
     Inherits from ProfileBase.
@@ -27,42 +28,42 @@ class Students(ProfileBase):
     __tablename__ = 'students'
 
     student_id: Mapped[str] = mapped_column(String(14), unique=True)
+    guardian_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('guardians.id',
+                ondelete='RESTRICT',name='fk_students_parents_parent_id')
+            )
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.STUDENT)
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)
     status: Mapped[StudentStatus] = mapped_column(Enum(StudentStatus, name='studentstatus'), default=StudentStatus.ENROLLED)
     date_of_birth: Mapped[date] = mapped_column(Date)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
+    level_id: Mapped[UUID] = mapped_column(UUID, ForeignKey('academic_levels.id',
+            ondelete='RESTRICT',name='fk_students_academic_levels_level_id')
+        )
     class_id: Mapped[UUID] = mapped_column(UUID,ForeignKey('classes.id',
             ondelete='RESTRICT',name='fk_students_classes_class_id')
-        )
-    level_id: Mapped[UUID] = mapped_column(UUID,ForeignKey('academic_levels.id',
-            ondelete='RESTRICT',name='fk_students_academic_levels_level_id')
         )
     department_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True),ForeignKey('student_departments.id',
             ondelete='RESTRICT',name='fk_students_student_departments_department_id')
         )
-    guardian_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True),ForeignKey('guardians.id',
-            ondelete='RESTRICT',name='fk_students_parents_parent_id')
-        )
     is_repeating: Mapped[bool] = mapped_column(Boolean, default=False)
-    admission_date: Mapped[date] = mapped_column(Date)
+    session_start_year: Mapped[int] = mapped_column(Integer)
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
     graduation_date: Mapped[date] = mapped_column(Date, nullable=True)
 
     # Relationships
-    documents_owned: Mapped[List['StudentDocuments']] = relationship(back_populates='owner')
-    awards_earned: Mapped[List['StudentAwards']] = relationship(back_populates='owner')
-    guardian: Mapped['Guardians'] = relationship(back_populates='wards', foreign_keys='[Students.guardian_id]')
-    class_: Mapped['Classes'] = relationship(back_populates='students',foreign_keys='[Students.class_id]',
-        primaryjoin='Students.class_id == Classes.id')
-    department: Mapped['StudentDepartments'] = relationship(back_populates='students', foreign_keys='[Students.department_id]')
-    level: Mapped['AcademicLevel'] = relationship(back_populates='students', foreign_keys='[Students.level_id]')
-    subjects_taken: Mapped[List['StudentSubjects']] = relationship(back_populates='student')
-    grades: Mapped[List['Grades']] = relationship(back_populates='student')
-    total_grades: Mapped[List['TotalGrades']] = relationship(back_populates='student')
-    classes_repeated: Mapped[List['StudentRepetitions']] = relationship(back_populates='repeating_student')
-    department_transfers: Mapped[List['StudentDepartmentTransfers']] = relationship(back_populates='transferred_student')
-    class_transfers: Mapped[List['StudentClassTransfers']] = relationship(back_populates='transferred_student')
+    documents_owned: Mapped[List['StudentDocument']] = relationship(back_populates='owner')
+    awards_earned: Mapped[List['StudentAward']] = relationship(back_populates='owner')
+    guardian: Mapped['Guardian'] = relationship(back_populates='wards', foreign_keys='[Student.guardian_id]')
+    class_: Mapped['Classes'] = relationship(back_populates='students',foreign_keys='[Student.class_id]',
+        primaryjoin='Student.class_id == Classes.id')
+    department: Mapped['StudentDepartment'] = relationship(back_populates='students', foreign_keys='[Student.department_id]')
+    level: Mapped['AcademicLevel'] = relationship(back_populates='students', foreign_keys='[Student.level_id]')
+    subjects_taken: Mapped[List['StudentSubject']] = relationship(back_populates='student')
+    grades: Mapped[List['Grade']] = relationship(back_populates='student')
+    total_grades: Mapped[List['TotalGrade']] = relationship(back_populates='student')
+    classes_repeated: Mapped[List['Repetition']] = relationship(back_populates='repeating_student')
+    department_transfers: Mapped[List['StudentDepartmentTransfer']] = relationship(back_populates='transferred_student')
+    class_transfers: Mapped[List['ClassTransfer']] = relationship(back_populates='transferred_student')
 
     __table_args__ = (
         Index('idx_students_name', 'first_name', 'last_name'),
@@ -77,7 +78,7 @@ class Students(ProfileBase):
         return f"Student(name={self.first_name} {self.last_name}, class={self.class_})"
 
 
-class Guardians(ProfileBase):
+class Guardian(UserBase):
     """
     Represents a parent or guardian of students, including contact information and relationship with the students they oversee.
     Inherits from ProfileBase.
@@ -92,7 +93,7 @@ class Guardians(ProfileBase):
     phone: Mapped[str] = mapped_column(String(14), unique=True)
 
     # Relationships
-    wards: Mapped[List['Students']] = relationship(back_populates='guardian')
+    wards: Mapped[List['Student']] = relationship(back_populates='guardian')
 
     __table_args__ = (
         Index('idx_guardians_name', 'first_name', 'last_name'),
@@ -105,7 +106,7 @@ class Guardians(ProfileBase):
         return f"Parent(name={self.first_name} {self.last_name}, phone={self.phone})"
 
 
-class Staff(ProfileBase):
+class Staff(UserBase):
     """
     Represents a staff member, including personal details, role, department, and employment status.
     Inherits from ProfileBase.
@@ -133,12 +134,12 @@ class Staff(ProfileBase):
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
 
     # Relationships
-    department: Mapped["StaffDepartments"] = relationship(back_populates='staff', foreign_keys="[Staff.department_id]")
-    role: Mapped["StaffRoles"] = relationship(back_populates='staff', foreign_keys='[Staff.role_id]')
-    access_changes: Mapped[List["AccessLevelChanges"]] = relationship(
-        "AccessLevelChanges",
+    department: Mapped["StaffDepartment"] = relationship(back_populates='staff', foreign_keys="[Staff.department_id]")
+    role: Mapped["StaffRole"] = relationship(back_populates='staff', foreign_keys='[Staff.role_id]')
+    access_changes: Mapped[List["AccessLevelChange"]] = relationship(
+        "AccessLevelChange",
         back_populates='user',
-        primaryjoin="Staff.id == AccessLevelChanges.staff_id"
+        primaryjoin="Staff.id == AccessLevelChange.staff_id"
     )
 
     __table_args__ = (
@@ -181,20 +182,20 @@ class Educator(Staff):
         'inherit_condition': (id == Staff.id)
     }
 
-    qualifications: Mapped[List['EducatorQualifications']] = relationship(back_populates='educator')
-    subject_assignments: Mapped[List['SubjectEducators']] = relationship(back_populates='teacher')
-    mentored_department: Mapped[List['StudentDepartments']] = relationship(back_populates='mentor')
+    qualifications: Mapped[List['EducatorQualification']] = relationship(back_populates='educator')
+    subject_assignments: Mapped[List['SubjectEducator']] = relationship(back_populates='teacher')
+    mentored_department: Mapped[List['StudentDepartment']] = relationship(back_populates='mentor')
     supervised_class: Mapped['Classes'] = relationship(back_populates='supervisor')
 
     def __repr__(self) -> str:
         return f"Educator(name={self.first_name} {self.last_name})"
 
 
-class Operations(Staff):
+class OperationStaff(Staff):
     """
     Represents an operations staff member, inheriting from Staff.
     """
-    __tablename__ = 'operations'
+    __tablename__ = 'operations_staff'
 
     id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
             name='fk_operations_staff_id'),primary_key=True
@@ -209,11 +210,11 @@ class Operations(Staff):
         return f"Operations staff(name={self.first_name} {self.last_name}, role_id={self.role_id})"
 
 
-class Support(Staff):
+class SupportStaff(Staff):
     """
     Represents a support staff member, inheriting from Staff.
     """
-    __tablename__ = 'support'
+    __tablename__ = 'support_staff'
 
     id: Mapped[UUID] = mapped_column(
         ForeignKey('staff.id',

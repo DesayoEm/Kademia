@@ -1,5 +1,5 @@
 from ...database.models.data_enums import ArchiveReason
-from ...schemas.profiles.staff import (
+from ...schemas.users.staff import (
     StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams
 )
 from ...core.factories.users.staff import StaffFactory

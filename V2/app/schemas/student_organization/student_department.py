@@ -11,6 +11,7 @@ class DepartmentFilterParams(BaseFilterParams):
 class DepartmentBase(BaseModel):
     """Base model for class levels"""
     name: str
+    code: str
     description: str
     mentor_id: UUID | None = None
     student_rep_id: UUID | None = None
@@ -22,6 +23,7 @@ class DepartmentBase(BaseModel):
         json_schema_extra = {
         "example": {
             "name": "Science",
+            "code": "SCI",
             "description": "Science Classes",
             "mentor_id": None,
             "student_rep_id": None,

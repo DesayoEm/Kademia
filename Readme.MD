@@ -11,7 +11,7 @@
 
 ### V2.0 (Current)
 - FastAPI and PostgreSQL backend
-- Comprehensive user management (Students, Staff, Parents)
+- Comprehensive user management (Students, Staff, Guardians)
 - Full academic lifecycle handling
 - Document management system
 - Role-based access control
@@ -27,28 +27,27 @@
 
 ### Database Design
 - UUID-based identification system
-- Robust audit trail implementation (created_by, modified_by, etc.)
-- Soft deletion support across all entities
-- Extensive indexing strategy for performance optimization
+- Audit trail implementation (created_by, modified_by, etc.)
+- Archive support across all entities
+- Indexing strategy for performance optimization
 
 ## Core Modules
 
 ### 1. User Management
 #### Profile Management
 - Students with academic tracking
-- Parents with ward management
+- Guardiand with ward management
 - Staff (Educators, Operations, Support, System) with role-based access
-- Comprehensive profile attributes (contact info, status, etc.)
 
 #### Access Control
-- Role-based access control (User, Admin, Superuser, System)
+- Role-based access control (User, Admin, Superuser)
 - Access level change tracking
 - Activity logging (last login, status changes)
 
 ### 2. Academic Structure
 #### Organization
 - Academic levels 
-- Class management with mentors and student representatives
+- Class management with mentors, supervisors and student representatives
 - Department organization
 - Subject management with curriculum tracking
 
@@ -98,17 +97,14 @@
 - Activity logging
 
 ## Database Features
-- Comprehensive indexing strategy
 - Audit trail implementation
 - Soft deletion support
 - Relationship management
-- Data validation constraints
 
 ## Service Layer
 - Modular service architecture
 - CRUD operations base service
 - Specialized services for each entity
-
 - Error handling
 
 ## Validation System
@@ -133,7 +129,7 @@
 3. Resource Management
    - Timetable management
    - Event scheduling
-   - Resource booking
+   - Appointment booking
 
 4. Mobile Application
    - Student portal

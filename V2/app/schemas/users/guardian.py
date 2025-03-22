@@ -1,9 +1,9 @@
 from ..common_imports import *
 from ..enums import ArchiveReason, AccessLevel, UserType
-from .base import ProfileBase, ProfileInDb
+from .base import UserBase, ProfileInDb
 
 
-class GuardiansBase(ProfileBase):
+class GuardiansBase(UserBase):
     """Base model for a Guardian"""
     access_level: AccessLevel
     user_type: UserType

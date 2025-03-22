@@ -2,8 +2,8 @@ import pytest
 from unittest.mock import patch, MagicMock
 from uuid import uuid4
 
-from V2.app.crud.staff_organization.staff_roles import StaffRoleCrud
-from V2.app.schemas.staff_organization.staff_roles import (
+from V2.app.crud.staff_organization.staff_role import StaffRoleCrud
+from V2.app.schemas.staff_organization.role import (
     StaffRoleCreate, StaffRoleUpdate, RolesFilterParams
 )
 from V2.app.database.models.data_enums import ArchiveReason

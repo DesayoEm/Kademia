@@ -1,12 +1,12 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from ..database.models import StaffDepartments, StaffRoles
-from ..database.models.users import System, Staff
-from ..database.models.data_enums import (
+from V2.app.database.models import StaffDepartment, StaffRole
+from V2.app.database.models.users import System
+from V2.app.database.models.data_enums import (
     AccessLevel, EmploymentStatus, StaffAvailability, Gender, UserType, StaffType
 )
-from .db_config import engine
+from V2.app.database.db_config import engine
 from uuid import UUID
 
 KADEMIA_ID = UUID('00000000-0000-0000-0000-000000000000')
@@ -50,7 +50,7 @@ try:
         session.flush()
 
 
-        system_role = StaffRoles(
+        system_role = StaffRole(
             id=KADEMIA_ID,
             name='System Administrator',
             description='System administrative role',
@@ -64,7 +64,7 @@ try:
         session.add(system_role)
         session.flush()
 
-        system_department = StaffDepartments(
+        system_department = StaffDepartment(
             id=KADEMIA_ID,
             name='System Department',
             description='System administrative department',

@@ -3,7 +3,7 @@ from .data_enums import DocumentType
 from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 
 
-class StudentDocuments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class StudentDocument(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """Manages documents uploaded for students.
     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
@@ -19,7 +19,7 @@ class StudentDocuments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     file_url: Mapped[str] = mapped_column(String(225))
 
     # Relationships
-    owner: Mapped['Students'] = relationship(back_populates='documents_owned', foreign_keys='[StudentDocuments.owner_id]')
+    owner: Mapped['Student'] = relationship(back_populates='documents_owned', foreign_keys='[StudentDocument.owner_id]')
 
     __table_args__ = (
         Index('idx_owner_document_type', 'owner_id', 'document_type'),

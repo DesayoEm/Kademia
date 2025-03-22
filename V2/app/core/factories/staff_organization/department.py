@@ -2,9 +2,9 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ....core.errors.profile_errors import RelatedStaffNotFoundError
-from ....core.validators.staff_organization import StaffOrganizationValidators
-from ....database.models.staff_organization import StaffDepartments
+from ....core.errors.user_profile_errors import RelatedStaffNotFoundError
+from ....core.validators.staff_organization import StaffOrganizationValidator
+from ....database.models.staff_organization import StaffDepartment
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
 from ....database.models.data_enums import ArchiveReason
 from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
@@ -13,21 +13,21 @@ from ....core.errors.staff_organisation_errors import DepartmentNotFoundError, D
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
-class StaffDepartmentsFactory:
+class StaffDepartmentFactory:
     """Factory class for managing staff department operations."""
 
     def __init__(self, session: Session):
-        self.repository = SQLAlchemyRepository(StaffDepartments, session)
-        self.validator = StaffOrganizationValidators()
+        self.repository = SQLAlchemyRepository(StaffDepartment, session)
+        self.validator = StaffOrganizationValidator()
 
-    def create_staff_department(self, new_department) -> StaffDepartments:
+    def create_staff_department(self, new_department) -> StaffDepartment:
         """Create a new staff department.
         Args:
             new_department: Department data containing name and description
         Returns:
-            StaffDepartments: Created department record
+            StaffDepartment: Created department record
         """
-        department = StaffDepartments(
+        department = StaffDepartment(
             id=uuid4(),
             name=self.validator.validate_name(new_department.name),
             description=self.validator.validate_name(new_department.description),
@@ -55,12 +55,12 @@ class StaffDepartmentsFactory:
                         raise RelationshipError(error=str(e), operation='create', entity='unknown')
 
 
-    def get_staff_department(self, department_id: UUID) -> StaffDepartments:
+    def get_staff_department(self, department_id: UUID) -> StaffDepartment:
         """Get a specific staff department by ID.
         Args:
             department_id (UUID): ID of department to retrieve
         Returns:
-            StaffDepartments: Retrieved department record
+            StaffDepartment: Retrieved department record
         """
         try:
             return self.repository.get_by_id(department_id)
@@ -68,22 +68,22 @@ class StaffDepartmentsFactory:
             raise DepartmentNotFoundError(id=department_id, detail = str(e))
 
 
-    def get_all_departments(self, filters) -> List[StaffDepartments]:
+    def get_all_departments(self, filters) -> List[StaffDepartment]:
         """Get all active departments with filtering.
         Returns:
-            List[StaffDepartments]: List of active departments
+            List[StaffDepartment]: List of active departments
         """
         fields = ['name', 'description']
         return self.repository.execute_query(fields, filters)
 
 
-    def update_staff_department(self, department_id: UUID, data: dict) -> StaffDepartments:
+    def update_staff_department(self, department_id: UUID, data: dict) -> StaffDepartment:
         """Update a staff department's information.
         Args:
             department_id (UUID): ID of department to update
             data (dict): Dictionary containing fields to update
         Returns:
-            StaffDepartments: Updated department record
+            StaffDepartment: Updated department record
         """
         original = data.copy()
         try:
@@ -118,13 +118,13 @@ class StaffDepartmentsFactory:
                         raise RelationshipError(error=str(e), operation='update', entity='unknown')
 
 
-    def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StaffDepartments:
+    def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StaffDepartment:
         """Archive a staff department.
         Args:
             department_id (UUID): ID of department to archive
             reason (ArchiveReason): Reason for archiving
         Returns:
-            StaffDepartments: Archived department record
+            StaffDepartment: Archived department record
         """
         try:
             return self.repository.archive(department_id, SYSTEM_USER_ID, reason)
@@ -143,33 +143,33 @@ class StaffDepartmentsFactory:
             raise DepartmentNotFoundError(id=department_id, detail = str(e))
 
 
-    def get_all_archived_departments(self, filters) -> List[StaffDepartments]:
+    def get_all_archived_departments(self, filters) -> List[StaffDepartment]:
         """Get all archived departments with filtering.
         Returns:
-            List[StaffDepartments]: List of archived department records
+            List[StaffDepartment]: List of archived department records
         """
         fields = ['name', 'description']
         return self.repository.execute_archive_query(fields, filters)
 
 
-    def get_archived_department(self, department_id: UUID) -> StaffDepartments:
+    def get_archived_department(self, department_id: UUID) -> StaffDepartment:
         """Get an archived department by ID.
         Args:
             department_id: ID of department to retrieve
         Returns:
-            StaffDepartments: Retrieved department record
+            StaffDepartment: Retrieved department record
         """
         try:
             return self.repository.get_archive_by_id(department_id)
         except EntityNotFoundError as e:
             raise DepartmentNotFoundError(id=department_id, detail = str(e))
 
-    def restore_department(self, department_id: UUID) -> StaffDepartments:
+    def restore_department(self, department_id: UUID) -> StaffDepartment:
         """Restore an archived department.
         Args:
             department_id: ID of department to restore
         Returns:
-            StaffDepartments: Restored department record
+            StaffDepartment: Restored department record
         """
         try:
             archived = self.get_archived_department(department_id)

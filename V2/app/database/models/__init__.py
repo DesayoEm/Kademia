@@ -1,35 +1,35 @@
 from .common_imports import Base
 
-from .users import Students, Guardians, Staff, Educator, Operations, Support, System
-from .documents import StudentDocuments
-from .auth_models import AccessLevelChanges
-from .staff_organization import StaffDepartments, StaffRoles, EducatorQualifications
-from .student_organization import StudentDepartments, Classes, AcademicLevel, StudentDepartmentTransfers, StudentClassTransfers
-from .academic import (Subjects, Grades, TotalGrades, StudentSubjects, AcademicLevelSubjects,SubjectEducators,StudentRepetitions,
-                       StudentAwards)
+from .users import Student, Guardian, Staff, Educator, OperationStaff, SupportStaff, System
+from .documents import StudentDocument
+from .auth_models import AccessLevelChange
+from .staff_organization import StaffDepartment, StaffRole, EducatorQualification
+from .student_organization import StudentDepartment, Classes, AcademicLevel, StudentDepartmentTransfer, ClassTransfer
+from .academic import (Subject, Grade, TotalGrade, StudentSubject, AcademicLevelSubject,SubjectEducator,Repetition,
+                       StudentAward)
 
 __all__ = [
     "Base",
-    "Students",
-    "Guardians",
+    "Student",
+    "Guardian",
     "Staff",
     "Educator",
-    "Operations",
-    "Support",
+    "OperationStaff",
+    "SupportStaff",
     "System",
-    "StudentDocuments",
-    "StaffDepartments",
-    "StaffRoles",
-    "StudentDepartments",
-    "AccessLevelChanges",
+    "StudentDocument",
+    "StaffDepartment",
+    "StaffRole",
+    "StudentDepartment",
+    "AccessLevelChange",
     "Classes",
-    "Subjects",
-    "Grades",
-    "TotalGrades",
-    "StudentSubjects",
-    "StudentDepartments",
-    "StudentDepartmentTransfers",
-    "StudentClassTransfers",
-    "EducatorQualifications",
-    "StudentAwards"
+    "Subject",
+    "Grade",
+    "TotalGrade",
+    "StudentSubject",
+    "StudentDepartment",
+    "StudentDepartmentTransfer",
+    "ClassTransfer",
+    "EducatorQualification",
+    "StudentAward"
 ]

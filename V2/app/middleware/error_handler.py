@@ -6,7 +6,7 @@ import uuid
 from ..core.errors.database_errors import *
 from ..core.errors.staff_organisation_errors import *
 from ..core.errors.student_organisation_errors import *
-from ..core.errors.profile_errors import *
+from ..core.errors.user_profile_errors import *
 from ..core.errors.auth_errors import *
 from ..log_service.logger import logger
 

@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 from uuid import uuid4
 
 from V2.app.core.factories.staff_organization.role import StaffRolesFactory
-from V2.app.schemas.staff_organization.staff_roles import StaffRoleCreate, StaffRoleUpdate, RolesFilterParams
+from V2.app.schemas.staff_organization.role import StaffRoleCreate, StaffRoleUpdate, RolesFilterParams
 from V2.app.database.models.data_enums import ArchiveReason
 from V2.app.core.errors.database_errors import EntityNotFoundError, UniqueViolationError
 from V2.app.core.errors.staff_organisation_errors import RoleNotFoundError, DuplicateRoleError

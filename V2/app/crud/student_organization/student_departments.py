@@ -1,5 +1,5 @@
 from ...database.models.data_enums import ArchiveReason
-from ...schemas.student_organization.student_departments import (
+from ...schemas.student_organization.student_department import (
     DepartmentCreate, DepartmentUpdate, DepartmentResponse, DepartmentFilterParams
 )
 from ...core.factories.student_organization.department import StudentDepartmentFactory

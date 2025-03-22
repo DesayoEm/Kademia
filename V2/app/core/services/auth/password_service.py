@@ -18,7 +18,6 @@ class PasswordService:
             password.append(random.choice(characters))
         random.shuffle(password)
         password = "".join(password)
-        print(password)
         return password
 
 

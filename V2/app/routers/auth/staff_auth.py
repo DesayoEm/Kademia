@@ -19,10 +19,10 @@ def login(
         db: Session = Depends(get_db)
 ):
     auth = AuthService(db)
-    #Authenticate
+    #authenticate
     staff = auth.authenticate_staff(login_data.email_address, login_data.password)
 
-    #Generate tokens
+    #generate tokens
     access_token = token_service.create_access_token(
         user_data={
             'email': login_data.email_address,

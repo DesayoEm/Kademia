@@ -1,8 +1,8 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-from ....core.validators.staff_organization import StaffOrganizationValidators
-from ....database.models.staff_organization import StaffRoles
+from ....core.validators.staff_organization import StaffOrganizationValidator
+from ....database.models.staff_organization import StaffRole
 from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
 from ....database.models.data_enums import ArchiveReason
 from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError
@@ -12,7 +12,7 @@ from ....core.errors.staff_organisation_errors import RoleNotFoundError, Duplica
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
 
-class StaffRolesFactory:
+class StaffRoleFactory:
     """Factory class for managing staff role operations."""
 
     def __init__(self, session: Session):
@@ -20,17 +20,17 @@ class StaffRolesFactory:
         Args:
             session: SQLAlchemy database session
         """
-        self.repository = SQLAlchemyRepository(StaffRoles, session)
-        self.validator = StaffOrganizationValidators()
+        self.repository = SQLAlchemyRepository(StaffRole, session)
+        self.validator = StaffOrganizationValidator()
 
-    def create_role(self, new_role) -> StaffRoles:
+    def create_role(self, new_role) -> StaffRole:
         """Create a new staff role.
         Args:
             new_role: Role data containing name and description
         Returns:
-            StaffRoles: Created role record
+            StaffRole: Created role record
         """
-        role = StaffRoles(
+        role = StaffRole(
             id=uuid4(),
             name=self.validator.validate_name(new_role.name),
             description=self.validator.validate_name(new_role.description),
@@ -44,21 +44,21 @@ class StaffRolesFactory:
                 input_value=new_role.name, detail=str(e), field='name'
             )
 
-    def get_all_roles(self, filters) -> List[StaffRoles]:
+    def get_all_roles(self, filters) -> List[StaffRole]:
         """Get all active staff roles with filtering.
         Returns:
-            List[StaffRoles]: List of active role records
+            List[StaffRole]: List of active role records
         """
         fields = ['name', 'description']
         return self.repository.execute_query(fields, filters)
 
 
-    def get_role(self, role_id: UUID) -> StaffRoles:
+    def get_role(self, role_id: UUID) -> StaffRole:
         """Get a specific staff role by ID.
         Args:
             role_id: ID of role to retrieve
         Returns:
-            StaffRoles: Retrieved role record
+            StaffRole: Retrieved role record
         """
         try:
             return self.repository.get_by_id(role_id)
@@ -66,13 +66,13 @@ class StaffRolesFactory:
             raise RoleNotFoundError(id=role_id, detail = str(e))
 
 
-    def update_role(self, role_id: UUID, data: dict) -> StaffRoles:
+    def update_role(self, role_id: UUID, data: dict) -> StaffRole:
         """Update a staff role's information.
         Args:
             role_id: ID of role to update
             data: Dictionary containing fields to update
         Returns:
-            StaffRoles: Updated role record
+            StaffRole: Updated role record
         """
         original = data.copy()
         try:
@@ -91,13 +91,13 @@ class StaffRolesFactory:
                 input_value=original.get('name', 'unknown'), detail=str(e), field='name'
             )
 
-    def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRoles:
+    def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRole:
         """Archive a role.
         Args:
             role_id: ID of role to archive
             reason: Reason for archiving
         Returns:
-            StaffRoles: Archived role record
+            StaffRole: Archived role record
         """
         try:
             return self.repository.archive(role_id, SYSTEM_USER_ID, reason)
@@ -115,33 +115,33 @@ class StaffRolesFactory:
         except EntityNotFoundError as e :
             raise RoleNotFoundError(id=role_id, detail = str(e))
 
-    def get_all_archived_roles(self, filters) -> List[StaffRoles]:
+    def get_all_archived_roles(self, filters) -> List[StaffRole]:
         """Get all archived staff roles with filtering.
         Returns:
-            List[StaffRoles]: List of archived role records
+            List[StaffRole]: List of archived role records
         """
         fields = ['name', 'description']
         return self.repository.execute_archive_query(fields, filters)
 
 
-    def get_archived_role(self, role_id: UUID) -> StaffRoles:
+    def get_archived_role(self, role_id: UUID) -> StaffRole:
         """Get an archived role by ID.
         Args:
             role_id: ID of role to retrieve
         Returns:
-            StaffRoles: Retrieved role record
+            StaffRole: Retrieved role record
         """
         try:
             return self.repository.get_archive_by_id(role_id)
         except EntityNotFoundError as e:
             raise RoleNotFoundError(id=role_id, detail = str(e))
 
-    def restore_role(self, role_id: UUID) -> StaffRoles:
+    def restore_role(self, role_id: UUID) -> StaffRole:
         """Restore an archived role.
         Args:
             role_id: ID of role to restore
         Returns:
-            StaffRoles: Restored role record
+            StaffRole: Restored role record
         """
         try:
             archived = self.get_archived_role(role_id)

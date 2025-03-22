@@ -2,7 +2,7 @@ from .common_imports import *
 from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 
 
-class StaffDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class StaffDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents a staff department.
     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
@@ -16,9 +16,9 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
 
     # Relationships
-    manager: Mapped['Staff'] = relationship(foreign_keys='[StaffDepartments.manager_id]')
+    manager: Mapped['Staff'] = relationship(foreign_keys='[StaffDepartment.manager_id]')
     staff: Mapped[List["Staff"]] = relationship(back_populates='department',
-                    primaryjoin="Staff.department_id == StaffDepartments.id")
+                    primaryjoin="Staff.department_id == StaffDepartment.id")
 
 
     __table_args__ = (
@@ -27,7 +27,7 @@ class StaffDepartments(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class StaffRoles(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class StaffRole(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents a role assigned to a staff member, including the role name and description.
     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
@@ -39,7 +39,7 @@ class StaffRoles(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     # Relationships
     staff: Mapped[List["Staff"]] = relationship(back_populates='role',
-            primaryjoin="Staff.role_id == StaffRoles.id")
+            primaryjoin="Staff.role_id == StaffRole.id")
 
     __table_args__ = (
         Index('idx_role_name', 'name'),
@@ -47,7 +47,7 @@ class StaffRoles(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class EducatorQualifications(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+class EducatorQualification(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents an educator's academic qualifications.
     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
@@ -64,7 +64,7 @@ class EducatorQualifications(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     # Relationships
     educator: Mapped['Educator'] = relationship(
         'Educator', back_populates='qualifications',
-        foreign_keys="[EducatorQualifications.educator_id]"
+        foreign_keys="[EducatorQualification.educator_id]"
     )
 
     __table_args__ = (

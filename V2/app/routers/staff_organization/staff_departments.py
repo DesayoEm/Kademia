@@ -1,13 +1,13 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from ...schemas.staff_organization.staff_departments import(
+from ...schemas.staff_organization.department import(
     StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
 )
 from ...schemas.shared_models import ArchiveRequest
 from fastapi import Depends, APIRouter
 from ...database.session_manager import get_db
-from ...crud.staff_organization.staff_departments import StaffDepartmentCrud
+from ...crud.staff_organization.staff_department import StaffDepartmentCrud
 from fastapi import HTTPException, Query
 from typing import Annotated
 
