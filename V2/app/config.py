@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 from pathlib import Path
-load_dotenv()  # Make sure this loads variables from .env
+load_dotenv()
 
 class Settings(BaseSettings):
     DATABASE_URL: str

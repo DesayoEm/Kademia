@@ -1,5 +1,5 @@
 from typing import List
-from uuid import uuid4, UUID
+from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from ...errors.student_organisation_errors import(
 RelatedLevelNotFoundError, RelatedClassNotFoundError,
@@ -39,20 +39,19 @@ class StudentFactory:
             student: Created student record
         """
         password = student_data.last_name.title()
-        from uuid import uuid4
         new_student = Student(
             id=uuid4(),
             first_name=self.validator.validate_name(student_data.first_name),
             last_name=self.validator.validate_name(student_data.last_name),
             password_hash=self.password_service.hash_password(password),
             guardian_id=student_data.guardian_id,
-            student_id = self.student_service.generate_student_id(),#Think
+            session_start_year=self.validator.validate_session_start_year(student_data.session_start_year),
+            student_id = self.student_service.generate_student_id(student_data.session_start_year),
             gender=student_data.gender,
             date_of_birth = self.validator.validate_date(student_data.date_of_birth),#Think. does student DOB need more constraints
             level_id=student_data.level_id,
             class_id=student_data.class_id,
             department_id=student_data.department_id,
-            session_start_year=self.validator.validate_session_start_year(student_data.session_start_year),
         )
         try:
             return self.repository.create(new_student)
