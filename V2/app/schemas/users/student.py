@@ -10,8 +10,9 @@ class StudentFilterParams(BaseFilterParams):
 
 class StudentBase(UserBase):
     """Base model for students"""
-    date_of_birth: date
     session_start_year: int
+    date_of_birth: date
+
 
 
 class StudentCreate(StudentBase):
@@ -21,6 +22,7 @@ class StudentCreate(StudentBase):
     level_id: UUID
     department_id: UUID
     guardian_id: UUID
+
 
 
     model_config = ConfigDict(
@@ -36,7 +38,7 @@ class StudentCreate(StudentBase):
                 "class_id": "00000000-0000-0000-0000-000000000001",
                 "level_id": "00000000-0000-0000-0000-000000000002",
                 "department_id": "00000000-0000-0000-0000-000000000003",
-                "session_start_year": "2023",
+                "session_start_year": "2025",
             }
         })
 
@@ -53,7 +55,7 @@ class StudentUpdate(StudentBase):
                 "last_name": "Johnson",
                 "gender": "FEMALE",
                 "date_of_birth": "2010-05-15",
-                "session_start_year": "2023",
+                "session_start_year": "2025",
             }
         })
 

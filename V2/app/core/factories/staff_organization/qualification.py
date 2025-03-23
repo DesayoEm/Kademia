@@ -47,8 +47,18 @@ class QualificationFactory:
             raise DuplicateQualificationError(#name is the only field with a unique constraint
                 input_value=new_qualification.name, detail=str(e), field = 'name'
             )
-        except RelationshipError as e:#Needs to be dynamic
-            raise RelatedEducatorNotFoundError(id=new_qualification.educator_id, detail=str(e), action='create')
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_educator_qualifications_educators_educator_id': ('educator_id', RelatedEducatorNotFoundError),
+            }
+            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    entity_id = getattr(new_qualification, attr_name, None)
+                    if entity_id:
+                        raise error_class(id=entity_id, detail=error_message, action='create')
+
+            raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
 
     def get_all_qualifications(self, filters) -> List[EducatorQualification]:
@@ -100,20 +110,18 @@ class QualificationFactory:
             raise DuplicateQualificationError(
                 input_value=original.get('name', 'unknown'), detail=str(e), field='name'
             )
-        except RelationshipError as e:  # edge case-educator is deleted(race condition)
+        except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
-                'educator_id': RelatedEducatorNotFoundError,
+                'fk_educator_qualifications_educators_educator_id': ('educator_id', RelatedEducatorNotFoundError),
             }
-            for field, error_class in fk_error_mapping.items():
-                if field in error_message:
-                    if field in data:
-                        entity_id = data[field]
-                    elif field == 'educator_id' and 'educator_id' in locals():
-                        entity_id = educator_id
-                    else:
-                        raise RelationshipError(error=str(e), operation='update', entity='unknown_entity')
-                    raise error_class(id=entity_id, detail=str(e), action='update')
+            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    entity_id = educator_id
+                    if entity_id:
+                        raise error_class(id=entity_id, detail=error_message, action='update')
+
+            raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
 
 
     def archive_qualification(self, qualification_id: UUID, reason: ArchiveReason) -> EducatorQualification:

@@ -84,9 +84,9 @@ class RelatedGuardianNotFoundError(UserProfileError, RelationshipError):
         self.log_message = f"Error during during fk insertion of guardian with id:{id} during {action} operation. Detail {detail}"
 
 class DuplicateGuardianError(UserProfileError, UniqueViolationError):
-    def __init__(self, input_value: str, detail: str):
-        UniqueViolationError.__init__(self, error=detail)
-        self.user_message = f"A guardian with {input_value} already exists!"
+    def __init__(self, input_value: str, detail: str, field: str):
+        UniqueViolationError.__init__(self,error=detail)
+        self.user_message = f"A guardian with {field} {input_value} already exists!"
         self.log_message = f"Unique constraint violated for during guardian creation with {input_value}. Detail {detail}"
 
 class GuardianNotFoundError(UserProfileError, EntityNotFoundError):

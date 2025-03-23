@@ -19,14 +19,14 @@ def create_guardian(data:GuardianCreate,
 
 
 @router.get("/", response_model=list[GuardianResponse])
-def get_guardian(filters: Annotated[GuardianFilterParams, Query()],
+def get_guardians(filters: Annotated[GuardianFilterParams, Query()],
                 db: Session = Depends(get_db)):
         guardian_crud = GuardianCrud(db)
         return guardian_crud.get_all_guardians(filters)
 
 
 @router.get("/{guardian_id}", response_model=GuardianResponse)
-def get_guardians(guardian_id: UUID, db: Session = Depends(get_db)):
+def get_guardian(guardian_id: UUID, db: Session = Depends(get_db)):
         guardian_crud = GuardianCrud(db)
         return guardian_crud.get_guardian(guardian_id)
 

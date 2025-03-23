@@ -44,15 +44,14 @@ class StaffDepartmentFactory:
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
-                'manager_id': RelatedStaffNotFoundError,
+                'fk_staff_departments_staff_manager_id': ('manager_id', RelatedStaffNotFoundError),
             }
-            for field, error_class in fk_error_mapping.items():
-                if field in error_message:
-                    if hasattr(new_department, field):
-                        entity_id = getattr(new_department, field)
-                        raise error_class(id=entity_id, detail=str(e), action='create')
-                    else:
-                        raise RelationshipError(error=str(e), operation='create', entity='unknown')
+            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    entity_id = getattr(new_department, attr_name, None)
+                    if entity_id:
+                        raise error_class(id=entity_id, detail=error_message, action='create')
+            raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
 
     def get_staff_department(self, department_id: UUID) -> StaffDepartment:
@@ -107,15 +106,14 @@ class StaffDepartmentFactory:
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
-                'manager_id': RelatedStaffNotFoundError,
+                'fk_staff_departments_staff_manager_id': ('manager_id', RelatedStaffNotFoundError),
             }
-            for field, error_class in fk_error_mapping.items():
-                if field in error_message:
-                    if field in data:
-                        entity_id = data[field]
-                        raise error_class(id=entity_id, detail=str(e), action='update')
-                    else:
-                        raise RelationshipError(error=str(e), operation='update', entity='unknown')
+            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    entity_id = data.get(attr_name, None)
+                    if entity_id:
+                        raise error_class(id=entity_id, detail=error_message, action='update')
+            raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
 
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StaffDepartment:

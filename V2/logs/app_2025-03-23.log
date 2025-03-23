@@ -1,0 +1,370 @@
+2025-03-23 06:18:43,187 - kademia - INFO - Application started
+2025-03-23 06:18:45,698 - kademia - INFO - Request started | eb1de386-3f86-4b2d-922d-a28fd46d02f9 | GET /
+2025-03-23 06:18:45,708 - kademia - INFO - Request completed | eb1de386-3f86-4b2d-922d-a28fd46d02f9 | Status: 200 | Time: 0.007s
+2025-03-23 06:18:45,928 - kademia - INFO - Request started | e0ba581f-040c-4d45-bd47-b9009deef675 | GET /favicon.ico
+2025-03-23 06:18:45,929 - kademia - INFO - Request completed | e0ba581f-040c-4d45-bd47-b9009deef675 | Status: 404 | Time: 0.001s
+2025-03-23 06:18:51,419 - kademia - INFO - Request started | b7d68e30-d8ff-412f-8561-f88bb9d941e7 | GET /docs
+2025-03-23 06:18:51,420 - kademia - INFO - Request completed | b7d68e30-d8ff-412f-8561-f88bb9d941e7 | Status: 200 | Time: 0.001s
+2025-03-23 06:18:51,534 - kademia - INFO - Request started | 2bb34b4e-0ac0-47ac-b852-3a55a8d3824a | GET /openapi.json
+2025-03-23 06:18:51,640 - kademia - INFO - Request completed | 2bb34b4e-0ac0-47ac-b852-3a55a8d3824a | Status: 200 | Time: 0.107s
+2025-03-23 06:19:14,861 - kademia - INFO - Request started | ae1da959-4715-430b-931f-1c80d19d9b27 | POST /api/v1/admin/students/
+2025-03-23 06:19:15,180 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-23 06:19:15,180 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-23 06:19:15,182 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-23 06:19:15,182 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-23 06:19:15,183 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-23 06:19:15,183 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-23 06:19:15,184 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-23 06:19:15,327 - sqlalchemy.engine.Engine - INFO - SELECT max(CAST(SUBSTRING(students.student_id FROM %(substring_1)s) AS INTEGER)) AS max_1 
+FROM students 
+WHERE students.student_id LIKE %(student_id_1)s AND students.session_start_year = %(session_start_year_1)s
+2025-03-23 06:19:15,328 - sqlalchemy.engine.Engine - INFO - [generated in 0.00074s] {'substring_1': 8, 'student_id_1': 'SCH-25-%', 'session_start_year_1': 2025}
+2025-03-23 06:19:15,339 - sqlalchemy.engine.Engine - INFO - INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at
+2025-03-23 06:19:15,340 - sqlalchemy.engine.Engine - INFO - [generated in 0.00085s] {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('65fefefb-ea56-4c2e-b343-9515d8fb470e'), 'password_hash': '$2b$12$LAXt4LoUe2LXjM8gjZNIhOtxNcKb0wbpZnQiAnVPKU2xotYg6eLv6', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-23 06:19:15,345 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-23 06:19:15,347 - kademia - ERROR - Unhandled exception | ae1da959-4715-430b-931f-1c80d19d9b27 | Foreign key constraint violation during create operation. Detail: Foreign key constraint violation during create operation. Detail: (psycopg2.errors.ForeignKeyViolation) insert or update on table "students" violates foreign key constraint "fk_students_academic_levels_level_id"
+DETAIL:  Key (level_id)=(00000000-0000-0000-0000-000000000002) is not present in table "academic_levels".
+
+[SQL: INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at]
+[parameters: {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('65fefefb-ea56-4c2e-b343-9515d8fb470e'), 'password_hash': '$2b$12$LAXt4LoUe2LXjM8gjZNIhOtxNcKb0wbpZnQiAnVPKU2xotYg6eLv6', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 98, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\users\student\student.py", line 18, in create_student
+    return student_crud.create_student(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\crud\users\student.py", line 30, in create_student
+    student = self.factory.create_student(data)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\factories\users\student.py", line 92, in create_student
+    raise RelationshipError(error=str(e), operation='create', entity='unknown_entity')
+app.core.errors.database_errors.RelationshipError: Foreign key constraint violation during create operation. Detail: Foreign key constraint violation during create operation. Detail: (psycopg2.errors.ForeignKeyViolation) insert or update on table "students" violates foreign key constraint "fk_students_academic_levels_level_id"
+DETAIL:  Key (level_id)=(00000000-0000-0000-0000-000000000002) is not present in table "academic_levels".
+
+[SQL: INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at]
+[parameters: {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('65fefefb-ea56-4c2e-b343-9515d8fb470e'), 'password_hash': '$2b$12$LAXt4LoUe2LXjM8gjZNIhOtxNcKb0wbpZnQiAnVPKU2xotYg6eLv6', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-23 06:19:15,360 - kademia - WARNING - RelationshipError | ae1da959-4715-430b-931f-1c80d19d9b27 | Foreign key constraint violation during create operation. Detail: Foreign key constraint violation during create operation. Detail: (psycopg2.errors.ForeignKeyViolation) insert or update on table "students" violates foreign key constraint "fk_students_academic_levels_level_id"
+DETAIL:  Key (level_id)=(00000000-0000-0000-0000-000000000002) is not present in table "academic_levels".
+
+[SQL: INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at]
+[parameters: {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('65fefefb-ea56-4c2e-b343-9515d8fb470e'), 'password_hash': '$2b$12$LAXt4LoUe2LXjM8gjZNIhOtxNcKb0wbpZnQiAnVPKU2xotYg6eLv6', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-23 06:20:50,617 - kademia - INFO - Application started
+2025-03-23 06:25:14,191 - kademia - INFO - Application started
+2025-03-23 06:25:16,351 - kademia - INFO - Request started | 1ed27a93-6e9e-4b1f-9c95-be31f36274c7 | GET /docs
+2025-03-23 06:25:16,352 - kademia - INFO - Request completed | 1ed27a93-6e9e-4b1f-9c95-be31f36274c7 | Status: 200 | Time: 0.000s
+2025-03-23 06:25:16,454 - kademia - INFO - Request started | 8deb7866-421c-4d5d-b3bd-07d025f75343 | GET /openapi.json
+2025-03-23 06:25:16,543 - kademia - INFO - Request completed | 8deb7866-421c-4d5d-b3bd-07d025f75343 | Status: 200 | Time: 0.089s
+2025-03-23 06:25:26,715 - kademia - INFO - Request started | eb1a05fa-2157-4373-b59f-943a3de9a8d9 | POST /api/v1/admin/students/
+2025-03-23 06:25:27,185 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-23 06:25:27,186 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-23 06:25:27,187 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-23 06:25:27,188 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-23 06:25:27,189 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-23 06:25:27,189 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-23 06:25:27,191 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-23 06:25:27,348 - sqlalchemy.engine.Engine - INFO - SELECT max(CAST(SUBSTRING(students.student_id FROM %(substring_1)s) AS INTEGER)) AS max_1 
+FROM students 
+WHERE students.student_id LIKE %(student_id_1)s AND students.session_start_year = %(session_start_year_1)s
+2025-03-23 06:25:27,349 - sqlalchemy.engine.Engine - INFO - [generated in 0.00063s] {'substring_1': 8, 'student_id_1': 'SCH-25-%', 'session_start_year_1': 2025}
+2025-03-23 06:25:27,358 - sqlalchemy.engine.Engine - INFO - INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at
+2025-03-23 06:25:27,359 - sqlalchemy.engine.Engine - INFO - [generated in 0.00088s] {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('46e655eb-4aaa-4941-ae12-0a6772be0482'), 'password_hash': '$2b$12$GRt.G24kntPszksAfDx2AerB.Cw6QR7N8.OxNPjcPNi69krqC3cYC', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-23 06:25:27,365 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-23 06:25:27,366 - kademia - ERROR - Unhandled exception | eb1a05fa-2157-4373-b59f-943a3de9a8d9 | Error during during fk insertion of Academic Level with id:00000000-0000-0000-0000-000000000002 during create operation. Detail Foreign key constraint violation during create operation. Detail: (psycopg2.errors.ForeignKeyViolation) insert or update on table "students" violates foreign key constraint "fk_students_academic_levels_level_id"
+DETAIL:  Key (level_id)=(00000000-0000-0000-0000-000000000002) is not present in table "academic_levels".
+
+[SQL: INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at]
+[parameters: {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('46e655eb-4aaa-4941-ae12-0a6772be0482'), 'password_hash': '$2b$12$GRt.G24kntPszksAfDx2AerB.Cw6QR7N8.OxNPjcPNi69krqC3cYC', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 98, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\users\student\student.py", line 18, in create_student
+    return student_crud.create_student(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\crud\users\student.py", line 30, in create_student
+    student = self.factory.create_student(data)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\factories\users\student.py", line 82, in create_student
+    raise error_class(id=entity_id, detail=error_message, action='create')
+app.core.errors.student_organisation_errors.RelatedLevelNotFoundError: Error during during fk insertion of Academic Level with id:00000000-0000-0000-0000-000000000002 during create operation. Detail Foreign key constraint violation during create operation. Detail: (psycopg2.errors.ForeignKeyViolation) insert or update on table "students" violates foreign key constraint "fk_students_academic_levels_level_id"
+DETAIL:  Key (level_id)=(00000000-0000-0000-0000-000000000002) is not present in table "academic_levels".
+
+[SQL: INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at]
+[parameters: {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('46e655eb-4aaa-4941-ae12-0a6772be0482'), 'password_hash': '$2b$12$GRt.G24kntPszksAfDx2AerB.Cw6QR7N8.OxNPjcPNi69krqC3cYC', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-23 06:25:27,375 - kademia - WARNING - RelationshipError | eb1a05fa-2157-4373-b59f-943a3de9a8d9 | Error during during fk insertion of Academic Level with id:00000000-0000-0000-0000-000000000002 during create operation. Detail Foreign key constraint violation during create operation. Detail: (psycopg2.errors.ForeignKeyViolation) insert or update on table "students" violates foreign key constraint "fk_students_academic_levels_level_id"
+DETAIL:  Key (level_id)=(00000000-0000-0000-0000-000000000002) is not present in table "academic_levels".
+
+[SQL: INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at]
+[parameters: {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('46e655eb-4aaa-4941-ae12-0a6772be0482'), 'password_hash': '$2b$12$GRt.G24kntPszksAfDx2AerB.Cw6QR7N8.OxNPjcPNi69krqC3cYC', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-23 06:26:13,095 - kademia - INFO - Application started
+2025-03-23 06:26:14,824 - kademia - INFO - Request started | 54ced96a-5b58-4156-a8f8-e206471921cc | GET /docs
+2025-03-23 06:26:14,826 - kademia - INFO - Request completed | 54ced96a-5b58-4156-a8f8-e206471921cc | Status: 200 | Time: 0.002s
+2025-03-23 06:26:14,939 - kademia - INFO - Request started | 4555b107-8a8d-4e95-b594-8af4c9eca489 | GET /openapi.json
+2025-03-23 06:26:15,027 - kademia - INFO - Request completed | 4555b107-8a8d-4e95-b594-8af4c9eca489 | Status: 200 | Time: 0.087s
+2025-03-23 06:26:27,442 - kademia - INFO - Request started | 3df151d7-e140-4e79-914e-32537217ffa9 | POST /api/v1/admin/students/
+2025-03-23 06:26:27,766 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-03-23 06:26:27,767 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-23 06:26:27,768 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-03-23 06:26:27,768 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-23 06:26:27,769 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-03-23 06:26:27,770 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-03-23 06:26:27,771 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-23 06:26:27,934 - sqlalchemy.engine.Engine - INFO - SELECT max(CAST(SUBSTRING(students.student_id FROM %(substring_1)s) AS INTEGER)) AS max_1 
+FROM students 
+WHERE students.student_id LIKE %(student_id_1)s AND students.session_start_year = %(session_start_year_1)s
+2025-03-23 06:26:27,935 - sqlalchemy.engine.Engine - INFO - [generated in 0.00062s] {'substring_1': 8, 'student_id_1': 'SCH-25-%', 'session_start_year_1': 2025}
+2025-03-23 06:26:27,944 - sqlalchemy.engine.Engine - INFO - INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at
+2025-03-23 06:26:27,945 - sqlalchemy.engine.Engine - INFO - [generated in 0.00090s] {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('d3f020c5-8d57-4018-a489-f2ba0ed204e0'), 'password_hash': '$2b$12$7qXILEf3yYKtM.zMx.8ATOhlyZlssLM41e7/SftK20ok0g2FA088C', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}
+2025-03-23 06:26:27,951 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-03-23 06:26:27,952 - kademia - ERROR - Unhandled exception | 3df151d7-e140-4e79-914e-32537217ffa9 | Error during during fk insertion of Academic Level with id:00000000-0000-0000-0000-000000000002 during create operation. Detail Foreign key constraint violation during create operation. Detail: (psycopg2.errors.ForeignKeyViolation) insert or update on table "students" violates foreign key constraint "fk_students_academic_levels_level_id"
+DETAIL:  Key (level_id)=(00000000-0000-0000-0000-000000000002) is not present in table "academic_levels".
+
+[SQL: INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at]
+[parameters: {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('d3f020c5-8d57-4018-a489-f2ba0ed204e0'), 'password_hash': '$2b$12$7qXILEf3yYKtM.zMx.8ATOhlyZlssLM41e7/SftK20ok0g2FA088C', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 157, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\middleware\error_handler.py", line 98, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\fastapi\routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\starlette\concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\routers\users\student\student.py", line 18, in create_student
+    return student_crud.create_student(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\crud\users\student.py", line 30, in create_student
+    student = self.factory.create_student(data)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\factories\users\student.py", line 82, in create_student
+    raise error_class(id=entity_id, detail=error_message, action='create')
+app.core.errors.student_organisation_errors.RelatedLevelNotFoundError: Error during during fk insertion of Academic Level with id:00000000-0000-0000-0000-000000000002 during create operation. Detail Foreign key constraint violation during create operation. Detail: (psycopg2.errors.ForeignKeyViolation) insert or update on table "students" violates foreign key constraint "fk_students_academic_levels_level_id"
+DETAIL:  Key (level_id)=(00000000-0000-0000-0000-000000000002) is not present in table "academic_levels".
+
+[SQL: INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at]
+[parameters: {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('d3f020c5-8d57-4018-a489-f2ba0ed204e0'), 'password_hash': '$2b$12$7qXILEf3yYKtM.zMx.8ATOhlyZlssLM41e7/SftK20ok0g2FA088C', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-23 06:26:27,963 - kademia - WARNING - RelationshipError | 3df151d7-e140-4e79-914e-32537217ffa9 | Error during during fk insertion of Academic Level with id:00000000-0000-0000-0000-000000000002 during create operation. Detail Foreign key constraint violation during create operation. Detail: (psycopg2.errors.ForeignKeyViolation) insert or update on table "students" violates foreign key constraint "fk_students_academic_levels_level_id"
+DETAIL:  Key (level_id)=(00000000-0000-0000-0000-000000000002) is not present in table "academic_levels".
+
+[SQL: INSERT INTO students (student_id, guardian_id, user_type, access_level, status, date_of_birth, image_url, level_id, class_id, department_id, is_repeating, session_start_year, date_left, graduation_date, id, password_hash, first_name, last_name, gender, last_login, deletion_eligible, created_by, last_modified_by, created_at, last_modified_at, is_archived, archived_at, archive_reason, archived_by) VALUES (%(student_id)s, %(guardian_id)s::UUID, %(user_type)s, %(access_level)s, %(status)s, %(date_of_birth)s, %(image_url)s, %(level_id)s::UUID, %(class_id)s::UUID, %(department_id)s::UUID, %(is_repeating)s, %(session_start_year)s, %(date_left)s, %(graduation_date)s, %(id)s::UUID, %(password_hash)s, %(first_name)s, %(last_name)s, %(gender)s, %(last_login)s, %(deletion_eligible)s, %(created_by)s::UUID, %(last_modified_by)s::UUID, now(), now(), %(is_archived)s, %(archived_at)s, %(archive_reason)s, %(archived_by)s::UUID) RETURNING students.created_at, students.last_modified_at]
+[parameters: {'student_id': 'SCH-25-00001', 'guardian_id': UUID('00000000-0000-0000-0000-000000000004'), 'user_type': 'STUDENT', 'access_level': 'READ', 'status': 'ENROLLED', 'date_of_birth': datetime.date(2010, 5, 15), 'image_url': None, 'level_id': UUID('00000000-0000-0000-0000-000000000002'), 'class_id': UUID('00000000-0000-0000-0000-000000000001'), 'department_id': UUID('00000000-0000-0000-0000-000000000003'), 'is_repeating': False, 'session_start_year': 2025, 'date_left': None, 'graduation_date': None, 'id': UUID('d3f020c5-8d57-4018-a489-f2ba0ed204e0'), 'password_hash': '$2b$12$7qXILEf3yYKtM.zMx.8ATOhlyZlssLM41e7/SftK20ok0g2FA088C', 'first_name': 'Omotara', 'last_name': 'Johnson', 'gender': 'FEMALE', 'last_login': None, 'deletion_eligible': False, 'created_by': UUID('00000000-0000-0000-0000-000000000000'), 'last_modified_by': UUID('00000000-0000-0000-0000-000000000000'), 'is_archived': False, 'archived_at': None, 'archive_reason': None, 'archived_by': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-23 06:26:56,006 - kademia - INFO - Application started
+2025-03-23 06:53:43,254 - kademia - INFO - Application started

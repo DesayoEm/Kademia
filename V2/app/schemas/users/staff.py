@@ -8,22 +8,20 @@ class StaffFilterParams(BaseFilterParams):
     last_name: Optional[str] = None
     order_by: Literal["last_name", "created_at"] = "last_name"
 
-class StaffEnumsRequest(BaseModel):
-    user_type: UserType
-    staff_type: StaffType
-    staff_availability: StaffAvailability
-    status: EmploymentStatus
-    
+
 class StaffBase(UserBase):
     """Base model for staff"""
-    user_type: UserType
-    status: EmploymentStatus
-    staff_type: StaffType
     email_address: str
     address: str
     phone: str
     department_id: UUID
     role_id: UUID
+
+
+
+class StaffCreate(StaffBase):
+    """Used for creating new staff"""
+    staff_type: StaffType
     date_joined: date
 
     model_config = ConfigDict(
@@ -31,30 +29,24 @@ class StaffBase(UserBase):
         extra="ignore",
         json_schema_extra={
             "example": {
-            "first_name": "Aina",
-            "last_name": "Folu",
-            "gender": "FEMALE",
-            # Staff specific fields
-            "user_type": "STAFF",
-            "status": "ACTIVE",
-            "staff_type": "Educator",
-            "email_address": "aina.folu@example.com",
-            "address": "456 Allen Avenue, Lagos",
-            "phone": "+2348056794345",
-            "department_id": "00000000-0000-0000-0000-000000000001",
-            "role_id": "00000000-0000-0000-0000-000000000002",
-            "date_joined": "2024-01-15",
-        }
-    })
+                "first_name": "Aina",
+                "last_name": "Folu",
+                "gender": "FEMALE",
+                # Staff specific fields
+                "staff_type": "Educator",
+                "email_address": "aina.folu@example.com",
+                "address": "456 Allen Avenue, Lagos",
+                "phone": "+2348056794345",
+                "department_id": "00000000-0000-0000-0000-000000000001",
+                "role_id": "00000000-0000-0000-0000-000000000002",
+                "date_joined": "2024-01-15",
+            }
+        })
 
 
-class StaffCreate(StaffBase):
-    """Used for creating new staff"""
-
-
-class StaffUpdate(BaseModel):
+class StaffUpdate(StaffBase):
     """Used for updating staff"""
-    date_left: date | None = None
+
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -65,21 +57,16 @@ class StaffUpdate(BaseModel):
                 "last_name": "Kincaid",
                 "gender": "FEMALE",
                 # Staff specific fields
-                "user_type": "STAFF",
-                "status": "ACTIVE",
-                "staff_type": "Admin",
                 "email_address": "aina.kincaid@example.com",
                 "address": "456 Allen Avenue, Lagos",
                 "phone": "+2348056794506",
                 "department_id": "00000000-0000-0000-0000-000000000001",
-                "role_id": "00000000-0000-0000-0000-000000000002",
-                "date_joined": "2024-01-15",
-                "date_left": None
+                "role_id": "00000000-0000-0000-0000-000000000002"
             }
         })
 
 
-class StaffResponse(StaffBase):
+class StaffResponse(StaffCreate):
     """Response model for staff"""
     pass
 

@@ -29,7 +29,7 @@ class Student(UserBase):
 
     student_id: Mapped[str] = mapped_column(String(14), unique=True)
     guardian_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('guardians.id',
-                ondelete='RESTRICT',name='fk_students_parents_parent_id')
+                ondelete='RESTRICT',name='fk_students_guardians_guardian_id')
             )
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.STUDENT)
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)

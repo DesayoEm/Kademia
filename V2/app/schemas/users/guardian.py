@@ -23,7 +23,7 @@ class GuardianBase(UserBase):
                 "gender": "MALE",
                 "email_address": "bola.coker@example.com",
                 "address": "123 Akala Express Ibadan",
-                "phone": "08012345678"
+                "phone": "+2348056794345"
         }
         }
     )
@@ -60,7 +60,7 @@ class GuardiansInDB(GuardianBase, ProfileInDb):
             #Guardian specific fields
             "email_address": "bola.coker@example.com",
             "address": "123 Akala Express Ibadan",
-            "phone": "08012345678",
+            "phone": "+2348056794345",
             #ProfileInDb fields
             "id": "00000000-0000-0000-0000-000000000000",
             "password_hash": "$2b$12$LQV3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewKxcqII5K8Ly.Nm",

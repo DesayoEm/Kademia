@@ -40,7 +40,6 @@ class StaffFactory:
                 "last_name": self.validator.validate_name(data.last_name),
                 "password_hash": self.password_service.hash_password(password),
                 "gender": data.gender,
-                "status": data.status,
                 "email_address": self.validator.validate_staff_email(data.email_address),
                 "address": self.validator.validate_address(data.address),
                 "phone": self.validator.validate_phone(data.phone),
@@ -80,16 +79,16 @@ class StaffFactory:
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
-                'role_id': RelatedRoleNotFoundError,
-                'department_id': RelatedDepartmentNotFoundError,
+                'fk_staff_staff_roles_role_id': ('role_id', RelatedRoleNotFoundError),
+                'fk_staff_staff_departments_department_id': ('department_id', RelatedDepartmentNotFoundError),
                 }
-            for field, error_class in fk_error_mapping.items():
-                if field in error_message:
-                    if hasattr(staff_data, field):
-                        entity_id = getattr(staff_data, field)
-                        raise error_class(id=entity_id, detail=str(e), action='create')
-                    else:
-                        raise RelationshipError(error=str(e), operation='create', entity='unknown_entity')
+            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    entity_id = getattr(staff_data, attr_name, None)
+                    if entity_id:
+                        raise error_class(id=entity_id, detail=error_message, action='create')
+
+            raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
 
     def get_staff(self, staff_id: UUID) -> Staff:
@@ -130,6 +129,12 @@ class StaffFactory:
                 existing.first_name = self.validator.validate_name(data.pop('first_name'))
             if 'last_name' in data:
                 existing.last_name = self.validator.validate_name(data.pop('last_name'))
+            if 'email_address' in data:
+                existing.first_name = self.validator.validate_staff_email(data.pop('email_address'))
+            if 'phone' in data:
+                existing.last_name = self.validator.validate_phone(data.pop('phone'))
+            if 'address' in data:
+                existing.last_name = self.validator.validate_address(data.pop('address'))
 
             for key, value in data.items():
                 if hasattr(existing, key):
@@ -137,7 +142,6 @@ class StaffFactory:
 
             existing.last_modified_by = SYSTEM_USER_ID
             return self.repository.update(staff_id, existing)
-
         except UniqueViolationError as e:
             error_message = str(e).lower()
             if "staff_phone_key" in error_message:
@@ -150,17 +154,15 @@ class StaffFactory:
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
-                'role_id': RelatedRoleNotFoundError,
-                'department_id': RelatedDepartmentNotFoundError,
-            }
-            for field, error_class in fk_error_mapping.items():
-                if field in error_message:
-                    if field in data:
-                        entity_id = data[field]
-                        raise error_class(id=entity_id, detail=str(e), action='update')
-                    else:
-                        raise RelationshipError(error=str(e), operation='update', entity='unknown')
-
+                'fk_staff_staff_roles_role_id': ('role_id', RelatedRoleNotFoundError),
+                'fk_staff_staff_departments_department_id': ('department_id', RelatedDepartmentNotFoundError),
+                }
+            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    entity_id = data.get(attr_name, None)
+                    if entity_id:
+                        raise error_class(id=entity_id, detail=error_message, action='update')
+            raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
 
     def archive_staff(self, staff_id: UUID, reason: ArchiveReason) -> Staff:
             """Archive staff.

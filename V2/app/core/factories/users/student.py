@@ -52,6 +52,8 @@ class StudentFactory:
             level_id=student_data.level_id,
             class_id=student_data.class_id,
             department_id=student_data.department_id,
+            created_by=SYSTEM_USER_ID,
+            last_modified_by=SYSTEM_USER_ID,
         )
         try:
             return self.repository.create(new_student)
@@ -67,18 +69,18 @@ class StudentFactory:
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
-                'guardian_id': RelatedGuardianNotFoundError,
-                'department_id': RelatedDepartmentNotFoundError,
-                'level_id': RelatedLevelNotFoundError,
-                'class_id': RelatedClassNotFoundError,
-                }
-            for field, error_class in fk_error_mapping.items():
-                if field in error_message:
-                    if hasattr(student_data, field):
-                        entity_id = getattr(student_data, field)
-                        raise error_class(id=entity_id, detail=str(e), action='create')
-                    else:
-                        raise RelationshipError(error=str(e), operation='create', entity='unknown_entity')
+                'fk_students_guardians_guardian_id': ('guardian_id', RelatedGuardianNotFoundError),
+                'fk_students_academic_levels_level_id': ('level_id', RelatedLevelNotFoundError),
+                'fk_students_classes_class_id': ('class_id', RelatedClassNotFoundError),
+                'fk_students_student_departments_department_id': ('department_id', RelatedDepartmentNotFoundError),
+            }
+            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    entity_id = getattr(student_data, attr_name, None)
+                    if entity_id:
+                        raise error_class(id=entity_id, detail=error_message, action='create')
+
+            raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
 
     def get_student(self, student_id: UUID) -> Student:

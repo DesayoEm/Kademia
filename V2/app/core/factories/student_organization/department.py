@@ -52,18 +52,16 @@ class StudentDepartmentFactory:
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
-                'student_rep_id': RelatedStudentNotFoundError,
-                'assistant_rep_id': RelatedStudentNotFoundError,
-                }
-            for field, error_class in fk_error_mapping.items():
-                if field in error_message:
-                    if hasattr(new_department, field):
-                        entity_id = getattr(new_department, field)
-                        raise error_class(id=entity_id, detail=str(e), action='create')
-                    else:
-                        raise RelationshipError(error=str(e), operation='create', entity='unknown')
-
-
+                'fk_student_departments_educators_mentor_id': ('mentor_id', RelatedEducatorNotFoundError),
+                'fk_classes_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
+                'fk_classes_students_assistant_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
+            }
+            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    entity_id = getattr(new_department, attr_name, None)
+                    if entity_id:
+                        raise error_class(id=entity_id, detail=error_message, action='create')
+            raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
     def get_student_department(self, department_id: UUID) -> StudentDepartment:
         """Get a specific student department by ID.
@@ -105,8 +103,8 @@ class StudentDepartmentFactory:
                 if hasattr(existing, key):
                     setattr(existing, key, value)
             existing.last_modified_by = SYSTEM_USER_ID
-
             return self.repository.update(department_id, existing)
+
         except EntityNotFoundError as e:
             raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
         except UniqueViolationError as e:
@@ -115,17 +113,16 @@ class StudentDepartmentFactory:
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
-                'student_rep_id': RelatedStudentNotFoundError,
-                'assistant_rep_id': RelatedStudentNotFoundError,
-                'mentor_id': RelatedEducatorNotFoundError,
+                'fk_student_departments_educators_mentor_id': ('mentor_id', RelatedEducatorNotFoundError),
+                'fk_classes_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
+                'fk_classes_students_assistant_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
             }
-            for field, error_class in fk_error_mapping.items():
-                if field in error_message:
-                    if field in data:
-                        entity_id = data[field]
-                        raise error_class(id=entity_id, detail=str(e), action='update')
-            raise RelationshipError(error=str(e), operation='update', entity='unknown')
-
+            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    entity_id = data.get(attr_name, None)
+                    if entity_id:
+                        raise error_class(id=entity_id, detail=error_message, action='update')
+            raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StudentDepartment:
         """Archive a student department.

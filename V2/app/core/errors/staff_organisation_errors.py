@@ -11,24 +11,6 @@ class StaffOrganizationError(KademiaError):
     """
     DOMAIN = "StaffOrganization"
 
-# Domain-specific extensions of input validation errors
-class StaffEmptyFieldError(EmptyFieldError):
-    def __init__(self, input_value: str):
-        super().__init__(data=input_value, domain=StaffOrganizationError.DOMAIN)
-
-class StaffBlankFieldError(BlankFieldError):
-    def __init__(self, input_value: str):
-        super().__init__(data=input_value, domain=StaffOrganizationError.DOMAIN)
-
-class StaffTextTooShortError(TextTooShortError):
-    def __init__(self, input_value: str, min_length=3):
-        super().__init__(data=input_value, min_length=min_length, domain=StaffOrganizationError.DOMAIN)
-
-class StaffInvalidCharacterError(InvalidCharacterError):
-    def __init__(self, input_value: str):
-        super().__init__(data=input_value, domain=StaffOrganizationError.DOMAIN)
-
-
 
 # Original domain-specific errors
 class DuplicateDepartmentError(StaffOrganizationError, UniqueViolationError):

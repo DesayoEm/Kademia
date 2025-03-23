@@ -38,7 +38,9 @@ class GuardianFactory:
             gender=guardian_data.gender,
             email_address=self.validator.validate_email_address(guardian_data.email_address),
             address=self.validator.validate_address(guardian_data.address),
-            phone=self.validator.validate_phone(guardian_data.address.phone),
+            phone=self.validator.validate_phone(guardian_data.phone),
+            created_by=SYSTEM_USER_ID,
+            last_modified_by=SYSTEM_USER_ID,
         )
         try:
             return self.repository.create(new_guardian)
@@ -46,13 +48,15 @@ class GuardianFactory:
             error_message = str(e).lower()
             if "guardians_phone_key" in error_message:
                 raise DuplicateGuardianError(
-                    input_value=guardian_data.phone, detail=error_message)
+                    input_value=guardian_data.phone, detail=error_message, field = "phone")
             elif "guardians_email_address_key" in error_message:
                 raise DuplicateGuardianError(
-                    input_value=guardian_data.email_address, detail=error_message)
+                    input_value=guardian_data.email_address, detail=error_message,
+                    field="email_address")
             else:
                 raise DuplicateGuardianError(
-                    input_value="unknown field",detail=error_message)
+                    input_value="unknown field",detail=error_message,
+                         field = "Unknown")
         except RelationshipError as e:
             raise RelationshipError(error=str(e), operation='create', entity='unknown_entity')
 
@@ -114,13 +118,15 @@ class GuardianFactory:
             error_message = str(e).lower()
             if "guardians_phone_key" in error_message:
                 raise DuplicateGuardianError(
-                    input_value=original.get('phone', 'unknown'), detail=error_message)
+                    input_value=original.get('phone', 'unknown'), detail=error_message,
+                    field = "phone")
             elif "guardians_email_address_key" in error_message:
                 raise DuplicateGuardianError(
-                    input_value=original.get('email_address', 'unknown'), detail=error_message)
+                    input_value=original.get('email_address', 'unknown'), detail=error_message,
+                    field = "email_address")
             else:
                 raise DuplicateGuardianError(
-                    input_value="unknown field",detail=error_message)
+                    input_value="unknown field",detail=error_message, field ="unknown")
 
         except RelationshipError as e:
             raise RelationshipError(error=str(e), operation='update', entity='unknown')

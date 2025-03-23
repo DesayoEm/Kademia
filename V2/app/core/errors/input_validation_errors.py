@@ -57,5 +57,5 @@ class InvalidSessionYearError(InputValidationError):
     """Raised when session year is in the past or too far into the future."""
     def __init__(self, entry: int, current_year):
         super().__init__()
-        self.user_message = f"Session year has to be between {current_year} and {current_year+2}"
+        self.user_message = f"Session year has to be between {current_year} and {current_year+1}"
         self.log_message = f"Invalid session year entered: {entry}"
