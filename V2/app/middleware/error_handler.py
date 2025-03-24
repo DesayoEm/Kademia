@@ -16,7 +16,8 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
     error_map = {
 
         # Auth errors
-        InvalidUserError: status.HTTP_401_UNAUTHORIZED,
+        InvalidCredentialsError: status.HTTP_401_UNAUTHORIZED,
+        UserNotFoundError: status.HTTP_404_NOT_FOUND,
 
         TokenError: status.HTTP_401_UNAUTHORIZED,
         TokenExpiredError: status.HTTP_401_UNAUTHORIZED,
@@ -41,10 +42,6 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         InvalidSessionYearError: status.HTTP_400_BAD_REQUEST,
 
         #Staff organization errors
-        StaffEmptyFieldError: status.HTTP_400_BAD_REQUEST,
-        StaffBlankFieldError: status.HTTP_400_BAD_REQUEST,
-        StaffTextTooShortError: status.HTTP_400_BAD_REQUEST,
-
         DepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateDepartmentError: status.HTTP_409_CONFLICT,
         RelatedDepartmentNotFoundError: status.HTTP_404_NOT_FOUND,

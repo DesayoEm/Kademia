@@ -19,6 +19,15 @@ class StudentOrganizationValidator:
 
         return value.strip().title()
 
+    def validate_level_name(self, value:str) -> str:
+        if not value:
+            raise EmptyFieldError(entry = value, domain = self.domain)
+        if not value.strip():
+            raise BlankFieldError(entry = value, domain = self.domain)
+        if len(value.strip()) < 3:
+            raise TextTooShortError(entry = value, domain = self.domain, min_length = 3)
+
+        return value.strip().upper()
 
     def validate_description(self, value:str):
         if not value:

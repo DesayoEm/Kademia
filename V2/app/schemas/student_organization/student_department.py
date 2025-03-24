@@ -25,9 +25,9 @@ class DepartmentBase(BaseModel):
             "name": "Science",
             "code": "SCI",
             "description": "Science Classes",
-            "mentor_id": None,
-            "student_rep_id": None,
-            "assistant_rep_id":  None
+            "mentor_id": "00000000-0000-0000-0000-000000000099",
+            "student_rep_id": "00000000-0000-0000-0000-000000000099",
+            "assistant_rep_id":  "00000000-0000-0000-0000-000000000099"
         }}
         )
 

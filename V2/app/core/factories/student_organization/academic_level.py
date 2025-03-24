@@ -30,7 +30,7 @@ class AcademicLevelFactory:
         """
         academic_level = AcademicLevel(
             id = uuid4(),
-            name = self.validator.validate_name(new_academic_level.name),
+            name = self.validator.validate_level_name(new_academic_level.name),
             description = self.validator.validate_name(new_academic_level.description),
             order = new_academic_level.order,
             created_by=SYSTEM_USER_ID,#Placeholder until auth is implemented

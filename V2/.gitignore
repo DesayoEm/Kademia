@@ -1,4 +1,6 @@
 venv/
+logs/
+*.log
 *.egg-info/
 __pycache__/
 *.idea/

@@ -46,6 +46,11 @@ class StudentDepartmentFactory:
                 raise DuplicateStudentDepartmentError(
                     input_value=new_department.name, detail=str(e), field = 'name'
                 )
+            if "student_departments_code_key" in error_message:
+                raise DuplicateStudentDepartmentError(
+                    input_value=new_department.name, detail=str(e), field = 'name'
+                )
+
             else:
                 raise DuplicateStudentDepartmentError(
                     input_value="unknown field", field="unknown", detail=error_message)
@@ -53,8 +58,8 @@ class StudentDepartmentFactory:
             error_message = str(e)
             fk_error_mapping = {
                 'fk_student_departments_educators_mentor_id': ('mentor_id', RelatedEducatorNotFoundError),
-                'fk_classes_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
-                'fk_classes_students_assistant_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
+                'fk_student_departments_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
+                'fk_student_departments_assistant_student_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
             }
             for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
                 if fk_constraint in error_message:
