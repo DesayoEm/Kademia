@@ -4,7 +4,7 @@ from ...database.session_manager import get_db
 from ...core.services.auth.auth_service import AuthService
 from ...core.services.auth.token_service import TokenService
 from ...schemas.auth.log_in import(
-    StaffLoginRequest, StudentLoginRequest, GuardianLoginRequest, TokenResponse
+    StaffLoginRequest, StudentLoginRequest, GuardianLoginRequest
 )
 from ...schemas.enums import UserType
 
@@ -13,7 +13,7 @@ token_service=TokenService()
 
 router = APIRouter()
 
-@router.post("/staff/login", response_model=TokenResponse)
+@router.post("/staff/login")
 async def staff_login(login_data: StaffLoginRequest, db: Session = Depends(get_db)):
     auth_service = AuthService(db)
     return auth_service.log_in(
@@ -22,7 +22,7 @@ async def staff_login(login_data: StaffLoginRequest, db: Session = Depends(get_d
         user_type=UserType.STAFF
     )
 
-@router.post("/student/login", response_model=TokenResponse)
+@router.post("/student/login")
 async def student_login(login_data: StudentLoginRequest, db: Session = Depends(get_db)):
     auth_service = AuthService(db)
     return auth_service.log_in(
@@ -31,7 +31,7 @@ async def student_login(login_data: StudentLoginRequest, db: Session = Depends(g
         user_type=UserType.STUDENT
     )
 
-@router.post("/guardian/login", response_model=TokenResponse)
+@router.post("/guardian/login")
 async def guardian_login(login_data: GuardianLoginRequest, db: Session = Depends(get_db)):
     auth_service = AuthService(db)
     return auth_service.log_in(

@@ -138,14 +138,13 @@ class SQLAlchemyRepository(BaseRepository[T]):
             query = self.active_query()
             query = self.apply_filters(query, fields, filters)
 
-            # Sorting
+
             order_by = getattr(filters, 'order_by', 'created_at')
             order_dir = getattr(filters, 'order_dir', 'asc')
             if order_by and hasattr(self.model, order_by):
                 order_func = desc if order_dir == 'desc' else asc
                 query = query.order_by(order_func(getattr(self.model, order_by)))
 
-            # Pagination
             limit = getattr(filters, 'limit', 100)
             offset = getattr(filters, 'offset', 0)
 

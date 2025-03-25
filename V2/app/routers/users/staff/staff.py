@@ -1,28 +1,28 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from ....database.models.enums import ArchiveReason
 from ....schemas.users.staff import StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams
 from fastapi import Depends, APIRouter
 from ....database.session_manager import get_db
 from ....crud.users.staff import StaffCrud
 from ....schemas.shared_models import ArchiveRequest
+from ....core.services.auth.dependencies import AccessTokenBearer
 from fastapi import Query
 from typing import Annotated
 
 router = APIRouter()
-
+bearer= AccessTokenBearer()
 
 @router.post("/", response_model= StaffResponse, status_code=201)
-def create_staff(data:StaffCreate,
-                db: Session = Depends(get_db)):
+def create_staff(data:StaffCreate,db: Session = Depends(get_db),
+                        user_details=Depends(bearer)):
         staff_crud = StaffCrud(db)
         return staff_crud.create_staff(data)
 
 
 @router.get("/", response_model=list[StaffResponse])
 def get_staff(filters: Annotated[StaffFilterParams, Query()],
-                db: Session = Depends(get_db)):
+                db: Session = Depends(get_db), user_details=Depends(bearer)):
         staff_crud = StaffCrud(db)
         return staff_crud.get_all_staff(filters)
 

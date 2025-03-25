@@ -18,6 +18,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         # Auth errors
         InvalidCredentialsError: status.HTTP_401_UNAUTHORIZED,
         UserNotFoundError: status.HTTP_404_NOT_FOUND,
+        EmailFailedToSendError: status.HTTP_500_INTERNAL_SERVER_ERROR,
 
         TokenError: status.HTTP_401_UNAUTHORIZED,
         TokenExpiredError: status.HTTP_401_UNAUTHORIZED,

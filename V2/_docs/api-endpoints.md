@@ -2,11 +2,12 @@
 
 ## Authentication
 
-- [ ] POST /auth/login - Authenticate user and get tokens
+- [x] POST /auth/login - Authenticate user and get tokens
 - [ ] POST /auth/refresh - Refresh access token
 - [ ] POST /auth/logout - Invalidate tokens
 - [ ] GET /auth/me - Get current user profile
 - [ ] PUT /auth/change-password - Change user password
+- - [ ] PUT /auth/forgot-password - Change user password
 
 ## Users - General
 - [x] GET /users/{id} - Get user by ID

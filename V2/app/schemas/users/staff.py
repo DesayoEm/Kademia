@@ -1,6 +1,6 @@
 from ..common_imports import *
 from ..shared_models import *
-from ..enums import UserType, StaffType, StaffAvailability, EmploymentStatus
+from ..enums import StaffType
 from .base import UserBase, ProfileInDb
 
 class StaffFilterParams(BaseFilterParams):

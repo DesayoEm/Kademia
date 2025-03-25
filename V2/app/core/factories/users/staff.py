@@ -9,6 +9,7 @@ from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRe
 from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....core.services.auth.password_service import PasswordService
+from ....core.services.auth.email_service import EmailService
 from ....database.models.users import Staff, Educator, SupportStaff, AdminStaff
 
 
@@ -23,6 +24,8 @@ class StaffFactory:
         self.repository = SQLAlchemyRepository(Staff, session)
         self.validator = UserValidator()
         self.password_service = PasswordService()
+        self.email_service = EmailService()
+
 
     def create_staff(self, staff_data) -> Staff:
         """Create a new staff.
@@ -64,7 +67,10 @@ class StaffFactory:
         new_staff = create_staff_instance(staff_data)
 
         try:
+            self.email_service.send_staff_onboarding_email(
+                staff_data.email_address, staff_data.first_name, staff_data.last_name, password)
             return self.repository.create(new_staff)
+
         except UniqueViolationError as e:  #email or phone
             error_message = str(e).lower()
             if "staff_phone_key" in error_message:

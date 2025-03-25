@@ -47,13 +47,10 @@ class AuthService:
             user_data.update({
                 "email": user.email_address,
                 "staff_type": user.staff_type,
-                "role_id": str(user.role_id) if user.role_id else None
             })
         elif user_type == UserType.STUDENT:
             user_data.update({
                 "student_id": user.student_id,
-                "level_id": str(user.level_id),
-                "class_id": str(user.class_id)
             })
         elif user_type == UserType.GUARDIAN:
             user_data.update({
@@ -77,6 +74,7 @@ class AuthService:
             "token_type": "bearer",
             "user_type": user_type
         }
+
 
     def get_current_user(self, token: str):
         """Validate token and return current user"""

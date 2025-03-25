@@ -6,14 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="d49e4f62-7add-4eb8-a665-00ba3b079643" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/student_organization/academic_level.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/academic_level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/student_organization/department.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/department.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/validators/student_organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/validators/student_organization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/_docs/api-endpoints.md" beforeDir="false" afterPath="$PROJECT_DIR$/V2/_docs/api-endpoints.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/errors/auth_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/auth_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/users/staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/users/staff.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/services/auth/auth_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/auth/auth_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/db_repositories/sqlalchemy_repos/main_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/db_repositories/sqlalchemy_repos/main_repo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/routers/auth/staff_auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/auth/staff_auth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/schemas/auth/staff_auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/auth/log_in.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/schemas/student_organization/student_department.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/student_organization/student_department.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/logs/app_2025-03-23.log" beforeDir="false" afterPath="$PROJECT_DIR$/V2/logs/app_2025-03-23.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/routers/auth/log_in.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/auth/log_in.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/routers/users/staff/staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/users/staff/staff.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/schemas/auth/log_in.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/auth/log_in.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/schemas/users/staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/users/staff.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

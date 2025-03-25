@@ -15,6 +15,11 @@ class UserNotFoundError(AuthError):
         self.user_message = f"User not found!"
         self.log_message = f"Staff with id:{identifier} not found."
 
+class EmailFailedToSendError(AuthError):
+    """Raised when sending an email fails."""
+    def __init__(self, detail: str):
+        self.user_message = f"Failed to send email!"
+        self.log_message = f"Failed to send email: {detail}."
 
 #Token related errors
 class TokenError(AuthError):
