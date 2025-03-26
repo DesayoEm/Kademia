@@ -38,3 +38,17 @@ class TokenInvalidError(TokenError):
         self.user_message = "Invalid authentication token"
         self.log_message = f"Invalid authentication token. Detail:{error} "
         super().__init__()
+
+class AccessTokenRequiredError(TokenError):
+    """Raised when """
+    def __init__(self):
+        self.user_message = "Access token required, received refresh token"
+        self.log_message = f"Access token required, received refresh token"
+        super().__init__()
+
+class RefreshTokenRequiredError(TokenError):
+    """Raised when """
+    def __init__(self):
+        self.user_message = "Refresh token required, received access token"
+        self.log_message = f"Refresh token required, received access token"
+        super().__init__()

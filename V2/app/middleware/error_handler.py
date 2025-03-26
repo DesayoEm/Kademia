@@ -23,6 +23,8 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         TokenError: status.HTTP_401_UNAUTHORIZED,
         TokenExpiredError: status.HTTP_401_UNAUTHORIZED,
         TokenInvalidError: status.HTTP_401_UNAUTHORIZED,
+        AccessTokenRequiredError: status.HTTP_401_UNAUTHORIZED,
+        RefreshTokenRequiredError: status.HTTP_401_UNAUTHORIZED,
 
         #Generic database errors
         DatabaseError: status.HTTP_500_INTERNAL_SERVER_ERROR,

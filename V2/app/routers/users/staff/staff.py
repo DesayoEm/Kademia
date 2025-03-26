@@ -6,12 +6,12 @@ from fastapi import Depends, APIRouter
 from ....database.session_manager import get_db
 from ....crud.users.staff import StaffCrud
 from ....schemas.shared_models import ArchiveRequest
-from ....core.services.auth.dependencies import AccessTokenBearer
+from ....core.services.auth.dependencies import TokenBearer
 from fastapi import Query
 from typing import Annotated
 
 router = APIRouter()
-bearer= AccessTokenBearer()
+bearer= TokenBearer()
 
 @router.post("/", response_model= StaffResponse, status_code=201)
 def create_staff(data:StaffCreate,db: Session = Depends(get_db),
