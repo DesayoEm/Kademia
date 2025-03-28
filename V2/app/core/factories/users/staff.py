@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from ...errors.staff_organisation_errors import RelatedRoleNotFoundError, RelatedDepartmentNotFoundError
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
 from ....core.errors.user_profile_errors import DuplicateStaffError, StaffNotFoundError, StaffTypeError
-from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
+from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....core.services.auth.password_service import PasswordService
@@ -23,7 +23,7 @@ class StaffFactory:
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(Staff, session)
         self.validator = UserValidator()
-        self.password_service = PasswordService()
+        self.password_service = PasswordService(session)
         self.email_service = EmailService()
 
 

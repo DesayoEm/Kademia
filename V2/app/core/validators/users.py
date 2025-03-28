@@ -55,18 +55,8 @@ class UserValidator:
 
     @staticmethod
     def validate_phone(value: str) -> str:
-        """
-        Validates phone numbers in E.164 format.
-        All phone numbers must include the country code with a '+' prefix.
-        Args:
-            value: Phone number input to validate
-        Returns:
-            Cleaned phone number string in E.164 format
-        Raises:
-            InvalidPhoneError: If the phone number format is invalid
-        """
         cleaned_number = re.sub(r'[\s\-\(\)]', '', value.strip())
-        e164_pattern = re.compile(r'^\+\d{1,3}\d{8,12}$')
+        e164_pattern = re.compile(r'^\+\d{1,3}\d{11,15}$')
 
         if e164_pattern.match(cleaned_number):
             return cleaned_number

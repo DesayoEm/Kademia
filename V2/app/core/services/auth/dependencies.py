@@ -1,6 +1,5 @@
 from fastapi.security import HTTPBearer
-from fastapi import Request, Depends
-from ....database.session import get_db
+from fastapi import Request
 from sqlalchemy.orm import Session
 from ...errors.auth_errors import TokenInvalidError, UserNotFoundError
 from ....database.models.users import Staff, Guardian, Student
@@ -11,6 +10,7 @@ from ....core.errors.auth_errors import RefreshTokenRequiredError, TokenRevokedE
 from ....database.redis.tokens import token_blocklist
 
 token_service = TokenService()
+session = Session()
 
 class TokenBearer(HTTPBearer):
     def __init__(self, auto_error: bool = True):
@@ -49,12 +49,11 @@ class RefreshTokenBearer(TokenBearer):
 access_token_bearer = AccessTokenBearer()
 refresh_token_bearer = RefreshTokenBearer()
 
-def get_current_user(
-    token_data: dict = Depends(access_token_bearer),
-    db: Session = Depends(get_db)
-):
+
+def get_current_user(token_data, db_session):
     """Convert token data to a user object"""
-    user_data = token_data.get("user", {})
+
+    user_data = token_data["user"]
     user_id = user_data.get("id")
     user_type = user_data.get("user_type")
 
@@ -63,11 +62,11 @@ def get_current_user(
 
     user = None
     if user_type == UserType.STAFF:
-        user = db.query(Staff).filter(Staff.id == user_id).first()
+        user = db_session.query(Staff).filter(Staff.id == user_id).first()
     elif user_type == UserType.STUDENT:
-        user = db.query(Student).filter(Student.id == user_id).first()
+        user = db_session.query(Student).filter(Student.id == user_id).first()
     elif user_type == UserType.GUARDIAN:
-        user = db.query(Guardian).filter(Guardian.id == user_id).first()
+        user = db_session.query(Guardian).filter(Guardian.id == user_id).first()
 
     if user is None:
         raise UserNotFoundError(identifier=user_id)

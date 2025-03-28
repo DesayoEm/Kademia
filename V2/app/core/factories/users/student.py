@@ -12,7 +12,7 @@ from ...errors.user_profile_errors import (
     DuplicateStudentIDError, DuplicateStudentError, RelatedGuardianNotFoundError, StudentNotFoundError
 )
 from ...services.auth.password_service import PasswordService
-from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
+from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....core.services.users.student_service import StudentService
@@ -27,7 +27,7 @@ class StudentFactory:
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(Student, session)
         self.validator = UserValidator()
-        self.password_service = PasswordService()
+        self.password_service = PasswordService(session)
         self.student_service = StudentService(session)
 
 

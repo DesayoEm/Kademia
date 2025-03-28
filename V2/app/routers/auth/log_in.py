@@ -49,15 +49,16 @@ async def guardian_login(login_data: GuardianLoginRequest, db: Session = Depends
         user_type=UserType.GUARDIAN
     )
 
-@router.get('refresh_token')
+@router.get('/refresh_token')
 def refresh_token(token_details: dict = Depends(refresh)):
     return token_service.refresh_token(token_details)
 
 @router.post("/change-password")
 def change_password(
-        password_data: PasswordChange,user = Depends(get_current_user()),
-        token_data: dict = Depends(access),db: Session = Depends(get_db)):
+        password_data: PasswordChange,token_data: dict = Depends(access),
+        db: Session = Depends(get_db)):
 
+    user = get_current_user(token_data, db)
     password_service = PasswordService(db)
     token_jti = token_data.get('jti')
 

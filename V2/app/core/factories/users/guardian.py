@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
 from ...errors.user_profile_errors import DuplicateGuardianError,GuardianNotFoundError
 from ...services.auth.password_service import PasswordService
-from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
+from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....database.models.users import Guardian
@@ -18,7 +18,7 @@ class GuardianFactory:
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(Guardian, session)
         self.validator = UserValidator()
-        self.password_service = PasswordService()
+        self.password_service = PasswordService(session)
         
 
 
@@ -100,11 +100,11 @@ class GuardianFactory:
             if 'last_name' in data:
                 existing.last_name = self.validator.validate_name(data.pop('last_name'))
             if 'email_address' in data:
-                existing.date_of_birth = self.validator.validate_email_address(data.pop('email_address'))
+                existing.email_address = self.validator.validate_email_address(data.pop('email_address'))
             if 'address' in data:
-                existing.session_start_year = self.validator.validate_address(data.pop('address'))
+                existing.address = self.validator.validate_address(data.pop('address'))
             if 'phone' in data:
-                existing.session_start_year = self.validator.validate_phone(data.pop('phone'))
+                existing.phone = self.validator.validate_phone(data.pop('phone'))
 
 
             for key, value in data.items():

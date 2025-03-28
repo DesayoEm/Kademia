@@ -4,13 +4,10 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from ...errors.auth_errors import WrongPasswordError
-from ...services.auth.auth_service import AuthService
 from ...validators.users import UserValidator
 from ....database.redis.tokens import token_blocklist
 from ....database.models.users import Staff, Guardian, Student
 from ....database.models.enums import UserType
-
-
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -18,7 +15,6 @@ class PasswordService:
 
     def __init__(self, session: Session):
         self.session = session
-        self.auth = AuthService(session)
         self.blocklist = token_blocklist
         self.validator = UserValidator()
 

@@ -15,14 +15,14 @@ bearer= TokenBearer()
 
 @router.post("/", response_model= StaffResponse, status_code=201)
 def create_staff(data:StaffCreate,db: Session = Depends(get_db),
-                        user_details=Depends(bearer)):
+                        ):
         staff_crud = StaffCrud(db)
         return staff_crud.create_staff(data)
 
 
 @router.get("/", response_model=list[StaffResponse])
 def get_staff(filters: Annotated[StaffFilterParams, Query()],
-                db: Session = Depends(get_db), user_details=Depends(bearer)):
+                db: Session = Depends(get_db)):
         staff_crud = StaffCrud(db)
         return staff_crud.get_all_staff(filters)
 

@@ -1,7 +1,7 @@
 from sqlalchemy import func
 from uuid import UUID
 from sqlalchemy.orm import Session
-from ....database.db_repositories.sqlalchemy_repos.main_repo import SQLAlchemyRepository
+from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import Classes
 

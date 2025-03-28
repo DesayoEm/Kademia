@@ -7,8 +7,6 @@ from .token_service import TokenService
 from datetime import timedelta, datetime
 
 
-
-
 class AuthService:
     def __init__(self, session: Session):
         self.session = session

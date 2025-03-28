@@ -105,18 +105,6 @@ class Repository(ABC, Generic[T]):
         """
         pass
 
-    @abstractmethod
-    def apply_archive_filters(self, query, fields: List, filters):
-        """
-        Apply filters to a query for archived entities.
-        Args:
-            query: The base query to filter
-            fields: List of fields that support text search
-            filters: Filter parameters
-        Returns:
-            The filtered query
-        """
-        pass
 
     @abstractmethod
     def execute_archive_query(self, fields, filters) -> List[T]:
