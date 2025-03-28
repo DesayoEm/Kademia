@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from ....core.errors.auth_errors import TokenInvalidError, TokenExpiredError
 from ....config import config
 import jwt
@@ -43,3 +43,11 @@ class TokenService:
             raise TokenInvalidError(str(e))
 
 
+    def refresh_token(self, token_details):
+        expiry = token_details['exp']
+        if datetime.fromtimestamp(expiry, tz=timezone.utc) > datetime.now(tz=timezone.utc):
+            new_access_token = self.create_access_token(
+                user_data=token_details['user']
+            )
+            return new_access_token
+        raise TokenInvalidError

@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from ....schemas.users.staff import StaffResponse, StaffFilterParams
 from fastapi import Depends, APIRouter
-from ....database.session_manager import get_db
+from ....database.session import get_db
 from ....crud.users.staff import StaffCrud
 from fastapi import Query
 from typing import Annotated

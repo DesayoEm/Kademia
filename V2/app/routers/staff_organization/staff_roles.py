@@ -5,7 +5,7 @@ from ...schemas.staff_organization.role import (
     StaffRoleCreate, StaffRoleUpdate, RolesFilterParams, StaffRoleResponse
 )
 from fastapi import Depends, APIRouter
-from ...database.session_manager import get_db
+from ...database.session import get_db
 from ...crud.staff_organization.staff_role import StaffRoleCrud
 from ...schemas.shared_models import ArchiveRequest
 from fastapi import Query

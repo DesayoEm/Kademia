@@ -1,10 +1,13 @@
 from sqlalchemy.orm import Session
 from .password_service import bcrypt_context
-from ...errors.auth_errors import InvalidCredentialsError, TokenInvalidError, UserNotFoundError
+from ...errors.auth_errors import InvalidCredentialsError
 from ....database.models.users import Staff, Guardian, Student
 from ....database.models.enums import UserType
 from .token_service import TokenService
 from datetime import timedelta, datetime
+
+
+
 
 class AuthService:
     def __init__(self, session: Session):
@@ -76,28 +79,3 @@ class AuthService:
         }
 
 
-    def get_current_user(self, token: str):
-        """Validate token and return current user"""
-        payload = self.token_service.decode_token(token)
-
-        if payload is None:
-            raise InvalidCredentialsError
-
-        user_id = payload.get("user_id")
-        user_type = payload.get("user_type")
-
-        if user_id is None or user_type is None:
-            raise TokenInvalidError
-
-        user = None
-        if user_type == UserType.STAFF:
-            user = self.session.query(Staff).filter(Staff.id == user_id).first()
-        elif user_type == UserType.STUDENT:
-            user = self.session.query(Student).filter(Student.id == user_id).first()
-        elif user_type == UserType.GUARDIAN:
-            user = self.session.query(Guardian).filter(Guardian.id == user_id).first()
-
-        if user is None:
-            UserNotFoundError(identifier = user_id)
-
-        return user

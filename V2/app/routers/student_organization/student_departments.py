@@ -6,7 +6,7 @@ from ...schemas.student_organization.student_department import(
 )
 from ...schemas.shared_models import ArchiveRequest
 from fastapi import Depends, APIRouter
-from ...database.session_manager import get_db
+from ...database.session import get_db
 from ...crud.student_organization.student_departments import DepartmentCrud
 from fastapi import Query
 from typing import Annotated

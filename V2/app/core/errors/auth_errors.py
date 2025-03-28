@@ -9,6 +9,14 @@ class InvalidCredentialsError(AuthError):
         self.log_message = f"Login attempted with Invalid email or password: User {credential} "
         super().__init__()
 
+
+class WrongPasswordError(AuthError):
+    def __init__(self):
+        self.user_message = "Wrong password!"
+        self.log_message = f"Password change attempted with wrong password "
+        super().__init__()
+
+
 class UserNotFoundError(AuthError):
     """Raised when a user account is not found."""
     def __init__(self, identifier: str):
@@ -51,4 +59,11 @@ class RefreshTokenRequiredError(TokenError):
     def __init__(self):
         self.user_message = "Refresh token required, received access token"
         self.log_message = f"Refresh token required, received access token"
+        super().__init__()
+
+class TokenRevokedError(TokenError):
+    """Raised when """
+    def __init__(self, jti):
+        self.user_message = "Token has been revoked"
+        self.log_message = f"Token id {jti} has been revoked"
         super().__init__()

@@ -3,7 +3,7 @@ from uuid import UUID
 from ...database.models.enums import ArchiveReason
 from ...schemas.staff_organization.role import RolesFilterParams, StaffRoleResponse
 from fastapi import Depends, APIRouter
-from ...database.session_manager import get_db
+from ...database.session import get_db
 from ...crud.staff_organization.staff_role import StaffRoleCrud
 from fastapi import Query
 from typing import Annotated

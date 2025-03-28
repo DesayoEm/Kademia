@@ -4,7 +4,7 @@ from ...schemas.staff_organization.educator_qualification import(
     QualificationCreate, QualificationUpdate, QualificationResponse, QualificationFilterParams
 )
 from fastapi import Depends, APIRouter
-from ...database.session_manager import get_db
+from ...database.session import get_db
 from ...crud.staff_organization.educator_qualification import QualificationCrud
 from ...schemas.shared_models import ArchiveRequest
 from fastapi import Query

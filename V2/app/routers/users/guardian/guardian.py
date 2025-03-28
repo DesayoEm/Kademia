@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from ....schemas.users.guardian import GuardianCreate, GuardianUpdate, GuardianResponse, GuardianFilterParams
 from fastapi import Depends, APIRouter
-from ....database.session_manager import get_db
+from ....database.session import get_db
 from ....crud.users.guardian import GuardianCrud
 from ....schemas.shared_models import ArchiveRequest
 from fastapi import Query

@@ -1,21 +1,24 @@
 from sqlalchemy.orm import Session
-from datetime import datetime, timezone
 from fastapi import Depends, APIRouter
-from starlette.responses import JSONResponse
-
-from ...core.errors.auth_errors import TokenInvalidError
-from ...database.session_manager import get_db
+from ...database.session import get_db
+from ...database.redis.tokens import token_blocklist
 from ...core.services.auth.auth_service import AuthService
 from ...core.services.auth.token_service import TokenService
-from ...core.services.auth.dependencies import RefreshTokenBearer
+from ...core.services.auth.password_service import PasswordService
+from ...core.services.auth.dependencies import (
+    RefreshTokenBearer, AccessTokenBearer, get_current_user
+)
 from ...schemas.auth.log_in import(
     StaffLoginRequest, StudentLoginRequest, GuardianLoginRequest
 )
+from ...schemas.auth.password_change import PasswordChange
 from ...schemas.enums import UserType
+
 
 
 token_service=TokenService()
 refresh = RefreshTokenBearer()
+access = AccessTokenBearer()
 
 router = APIRouter()
 
@@ -48,14 +51,27 @@ async def guardian_login(login_data: GuardianLoginRequest, db: Session = Depends
 
 @router.get('refresh_token')
 def refresh_token(token_details: dict = Depends(refresh)):
-    expiry = token_details['exp']
+    return token_service.refresh_token(token_details)
 
-    if datetime.fromtimestamp(expiry, tz=timezone.utc) > datetime.now(tz=timezone.utc):
-        new_access_token = token_service.create_access_token(
-            user_data = token_details['user']
-        )
-        return JSONResponse(content ={
-            "access_token": new_access_token
-        })
+@router.post("/change-password")
+def change_password(
+        password_data: PasswordChange,user = Depends(get_current_user()),
+        token_data: dict = Depends(access),db: Session = Depends(get_db)):
 
-    raise TokenInvalidError
+    password_service = PasswordService(db)
+    token_jti = token_data.get('jti')
+
+    password_service.change_password(
+        user,
+        password_data.current_password,
+        password_data.new_password,
+        token_jti
+    )
+    return {"message": "Password changed successfully"}
+
+
+@router.post("/logout")
+async def logout(token_data: dict = Depends(access)):
+    token_blocklist.revoke_token(token_data)
+    return {"message": "Successfully logged out"}
+

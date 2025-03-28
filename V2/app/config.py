@@ -4,6 +4,9 @@ from pydantic import EmailStr
 load_dotenv()
 
 class Settings(BaseSettings):
+    APP_NAME: str = "Kademia"
+    DEBUG: bool = False
+
     DATABASE_URL: str
     DATABASE_POOL_SIZE: int = 5
 
@@ -11,8 +14,8 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
 
-    APP_NAME: str = "Kademia"
-    DEBUG: bool = False
+    REDIS_HOST: str = 'localhost'
+    REDIS_PORT: int = 6379
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -37,6 +40,5 @@ class EmailSettings(BaseSettings):
     class Config:
         env_file = ".env"
         env_prefix = "EMAIL_"
-
 
 email_settings = EmailSettings()

@@ -25,6 +25,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         TokenInvalidError: status.HTTP_401_UNAUTHORIZED,
         AccessTokenRequiredError: status.HTTP_401_UNAUTHORIZED,
         RefreshTokenRequiredError: status.HTTP_401_UNAUTHORIZED,
+        TokenRevokedError: status.HTTP_401_UNAUTHORIZED,
 
         #Generic database errors
         DatabaseError: status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -69,7 +70,6 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         DuplicateStudentDepartmentError: status.HTTP_409_CONFLICT,
 
         #Profile errors
-
         StaffTypeError: status.HTTP_400_BAD_REQUEST,
         StaffNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateStaffError: status.HTTP_409_CONFLICT,

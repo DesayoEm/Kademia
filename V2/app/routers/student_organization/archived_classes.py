@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from ...schemas.student_organization.classes import ClassFilterParams, ClassResponse
 from fastapi import Depends, APIRouter
-from ...database.session_manager import get_db
+from ...database.session import get_db
 from ...crud.student_organization.classes import ClassCrud
 from fastapi import Query
 from typing import Annotated

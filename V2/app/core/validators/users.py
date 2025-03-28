@@ -87,3 +87,12 @@ class UserValidator:
             raise InvalidSessionYearError(entry=value, current_year=current_year)
 
         return value
+
+    def validate_password (self, password:str):#Password is exposed. Fixed
+        if not password:
+            raise EmptyFieldError(entry=password, domain=self.domain)
+        if not password.strip():
+            raise BlankFieldError(entry=password, domain=self.domain)
+        if len(password.strip()) < 12:
+            raise TextTooShortError(entry=password, domain=self.domain, min_length=12)
+        return password
