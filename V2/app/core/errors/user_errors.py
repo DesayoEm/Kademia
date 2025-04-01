@@ -11,20 +11,25 @@ class UserProfileError(KademiaError):
 #Staff-specific errors
 class DuplicateStaffError(UserProfileError, UniqueViolationError):
     """Raised when duplicate data is entered for a unique constraint in the staff data."""
+
     def __init__(self, input_value: str, detail: str, field: str):
         UniqueViolationError.__init__(self, error=detail)
         self.user_message = f"A Staff member with {field} {input_value} already exists"
         self.log_message = f"Duplicate staff creation attempted: {detail}"
 
+
 class StaffNotFoundError(UserProfileError, EntityNotFoundError):
     """Raised when a staff account is not found."""
+
     def __init__(self, id: UUID, detail: str):
         EntityNotFoundError.__init__(self, entity_type="Staff", identifier=str(id), error = detail)
         self.user_message = f"Staff not found!"
         self.log_message = f"Staff with id:{id} not found. Detail {detail}"
 
+
 class RelatedStaffNotFoundError(UserProfileError, RelationshipError):
     """Raised when a staff account is not found during fk insertion"""
+
     def __init__(self, id: UUID, detail: str, action: str):
         RelationshipError.__init__(self, error = detail, operation=action, entity="Staff")
         self.user_message = f"Related staff not found!"
@@ -32,10 +37,13 @@ class RelatedStaffNotFoundError(UserProfileError, RelationshipError):
 
 class RelatedEducatorNotFoundError(UserProfileError, RelationshipError):
     """Raised when an educator account is not found during fk insertion"""
-    def __init__(self, id: UUID, detail: str, action: str):
+
+    def __init__(self, identifier: UUID, detail: str, action: str):
         RelationshipError.__init__(self, error = detail, operation=action, entity="Staff")
         self.user_message = f"Related educator not found!"
-        self.log_message = f"Error during during fk insertion of Educator with id:{id} during {action} operation. Detail {detail}"
+        self.log_message = f"Error during during fk insertion of Educator with id:{identifier} during {action} operation. Detail {detail}"
+
+
 
 class StaffTypeError(UserProfileError):
     """Raised when an invalid staff type is entered"""

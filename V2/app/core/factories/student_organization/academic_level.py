@@ -41,6 +41,7 @@ class AcademicLevelFactory:
             new_academic_level.order = self.service.create_order(new_academic_level.level_id)
         try:
             return self.repository.create(academic_level)
+
         except UniqueViolationError as e:
             error_message = str(e).lower()
             if "academic_levels_name_key" in error_message:
@@ -63,8 +64,9 @@ class AcademicLevelFactory:
         """
         try:
             return self.repository.get_by_id(academic_level_id)
+
         except EntityNotFoundError as e:
-            raise LevelNotFoundError(id=academic_level_id, detail= str(e))
+            raise LevelNotFoundError(identifier=academic_level_id, detail= str(e))
 
 
     def get_all_academic_levels(self, filters) -> List[AcademicLevel]:
@@ -72,8 +74,9 @@ class AcademicLevelFactory:
         Returns:
             List[AcademicLevel]: List of active academic_levels
         """
-        fields = ['name', 'description']
+        fields = ['name']
         return self.repository.execute_query(fields, filters)
+
 
     def update_academic_level(self, academic_level_id: UUID, data: dict) -> AcademicLevel:
         """Update an academic level's information.
@@ -98,7 +101,8 @@ class AcademicLevelFactory:
             return self.repository.update(academic_level_id, existing)
 
         except EntityNotFoundError as e:
-            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
+            raise LevelNotFoundError(identifier=academic_level_id, detail=str(e))
+
         except UniqueViolationError as e:  # Could either be on name or order
             error_message = str(e)
             if "academic_levels_name_key" in error_message.lower():
@@ -122,8 +126,9 @@ class AcademicLevelFactory:
         """
         try:
             return self.repository.archive(academic_level_id, SYSTEM_USER_ID, reason)
+
         except EntityNotFoundError as e:
-            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
+            raise LevelNotFoundError(identifier=academic_level_id, detail=str(e))
 
 
     def delete_academic_level(self, academic_level_id: UUID) -> None:
@@ -133,8 +138,9 @@ class AcademicLevelFactory:
         """
         try:
             self.repository.delete(academic_level_id)
+
         except EntityNotFoundError as e:
-            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
+            raise LevelNotFoundError(identifier=academic_level_id, detail=str(e))
 
 
     def get_all_archived_academic_levels(self, filters) -> List[AcademicLevel]:
@@ -142,7 +148,7 @@ class AcademicLevelFactory:
         Returns:
             List[AcademicLevel]: List of archived academic_level records
         """
-        fields = ['name', 'description']
+        fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
 
@@ -155,8 +161,9 @@ class AcademicLevelFactory:
         """
         try:
             return self.repository.get_archive_by_id(academic_level_id)
+
         except EntityNotFoundError as e:
-            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
+            raise LevelNotFoundError(identifier=academic_level_id, detail=str(e))
 
     def restore_academic_level(self, academic_level_id: UUID) -> AcademicLevel:
         """Restore an archived academic_level.
@@ -169,8 +176,9 @@ class AcademicLevelFactory:
             archived = self.get_archived_academic_level(academic_level_id)
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(academic_level_id)
+
         except EntityNotFoundError as e:
-            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
+            raise LevelNotFoundError(identifier=academic_level_id, detail=str(e))
 
 
     def delete_archived_academic_level(self, academic_level_id: UUID) -> None:
@@ -180,6 +188,7 @@ class AcademicLevelFactory:
         """
         try:
             self.repository.delete_archive(academic_level_id)
+
         except EntityNotFoundError as e:
-            raise LevelNotFoundError(id=academic_level_id, detail=str(e))
+            raise LevelNotFoundError(identifier=academic_level_id, detail=str(e))
 

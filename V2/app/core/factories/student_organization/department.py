@@ -2,6 +2,7 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
+from ...errors.student_organisation_errors import StudentDepartmentInUseError
 from ...errors.user_errors import RelatedEducatorNotFoundError
 from ....core.errors.user_errors import RelatedStudentNotFoundError
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -10,7 +11,8 @@ from ....core.errors.database_errors import EntityNotFoundError, UniqueViolation
 from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import StudentDepartment
 from ....core.errors.student_organisation_errors import (
-     DuplicateStudentDepartmentError, StudentDepartmentNotFoundError
+     DuplicateStudentDepartmentError, StudentDepartmentNotFoundError,
+     StudentDepartmentInUseError as DepartmentInUseError
     )
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
@@ -50,10 +52,10 @@ class StudentDepartmentFactory:
                 raise DuplicateStudentDepartmentError(
                     input_value=new_department.name, detail=str(e), field = 'name'
                 )
-
             else:
                 raise DuplicateStudentDepartmentError(
                     input_value="unknown field", field="unknown", detail=error_message)
+
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
@@ -61,12 +63,14 @@ class StudentDepartmentFactory:
                 'fk_student_departments_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
                 'fk_student_departments_assistant_student_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
             }
+
             for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     entity_id = getattr(new_department, attr_name, None)
                     if entity_id:
                         raise error_class(id=entity_id, detail=error_message, action='create')
             raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
+
 
     def get_student_department(self, department_id: UUID) -> StudentDepartment:
         """Get a specific student department by ID.
@@ -78,7 +82,7 @@ class StudentDepartmentFactory:
         try:
             return self.repository.get_by_id(department_id)
         except EntityNotFoundError as e:
-            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
+            raise StudentDepartmentNotFoundError(identifier=department_id, detail=str(e))
 
 
     def get_all_departments(self, filters) -> List[StudentDepartment]:
@@ -88,6 +92,7 @@ class StudentDepartmentFactory:
         """
         fields = ['name', 'description']
         return self.repository.execute_query(fields, filters)
+
 
     def update_student_department(self, department_id: UUID, data: dict) -> StudentDepartment:
         """Update a student department's information.
@@ -111,10 +116,12 @@ class StudentDepartmentFactory:
             return self.repository.update(department_id, existing)
 
         except EntityNotFoundError as e:
-            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
+            raise StudentDepartmentNotFoundError(identifier=department_id, detail=str(e))
+
         except UniqueViolationError as e:
             raise DuplicateStudentDepartmentError(
                 input_value=original.get('name', 'unknown'), detail=str(e), field='name')
+
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
@@ -122,12 +129,14 @@ class StudentDepartmentFactory:
                 'fk_classes_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
                 'fk_classes_students_assistant_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
             }
+
             for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     entity_id = data.get(attr_name, None)
                     if entity_id:
                         raise error_class(id=entity_id, detail=error_message, action='update')
             raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
+
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StudentDepartment:
         """Archive a student department.
@@ -139,8 +148,10 @@ class StudentDepartmentFactory:
         """
         try:
             return self.repository.archive(department_id, SYSTEM_USER_ID, reason)
+
         except EntityNotFoundError as e:
-            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
+            raise StudentDepartmentNotFoundError(identifier=department_id, detail=str(e))
+
 
     def delete_department(self, department_id: UUID) -> None:
         """Permanently delete a student department.
@@ -149,8 +160,22 @@ class StudentDepartmentFactory:
         """
         try:
             self.repository.delete(department_id)
+
         except EntityNotFoundError as e:
-            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
+            raise StudentDepartmentNotFoundError(identifier=department_id, detail=str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_student_departments_educators_mentor_id': ('mentor_id', DepartmentInUseError, 'Educator' ),
+                'fk_classes_students_student_rep': ('student_rep_id', DepartmentInUseError, 'Student representative'),
+                'fk_classes_students_assistant_rep': ('assistant_rep_id', DepartmentInUseError, 'Student representative'),
+            }
+
+            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    raise error_class(entity_name=entity_name, detail=error_message)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
 
 
     def get_all_archived_departments(self, filters) -> List[StudentDepartment]:
@@ -158,7 +183,7 @@ class StudentDepartmentFactory:
         Returns:
             List[StudentDepartment]: List of archived department records
         """
-        fields = ['name', 'description']
+        fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
 
@@ -171,8 +196,10 @@ class StudentDepartmentFactory:
         """
         try:
             return self.repository.get_archive_by_id(department_id)
+
         except EntityNotFoundError as e:
-            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
+            raise StudentDepartmentNotFoundError(identifier=department_id, detail=str(e))
+
 
     def restore_department(self, department_id: UUID) -> StudentDepartment:
         """Restore an archived department.
@@ -185,8 +212,10 @@ class StudentDepartmentFactory:
             archived = self.get_archived_department(department_id)
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(department_id)
+
         except EntityNotFoundError as e:
-            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
+            raise StudentDepartmentNotFoundError(identifier=department_id, detail=str(e))
+
 
     def delete_archived_department(self, department_id: UUID) -> None:
         """Permanently delete an archived department.
@@ -195,5 +224,21 @@ class StudentDepartmentFactory:
         """
         try:
             self.repository.delete_archive(department_id)
+
         except EntityNotFoundError as e:
-            raise StudentDepartmentNotFoundError(id=department_id, detail=str(e))
+            raise StudentDepartmentNotFoundError(identifier=department_id, detail=str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_student_departments_educators_mentor_id': ('mentor_id', DepartmentInUseError, 'Educator' ),
+                'fk_classes_students_student_rep': ('student_rep_id', DepartmentInUseError, 'Student representative'),
+                'fk_classes_students_assistant_rep': ('assistant_rep_id', DepartmentInUseError, 'Student representative'),
+            }
+
+            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    raise error_class(entity_name=entity_name, detail=error_message)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
+
+

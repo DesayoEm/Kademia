@@ -60,7 +60,7 @@ class QualificationFactory:
                 if fk_constraint in error_message:
                     entity_id = getattr(new_qualification, attr_name, None)
                     if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='create')
+                        raise error_class(identifier=entity_id, detail=error_message, action='create')
 
             raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
@@ -123,7 +123,7 @@ class QualificationFactory:
                 if fk_constraint in error_message:
                     entity_id = educator_id
                     if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='update')
+                        raise error_class(identifier=entity_id, detail=error_message, action='update')
 
             raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
 
@@ -158,6 +158,7 @@ class QualificationFactory:
             fk_error_mapping = {
                 'fk_staff_departments_staff_manager_id': ('educator_id', QualificationInUseError, 'Educator')
             }
+
             for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     raise error_class(entity_name=entity_name, detail=error_message)
@@ -217,6 +218,7 @@ class QualificationFactory:
             fk_error_mapping = {
                 'fk_staff_departments_staff_manager_id': ('educator_id', QualificationInUseError, 'Educator')
             }
+
             for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     raise error_class(entity_name=entity_name, detail=error_message)

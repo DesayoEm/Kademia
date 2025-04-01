@@ -107,6 +107,7 @@ class StaffDepartmentFactory:
 
         except EntityNotFoundError as e:
             raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
+
         except UniqueViolationError as e:
             raise DuplicateDepartmentError(#name is the only field with a unique constraint
                 input_value=original.get('name', 'unknown'), detail=str(e), field = 'name'
@@ -122,7 +123,7 @@ class StaffDepartmentFactory:
                 if fk_constraint in error_message:
                     entity_id = data.get(attr_name, None)
                     if entity_id:
-                        raise error_class(id=department_id, detail=error_message, action='update')
+                        raise error_class(identifier=department_id, detail=error_message, action='update')
             raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
 
 
@@ -157,6 +158,7 @@ class StaffDepartmentFactory:
             fk_error_mapping = {
                 'fk_staff_departments_staff_manager_id': ('manager_id', DepartmentInUseError, 'Staff')
             }
+
             for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     raise error_class(entity_name=entity_name, detail=error_message)
@@ -220,6 +222,7 @@ class StaffDepartmentFactory:
             fk_error_mapping = {
                 'fk_staff_departments_staff_manager_id': ('manager_id', DepartmentInUseError, 'Staff')
             }
+
             for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     raise error_class(entity_name=entity_name, detail=error_message)

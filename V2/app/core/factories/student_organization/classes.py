@@ -1,6 +1,8 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
+
+from ...errors.student_organisation_errors import LevelInUseError, ClassInUseError
 from ....core.errors.database_errors import RelationshipError
 from ....core.errors.user_errors import RelatedEducatorNotFoundError, RelatedStudentNotFoundError
 from ....core.errors.student_organisation_errors import  RelatedLevelNotFoundError
@@ -47,6 +49,7 @@ class ClassFactory:
         class_data.order = self.service.create_order(new_class.level_id)
         try:
             return self.repository.create(class_data)
+
         except UniqueViolationError as e:  # Could either be code or order
             error_message = str(e)
             if "uq_class_level_code" in error_message.lower():
@@ -75,6 +78,7 @@ class ClassFactory:
 
             raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
+
     def get_class(self, class_id: UUID) -> Classes:
         """Get a specific class by ID.
         Args:
@@ -85,7 +89,7 @@ class ClassFactory:
         try:
             return self.repository.get_by_id(class_id)
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(id=class_id, detail = str(e))
+            raise ClassNotFoundError(identifier=class_id, detail = str(e))
 
 
     def get_all_classes(self, filters) -> List[Classes]:
@@ -95,6 +99,7 @@ class ClassFactory:
         """
         fields = ['level_id', 'code']
         return self.repository.execute_query(fields, filters)
+
 
     def update_class(self, class_id: UUID, data: dict) -> Classes:
         """Update a class's information.
@@ -113,8 +118,10 @@ class ClassFactory:
             existing.last_modified_by = SYSTEM_USER_ID
 
             return self.repository.update(class_id, existing)
+
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(id=class_id, detail = str(e))
+            raise ClassNotFoundError(identifier=class_id, detail = str(e))
+
         except UniqueViolationError as e:
             error_message= str(e)
             if "classes_order_key" in error_message.lower():
@@ -123,6 +130,7 @@ class ClassFactory:
             else:
                 raise DuplicateClassError(
                     input_value="unknown field", field="unknown", detail=error_message)
+
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
@@ -131,13 +139,15 @@ class ClassFactory:
                 'fk_classes_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
                 'fk_classes_students_assistant_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
             }
+
             for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     entity_id = data.get(attr_name, None)
                     if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='update')
+                        raise error_class(identifier=entity_id, detail=error_message, action='update')
 
             raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
+
 
     def archive_class(self, class_id: UUID, reason: ArchiveReason) -> Classes:
         """Archive a class.
@@ -150,7 +160,7 @@ class ClassFactory:
         try:
             return self.repository.archive(class_id, SYSTEM_USER_ID, reason)
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(id=class_id, detail = str(e))
+            raise ClassNotFoundError(identifier=class_id, detail = str(e))
 
 
     def delete_class(self, class_id: UUID) -> None:
@@ -160,8 +170,23 @@ class ClassFactory:
         """
         try:
             self.repository.delete(class_id)
+
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(id=class_id, detail = str(e))
+            raise ClassNotFoundError(identifier=class_id, detail = str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_classes_academic_levels_level_id': ('level_id', ClassInUseError, "Level"),
+                'fk_classes_educators_supervisor_id': ('supervisor_id', ClassInUseError, "Supervisor"),
+                'fk_classes_students_student_rep': ('student_rep_id', ClassInUseError, "Student representative"),
+                'fk_classes_students_assistant_rep': ('assistant_rep_id', ClassInUseError, "Student representative"),
+            }
+
+            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    raise error_class(entity_name=entity_name, detail=error_message)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
 
 
     def get_all_archived_classes(self, filters) -> List[Classes]:
@@ -169,7 +194,7 @@ class ClassFactory:
         Returns:
             List[Classes]: List of archived class records
         """
-        fields = ['level_id', 'code']
+        fields = ['code']
         return self.repository.execute_archive_query(fields, filters)
 
 
@@ -183,7 +208,7 @@ class ClassFactory:
         try:
             return self.repository.get_archive_by_id(class_id)
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(id=class_id, detail = str(e))
+            raise ClassNotFoundError(identifier=class_id, detail = str(e))
 
     def restore_class(self, class_id: UUID) -> Classes:
         """Restore an archived class.
@@ -197,7 +222,7 @@ class ClassFactory:
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(class_id)
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(id=class_id, detail = str(e))
+            raise ClassNotFoundError(identifier=class_id, detail = str(e))
 
 
     def delete_archived_class(self, class_id: UUID) -> None:
@@ -207,6 +232,22 @@ class ClassFactory:
         """
         try:
             self.repository.delete_archive(class_id)
+
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(id=class_id, detail = str(e))
+            raise ClassNotFoundError(identifier=class_id, detail = str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_classes_academic_levels_level_id': ('level_id', ClassInUseError, "Level"),
+                'fk_classes_educators_supervisor_id': ('supervisor_id', ClassInUseError, "Supervisor"),
+                'fk_classes_students_student_rep': ('student_rep_id', ClassInUseError, "Student representative"),
+                'fk_classes_students_assistant_rep': ('assistant_rep_id', ClassInUseError, "Student representative"),
+            }
+
+            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    raise error_class(entity_name=entity_name, detail=error_message)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
+
 

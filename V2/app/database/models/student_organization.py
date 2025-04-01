@@ -37,7 +37,7 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
     code: Mapped[ClassCode] = mapped_column(Enum(ClassCode, name='classcode'))
     supervisor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
-            ondelete='RESTRICT', name='fk_classes_educators_supervisor_id'), nullable = True
+            ondelete='SET NULL', name='fk_classes_educators_supervisor_id'), nullable = True
         )
     student_rep_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
             ondelete='SET NULL', name='fk_classes_students_student_rep'), nullable=True

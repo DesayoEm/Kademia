@@ -24,7 +24,6 @@ class GuardianFactory:
         self.email_service = EmailService()
         
 
-
     def create_guardian(self, guardian_data) -> Guardian:
         """Create a new guardian.
         Args:
