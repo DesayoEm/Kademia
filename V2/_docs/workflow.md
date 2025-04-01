@@ -52,7 +52,7 @@
 - [x] Password hashing service
 - [x] JWT token service
 - [x] Authentication service
-- [ ] Login/Registration flows
+- [x] Login/Registration flows
 
 ### 2. Exception Handling
 - [x] Base exception classes
@@ -63,8 +63,8 @@
 
 ## Phase 3: API Routes and Academic services
 ### 1. Auth Routes
-- [ ] Login endpoints
-- [ ] Registration endpoints
+- [x] Login endpoints
+- [x] Registration endpoints
 - [ ] Profile management endpoints
 
 ### 2. Core Routes

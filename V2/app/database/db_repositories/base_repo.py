@@ -61,11 +61,11 @@ class Repository(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def update(self, id: UUID, updated_entity: T) -> T:
+    def update(self, entity_id: UUID, updated_entity: T) -> T:
         """
         Update an existing active entity.
         Args:
-            id: The UUID of the entity to update
+            entity_id: The UUID of the entity to update
             updated_entity: The entity with updated values
         Returns:
             The updated entity
@@ -73,11 +73,11 @@ class Repository(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def archive(self, id: UUID, archived_by_id: UUID, reason: ArchiveReason) -> T:
+    def archive(self, entity_id: UUID, archived_by_id: UUID, reason: ArchiveReason) -> T:
         """
         Archive an active entity (soft delete).
         Args:
-            id: The UUID of the entity to archive
+            entity_id: The UUID of the entity to archive
             archived_by_id: The UUID of the users performing the archive
             reason: The reason for archiving
         Returns:

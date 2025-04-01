@@ -1,5 +1,6 @@
 from ..common_imports import *
 from ..shared_models import *
+from ..enums import ValidityType
 
 
 class QualificationFilterParams(BaseFilterParams):
@@ -13,6 +14,9 @@ class QualificationBase(BaseModel):
     educator_id: UUID
     name: str
     description: str | None = None
+    validity_type = ValidityType
+    valid_until: str
+
 
 
     model_config = ConfigDict(
@@ -21,7 +25,9 @@ class QualificationBase(BaseModel):
             "example": {
                 "educator_id": "00000000-0000-0000-0000-000000000001",
                 "name": "Master of Science in Mathematics",
-                "description": "Advanced degree in pure mathematics"
+                "description": "Advanced degree in pure mathematics",
+                "validity_type": "Lifetime",
+                "valid_until": "Lifetime",
             }
         }
     )
@@ -41,7 +47,9 @@ class QualificationUpdate(BaseModel):
         json_schema_extra={
             "example": {
                 "name": "Master of Science in Geology",
-                "description": "Advanced degree in stuff"
+                "description": "Advanced degree in stuff",
+                "validity_type": "Temporary",
+                "valid_until": "2029",
             }
         }
     )
@@ -52,9 +60,14 @@ class QualificationResponse(QualificationBase):
     pass
 
 
-class QualificationInDB(QualificationBase):
+class QualificationInDB:
     """Represents stored educator qualifications"""
     id: UUID
+    educator_id: UUID
+    name: str
+    description: str | None = None
+    validity_type = ValidityType
+    valid_until: str
     created_at: datetime
     created_by: UUID
     last_modified_at: datetime
@@ -64,21 +77,3 @@ class QualificationInDB(QualificationBase):
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        json_schema_extra={
-            "id": "00000000-0000-0000-0000-000000000000",
-            "educator_id": "00000000-0000-0000-0000-000000000001",
-            "name": "Master of Science in Mathematics",
-            "description": "Advanced degree in pure mathematics",
-            "created_at": "2024-02-17T12:00:00Z",
-            "created_by": "00000000-0000-0000-0000-000000000000",
-            "last_modified_at": "2024-02-17T12:00:00Z",
-            "last_modified_by": "00000000-0000-0000-0000-000000000000",
-            "is_archived": False,
-            "archived_at": None,
-            "archived_by": None,
-            "archive_reason": None
-            }
-
-    )

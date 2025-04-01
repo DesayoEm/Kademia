@@ -7,7 +7,7 @@ from ..core.errors.database_errors import *
 from ..core.errors.staff_organisation_errors import *
 from ..core.errors.input_validation_errors import *
 from ..core.errors.student_organisation_errors import *
-from ..core.errors.user_profile_errors import *
+from ..core.errors.user_errors import *
 from ..core.errors.auth_errors import *
 from ..log_service.logger import logger
 
@@ -43,6 +43,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         InvalidCharacterError: status.HTTP_400_BAD_REQUEST,
         InvalidCodeError: status.HTTP_400_BAD_REQUEST,
         InvalidPhoneError: status.HTTP_400_BAD_REQUEST,
+        EmailFormatError: status.HTTP_400_BAD_REQUEST,
         InvalidSessionYearError: status.HTTP_400_BAD_REQUEST,
 
         #Staff organization errors

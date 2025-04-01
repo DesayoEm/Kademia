@@ -2,8 +2,10 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ....core.errors.user_profile_errors import RelatedStaffNotFoundError
+from ...errors.staff_organisation_errors import DepartmentInUseError
+from ....core.errors.user_errors import RelatedStaffNotFoundError
 from ....core.validators.staff_organization import StaffOrganizationValidator
+from ....core.validators.entity_validators import EntityValidator
 from ....database.models.staff_organization import StaffDepartment
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
@@ -18,6 +20,7 @@ class StaffDepartmentFactory:
 
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(StaffDepartment, session)
+        self.entity_validator = EntityValidator(session)
         self.validator = StaffOrganizationValidator()
 
     def create_staff_department(self, new_department) -> StaffDepartment:
@@ -31,16 +34,18 @@ class StaffDepartmentFactory:
             id=uuid4(),
             name=self.validator.validate_name(new_department.name),
             description=self.validator.validate_name(new_department.description),
-            manager_id=new_department.manager_id,
+            manager_id=self.entity_validator.validate_staff_exists(new_department.manager_id),
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
         )
         try:
             return self.repository.create(department)
+
         except UniqueViolationError as e:
             raise DuplicateDepartmentError(
                 input_value=new_department.name, detail=str(e), field = 'name'
             )
+
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
@@ -64,7 +69,7 @@ class StaffDepartmentFactory:
         try:
             return self.repository.get_by_id(department_id)
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(id=department_id, detail = str(e))
+            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
 
 
     def get_all_departments(self, filters) -> List[StaffDepartment]:
@@ -72,7 +77,7 @@ class StaffDepartmentFactory:
         Returns:
             List[StaffDepartment]: List of active departments
         """
-        fields = ['name', 'description']
+        fields = ['name']
         return self.repository.execute_query(fields, filters)
 
 
@@ -91,28 +96,33 @@ class StaffDepartmentFactory:
                 existing.name = self.validator.validate_name(data.pop('name'))
             if 'description' in data:
                 existing.description = self.validator.validate_name(data.pop('description'))
+            if 'manager_id' in data:
+                existing.manager_id = self.entity_validator.validate_staff_exists(data.pop('manager_id'))
+
             for key, value in data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
-            existing.last_modified_by = SYSTEM_USER_ID #Placeholder
-
+            existing.last_modified_by = SYSTEM_USER_ID
             return self.repository.update(department_id, existing)
+
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(id=department_id, detail = str(e))
+            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
         except UniqueViolationError as e:
             raise DuplicateDepartmentError(#name is the only field with a unique constraint
                 input_value=original.get('name', 'unknown'), detail=str(e), field = 'name'
             )
+
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
                 'fk_staff_departments_staff_manager_id': ('manager_id', RelatedStaffNotFoundError),
             }
+
             for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     entity_id = data.get(attr_name, None)
                     if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='update')
+                        raise error_class(id=department_id, detail=error_message, action='update')
             raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
 
 
@@ -126,8 +136,9 @@ class StaffDepartmentFactory:
         """
         try:
             return self.repository.archive(department_id, SYSTEM_USER_ID, reason)
+
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(id=department_id, detail = str(e))
+            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
 
 
     def delete_department(self, department_id: UUID) -> None:
@@ -137,8 +148,19 @@ class StaffDepartmentFactory:
         """
         try:
             self.repository.delete(department_id)
+
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(id=department_id, detail = str(e))
+            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_staff_departments_staff_manager_id': ('manager_id', DepartmentInUseError, 'Staff')
+            }
+            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    raise error_class(entity_name=entity_name, detail=error_message)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
 
 
     def get_all_archived_departments(self, filters) -> List[StaffDepartment]:
@@ -146,7 +168,7 @@ class StaffDepartmentFactory:
         Returns:
             List[StaffDepartment]: List of archived department records
         """
-        fields = ['name', 'description']
+        fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
 
@@ -160,7 +182,7 @@ class StaffDepartmentFactory:
         try:
             return self.repository.get_archive_by_id(department_id)
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(id=department_id, detail = str(e))
+            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
 
     def restore_department(self, department_id: UUID) -> StaffDepartment:
         """Restore an archived department.
@@ -174,7 +196,7 @@ class StaffDepartmentFactory:
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(department_id)
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(id=department_id, detail = str(e))
+            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
 
 
     def delete_archived_department(self, department_id: UUID) -> None:
@@ -185,4 +207,20 @@ class StaffDepartmentFactory:
         try:
             self.repository.delete_archive(department_id)
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(id=department_id, detail = str(e))
+            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
+
+        try:
+            self.repository.delete(department_id)
+
+        except EntityNotFoundError as e:
+            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_staff_departments_staff_manager_id': ('manager_id', DepartmentInUseError, 'Staff')
+            }
+            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    raise error_class(entity_name=entity_name, detail=error_message)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')

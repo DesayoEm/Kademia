@@ -6,12 +6,12 @@ from fastapi import Depends, APIRouter
 from ....database.session import get_db
 from ....crud.users.staff import StaffCrud
 from ....schemas.shared_models import ArchiveRequest
-from ....core.services.auth.dependencies import TokenBearer
+from ....core.services.auth.dependencies import AccessTokenBearer
 from fastapi import Query
 from typing import Annotated
 
 router = APIRouter()
-bearer= TokenBearer()
+bearer= AccessTokenBearer()
 
 @router.post("/", response_model= StaffResponse, status_code=201)
 def create_staff(data:StaffCreate,db: Session = Depends(get_db),
@@ -21,7 +21,7 @@ def create_staff(data:StaffCreate,db: Session = Depends(get_db),
 
 
 @router.get("/", response_model=list[StaffResponse])
-def get_staff(filters: Annotated[StaffFilterParams, Query()],
+def get_staff(filters: Annotated[StaffFilterParams, Query()], user_details=Depends(bearer),
                 db: Session = Depends(get_db)):
         staff_crud = StaffCrud(db)
         return staff_crud.get_all_staff(filters)

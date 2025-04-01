@@ -2,19 +2,20 @@
 
 ## Phone number validation and unique constraints
 **Priority: Medium**
+**Status: Complete** 
 **Target Resolution: Before Production**
 
 ### Current Implementation
 - There are 2 phone number formats(With and without country code)
 - The same number can be entered into the db with different formats
 
-**Status: Complete**  
 
 
 
 ## Foreign key custom validation
 **Priority: High**  
 **Target Resolution: Before Production**
+**Status: Complete**  
 
 ### Current Implementation
 - Current behavior allows invalid UUIDs to be saved
@@ -40,31 +41,4 @@ Also affects relationships in student departments
 
 2. Database Considerations
    - Will require full database reset before production
-
-
-## Future Enhancements
-
-### RBAC Implementation
-**Priority: Medium**  
-**Target: Post-Authentication**
-
-- Role hierarchy definition
-- Permission granularity decisions
-- Resource-level access control
-- UI considerations for role-based content display
-
-
-## Development Guidelines
-
-1. Mark temporary solutions with TODO comments:
-```python
-# TODO(AUTH-123): Replace system users with actual users context
-self.current_user_id = SYSTEM_USER_ID
-```
-
-## Issue Tracking
-- AUTH-123: Implement authentication system
-- RBAC-456: Design and implement role-based access control
-- AUDIT-789: Enhance audit trail system
-
- document as new technical debt is identified or existing items are resolved.*
+ as new technical debt is identified or existing items are resolved.*

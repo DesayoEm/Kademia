@@ -1,7 +1,7 @@
 from datetime import date, datetime
 import re
-
-from ..errors.input_validation_errors import InvalidSessionYearError
+from pydantic import EmailStr, ValidationError
+from ..errors.input_validation_errors import InvalidSessionYearError, EmailFormatError
 from ...core.errors.input_validation_errors import(
     BlankFieldError, DateError, TextTooShortError,EmptyFieldError, InvalidCharacterError, InvalidPhoneError
     )
@@ -43,15 +43,14 @@ class UserValidator:
 
         return value.lower()
 
-    def validate_email_address(self, value:str):# FIX. Add more constraints
+    def validate_email_address(self, value:str):
         if not value:
             raise EmptyFieldError(entry=value, domain=self.domain)
         if not value.strip():
             raise BlankFieldError(entry=value, domain=self.domain)
-        if len(value.strip()) < 12:
-            raise TextTooShortError(entry=value, domain=self.domain, min_length=12)
+            #raise EmailFormatError()
+        return value
 
-        return value.lower()
 
     @staticmethod
     def validate_phone(value: str) -> str:
@@ -78,11 +77,3 @@ class UserValidator:
 
         return value
 
-    def validate_password (self, password:str):#Password is exposed. Fixed
-        if not password:
-            raise EmptyFieldError(entry=password, domain=self.domain)
-        if not password.strip():
-            raise BlankFieldError(entry=password, domain=self.domain)
-        if len(password.strip()) < 12:
-            raise TextTooShortError(entry=password, domain=self.domain, min_length=12)
-        return password

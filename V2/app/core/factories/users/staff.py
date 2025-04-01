@@ -4,12 +4,13 @@ from sqlalchemy.orm import Session
 
 from ...errors.staff_organisation_errors import RelatedRoleNotFoundError, RelatedDepartmentNotFoundError
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
-from ....core.errors.user_profile_errors import DuplicateStaffError, StaffNotFoundError, StaffTypeError
+from ....core.errors.user_errors import DuplicateStaffError, StaffNotFoundError, StaffTypeError
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....core.services.auth.password_service import PasswordService
 from ....core.services.auth.email_service import EmailService
+from ....core.validators.entity_validators import EntityValidator
 from ....database.models.users import Staff, Educator, SupportStaff, AdminStaff
 
 
@@ -23,6 +24,7 @@ class StaffFactory:
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(Staff, session)
         self.validator = UserValidator()
+        self.entity_validator = EntityValidator(session)
         self.password_service = PasswordService(session)
         self.email_service = EmailService()
 
@@ -46,8 +48,8 @@ class StaffFactory:
                 "email_address": self.validator.validate_staff_email(data.email_address),
                 "address": self.validator.validate_address(data.address),
                 "phone": self.validator.validate_phone(data.phone),
-                "department_id": data.department_id,
-                "role_id": data.role_id,
+                "department_id": self.entity_validator.validate_department_exists(data.department_id),
+                "role_id": self.entity_validator.validate_role_exists(data.role_id),
                 "date_joined": self.validator.validate_date(data.date_joined),
                 "created_by": SYSTEM_USER_ID,
                 "last_modified_by": SYSTEM_USER_ID,
@@ -141,6 +143,11 @@ class StaffFactory:
                 existing.last_name = self.validator.validate_phone(data.pop('phone'))
             if 'address' in data:
                 existing.last_name = self.validator.validate_address(data.pop('address'))
+            if 'department_id' in data:
+                existing.department_id = self.entity_validator.validate_department_exists(data.pop('department_id'))
+            if 'role_id' in data:
+                existing.role_id = self.entity_validator.validate_role_exists(data.pop('role_id'))
+
 
             for key, value in data.items():
                 if hasattr(existing, key):

@@ -18,7 +18,6 @@ class TokenBearer(HTTPBearer):
 
 
     async def __call__(self, request: Request):
-        print(f"Called from: {self.__class__.__name__}")
         credentials = await super().__call__(request)
         token = credentials.credentials
         token_data = token_service.decode_token(token)

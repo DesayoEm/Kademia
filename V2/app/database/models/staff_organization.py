@@ -1,4 +1,5 @@
 from .common_imports import *
+from .enums import ValidityType
 from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 
 
@@ -60,6 +61,9 @@ class EducatorQualification(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
     name: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str] = mapped_column(String(500), nullable=True)
+    valid_until: Mapped[str] = mapped_column(String(8), nullable=False)
+    validity_type: Mapped[ValidityType] = mapped_column(Enum(ValidityType, name='validitytype'),
+                                    default=ValidityType.Temporary)
 
     # Relationships
     educator: Mapped['Educator'] = relationship(

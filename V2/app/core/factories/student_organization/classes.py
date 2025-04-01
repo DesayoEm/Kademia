@@ -2,7 +2,7 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 from ....core.errors.database_errors import RelationshipError
-from ....core.errors.user_profile_errors import RelatedEducatorNotFoundError, RelatedStudentNotFoundError
+from ....core.errors.user_errors import RelatedEducatorNotFoundError, RelatedStudentNotFoundError
 from ....core.errors.student_organisation_errors import  RelatedLevelNotFoundError
 from ....core.errors.student_organisation_errors import (
     DuplicateClassError, ClassNotFoundError

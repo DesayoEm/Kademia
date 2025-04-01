@@ -2,7 +2,9 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ....core.errors.user_profile_errors import RelatedEducatorNotFoundError
+from ...errors.staff_organisation_errors import QualificationInUseError
+from ...services.staff_organization.qualifications import QualificationsService
+from ....core.errors.user_errors import RelatedEducatorNotFoundError
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import EducatorQualification
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -24,6 +26,7 @@ class QualificationFactory:
         """
         self.repository = SQLAlchemyRepository(EducatorQualification, session)
         self.validator = StaffOrganizationValidator()
+        self.service = QualificationsService(session)
 
     def create_qualification(self, new_qualification) -> EducatorQualification:
         """Create a new qualification.
@@ -34,12 +37,13 @@ class QualificationFactory:
         """
         qualification = EducatorQualification(
             id=uuid4(),
+            educator_id=new_qualification.educator_id,
             name=self.validator.validate_name(new_qualification.name),
             description=self.validator.validate_name(new_qualification.description),
-            educator_id=new_qualification.educator_id,
+            validity_type = new_qualification.validity_type,
+            valid_until = self.service.create_valid_until(new_qualification.validity_type, new_qualification.valid_until),
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
-
         )
         try:
             return self.repository.create(qualification)
@@ -66,7 +70,7 @@ class QualificationFactory:
         Returns:
             List[EducatorQualification]: List of active qualification records
         """
-        fields = ['name', 'description']
+        fields = ['name']
         return self.repository.execute_query(fields, filters)
 
 
@@ -81,7 +85,7 @@ class QualificationFactory:
             return self.repository.get_by_id(qualification_id)
         except EntityNotFoundError as e:
             error_message = str(e)
-            raise QualificationNotFoundError(id=qualification_id, detail = error_message)
+            raise QualificationNotFoundError(identifier=qualification_id, detail = error_message)
 
     def update_qualification(self, qualification_id: UUID, data: dict) -> EducatorQualification:
         """Update a qualification's information.
@@ -104,7 +108,7 @@ class QualificationFactory:
 
             return self.repository.update(qualification_id, existing)
         except EntityNotFoundError as e:
-            raise QualificationNotFoundError(id=qualification_id, detail=str(e))
+            raise QualificationNotFoundError(identifier=qualification_id, detail=str(e))
 
         except UniqueViolationError as e:  # name is the only field with a unique constraint
             raise DuplicateQualificationError(
@@ -135,7 +139,7 @@ class QualificationFactory:
         try:
             return self.repository.archive(qualification_id, SYSTEM_USER_ID, reason)
         except EntityNotFoundError as e:
-            raise QualificationNotFoundError(id=qualification_id, detail = str(e))
+            raise QualificationNotFoundError(identifier=qualification_id, detail = str(e))
 
 
     def delete_qualification(self, qualification_id: UUID) -> None:
@@ -145,9 +149,19 @@ class QualificationFactory:
         """
         try:
             self.repository.delete(qualification_id)
+
         except EntityNotFoundError as e:
-            raise QualificationNotFoundError(id=qualification_id, detail = str(e))
-        #Raise relationship errors on deletion
+            raise QualificationNotFoundError(identifier=qualification_id, detail = str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_staff_departments_staff_manager_id': ('educator_id', QualificationInUseError, 'Educator')
+            }
+            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    raise error_class(entity_name=entity_name, detail=error_message)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
 
 
     # Archive factory methods
@@ -156,7 +170,7 @@ class QualificationFactory:
         Returns:
             List[EducatorQualification]: List of archived qualification records
         """
-        fields = ['name', 'description']
+        fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
 
@@ -170,7 +184,7 @@ class QualificationFactory:
         try:
             return self.repository.get_archive_by_id(qualification_id)
         except EntityNotFoundError as e:
-            raise QualificationNotFoundError(id=qualification_id, detail = str(e))
+            raise QualificationNotFoundError(identifier=qualification_id, detail = str(e))
 
 
     def restore_qualification(self, qualification_id: UUID) -> EducatorQualification:
@@ -185,7 +199,7 @@ class QualificationFactory:
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(qualification_id)
         except EntityNotFoundError as e:
-            raise QualificationNotFoundError(id=qualification_id, detail = str(e))
+            raise QualificationNotFoundError(identifier=qualification_id, detail = str(e))
 
 
     def delete_archived_qualification(self, qualification_id: UUID) -> None:
@@ -196,4 +210,14 @@ class QualificationFactory:
         try:
             self.repository.delete_archive(qualification_id)
         except EntityNotFoundError as e:
-            raise QualificationNotFoundError(id=qualification_id, detail = str(e))
+            raise QualificationNotFoundError(identifier=qualification_id, detail = str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_staff_departments_staff_manager_id': ('educator_id', QualificationInUseError, 'Educator')
+            }
+            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    raise error_class(entity_name=entity_name, detail=error_message)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')

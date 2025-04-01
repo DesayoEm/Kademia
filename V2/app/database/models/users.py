@@ -1,5 +1,5 @@
 from .common_imports import *
-from .enums import StaffType, Gender, UserType, AccessLevel, StudentStatus, StaffAvailability, EmploymentStatus
+from .enums import StaffType, Gender, UserType, AccessLevel, StudentStatus, StaffAvailability, EmploymentStatus, Title
 from .mixins import AuditMixins, TimeStampMixins, ArchiveMixins
 
 
@@ -85,6 +85,7 @@ class Guardian(UserBase):
     """
     __tablename__ = 'guardians'
 
+    title: Mapped[Title] = mapped_column(Enum(Title, name='title'))
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.GUARDIAN)
     image_url: Mapped[str] = mapped_column(String(225), nullable=True)

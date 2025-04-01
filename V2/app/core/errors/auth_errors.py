@@ -16,6 +16,17 @@ class WrongPasswordError(AuthError):
         self.log_message = f"Password change attempted with wrong password "
         super().__init__()
 
+class PasswordFormatError(AuthError):
+    def __init__(self):
+        self.user_message = ("Password must meet all the following criteria:\n"
+                "- Must be between 8 and 12 characters\n"
+                "- Must contain at least one uppercase letter\n"
+                "- Must contain at least one lowercase letter\n"
+                "- Must contain at least one number\n"
+                "- Must contain at least one special character"
+                )
+        self.log_message = f"Password setting attempted with invalid format "
+        super().__init__()
 
 class UserNotFoundError(AuthError):
     """Raised when a user account is not found."""
@@ -28,6 +39,8 @@ class EmailFailedToSendError(AuthError):
     def __init__(self, detail: str):
         self.user_message = f"Failed to send email!"
         self.log_message = f"Failed to send email: {detail}."
+
+
 
 #Token related errors
 class TokenError(AuthError):

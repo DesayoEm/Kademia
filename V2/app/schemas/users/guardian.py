@@ -1,5 +1,6 @@
 from ..common_imports import *
 from .base import UserBase, ProfileInDb
+from ..enums import Title
 from ..shared_models import *
 
 class GuardianFilterParams(BaseFilterParams):
@@ -12,12 +13,14 @@ class GuardianBase(UserBase):
     email_address: str
     address: str
     phone: str
+    title: Title
 
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
         json_schema_extra={
             "example": {
+                "title":"Ms",
                 "first_name": "Bola",
                 "last_name": "Coker",
                 "gender": "MALE",
@@ -27,7 +30,6 @@ class GuardianBase(UserBase):
         }
         }
     )
-
 
 
 class GuardianCreate(GuardianBase):

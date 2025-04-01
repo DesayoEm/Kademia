@@ -42,9 +42,12 @@ class StaffDepartmentResponse(StaffDepartmentBase):
     pass
 
 
-class StaffDepartmentInDB(StaffDepartmentBase):
+class StaffDepartmentInDB:
     """Represents stored staff departments"""
     id: UUID
+    name: str
+    description: str
+    manager_id: UUID | None = None
     created_at: datetime
     created_by: UUID
     last_modified_at: datetime
@@ -55,23 +58,3 @@ class StaffDepartmentInDB(StaffDepartmentBase):
     archive_reason: ArchiveReason | None = None
 
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        extra="forbid",
-        json_schema_extra = {
-            "example": {
-                "id": "00000000-0000-0000-0000-000000000000",
-                "name": "Academic Affairs",
-                "description": "Manages academic programs and curriculum",
-                "manager_id": "00000000-0000-0000-0000-000000000000",
-                "created_at": "2024-02-17T12:00:00Z",
-                "created_by": "00000000-0000-0000-0000-000000000000",
-                "last_modified_at": "2024-02-17T12:00:00Z",
-                "last_modified_by": "00000000-0000-0000-0000-000000000000",
-                "is_archived": False,
-                "archived_at": None,
-                "archived_by": None,
-                "archive_reason": None
-            }
-        }
-    )

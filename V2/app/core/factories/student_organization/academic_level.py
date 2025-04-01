@@ -33,14 +33,15 @@ class AcademicLevelFactory:
             name = self.validator.validate_level_name(new_academic_level.name),
             description = self.validator.validate_name(new_academic_level.description),
             order = new_academic_level.order,
-            created_by=SYSTEM_USER_ID,#Placeholder until auth is implemented
+            created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID
         )
+
         if not new_academic_level.order:
             new_academic_level.order = self.service.create_order(new_academic_level.level_id)
         try:
             return self.repository.create(academic_level)
-        except UniqueViolationError as e:#Could either be on name or order
+        except UniqueViolationError as e:
             error_message = str(e).lower()
             if "academic_levels_name_key" in error_message:
                 raise DuplicateLevelError(

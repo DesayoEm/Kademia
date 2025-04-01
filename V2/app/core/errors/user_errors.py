@@ -74,6 +74,8 @@ class RelatedStudentNotFoundError(UserProfileError, RelationshipError):
         self.user_message = f"Related student not found!"
         self.log_message = f"Error during during fk insertion of student with id:{id} during {action} operation. Detail {detail}"
 
+
+
 # Guardian-specific errors
 
 class RelatedGuardianNotFoundError(UserProfileError, RelationshipError):

@@ -1,11 +1,8 @@
 from uuid import UUID
 from typing import Optional, List, Type
 from sqlalchemy import desc, asc, select, Select
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from sqlalchemy.orm import Session
-from ....core.errors.database_errors import (
-    UniqueViolationError, EntityNotFoundError, RelationshipError, DBConnectionError)
-from ....core.errors.database_errors import DatabaseError as TKDatabaseError
+from ....core.errors.database_errors import  EntityNotFoundError
 from ..base_repo import Repository, T
 from ....core.decorators.db_handlers import handle_write_errors, handle_read_errors
 

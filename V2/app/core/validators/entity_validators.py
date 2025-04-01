@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
-from typing import Optional
 from sqlalchemy import select, exists
 
-from V2.app.core.errors.staff_organisation_errors import RelatedDepartmentNotFoundError, RelatedRoleNotFoundError
-from V2.app.core.errors.user_profile_errors import RelatedStaffNotFoundError
-from V2.app.database.models import StaffRole
+from ..errors.staff_organisation_errors import RelatedDepartmentNotFoundError, RelatedRoleNotFoundError
+from ..errors.user_errors import RelatedStaffNotFoundError
+
 
 
 class EntityValidator:
@@ -30,8 +29,8 @@ class EntityValidator:
         return True
 
     def validate_role_exists(self, role_id: UUID) -> bool:#Cache later
-        """Validate that a role department exists."""
-        from ...database.models import StaffDepartment
+        """Validate that a role exists."""
+        from ...database.models import StaffRole
 
         stmt = select(
             exists().where(StaffRole.id == role_id)

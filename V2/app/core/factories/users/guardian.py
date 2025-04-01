@@ -1,8 +1,10 @@
 from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
+
+from ...services.auth.email_service import EmailService
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
-from ...errors.user_profile_errors import DuplicateGuardianError,GuardianNotFoundError
+from ...errors.user_errors import DuplicateGuardianError,GuardianNotFoundError
 from ...services.auth.password_service import PasswordService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
@@ -19,6 +21,7 @@ class GuardianFactory:
         self.repository = SQLAlchemyRepository(Guardian, session)
         self.validator = UserValidator()
         self.password_service = PasswordService(session)
+        self.email_service = EmailService()
         
 
 
@@ -29,9 +32,10 @@ class GuardianFactory:
         Returns:
             guardian: Created guardian record
         """
-        password = guardian_data.last_name.title()
+        password = self.password_service.generate_random_password()
         new_guardian = Guardian(
             id=uuid4(),
+            title=guardian_data.title,
             first_name=self.validator.validate_name(guardian_data.first_name),
             last_name=self.validator.validate_name(guardian_data.last_name),
             password_hash=self.password_service.hash_password(password),
@@ -43,6 +47,10 @@ class GuardianFactory:
             last_modified_by=SYSTEM_USER_ID,
         )
         try:
+            self.email_service.send_guardian_onboarding_email(
+                new_guardian.email_address, new_guardian.title, new_guardian.last_name, password
+            )
+
             return self.repository.create(new_guardian)
         except UniqueViolationError as e:
             error_message = str(e).lower()

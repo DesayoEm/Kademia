@@ -8,7 +8,7 @@ RelatedStudentDepartmentNotFoundError as RelatedDepartmentNotFoundError,
 from ....core.errors.database_errors import (
     RelationshipError, UniqueViolationError,EntityNotFoundError
     )
-from ...errors.user_profile_errors import (
+from ...errors.user_errors import (
     DuplicateStudentIDError, DuplicateStudentError, RelatedGuardianNotFoundError, StudentNotFoundError
 )
 from ...services.auth.password_service import PasswordService

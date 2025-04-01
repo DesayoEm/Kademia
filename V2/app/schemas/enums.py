@@ -5,6 +5,14 @@ class Gender(str, Enum):
     FEMALE = 'FEMALE'
     SYSTEM = 'SYSTEM'
 
+class Title(str, Enum):
+    Ms = 'Ms'
+    Mrs = 'Mrs'
+    Mr = 'Mr'
+
+class ValidityType(str, Enum):
+    Temporary = 'Temporary'
+    Lifetime = 'Lifetime'
 
 class UserType(str, Enum):
     STUDENT = 'STUDENT'
