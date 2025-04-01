@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from ....core.services.student_organization.academic_level import AcademicLevelService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
-from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError
+from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
 from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import AcademicLevel
 from ....core.errors.student_organisation_errors import (
@@ -32,13 +32,10 @@ class AcademicLevelFactory:
             id = uuid4(),
             name = self.validator.validate_level_name(new_academic_level.name),
             description = self.validator.validate_name(new_academic_level.description),
-            order = new_academic_level.order,
+            order = self.service.create_order(new_academic_level.level_id),
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID
         )
-
-        if not new_academic_level.order:
-            new_academic_level.order = self.service.create_order(new_academic_level.level_id)
         try:
             return self.repository.create(academic_level)
 
@@ -93,6 +90,9 @@ class AcademicLevelFactory:
                 existing.name = self.validator.validate_name(data.pop('name'))
             if 'description' in data:
                 existing.description = self.validator.validate_name(data.pop('description'))
+            if 'order' in data:
+                existing.order = (data.pop('order'))
+
             for key, value in data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
@@ -141,6 +141,12 @@ class AcademicLevelFactory:
 
         except EntityNotFoundError as e:
             raise LevelNotFoundError(identifier=academic_level_id, detail=str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
 
 
     def get_all_archived_academic_levels(self, filters) -> List[AcademicLevel]:
@@ -192,3 +198,8 @@ class AcademicLevelFactory:
         except EntityNotFoundError as e:
             raise LevelNotFoundError(identifier=academic_level_id, detail=str(e))
 
+        except RelationshipError as e:
+            error_message = str(e)
+            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')

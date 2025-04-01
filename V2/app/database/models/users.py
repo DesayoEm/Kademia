@@ -17,6 +17,7 @@ class UserBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     last_name: Mapped[str] = mapped_column(String(30))
     gender: Mapped[Gender] = mapped_column(Enum(Gender, name="gender"))
     last_login: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
+    exported: Mapped[bool] = mapped_column(Boolean, default=False)
     deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
@@ -37,13 +38,13 @@ class Student(UserBase):
     date_of_birth: Mapped[date] = mapped_column(Date)
     image_url: Mapped[str] = mapped_column(String(200), nullable=True)
     level_id: Mapped[UUID] = mapped_column(UUID, ForeignKey('academic_levels.id',
-            ondelete='RESTRICT',name='fk_students_academic_levels_level_id')
+            ondelete='SET NULL',name='fk_students_academic_levels_level_id'), nullable = True
         )
     class_id: Mapped[UUID] = mapped_column(UUID,ForeignKey('classes.id',
-            ondelete='RESTRICT',name='fk_students_classes_class_id')
+            ondelete='SET NULL',name='fk_students_classes_class_id'), nullable = True
         )
     department_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True),ForeignKey('student_departments.id',
-            ondelete='RESTRICT',name='fk_students_student_departments_department_id'),  nullable = True
+            ondelete='SET NULL',name='fk_students_student_departments_department_id'),  nullable = True
         )
     is_repeating: Mapped[bool] = mapped_column(Boolean, default=False)
     session_start_year: Mapped[int] = mapped_column(Integer)
@@ -123,11 +124,14 @@ class Staff(UserBase):
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))
     phone: Mapped[str] = mapped_column(String(14), unique=True)
-    department_id: Mapped[UUID] = mapped_column(
-        ForeignKey('staff_departments.id', ondelete='RESTRICT', name='fk_staff_staff_departments_department_id')
+    department_id: Mapped[Optional[UUID]] = mapped_column(
+        ForeignKey('staff_departments.id', ondelete='SET NULL', name='fk_staff_staff_departments_department_id'),
+        nullable=True
     )
-    role_id: Mapped[UUID] = mapped_column(
-        ForeignKey('staff_roles.id', ondelete='RESTRICT', name='fk_staff_staff_roles_role_id'),
+
+    role_id: Mapped[Optional[UUID]] = mapped_column(
+        ForeignKey('staff_roles.id', ondelete='SET NULL', name='fk_staff_staff_roles_role_id'),
+        nullable=True
     )
     date_joined: Mapped[date] = mapped_column(Date)
     date_left: Mapped[date] = mapped_column(Date, nullable=True)

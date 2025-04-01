@@ -51,6 +51,7 @@ class GuardianFactory:
             )
 
             return self.repository.create(new_guardian)
+
         except UniqueViolationError as e:
             error_message = str(e).lower()
             if "guardians_phone_key" in error_message:
@@ -64,21 +65,26 @@ class GuardianFactory:
                 raise DuplicateGuardianError(
                     input_value="unknown field",detail=error_message,
                          field = "Unknown")
+
+
         except RelationshipError as e:
-            raise RelationshipError(error=str(e), operation='create', entity='unknown_entity')
+            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
+            raise RelationshipError(error=str(e), operation='update', entity='unknown')
 
 
     def get_guardian(self, guardian_id: UUID) -> Guardian:
-        """Get a specific guardian by ID.
+        """Get a specific guardian by id.
         Args:
-            guardian_id (UUID): ID of guardian to retrieve
+            guardian_id (UUID): id of guardian to retrieve
         Returns:
             guardian: Retrieved guardian record
         """
         try:
             return self.repository.get_by_id(guardian_id)
+
         except EntityNotFoundError as e:
-            raise GuardianNotFoundError(id=guardian_id, detail = str(e))
+            raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
 
 
     def get_all_guardians(self, filters) -> List[Guardian]:
@@ -86,7 +92,7 @@ class GuardianFactory:
         Returns:
             List[guardian]: List of active guardians
         """
-        fields = ['first_name','last_name', 'guardian_id']
+        fields = ['first_name','last_name']
         return self.repository.execute_query(fields, filters)
 
 
@@ -136,6 +142,8 @@ class GuardianFactory:
                     input_value="unknown field",detail=error_message, field ="unknown")
 
         except RelationshipError as e:
+            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
             raise RelationshipError(error=str(e), operation='update', entity='unknown')
 
 
@@ -150,7 +158,7 @@ class GuardianFactory:
             try:
                 return self.repository.archive(guardian_id, SYSTEM_USER_ID, reason)
             except EntityNotFoundError as e:
-                raise GuardianNotFoundError(id=guardian_id, detail = str(e))
+                raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
 
 
     def delete_guardian(self, guardian_id: UUID) -> None:
@@ -161,7 +169,13 @@ class GuardianFactory:
         try:
             self.repository.delete(guardian_id)
         except EntityNotFoundError as e:
-            raise GuardianNotFoundError(id=guardian_id, detail = str(e))
+            raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
+
+
+        except RelationshipError as e:
+            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
+            raise RelationshipError(error=str(e), operation='update', entity='unknown')
 
 
     def get_all_archived_guardians(self, filters) -> List[Guardian]:
@@ -169,7 +183,7 @@ class GuardianFactory:
         Returns:
             List[guardian]: List of archived guardian records
         """
-        fields = ['first_name','last_name', 'guardian_id']
+        fields = ['first_name','last_name']
         return self.repository.execute_archive_query(fields, filters)
 
 
@@ -183,7 +197,8 @@ class GuardianFactory:
         try:
             return self.repository.get_archive_by_id(guardian_id)
         except EntityNotFoundError as e:
-            raise GuardianNotFoundError(id=guardian_id, detail = str(e))
+            raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
+
 
     def restore_guardian(self, guardian_id: UUID) -> Guardian:
         """Restore an archived guardian.
@@ -197,7 +212,7 @@ class GuardianFactory:
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(guardian_id)
         except EntityNotFoundError as e:
-            raise GuardianNotFoundError(id=guardian_id, detail = str(e))
+            raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
 
 
     def delete_archived_guardian(self, guardian_id: UUID) -> None:
@@ -208,7 +223,13 @@ class GuardianFactory:
         try:
             self.repository.delete_archive(guardian_id)
         except EntityNotFoundError as e:
-            raise GuardianNotFoundError(id=guardian_id, detail = str(e))
+            raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
+
+
+        except RelationshipError as e:
+            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
+            raise RelationshipError(error=str(e), operation='update', entity='unknown')
 
 
 

@@ -3,6 +3,7 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from ...errors.staff_organisation_errors import RelatedRoleNotFoundError, RelatedDepartmentNotFoundError
+from ...errors.user_errors import StaffInUseError
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
 from ....core.errors.user_errors import DuplicateStaffError, StaffNotFoundError, StaffTypeError
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -84,17 +85,19 @@ class StaffFactory:
             else:
                 raise DuplicateStaffError(
                     input_value="unknown field", field="unknown", detail=error_message)
+
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
                 'fk_staff_staff_roles_role_id': ('role_id', RelatedRoleNotFoundError),
                 'fk_staff_staff_departments_department_id': ('department_id', RelatedDepartmentNotFoundError),
                 }
+
             for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     entity_id = getattr(staff_data, attr_name, None)
                     if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='create')
+                        raise error_class(identifier=entity_id, detail=error_message, action='create')
 
             raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
@@ -108,8 +111,9 @@ class StaffFactory:
         """
         try:
             return self.repository.get_by_id(staff_id)
+
         except EntityNotFoundError as e:
-            raise StaffNotFoundError(id=staff_id, detail = str(e))
+            raise StaffNotFoundError(identifier=staff_id, detail = str(e))
 
 
     def get_all_staff(self, filters) -> List[Staff]:
@@ -155,6 +159,7 @@ class StaffFactory:
 
             existing.last_modified_by = SYSTEM_USER_ID
             return self.repository.update(staff_id, existing)
+
         except UniqueViolationError as e:
             error_message = str(e).lower()
             if "staff_phone_key" in error_message:
@@ -170,12 +175,15 @@ class StaffFactory:
                 'fk_staff_staff_roles_role_id': ('role_id', RelatedRoleNotFoundError),
                 'fk_staff_staff_departments_department_id': ('department_id', RelatedDepartmentNotFoundError),
                 }
+
             for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     entity_id = data.get(attr_name, None)
                     if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='update')
+                        raise error_class(identifier=entity_id, detail=error_message, action='update')
+
             raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
+
 
     def archive_staff(self, staff_id: UUID, reason: ArchiveReason) -> Staff:
             """Archive staff.
@@ -187,8 +195,9 @@ class StaffFactory:
             """
             try:
                 return self.repository.archive(staff_id, SYSTEM_USER_ID, reason)
+
             except EntityNotFoundError as e:
-                raise StaffNotFoundError(id=staff_id, detail = str(e))
+                raise StaffNotFoundError(identifier=staff_id, detail = str(e))
 
 
     def delete_staff(self, staff_id: UUID) -> None:
@@ -198,8 +207,17 @@ class StaffFactory:
         """
         try:
             self.repository.delete(staff_id)
+
         except EntityNotFoundError as e:
-            raise StaffNotFoundError(id=staff_id, detail = str(e))
+            raise StaffNotFoundError(identifier=staff_id, detail = str(e))
+
+
+        except RelationshipError as e:
+            # Note: Referenced FKs are SET NULL on deletion, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
+            error_message = str(e)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
+
 
 
     def get_all_archived_staff(self, filters) -> List[Staff]:
@@ -221,7 +239,7 @@ class StaffFactory:
         try:
             return self.repository.get_archive_by_id(staff_id)
         except EntityNotFoundError as e:
-            raise StaffNotFoundError(id=staff_id, detail = str(e))
+            raise StaffNotFoundError(identifier=staff_id, detail = str(e))
 
     def restore_staff(self, staff_id: UUID) -> Staff:
         """Restore an archived staff.
@@ -235,7 +253,7 @@ class StaffFactory:
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(staff_id)
         except EntityNotFoundError as e:
-            raise StaffNotFoundError(id=staff_id, detail = str(e))
+            raise StaffNotFoundError(identifier=staff_id, detail = str(e))
 
 
     def delete_archived_staff(self, staff_id: UUID) -> None:
@@ -246,7 +264,14 @@ class StaffFactory:
         try:
             self.repository.delete_archive(staff_id)
         except EntityNotFoundError as e:
-            raise StaffNotFoundError(id=staff_id, detail = str(e))
+            raise StaffNotFoundError(identifier=staff_id, detail = str(e))
+
+        except RelationshipError as e:
+            # Note: Referenced FKs are SET NULL on deletion, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
+            error_message = str(e)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
+
 
 
 

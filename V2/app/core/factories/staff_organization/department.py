@@ -155,13 +155,8 @@ class StaffDepartmentFactory:
 
         except RelationshipError as e:
             error_message = str(e)
-            fk_error_mapping = {
-                'fk_staff_departments_staff_manager_id': ('manager_id', DepartmentInUseError, 'Staff')
-            }
-
-            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    raise error_class(entity_name=entity_name, detail=error_message)
+            # Note: Referenced FKs are SET NULL on delete, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
             raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
 
 
@@ -185,6 +180,7 @@ class StaffDepartmentFactory:
             return self.repository.get_archive_by_id(department_id)
         except EntityNotFoundError as e:
             raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
+
 
     def restore_department(self, department_id: UUID) -> StaffDepartment:
         """Restore an archived department.
@@ -217,13 +213,9 @@ class StaffDepartmentFactory:
         except EntityNotFoundError as e:
             raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
 
+
         except RelationshipError as e:
             error_message = str(e)
-            fk_error_mapping = {
-                'fk_staff_departments_staff_manager_id': ('manager_id', DepartmentInUseError, 'Staff')
-            }
-
-            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    raise error_class(entity_name=entity_name, detail=error_message)
+            # Note: Referenced FKs are SET NULL on delete, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
             raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')

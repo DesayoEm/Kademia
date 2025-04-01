@@ -6,15 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="d49e4f62-7add-4eb8-a665-00ba3b079643" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/errors/student_organisation_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/student_organisation_errors.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/errors/user_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/user_errors.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/department.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/department.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/qualification.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/qualification.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/factories/student_organization/academic_level.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/academic_level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/factories/student_organization/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/classes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/student_organization/department.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/department.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/factories/users/guardian.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/users/guardian.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/database/models/student_organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/student_organization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/users/staff.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/users/staff.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/users/student.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/users/student.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/models/documents.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/documents.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/models/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/users.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

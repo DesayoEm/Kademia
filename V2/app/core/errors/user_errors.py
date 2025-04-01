@@ -21,19 +21,20 @@ class DuplicateStaffError(UserProfileError, UniqueViolationError):
 class StaffNotFoundError(UserProfileError, EntityNotFoundError):
     """Raised when a staff account is not found."""
 
-    def __init__(self, id: UUID, detail: str):
+    def __init__(self, identifier: UUID, detail: str):
         EntityNotFoundError.__init__(self, entity_type="Staff", identifier=str(id), error = detail)
         self.user_message = f"Staff not found!"
-        self.log_message = f"Staff with id:{id} not found. Detail {detail}"
+        self.log_message = f"Staff with id:{identifier} not found. Detail {detail}"
 
 
 class RelatedStaffNotFoundError(UserProfileError, RelationshipError):
     """Raised when a staff account is not found during fk insertion"""
 
-    def __init__(self, id: UUID, detail: str, action: str):
+    def __init__(self, identifier: UUID, detail: str, action: str):
         RelationshipError.__init__(self, error = detail, operation=action, entity="Staff")
         self.user_message = f"Related staff not found!"
-        self.log_message = f"Error during during fk insertion of Staff with id:{id} during {action} operation. Detail {detail}"
+        self.log_message = f"Error during during fk insertion of Staff with id:{identifier} during {action} operation. Detail {detail}"
+
 
 class RelatedEducatorNotFoundError(UserProfileError, RelationshipError):
     """Raised when an educator account is not found during fk insertion"""
@@ -43,6 +44,14 @@ class RelatedEducatorNotFoundError(UserProfileError, RelationshipError):
         self.user_message = f"Related educator not found!"
         self.log_message = f"Error during during fk insertion of Educator with id:{identifier} during {action} operation. Detail {detail}"
 
+
+class StaffInUseError(UserProfileError, UniqueViolationError):
+    """Raised when attempting to delete a staff member that still has related entities."""
+
+    def __init__(self, entity_name: str, detail: str):
+        super().__init__(error=detail)
+        self.user_message = f"Cannot delete staff while {entity_name} is still assigned."
+        self.log_message = f"Deletion blocked: staff is still linked to {entity_name}. Detail: {detail}"
 
 
 class StaffTypeError(UserProfileError):
@@ -62,36 +71,48 @@ class DuplicateStudentIDError(UserProfileError, UniqueViolationError):
         self.user_message = f"A student with id {stu_id} already exists!"
         self.log_message = f"Unique constraint violated during student creation with {stu_id}. Detail {detail}"
 
+
 class DuplicateStudentError(UserProfileError, UniqueViolationError):
     def __init__(self, input_value: str, detail: str):
         UniqueViolationError.__init__(self, error=detail)
         self.user_message = f"A student with {input_value} already exists!"
         self.log_message = f"Unique constraint violated during student creation with {input_value}. Detail {detail}"
 
+
 class StudentNotFoundError(UserProfileError, EntityNotFoundError):
     """Raised when a staff account is not found."""
-    def __init__(self, id: UUID, detail: str):
-        EntityNotFoundError.__init__(self, entity_type="Student", identifier=str(id), error = detail)
+    def __init__(self, identifier: UUID, detail: str):
+        EntityNotFoundError.__init__(self, entity_type="Student", identifier=str(identifier), error = detail)
         self.user_message = f"Student not found!"
-        self.log_message = f"Student with id:{id} not found. Detail {detail}"
+        self.log_message = f"Student with id:{identifier} not found. Detail {detail}"
+
 
 class RelatedStudentNotFoundError(UserProfileError, RelationshipError):
     """Raised when a student account is not found during fk insertion"""
-    def __init__(self, id: UUID, detail: str, action: str):
+    def __init__(self, identifier: UUID, detail: str, action: str):
         RelationshipError.__init__(self, error = detail, operation=action, entity="Staff")
         self.user_message = f"Related student not found!"
-        self.log_message = f"Error during during fk insertion of student with id:{id} during {action} operation. Detail {detail}"
+        self.log_message = f"Error during during fk insertion of student with id:{identifier} during {action} operation. Detail {detail}"
 
+
+class StudentInUseError(UserProfileError, UniqueViolationError):
+    """Raised when attempting to delete a student that still has related entities."""
+
+    def __init__(self, entity_name: str, detail: str):
+        super().__init__(error=detail)
+        self.user_message = f"Cannot delete student while {entity_name} is still assigned."
+        self.log_message = f"Deletion blocked: student is still linked to {entity_name}. Detail: {detail}"
 
 
 # Guardian-specific errors
 
 class RelatedGuardianNotFoundError(UserProfileError, RelationshipError):
     """Raised when a guardian account is not found during fk insertion"""
-    def __init__(self, id: UUID, detail: str, action: str):
+    def __init__(self, identifier: UUID, detail: str, action: str):
         RelationshipError.__init__(self, error = detail, operation=action, entity="Staff")
         self.user_message = f"Related guardian not found!"
-        self.log_message = f"Error during during fk insertion of guardian with id:{id} during {action} operation. Detail {detail}"
+        self.log_message = f"Error during during fk insertion of guardian with id:{identifier} during {action} operation. Detail {detail}"
+
 
 class DuplicateGuardianError(UserProfileError, UniqueViolationError):
     def __init__(self, input_value: str, detail: str, field: str):
@@ -99,9 +120,10 @@ class DuplicateGuardianError(UserProfileError, UniqueViolationError):
         self.user_message = f"A guardian with {field} {input_value} already exists!"
         self.log_message = f"Unique constraint violated for during guardian creation with {input_value}. Detail {detail}"
 
+
 class GuardianNotFoundError(UserProfileError, EntityNotFoundError):
     """Raised when a staff account is not found."""
-    def __init__(self, id: UUID, detail: str):
-        EntityNotFoundError.__init__(self, entity_type="Guardian", identifier=str(id), error = detail)
+    def __init__(self, identifier: UUID, detail: str):
+        EntityNotFoundError.__init__(self, entity_type="Guardian", identifier=str(identifier), error = detail)
         self.user_message = f"Guardian not found!"
-        self.log_message = f"Guardian with id:{id} not found. Detail {detail}"
+        self.log_message = f"Guardian with id:{identifier} not found. Detail {detail}"

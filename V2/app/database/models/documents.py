@@ -11,7 +11,7 @@ class StudentDocument(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     owner_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-            ondelete='CASCADE',name='fk_student_documents_students_owner_id'),default=uuid4
+            ondelete='RESTRICT',name='fk_student_documents_students_owner_id'),default=uuid4
         )
     title: Mapped[str] = mapped_column(String(50))
     academic_year: Mapped[int] = mapped_column(Integer)

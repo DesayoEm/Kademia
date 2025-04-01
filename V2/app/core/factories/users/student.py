@@ -9,7 +9,8 @@ from ....core.errors.database_errors import (
     RelationshipError, UniqueViolationError,EntityNotFoundError
     )
 from ...errors.user_errors import (
-    DuplicateStudentIDError, DuplicateStudentError, RelatedGuardianNotFoundError, StudentNotFoundError
+    DuplicateStudentIDError, DuplicateStudentError, RelatedGuardianNotFoundError, StudentNotFoundError,
+    StudentInUseError
 )
 from ...services.auth.password_service import PasswordService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -57,6 +58,7 @@ class StudentFactory:
         )
         try:
             return self.repository.create(new_student)
+
         except UniqueViolationError as e:
             error_message = str(e).lower()
             if "students_student_id_key" in error_message:
@@ -66,6 +68,7 @@ class StudentFactory:
             else:
                 raise DuplicateStudentError(
                     input_value="unknown field",detail=error_message)
+
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
@@ -74,6 +77,7 @@ class StudentFactory:
                 'fk_students_classes_class_id': ('class_id', RelatedClassNotFoundError),
                 'fk_students_student_departments_department_id': ('department_id', RelatedDepartmentNotFoundError),
             }
+
             for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     entity_id = getattr(student_data, attr_name, None)
@@ -92,8 +96,9 @@ class StudentFactory:
         """
         try:
             return self.repository.get_by_id(student_id)
+
         except EntityNotFoundError as e:
-            raise StudentNotFoundError(id=student_id, detail = str(e))
+            raise StudentNotFoundError(identifier=student_id, detail = str(e))
 
 
     def get_all_students(self, filters) -> List[Student]:
@@ -135,7 +140,10 @@ class StudentFactory:
         except UniqueViolationError as e:
             raise DuplicateStudentError(input_value="unknown",  detail=str(e))
 
+
         except RelationshipError as e:
+            # Note: There are no referenced FK in the updated fields, so RelationshipError may not trigger here,
+            # but it is being kept for unexpected constraint issues.
             raise RelationshipError(error=str(e), operation='update', entity='unknown')
 
 
@@ -150,7 +158,7 @@ class StudentFactory:
             try:
                 return self.repository.archive(student_id, SYSTEM_USER_ID, reason)
             except EntityNotFoundError as e:
-                raise StudentNotFoundError(id=student_id, detail = str(e))
+                raise StudentNotFoundError(identifier=student_id, detail = str(e))
 
 
     def delete_student(self, student_id: UUID) -> None:
@@ -160,8 +168,20 @@ class StudentFactory:
         """
         try:
             self.repository.delete(student_id)
+
         except EntityNotFoundError as e:
-            raise StudentNotFoundError(id=student_id, detail = str(e))
+            raise StudentNotFoundError(identifier=student_id, detail = str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_students_guardians_guardian_id': ('guardian_id', StudentInUseError, 'guardian'),
+            }
+
+            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    raise error_class(entity_name=entity_name, detail=error_message)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
 
 
     def get_all_archived_students(self, filters) -> List[Student]:
@@ -182,8 +202,10 @@ class StudentFactory:
         """
         try:
             return self.repository.get_archive_by_id(student_id)
+
         except EntityNotFoundError as e:
-            raise StudentNotFoundError(id=student_id, detail = str(e))
+            raise StudentNotFoundError(identifier=student_id, detail = str(e))
+
 
     def restore_student(self, student_id: UUID) -> Student:
         """Restore an archived student.
@@ -196,8 +218,9 @@ class StudentFactory:
             archived = self.get_archived_student(student_id)
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(student_id)
+
         except EntityNotFoundError as e:
-            raise StudentNotFoundError(id=student_id, detail = str(e))
+            raise StudentNotFoundError(identifier=student_id, detail = str(e))
 
 
     def delete_archived_student(self, student_id: UUID) -> None:
@@ -207,8 +230,20 @@ class StudentFactory:
         """
         try:
             self.repository.delete_archive(student_id)
+
         except EntityNotFoundError as e:
-            raise StudentNotFoundError(id=student_id, detail = str(e))
+            raise StudentNotFoundError(identifier=student_id, detail = str(e))
+
+        except RelationshipError as e:
+            error_message = str(e)
+            fk_error_mapping = {
+                'fk_students_guardians_guardian_id': ('guardian_id', StudentInUseError, 'guardian'),
+            }
+
+            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
+                if fk_constraint in error_message:
+                    raise error_class(entity_name=entity_name, detail=error_message)
+            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
 
 
 

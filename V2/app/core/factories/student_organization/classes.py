@@ -38,7 +38,8 @@ class ClassFactory:
         class_data = Classes(
             id = uuid4(),
             level_id = new_class.level_id,
-            code = new_class.code,
+            order = self.service.create_order(new_class.level_id),
+            code=new_class.code,
             supervisor_id = new_class.supervisor_id,
             student_rep_id =  new_class.student_rep_id,
             assistant_rep_id = new_class.assistant_rep_id,
@@ -46,7 +47,6 @@ class ClassFactory:
             last_modified_by=SYSTEM_USER_ID,
 
         )
-        class_data.order = self.service.create_order(new_class.level_id)
         try:
             return self.repository.create(class_data)
 
@@ -70,6 +70,7 @@ class ClassFactory:
                 'fk_classes_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
                 'fk_classes_students_assistant_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
             }
+
             for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
                 if fk_constraint in error_message:
                     entity_id = getattr(new_class, attr_name, None)
@@ -112,11 +113,13 @@ class ClassFactory:
         original = data.copy()
         try:
             existing = self.get_class(class_id)
+            if 'order' in data:
+                existing.order = (data.pop('order'))
+
             for key, value in data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
             existing.last_modified_by = SYSTEM_USER_ID
-
             return self.repository.update(class_id, existing)
 
         except EntityNotFoundError as e:
