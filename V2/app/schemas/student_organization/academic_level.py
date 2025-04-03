@@ -8,10 +8,9 @@ class AcademicLevelFilterParams(BaseFilterParams):
     order_by: Literal["order", "created_at"] = "order"
 
 class AcademicLevelBase(BaseModel):
-    """Base model for class levels"""
+    """Base model for academic levels"""
     name: str
     description: str
-    order: int | None = None
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -19,29 +18,44 @@ class AcademicLevelBase(BaseModel):
         json_schema_extra = {
                 "example": {
                     "name": "JSS1",
-                    "description": "First Level in the Secondary School System",
-                    "order": 1
+                    "description": "First Level in the Secondary School System"
+
                 }
         }
     )
 
-class AcademicLevelUpdate(AcademicLevelBase):
-    """Used for updating class levels"""
-    pass
-
-
 
 class AcademicLevelCreate(AcademicLevelBase):
-    """Used for creating new class levels"""
-    pass
+    """For creating new academic levels"""
+
+class AcademicLevelUpdate(AcademicLevelBase):
+    """For updating academic levels"""
+    order: int
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
+                "name": "JSS1",
+                "description": "First Level in the Secondary School System",
+                "order":10
+
+            }
+        }
+    )
+
+
 
 class AcademicLevelResponse(AcademicLevelBase):
     """Response model for class levels"""
-    pass
+    order: int
 
 class AcademicLevelInDB(AcademicLevelBase):
     """Represents stored class levels"""
     id: UUID
+    name: str
+    description: str
     created_at: datetime
     created_by: UUID
     last_modified_at: datetime
@@ -50,24 +64,3 @@ class AcademicLevelInDB(AcademicLevelBase):
     archived_at: datetime | None = None
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
-
-
-    model_config = ConfigDict(
-        from_attributes=True,
-        extra="ignore",
-        json_schema_extra = {
-        "example": {
-            "name": "JSS2",
-            "description": "Second Level in the Secondary School System",
-            "order": 1,
-            "created_at": "2024-02-17T12:00:00Z",
-            "created_by": "00000000-0000-0000-0000-000000000000",
-            "last_modified_at": "2024-02-17T12:00:00Z",
-            "last_modified_by": "00000000-0000-0000-0000-000000000000",
-            "is_archived": False,
-            "archived_at": None,
-            "archived_by": None,
-            "archive_reason": None
-        }
-        }
-    )

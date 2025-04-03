@@ -27,6 +27,7 @@ class TokenService:
         )
         return token
 
+
     def decode_token(self, token: str) -> dict:
         try:
             decoded_token = jwt.decode(

@@ -2,7 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
-from ...services.auth.email_service import EmailService
+from ....core.services.email.onboarding import EmailService
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
 from ...errors.user_errors import DuplicateGuardianError,GuardianNotFoundError
 from ...services.auth.password_service import PasswordService

@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import select, or_, func
 from .password_service import bcrypt_context
 from ...errors.auth_errors import InvalidCredentialsError
 from ....database.models.users import Staff, Guardian, Student
@@ -12,18 +13,26 @@ class AuthService:
         self.session = session
         self.token_service = TokenService()
 
-    def authenticate_user(
-            self, identifier: str, password: str, user_type: UserType):
+    def authenticate_user(self, identifier: str, password: str, user_type: UserType):
         """Authenticate a user based on their type"""
         user = None
-        if user_type == UserType.STAFF:
-            user = self.session.query(Staff).filter(Staff.email_address == identifier.lower()).first()
-        elif user_type == UserType.STUDENT:
-            user = self.session.query(Student).filter(Student.student_id == identifier).first()
+
+        if user_type == UserType.STUDENT:
+            stmt = select(Student).where(func.lower(Student.student_id) == identifier.lower())
+            user = self.session.execute(stmt).scalars().first()
+
         elif user_type == UserType.GUARDIAN:
-            user = self.session.query(Guardian).filter(
-                (Guardian.email_address == identifier.lower()) |
-                (Guardian.phone == identifier)).first()
+            stmt = select(Guardian).where(
+                or_(
+                    Guardian.email_address == identifier.lower(),
+                    Guardian.phone == identifier
+                )
+            )
+            user = self.session.execute(stmt).scalars().first()
+
+        elif user_type == UserType.STAFF:
+            stmt = select(Staff).where(Staff.email_address == identifier.lower())
+            user = self.session.execute(stmt).scalars().first()
 
         if not user:
             raise InvalidCredentialsError(credential=identifier)
@@ -35,29 +44,34 @@ class AuthService:
         return user
 
 
+    def authenticate_user_identifier(self, identifier: str):
+        """Authenticate a user's identifier without validating a password (for password resets)"""
+        user = None
+
+        #Only staff are required to reset a password
+        stmt = select(Staff).where(Staff.email_address == identifier.lower())
+        user = self.session.execute(stmt).scalars().first()
+
+        if not user:
+            raise InvalidCredentialsError(credential=identifier)
+
+        return user
+
+
     def log_in(self, identifier: str, password: str, user_type: UserType):
         """Login a user and generate access tokens"""
         user = self.authenticate_user(identifier, password, user_type)
         user_data = {
             "user_id": str(user.id),
-            "user_type": user_type,
+            "user_type": user_type.value,
             "access_level": user.access_level,
         }
 
         if user_type == UserType.STAFF:
             user_data.update({
-                "email": user.email_address,
                 "staff_type": user.staff_type,
             })
-        elif user_type == UserType.STUDENT:
-            user_data.update({
-                "student_id": user.student_id,
-            })
-        elif user_type == UserType.GUARDIAN:
-            user_data.update({
-                "email": user.email_address,
-                "phone": user.phone
-            })
+
 
         access_token = self.token_service.create_access_token(
             user_data = user_data,
@@ -69,6 +83,7 @@ class AuthService:
             refresh=True,
             expiry=timedelta(days=1)
         )
+
         return {
             "access_token": access_token,
             "refresh_token": refresh_token,

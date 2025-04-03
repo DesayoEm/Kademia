@@ -9,16 +9,21 @@ from ..core.errors.input_validation_errors import *
 from ..core.errors.student_organisation_errors import *
 from ..core.errors.user_errors import *
 from ..core.errors.auth_errors import *
+from ..core.errors.email_errors import *
 from ..log_service.logger import logger
 
 class ExceptionMiddleware(BaseHTTPMiddleware):
 
     error_map = {
 
+        # Email errors
+        EmailFailedToSendError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+
+
         # Auth errors
         InvalidCredentialsError: status.HTTP_401_UNAUTHORIZED,
         UserNotFoundError: status.HTTP_404_NOT_FOUND,
-        EmailFailedToSendError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+
 
         TokenError: status.HTTP_401_UNAUTHORIZED,
         TokenExpiredError: status.HTTP_401_UNAUTHORIZED,

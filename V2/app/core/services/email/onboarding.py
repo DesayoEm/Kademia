@@ -1,45 +1,14 @@
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+from ....core.services.email.base import EmailService
 
-from ...errors.auth_errors import EmailFailedToSendError
-from ....config import email_settings
 
-class EmailService:
+class OnboardingService:
+
     def __init__(self):
-        self.username = email_settings.MAIL_USERNAME
-        self.password = email_settings.MAIL_PASSWORD
-        self.server = email_settings.MAIL_SERVER
-        self.port = email_settings.MAIL_PORT
-        self.sender = email_settings.MAIL_FROM
-        self.use_tls = email_settings.MAIL_TLS
-        self.use_ssl = email_settings.MAIL_SSL
-
-    def send_email(self, recipient: str, subject: str, body_html: str,
-                                body_text: str = None) -> bool:
-        """Send email to a recipient with a given subject and body."""
-        message = MIMEMultipart("alternative")
-        message["Subject"] = subject
-        message["From"] = self.sender
-        message["To"] = recipient
-
-        if body_text:
-            message.attach(MIMEText(body_text, "plain"))
-
-        message.attach(MIMEText(body_html, "html"))
-        try:
-            with smtplib.SMTP(self.server, self.port) as server:
-                if self.use_tls:
-                    server.starttls()
-                server.login(self.username, self.password)
-                server.sendmail(self.sender, recipient, message.as_string())
-                return True
-        except Exception as e:
-            raise EmailFailedToSendError(detail = str(e))
-
+        self.service = EmailService()
 
     def send_staff_onboarding_email(self, to_email: str, first_name: str, last_name: str, password: str) -> bool:
         """Send an onboarding email with temporary password to a new staff member."""
+
         subject = "Welcome to Kademia - Your Account Information"
 
         html_body = f"""
@@ -100,10 +69,13 @@ class EmailService:
         This is an automated message. Please do not reply to this email.
         """
 
-        return self.send_email(to_email, subject, html_body, text_body)
+        return self.service.send_email(to_email, subject, html_body, text_body)
 
-    def send_guardian_onboarding_email(self, to_email: str, title: str, last_name: str, password: str) -> bool:
+    def send_guardian_onboarding_email(
+            self, to_email: str, title: str, last_name: str, password: str
+            ) -> bool:
         """Send an onboarding email with temporary password to a guardian."""
+
         subject = "Welcome to Kademia - Your Account Information"
 
         html_body = f"""
@@ -164,4 +136,4 @@ class EmailService:
         This is an automated message. Please do not reply to this email.
         """
 
-        return self.send_email(to_email, subject, html_body, text_body)
+        return self.service.send_email(to_email, subject, html_body, text_body)

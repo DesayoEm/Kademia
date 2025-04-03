@@ -3,14 +3,13 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from ...errors.staff_organisation_errors import RelatedRoleNotFoundError, RelatedDepartmentNotFoundError
-from ...errors.user_errors import StaffInUseError
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
 from ....core.errors.user_errors import DuplicateStaffError, StaffNotFoundError, StaffTypeError
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....core.services.auth.password_service import PasswordService
-from ....core.services.auth.email_service import EmailService
+from ....core.services.email.onboarding import EmailService
 from ....core.validators.entity_validators import EntityValidator
 from ....database.models.users import Staff, Educator, SupportStaff, AdminStaff
 

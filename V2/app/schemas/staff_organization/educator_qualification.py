@@ -14,7 +14,7 @@ class QualificationBase(BaseModel):
     educator_id: UUID
     name: str
     description: str | None = None
-    validity_type = ValidityType
+    validity_type : ValidityType
     valid_until: str
 
 
@@ -66,7 +66,7 @@ class QualificationInDB:
     educator_id: UUID
     name: str
     description: str | None = None
-    validity_type = ValidityType
+    validity_type : ValidityType
     valid_until: str
     created_at: datetime
     created_by: UUID

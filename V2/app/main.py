@@ -19,7 +19,7 @@ from .routers.student_organization import (
 from .routers.users.staff import staff, archived_staff
 from .routers.users.student import student, archived_student
 from .routers.users.guardian import guardian, archived_guardian
-from .routers.auth import log_in
+from .routers.auth import auth, password
 from .middleware.error_handler import ExceptionMiddleware
 from .log_service.logger import logger
 
@@ -31,19 +31,25 @@ app = FastAPI(
 
 app.add_middleware(ExceptionMiddleware)
 
-# Staff auth
-app.include_router(log_in.router, prefix=f"/api/{version}/staff/auth",
+# auth
+app.include_router(auth.router, prefix=f"/api/{version}/auth",
                    tags=["Auth"])
 
-# /api/educators/
-# /api/support-staff/
-# /api/administrative-staff
+app.include_router(password.router, prefix=f"/api/{version}/auth",
+                   tags=["Auth", "Password"])
+
+
 
 # Staff
 app.include_router(staff.router, prefix=f"/api/{version}/admin/staff",
                    tags=["Staff", "Admin"])
 app.include_router(archived_staff.router, prefix=f"/api/{version}/admin/archive/staff",
                    tags=["Archived","Staff", "Admin"])
+
+# /api/educators/
+# /api/support-staff/
+# /api/administrative-staff
+
 
 # Students
 app.include_router(student.router, prefix=f"/api/{version}/admin/students",

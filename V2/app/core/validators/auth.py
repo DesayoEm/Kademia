@@ -1,4 +1,4 @@
-from V2.app.core.errors.auth_errors import PasswordFormatError
+from ...core.errors.auth_errors import PasswordFormatError
 
 
 class AuthValidator:

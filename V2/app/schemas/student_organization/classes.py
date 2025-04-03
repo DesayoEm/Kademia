@@ -10,6 +10,7 @@ class ClassFilterParams(BaseFilterParams):
     code: str |None = None
     order_by: Literal["order", "created_at"] = "order"
 
+
 class ClassBase(BaseModel):
     """Base model for class levels"""
     level_id: UUID
@@ -30,13 +31,12 @@ class ClassBase(BaseModel):
         }}
     )
 
-
 class ClassUpdate(BaseModel):
     """Used for updating class levels"""
     supervisor_id: UUID | None = None
     student_rep_id: UUID | None = None
     assistant_rep_id: UUID | None = None
-    order: int | None = None
+    order: int
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -46,10 +46,9 @@ class ClassUpdate(BaseModel):
                 "supervisor_id": "00000000-0000-0000-0000-000000000000",
                 "student_rep_id": "00000000-0000-0000-0000-000000000000",
                 "assistant_rep_id": "00000000-0000-0000-0000-000000000000",
-                "order": "1",
+                "order": "10",
             }}
     )
-
 
 class ClassCreate(ClassBase):
     """Used for creating new class levels"""
@@ -58,12 +57,17 @@ class ClassCreate(ClassBase):
 
 class ClassResponse(ClassBase):
     """Response model for class levels"""
-    pass
+    order: int
 
-
-class ClassInDB(ClassBase):
+class ClassInDB:
     """Represents stored class levels"""
     id: UUID
+    level_id: UUID
+    code: ClassCode
+    order: int
+    supervisor_id: UUID | None = None
+    student_rep_id: UUID | None = None
+    assistant_rep_id: UUID | None = None
     created_at: datetime
     created_by: UUID
     last_modified_at: datetime
@@ -73,27 +77,4 @@ class ClassInDB(ClassBase):
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        extra="ignore",
-        json_schema_extra = {
-        "json_schema_extra": {
-        "example": {
-            "id": "00000000-0000-0000-0000-000000000000",
-            "level_id": "00000000-0000-0000-0000-000000000000",
-            "code": "A",
-            "supervisor_id": "00000000-0000-0000-0000-000000000000",
-            "student_rep_id": "00000000-0000-0000-0000-000000000000",
-            "assistant_rep_id": "00000000-0000-0000-0000-000000000000",
-            "order": "1",
-            "created_at": "2024-02-17T12:00:00Z",
-            "created_by": "00000000-0000-0000-0000-000000000000",
-            "last_modified_at": "2024-02-17T12:00:00Z",
-            "last_modified_by": "00000000-0000-0000-0000-000000000000",
-            "is_archived": False,
-            "archived_at": None,
-            "archived_by": None,
-            "archive_reason": None
-        }
-        }})
 

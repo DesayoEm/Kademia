@@ -7,7 +7,7 @@ from ....database.models.enums import UserType
 from .token_service import TokenService
 
 from ....core.errors.auth_errors import RefreshTokenRequiredError, TokenRevokedError, AccessTokenRequiredError
-from ....database.redis.tokens import token_blocklist
+from ....database.redis.access_tokens import token_blocklist
 
 token_service = TokenService()
 session = Session()

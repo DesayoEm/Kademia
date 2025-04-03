@@ -1,14 +1,7 @@
-from ...config import config
-import redis
+from .config import r
 from datetime import datetime, timedelta
 from ...core.errors.auth_errors import TokenInvalidError
 
-r = redis.Redis(
-    host=config.REDIS_HOST,
-    port=config.REDIS_PORT,
-    db=0,
-    decode_responses=True
-)
 
 class TokenBlocklist:
     def __init__(self, redis_client):
