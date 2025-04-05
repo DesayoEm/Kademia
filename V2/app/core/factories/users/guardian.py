@@ -92,7 +92,7 @@ class GuardianFactory:
         Returns:
             List[guardian]: List of active guardians
         """
-        fields = ['first_name','last_name']
+        fields = ['name']
         return self.repository.execute_query(fields, filters)
 
 
@@ -183,7 +183,7 @@ class GuardianFactory:
         Returns:
             List[guardian]: List of archived guardian records
         """
-        fields = ['first_name','last_name']
+        fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
 

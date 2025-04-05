@@ -4,8 +4,8 @@ from ..enums import Title
 from ..shared_models import *
 
 class GuardianFilterParams(BaseFilterParams):
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
+    name: str | None = None
+    order_by: Literal["name", "created_at"] = "name"
 
 
 class GuardianBase(UserBase):

@@ -1,6 +1,6 @@
 from uuid import UUID
 from typing import Optional, List, Type
-from sqlalchemy import desc, asc, select, Select
+from sqlalchemy import desc, asc, select, Select, func, or_
 from sqlalchemy.orm import Session
 from ....core.errors.database_errors import  EntityNotFoundError
 from ..base_repo import Repository, T
@@ -72,12 +72,27 @@ class SQLAlchemyRepository(BaseRepository[T]):
         for field, value in filters.model_dump(exclude_unset=True).items():
             if field in {'limit', 'offset', 'order_by', 'order_dir'}:
                 continue
-            if value is not None and hasattr(self.model, field):
-                column = getattr(self.model, field)
-                if isinstance(value, str) and field in fields:
-                    stmt = stmt.where(column.ilike(f"%{value}%"))
-                else:
-                    stmt = stmt.where(column == value)
+
+            if value is not None:
+
+                if field == "name" and hasattr(self.model, "first_name") and hasattr(self.model, "last_name"):
+                    full_name = func.concat(self.model.first_name, ' ', self.model.last_name)
+                    reversed_full_name = func.concat(self.model.last_name, ' ', self.model.first_name)
+
+                    stmt = stmt.where(
+                        or_(
+                            full_name.ilike(f"%{value}%"),
+                            reversed_full_name.ilike(f"%{value}%")
+                        )
+                    )
+
+                elif hasattr(self.model, field):
+                    column = getattr(self.model, field)
+
+                    if isinstance(value, str) and field in fields:
+                        stmt = stmt.where(column.ilike(f"%{value}%"))
+                    else:
+                        stmt = stmt.where(column == value)
 
         return stmt
 
@@ -91,10 +106,20 @@ class SQLAlchemyRepository(BaseRepository[T]):
         order_by = getattr(filters, 'order_by', 'created_at')
         order_dir = getattr(filters, 'order_dir', 'asc')
 
-        if order_by and hasattr(self.model, order_by):
+        order_func = desc if order_dir == 'desc' else asc
+
+        if order_by == "name":
+            stmt = stmt.order_by(
+                order_func(self.model.first_name),
+                order_func(self.model.last_name)
+            )
+
+        elif hasattr(self.model, order_by):
             order_column = getattr(self.model, order_by)
-            order_func = desc if order_dir == 'desc' else asc
             stmt = stmt.order_by(order_func(order_column))
+        else:
+            stmt = stmt.order_by(order_func(self.model.created_at))
+
 
         limit = getattr(filters, 'limit', 100)
         offset = getattr(filters, 'offset', 0)
