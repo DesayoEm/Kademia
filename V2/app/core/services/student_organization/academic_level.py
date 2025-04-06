@@ -10,11 +10,10 @@ class AcademicLevelService:
         self.repository = SQLAlchemyRepository(AcademicLevel, session)
         self.validator = StudentOrganizationValidator()
 
-    def create_order(self, level_id: UUID) -> int:
+    def return_default_order(self) -> int:
         """Create a new order value by getting the max order + 1 for the given level"""
         stmt = (
             select(func.max(AcademicLevel.order))
-            .where(AcademicLevel.id == level_id)
         )
         result = self.repository.session.execute(stmt).scalar_one_or_none()
         return 1 if result is None else result + 1

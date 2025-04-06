@@ -34,7 +34,7 @@ class StaffDepartmentFactory:
             id=uuid4(),
             name=self.validator.validate_name(new_department.name),
             description=self.validator.validate_name(new_department.description),
-            manager_id=self.entity_validator.validate_staff_exists(new_department.manager_id),
+
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
         )
@@ -42,21 +42,16 @@ class StaffDepartmentFactory:
             return self.repository.create(department)
 
         except UniqueViolationError as e:
-            raise DuplicateDepartmentError(
-                input_value=new_department.name, detail=str(e), field = 'name'
-            )
+            error_message = str(e)
+            if 'staff_departments_name_key' in error_message:
+                raise DuplicateDepartmentError(
+                    entry=new_department.name, detail=error_message, field='name'
+                )
+            raise DuplicateDepartmentError(entry='unknown', detail=str(e), field='unknown')
+
 
         except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'fk_staff_departments_staff_manager_id': ('manager_id', RelatedStaffNotFoundError),
-            }
-            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    entity_id = getattr(new_department, attr_name, None)
-                    if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='create')
-            raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
+            raise RelationshipError(error=str(e), operation='create', entity='unknown_entity')
 
 
     def get_staff_department(self, department_id: UUID) -> StaffDepartment:
@@ -90,18 +85,24 @@ class StaffDepartmentFactory:
             StaffDepartment: Updated department record
         """
         original = data.copy()
+
         try:
             existing = self.get_staff_department(department_id)
-            if 'name' in data:
-                existing.name = self.validator.validate_name(data.pop('name'))
-            if 'description' in data:
-                existing.description = self.validator.validate_name(data.pop('description'))
-            if 'manager_id' in data:
-                existing.manager_id = self.entity_validator.validate_staff_exists(data.pop('manager_id'))
+
+            validations = {
+                "name": (self.validator.validate_name, "name"),
+                "description": (self.validator.validate_name, "description"),
+            }
+
+            for field, (validator_func, model_attr) in validations.items():
+                if field in data:
+                    validated_value = validator_func(data.pop(field))
+                    setattr(existing, model_attr, validated_value)
 
             for key, value in data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
+
             existing.last_modified_by = SYSTEM_USER_ID
             return self.repository.update(department_id, existing)
 
@@ -109,22 +110,15 @@ class StaffDepartmentFactory:
             raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
 
         except UniqueViolationError as e:
-            raise DuplicateDepartmentError(#name is the only field with a unique constraint
-                input_value=original.get('name', 'unknown'), detail=str(e), field = 'name'
-            )
+            error_message = str(e)
+            if 'staff_departments_name_key' in error_message:
+                raise DuplicateDepartmentError(
+                    entry=original.get('name', 'unknown'), detail=error_message, field='name'
+                )
+            raise DuplicateDepartmentError(entry='unknown', detail=str(e), field = 'unknown')
 
         except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'fk_staff_departments_staff_manager_id': ('manager_id', RelatedStaffNotFoundError),
-            }
-
-            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    entity_id = data.get(attr_name, None)
-                    if entity_id:
-                        raise error_class(identifier=department_id, detail=error_message, action='update')
-            raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
+            raise RelationshipError(error=str(e), operation='update', entity='staff')
 
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StaffDepartment:
@@ -206,13 +200,6 @@ class StaffDepartmentFactory:
             self.repository.delete_archive(department_id)
         except EntityNotFoundError as e:
             raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
-
-        try:
-            self.repository.delete(department_id)
-
-        except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
-
 
         except RelationshipError as e:
             error_message = str(e)

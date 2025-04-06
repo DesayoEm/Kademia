@@ -2,7 +2,7 @@ from sqlalchemy.orm import declared_attr
 from typing import List, Optional
 from uuid import uuid4
 from enum import Enum
-from datetime import timezone
+from datetime import timezone, date as pydate
 
 
 from datetime import (

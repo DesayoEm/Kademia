@@ -1,23 +1,25 @@
-from ..errors.input_validation_errors import InvalidValidityYearError, InvalidYearError, InvalidYearLengthError
+from ..errors.input_validation_errors import InvalidValidityYearError, InvalidYearError, InvalidYearLengthError, \
+    PastDateError
 from ...core.errors.input_validation_errors import (
     EmptyFieldError, BlankFieldError, InvalidCharacterError, TextTooShortError
 )
-from datetime import datetime
+from datetime import datetime, date
 
 
 class StaffOrganizationValidator:
     def _init__(self):
         self.domain = "STAFF ORGANIZATION"
 
-    def validate_name(self, value:str) -> str:
+    @staticmethod
+    def validate_name(value:str) -> str:
         if not value:
-            raise BlankFieldError(entry = value, domain = self.domain)
+            raise BlankFieldError(entry = value)
         if not value.strip():
-            raise BlankFieldError(entry = value, domain = self.domain)
+            raise BlankFieldError(entry = value)
         if len(value.strip()) < 3:
-            raise TextTooShortError(entry = value, domain = self.domain, min_length = 3)
+            raise TextTooShortError(entry = value, min_length = 3)
         if any(val.isnumeric() for val in value):
-            raise InvalidCharacterError(entry=value, domain=self.domain)
+            raise InvalidCharacterError(entry=value)
         
         return value.strip().title()
 
@@ -46,6 +48,17 @@ class StaffOrganizationValidator:
             raise InvalidValidityYearError(year = year)
 
         return str(year)
+
+
+    @staticmethod
+    def validate_valid_until_date(value: date) -> date:
+
+        current_date = datetime.today().date()
+        if value < current_date:
+            raise PastDateError(entry=value)
+
+        return value
+
 
 
 

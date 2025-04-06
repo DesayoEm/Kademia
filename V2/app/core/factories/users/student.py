@@ -82,7 +82,7 @@ class StudentFactory:
                 if fk_constraint in error_message:
                     entity_id = getattr(student_data, attr_name, None)
                     if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='create')
+                        raise error_class(identifier=entity_id, detail=error_message, action='create')
 
             raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 

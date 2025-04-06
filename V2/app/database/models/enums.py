@@ -22,6 +22,13 @@ class UserType(str, Enum):
     SYSTEM = 'SYSTEM'
 
 
+class StaffType(str, Enum):
+    Educator = 'Educator'
+    Admin = 'Admin'
+    Support = 'Support'
+    System = 'System'
+
+
 class DocumentType(str, Enum):
     RESULT = 'RESULT'
     ID = 'ID'
@@ -39,12 +46,6 @@ class AcademicLevel(str, Enum):
     SSS2 = 'SSS2'
     SSS3 = 'SSS3'
     ALEVELS = 'ALEVELS'
-
-class StaffType(str, Enum):
-    Educator = 'Educator'
-    Admin = 'Admin'
-    Support = 'Support'
-    System = 'System'
 
 
 class StaffAvailability(str, Enum):

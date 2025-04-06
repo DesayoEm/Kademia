@@ -15,7 +15,7 @@ class QualificationBase(BaseModel):
     name: str
     description: str | None = None
     validity_type : ValidityType
-    valid_until: str
+    valid_until: date
 
 
 
@@ -26,9 +26,10 @@ class QualificationBase(BaseModel):
                 "educator_id": "00000000-0000-0000-0000-000000000001",
                 "name": "Master of Science in Mathematics",
                 "description": "Advanced degree in pure mathematics",
-                "validity_type": "Lifetime",
-                "valid_until": "Lifetime",
+                "validity_type": "Temporary",
+                "valid_until": "2026-06-01",
             }
+
         }
     )
 
@@ -41,6 +42,8 @@ class QualificationUpdate(BaseModel):
     """Used for updating educator qualifications"""
     name: str
     description: str | None
+    validity_type: ValidityType
+    valid_until: date
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -49,7 +52,7 @@ class QualificationUpdate(BaseModel):
                 "name": "Master of Science in Geology",
                 "description": "Advanced degree in stuff",
                 "validity_type": "Temporary",
-                "valid_until": "2029",
+                "valid_until": "2026-06-01",
             }
         }
     )

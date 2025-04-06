@@ -44,20 +44,6 @@ class AuthService:
         return user
 
 
-    def authenticate_user_identifier(self, identifier: str):
-        """Authenticate a user's identifier without validating a password (for password resets)"""
-        user = None
-
-        #Only staff are required to reset a password
-        stmt = select(Staff).where(Staff.email_address == identifier.lower())
-        user = self.session.execute(stmt).scalars().first()
-
-        if not user:
-            raise InvalidCredentialsError(credential=identifier)
-
-        return user
-
-
     def log_in(self, identifier: str, password: str, user_type: UserType):
         """Login a user and generate access tokens"""
         user = self.authenticate_user(identifier, password, user_type)

@@ -12,6 +12,7 @@ class ClassService:
 
     def create_order(self, level_id: UUID) -> int:
         """Create a new order value by getting the max order + 1 for the given level"""
+
         stmt = (
             select(func.max(Classes.order))
             .where(Classes.level_id == level_id)

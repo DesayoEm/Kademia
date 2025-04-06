@@ -33,9 +33,7 @@ class ClassBase(BaseModel):
 
 class ClassUpdate(BaseModel):
     """Used for updating class levels"""
-    supervisor_id: UUID | None = None
-    student_rep_id: UUID | None = None
-    assistant_rep_id: UUID | None = None
+
     order: int
 
     model_config = ConfigDict(
@@ -43,10 +41,7 @@ class ClassUpdate(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "supervisor_id": "00000000-0000-0000-0000-000000000000",
-                "student_rep_id": "00000000-0000-0000-0000-000000000000",
-                "assistant_rep_id": "00000000-0000-0000-0000-000000000000",
-                "order": "10",
+                "order": "0",
             }}
     )
 

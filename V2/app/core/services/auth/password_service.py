@@ -3,13 +3,12 @@ import string
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from .auth_service import AuthService
 from ..email.password_reset import PasswordEmailService
 from ...errors.auth_errors import WrongPasswordError, InvalidCredentialsError, ResetLinkExpiredError
 from ...validators.auth import AuthValidator
 from ....database.redis.access_tokens import token_blocklist
 from ....database.redis.password_tokens import password_token_list
-from ....database.models.users import Guardian, Student
+from ....database.models.users import Guardian, Student, Staff
 from ....schemas.enums import UserType
 from sqlalchemy import select
 
@@ -23,12 +22,13 @@ class PasswordService:
         self.token_list = password_token_list
         self.validator = AuthValidator()
         self.email_service = PasswordEmailService()
-        self.authenticator = AuthService(session)
+
+
 
     @staticmethod
     def generate_random_password():
         length = 10
-        characters = list(string.ascii_letters + string.digits + "!@#$%&")
+        characters = list(string.ascii_letters + "!@#$%&")
         random.shuffle(characters)
         password = []
         for item in range(length):
@@ -56,8 +56,22 @@ class PasswordService:
         return True
 
 
+    def authenticate_user_identifier(self, identifier: str):
+        """Authenticate a user's identifier without validating a password (for password resets)"""
+        user = None
+
+        #Only staff are required to reset a password
+        stmt = select(Staff).where(Staff.email_address == identifier.lower())
+        user = self.session.execute(stmt).scalars().first()
+
+        if not user:
+            raise InvalidCredentialsError(credential=identifier)
+
+        return user
+
+
     def request_password_reset(self, user_identifier: str):
-        user = self.authenticator.authenticate_user_identifier(user_identifier)
+        user = self.authenticate_user_identifier(user_identifier)
         token = self.token_list.save_password_token(user_identifier)
 
         reset_link = f"https://kademia.com/staff/reset-password?token={token}"
@@ -73,7 +87,7 @@ class PasswordService:
             self, password_token: str, user_identifier: str, new_password: str
                     ):
 
-        user = self.authenticator.authenticate_user_identifier(user_identifier)
+        user = self.authenticate_user_identifier(user_identifier)
 
         if not self.token_list.is_token_active(password_token):
             raise ResetLinkExpiredError(token = password_token)

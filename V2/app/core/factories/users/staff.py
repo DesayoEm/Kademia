@@ -3,13 +3,13 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from ...errors.staff_organisation_errors import RelatedRoleNotFoundError, RelatedDepartmentNotFoundError
+from ...services.email.onboarding import OnboardingService
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
 from ....core.errors.user_errors import DuplicateStaffError, StaffNotFoundError, StaffTypeError
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....core.services.auth.password_service import PasswordService
-from ....core.services.email.onboarding import EmailService
 from ....core.validators.entity_validators import EntityValidator
 from ....database.models.users import Staff, Educator, SupportStaff, AdminStaff
 
@@ -26,7 +26,7 @@ class StaffFactory:
         self.validator = UserValidator()
         self.entity_validator = EntityValidator(session)
         self.password_service = PasswordService(session)
-        self.email_service = EmailService()
+        self.onboarding_service = OnboardingService()
 
 
     def create_staff(self, staff_data) -> Staff:
@@ -48,6 +48,7 @@ class StaffFactory:
                 "email_address": self.validator.validate_staff_email(data.email_address),
                 "address": self.validator.validate_address(data.address),
                 "phone": self.validator.validate_phone(data.phone),
+                #role and department use error message in entity_validators.py and not the one in the except block.
                 "department_id": self.entity_validator.validate_department_exists(data.department_id),
                 "role_id": self.entity_validator.validate_role_exists(data.role_id),
                 "date_joined": self.validator.validate_date(data.date_joined),
@@ -67,10 +68,11 @@ class StaffFactory:
                     input_value=data.staff_type
                 )
         new_staff = create_staff_instance(staff_data)
+        full_name = f"{staff_data.first_name} {staff_data.last_name}"
 
         try:
-            self.email_service.send_staff_onboarding_email(
-                staff_data.email_address, staff_data.first_name, staff_data.last_name, password)
+            self.onboarding_service.send_staff_onboarding_email(
+                staff_data.email_address, full_name, password)
             return self.repository.create(new_staff)
 
         except UniqueViolationError as e:  #email or phone
@@ -88,15 +90,15 @@ class StaffFactory:
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
-                'fk_staff_staff_roles_role_id': ('role_id', RelatedRoleNotFoundError),
-                'fk_staff_staff_departments_department_id': ('department_id', RelatedDepartmentNotFoundError),
+                'Failed to validate role': ('role_id', RelationshipError, 'role'),
+                'Failed to validate department': ('department_id', RelationshipError, 'department'),
+                #Used hardcoded error messages from entity_validators as SQLAlchemy will not validate fks
+                #due to polymorphic association on staff table
                 }
 
-            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    entity_id = getattr(staff_data, attr_name, None)
-                    if entity_id:
-                        raise error_class(identifier=entity_id, detail=error_message, action='create')
+            for error, (attr_name, error_class, entity) in fk_error_mapping.items():
+                if error in error_message:
+                    raise error_class(error=error_message, operation='create', entity=entity)
 
             raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
@@ -135,22 +137,20 @@ class StaffFactory:
         original = data.copy()
         try:
             existing = self.get_staff(staff_id)
+            validations = {
+                "first_name": (self.validator.validate_name, "first_name"),
+                "last_name": (self.validator.validate_name, "last_name"),
+                "email_address": (self.validator.validate_staff_email, "email_address"),
+                "phone": (self.validator.validate_phone, "phone"),
+                "address": (self.validator.validate_address, "address"),
+                "department_id": (self.entity_validator.validate_department_exists, "department_id"),
+                "role_id": (self.entity_validator.validate_role_exists, "role_id")
+            }
 
-            if 'first_name' in data:
-                existing.first_name = self.validator.validate_name(data.pop('first_name'))
-            if 'last_name' in data:
-                existing.last_name = self.validator.validate_name(data.pop('last_name'))
-            if 'email_address' in data:
-                existing.first_name = self.validator.validate_staff_email(data.pop('email_address'))
-            if 'phone' in data:
-                existing.last_name = self.validator.validate_phone(data.pop('phone'))
-            if 'address' in data:
-                existing.last_name = self.validator.validate_address(data.pop('address'))
-            if 'department_id' in data:
-                existing.department_id = self.entity_validator.validate_department_exists(data.pop('department_id'))
-            if 'role_id' in data:
-                existing.role_id = self.entity_validator.validate_role_exists(data.pop('role_id'))
-
+            for field, (validator_func, model_attr) in validations.items():
+                if field in data:
+                    validated_value = validator_func(data.pop(field))
+                    setattr(existing, model_attr, validated_value)
 
             for key, value in data.items():
                 if hasattr(existing, key):
@@ -168,20 +168,22 @@ class StaffFactory:
                                           detail=error_message)
             raise DuplicateStaffError(input_value="unknown field", field="unknown", detail=error_message)
 
+
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
-                'fk_staff_staff_roles_role_id': ('role_id', RelatedRoleNotFoundError),
-                'fk_staff_staff_departments_department_id': ('department_id', RelatedDepartmentNotFoundError),
-                }
-
-            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    entity_id = data.get(attr_name, None)
-                    if entity_id:
-                        raise error_class(identifier=entity_id, detail=error_message, action='update')
+                'Failed to validate role': ('role_id', RelationshipError, 'role'),
+                'Failed to validate department': ('department_id', RelationshipError, 'department'),
+                # Used hardcoded error messages from entity_validators as SQLAlchemy will not validate fks
+                # due to polymorphic association on staff table
+            }
+            for error, (attr_name, error_class, entity) in fk_error_mapping.items():
+                if error in error_message:
+                    raise error_class(error=error_message, operation='update', entity=entity)
 
             raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
+
+
 
 
     def archive_staff(self, staff_id: UUID, reason: ArchiveReason) -> Staff:

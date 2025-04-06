@@ -59,11 +59,12 @@ class EducatorQualification(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     educator_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
             ondelete='CASCADE', name='fk_educator_qualifications_educators_educator_id')
         )
-    name: Mapped[str] = mapped_column(String(100), unique=True)
+    name: Mapped[str] = mapped_column(String(100))
     description: Mapped[str] = mapped_column(String(500), nullable=True)
-    valid_until: Mapped[str] = mapped_column(String(8), nullable=False)
     validity_type: Mapped[ValidityType] = mapped_column(Enum(ValidityType, name='validitytype'),
                                     default=ValidityType.Temporary)
+    valid_until: Mapped[pydate] = mapped_column(Date, nullable=False)
+    # date is imported from Python as pydate
 
     # Relationships
     educator: Mapped['Educator'] = relationship(
@@ -72,6 +73,7 @@ class EducatorQualification(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
     __table_args__ = (
+        UniqueConstraint('educator_id', 'name', name='uq_educator_qualification_name'),
         Index('idx_educator', 'educator_id'),
         Index('idx_qualification_name', 'name'),
     )

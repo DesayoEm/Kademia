@@ -45,7 +45,7 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     assistant_rep_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
             ondelete='SET NULL', name='fk_classes_students_assistant_rep'), nullable=True
         )
-    order: Mapped[int] = mapped_column(Integer, unique=True, nullable=True)
+    order: Mapped[int] = mapped_column(Integer, nullable=False)
 
     # Relationships
     students: Mapped[List['Student']] = relationship(
@@ -63,6 +63,7 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     __table_args__ = (
         UniqueConstraint('level_id', 'code', name='uq_class_level_code'),
+        UniqueConstraint('level_id', 'order', name='uq_class_level_order'),
         Index('idx_class_level_code', 'level_id', 'code'),
         Index('idx_class_supervisor', 'supervisor_id'),
         Index('idx_class_reps', 'student_rep_id', 'assistant_rep_id')

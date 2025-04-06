@@ -55,7 +55,7 @@ class ClassFactory:
             if "uq_class_level_code" in error_message.lower():
                 raise DuplicateClassError(
                     input_value=class_data.code.value, field="", detail=error_message)#None is a filler attr hare
-            elif "classes_order_key" in error_message.lower():
+            elif "uq_class_level_order" in error_message.lower():
                 raise DuplicateClassError(
                     input_value=str(class_data.order), field="order", detail=error_message)
             else:
@@ -75,7 +75,7 @@ class ClassFactory:
                 if fk_constraint in error_message:
                     entity_id = getattr(new_class, attr_name, None)
                     if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='create')
+                        raise error_class(identifier=entity_id, detail=error_message, action='create')
 
             raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
@@ -113,8 +113,15 @@ class ClassFactory:
         original = data.copy()
         try:
             existing = self.get_class(class_id)
-            if 'order' in data:
-                existing.order = (data.pop('order'))
+
+            validations = {
+                "order": (self.validator.validate_order, "order"),
+            }
+
+            for field, (validator_func, model_attr) in validations.items():
+                if field in data:
+                    validated_value = validator_func(data.pop(field))
+                    setattr(existing, model_attr, validated_value)
 
             for key, value in data.items():
                 if hasattr(existing, key):
@@ -127,12 +134,13 @@ class ClassFactory:
 
         except UniqueViolationError as e:
             error_message= str(e)
-            if "classes_order_key" in error_message.lower():
+            if "uq_class_level_order" in error_message.lower():
                 raise DuplicateClassError(
-                    input_value=str(original.get('order', 'unknown')), field="order", detail=error_message)
+                    entry=str(original.get('order', 'unknown')), field="order", detail=error_message)
             else:
                 raise DuplicateClassError(
-                    input_value="unknown field", field="unknown", detail=error_message)
+                    entry="unknown entry", field="unknown", detail=error_message)
+
 
         except RelationshipError as e:
             error_message = str(e)

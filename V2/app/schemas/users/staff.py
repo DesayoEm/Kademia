@@ -4,8 +4,9 @@ from ..enums import StaffType
 from .base import UserBase, ProfileInDb
 
 class StaffFilterParams(BaseFilterParams):
-    name: str | None = None
-    order_by: Literal["name", "created_at"] = "name"
+    full_name: str | None = None
+    staff_type: StaffType | None = None
+    order_by: Literal["full_name", "created_at"] = "full_name"
 
 
 class StaffBase(UserBase):
@@ -67,7 +68,8 @@ class StaffUpdate(StaffBase):
 
 class StaffResponse(StaffCreate):
     """Response model for staff"""
-    pass
+    staff_type: StaffType | None = None
+    date_joined: date | None = None
 
 
 class StaffInDB(StaffBase, ProfileInDb):

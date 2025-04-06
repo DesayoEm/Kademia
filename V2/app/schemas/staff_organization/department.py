@@ -4,7 +4,6 @@ from ..shared_models import *
 
 class DepartmentFilterParams(BaseFilterParams):
     name: Optional[str] = None
-    description: Optional[str] = None
     order_by: Literal["name", "created_at"] = "name"
 
 
@@ -12,7 +11,7 @@ class StaffDepartmentBase(BaseModel):
     """Base model for staff departments"""
     name: str
     description: str
-    manager_id: UUID | None = None
+
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -21,7 +20,6 @@ class StaffDepartmentBase(BaseModel):
             "example": {
                 "name": "Academic Affairs",
                 "description": "Manages academic programs and curriculum",
-                "manager_id": "00000000-0000-0000-0000-000000000000"
             }
         }
     )

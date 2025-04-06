@@ -19,20 +19,21 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         # Email errors
         EmailFailedToSendError: status.HTTP_500_INTERNAL_SERVER_ERROR,
 
-
         # Auth errors
         InvalidCredentialsError: status.HTTP_401_UNAUTHORIZED,
+        WrongPasswordError: status.HTTP_401_UNAUTHORIZED,
+        PasswordFormatError: status.HTTP_400_BAD_REQUEST,
         UserNotFoundError: status.HTTP_404_NOT_FOUND,
-
 
         TokenError: status.HTTP_401_UNAUTHORIZED,
         TokenExpiredError: status.HTTP_401_UNAUTHORIZED,
         TokenInvalidError: status.HTTP_401_UNAUTHORIZED,
+        ResetLinkExpiredError: status.HTTP_401_UNAUTHORIZED,
         AccessTokenRequiredError: status.HTTP_401_UNAUTHORIZED,
         RefreshTokenRequiredError: status.HTTP_401_UNAUTHORIZED,
         TokenRevokedError: status.HTTP_401_UNAUTHORIZED,
 
-        #Generic database errors
+        # Generic database errors
         DatabaseError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         EntityNotFoundError: status.HTTP_404_NOT_FOUND,
         UniqueViolationError: status.HTTP_409_CONFLICT,
@@ -40,18 +41,23 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         TransactionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         DBConnectionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
 
-        # Generic input errors
-        TextTooShortError: status.HTTP_400_BAD_REQUEST,
-        DateError: status.HTTP_400_BAD_REQUEST,
+        # Generic input validation errors
         EmptyFieldError: status.HTTP_400_BAD_REQUEST,
         BlankFieldError: status.HTTP_400_BAD_REQUEST,
+        TextTooShortError: status.HTTP_400_BAD_REQUEST,
         InvalidCharacterError: status.HTTP_400_BAD_REQUEST,
         InvalidCodeError: status.HTTP_400_BAD_REQUEST,
         InvalidPhoneError: status.HTTP_400_BAD_REQUEST,
         EmailFormatError: status.HTTP_400_BAD_REQUEST,
+        DateError: status.HTTP_400_BAD_REQUEST,
+        PastDateError: status.HTTP_400_BAD_REQUEST,
+        InvalidValidityYearError: status.HTTP_400_BAD_REQUEST,
+        InvalidYearError: status.HTTP_400_BAD_REQUEST,
+        InvalidYearLengthError: status.HTTP_400_BAD_REQUEST,
         InvalidSessionYearError: status.HTTP_400_BAD_REQUEST,
+        InvalidOrderNumberError: status.HTTP_400_BAD_REQUEST,
 
-        #Staff organization errors
+        # Staff organization errors
         DepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateDepartmentError: status.HTTP_409_CONFLICT,
         RelatedDepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
@@ -62,6 +68,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
         QualificationNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateQualificationError: status.HTTP_409_CONFLICT,
+        LifetimeValidityConflictError: status.HTTP_400_BAD_REQUEST,
 
         # Student organization errors
         ClassNotFoundError: status.HTTP_404_NOT_FOUND,
@@ -75,7 +82,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         RelatedStudentDepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateStudentDepartmentError: status.HTTP_409_CONFLICT,
 
-        #Profile errors
+        # User profile errors (Staff/Student/Guardian)
         StaffTypeError: status.HTTP_400_BAD_REQUEST,
         StaffNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateStaffError: status.HTTP_409_CONFLICT,
@@ -90,8 +97,8 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         GuardianNotFoundError: status.HTTP_404_NOT_FOUND,
         RelatedGuardianNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateGuardianError: status.HTTP_409_CONFLICT,
-
     }
+
 
     async def dispatch(self, request: Request, call_next):
         request_id = str(uuid.uuid4())

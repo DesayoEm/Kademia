@@ -32,7 +32,8 @@ class AcademicLevelFactory:
             id = uuid4(),
             name = self.validator.validate_level_name(new_academic_level.name),
             description = self.validator.validate_name(new_academic_level.description),
-            order = self.service.create_order(new_academic_level.level_id),
+            order = self.service.return_default_order(),
+
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID
         )
@@ -86,12 +87,17 @@ class AcademicLevelFactory:
         original = data.copy()
         try:
             existing = self.get_academic_level(academic_level_id)
-            if 'name' in data:
-                existing.name = self.validator.validate_name(data.pop('name'))
-            if 'description' in data:
-                existing.description = self.validator.validate_name(data.pop('description'))
-            if 'order' in data:
-                existing.order = (data.pop('order'))
+
+            validations = {
+                "name": (self.validator.validate_level_name, "name"),
+                "description": (self.validator.validate_name, "description"),
+                "order": (self.validator.validate_order, "order"),
+            }
+
+            for field, (validator_func, model_attr) in validations.items():
+                if field in data:
+                    validated_value = validator_func(data.pop(field))
+                    setattr(existing, model_attr, validated_value)
 
             for key, value in data.items():
                 if hasattr(existing, key):
@@ -107,13 +113,13 @@ class AcademicLevelFactory:
             error_message = str(e)
             if "academic_levels_name_key" in error_message.lower():
                 raise DuplicateLevelError(
-                    input_value=original.get('name', 'unknown'), field="name", detail=error_message)
+                    entry=original.get('name', 'unknown'), field="name", detail=error_message)
             elif "academic_levels_order_key" in error_message.lower():
                 raise DuplicateLevelError(
-                    input_value=original.get('order', 'unknown'), field="order", detail=error_message)
+                    entry=original.get('order', 'unknown'), field="order", detail=error_message)
             else:
                 raise DuplicateLevelError(
-                    input_value="unknown field", field="unknown", detail=error_message)
+                    entry="unknown field", field="unknown", detail=error_message)
 
 
     def archive_academic_level(self, academic_level_id: UUID, reason: ArchiveReason) -> AcademicLevel:

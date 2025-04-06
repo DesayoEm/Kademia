@@ -2,7 +2,6 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ...errors.student_organisation_errors import StudentDepartmentInUseError
 from ...errors.user_errors import RelatedEducatorNotFoundError
 from ....core.errors.user_errors import RelatedStudentNotFoundError
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -68,7 +67,7 @@ class StudentDepartmentFactory:
                 if fk_constraint in error_message:
                     entity_id = getattr(new_department, attr_name, None)
                     if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='create')
+                        raise error_class(identifier=entity_id, detail=error_message, action='create')
             raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
 
 

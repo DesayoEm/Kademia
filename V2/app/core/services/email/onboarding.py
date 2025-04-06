@@ -6,7 +6,7 @@ class OnboardingService:
     def __init__(self):
         self.service = EmailService()
 
-    def send_staff_onboarding_email(self, to_email: str, first_name: str, last_name: str, password: str) -> bool:
+    def send_staff_onboarding_email(self, to_email: str, full_name: str, password: str) -> bool:
         """Send an onboarding email with temporary password to a new staff member."""
 
         subject = "Welcome to Kademia - Your Account Information"
@@ -27,20 +27,22 @@ class OnboardingService:
                 <div class="header">
                     <h1>Welcome to Kademia</h1>
                 </div>
+                
                 <div class="content">
-                    <p>Dear {first_name} {last_name},</p>
+                    <p>Dear {full_name},</p>
                     
-                    <p>Your Kademia account has been created. You can log in with the following credentials:</p>
+                    <p>Your Kademia account has been created and you can log in with the following credentials:</p>
                     
                     <p><strong>Email:</strong> {to_email}</p>
                     <p><strong>Temporary Password:</strong> {password}</p>
                     
-                    <p><strong>Important:</strong> Please change your password immediately after your first login for security reasons.</p>
+                    <p><strong>You will be asked change your password immediately after your first login for security reasons.</strong></p>
                     
                     <p>If you have any questions, please contact the IT department.</p>
                     
                     <p>Best regards,<br>Kademia Admin Team</p>
                 </div>
+                
                 <div class="footer">
                     <p>This is an automated message. Please do not reply to this email.</p>
                 </div>
@@ -52,14 +54,14 @@ class OnboardingService:
         text_body = f"""
         Welcome to Kademia!
         
-        Dear {first_name} {last_name},
+        Dear {full_name},
         
-        Your Kademia account has been created. You can log in with the following credentials:
+        Your Kademia account has been created and you log in with the following credentials:
         
         Email: {to_email}
         Temporary Password: {password}
         
-        Important: Please change your password immediately after your first login for security reasons.
+        You will be asked change your password immediately after your first login for security reasons.
         
         If you have any questions, please contact the IT department.
         
@@ -72,7 +74,7 @@ class OnboardingService:
         return self.service.send_email(to_email, subject, html_body, text_body)
 
     def send_guardian_onboarding_email(
-            self, to_email: str, title: str, last_name: str, password: str
+            self, to_email: str, full_name: str, password: str
             ) -> bool:
         """Send an onboarding email with temporary password to a guardian."""
 
@@ -95,19 +97,20 @@ class OnboardingService:
                     <h1>Welcome to Kademia</h1>
                 </div>
                 <div class="content">
-                    <p>Dear {title} {last_name},</p>
+                    <p>Dear {full_name},</p>
 
-                    <p>Your Kademia account has been created. You can log in with the following credentials:</p>
+                    <p>Your Kademia account has been created and you can log in with the following credentials:</p>
 
                     <p><strong>Email:</strong> {to_email}</p>
                     <p><strong>Temporary Password:</strong> {password}</p>
 
-                    <p><strong>Important:</strong> Please change your password immediately after your first login for security reasons.</p>
+                    <p><strong>You will be asked change your password immediately after your first login for security reasons.</strong> </p>
 
                     <p>If you have any questions, please contact the IT department.</p>
 
                     <p>Best regards,<br>Kademia Admin Team</p>
                 </div>
+                
                 <div class="footer">
                     <p>This is an automated message. Please do not reply to this email.</p>
                 </div>
@@ -119,14 +122,14 @@ class OnboardingService:
         text_body = f"""
         Welcome to Kademia!
 
-        Dear {title} {last_name},
+        Dear {full_name},
 
-        Your Kademia account has been created. You can log in with the following credentials:
+        Your Kademia account has been created and you can log in with the following credentials:
 
         Email: {to_email}
         Temporary Password: {password}
 
-        Important: Please change your password immediately after your first login for security reasons.
+       You will be asked change your password immediately after your first login for security reasons..
 
         If you have any questions, please contact the IT department.
 

@@ -6,7 +6,6 @@ from ..shared_models import *
 
 class RolesFilterParams(BaseFilterParams):
     name: Optional[str] = None
-    description: Optional[str] = None
     order_by: Literal["name", "created_at"] = "name"
 
 

@@ -10,9 +10,9 @@ class StudentOrganizationError(KademiaError):
 class DuplicateStudentDepartmentError(StudentOrganizationError, UniqueViolationError):
     """Raised when a duplicate student department is created."""
 
-    def __init__(self, input_value: str, detail: str, field: str = "name"):
+    def __init__(self, entry: str, detail: str, field: str = "name"):
         UniqueViolationError.__init__(self, error=detail)
-        self.user_message = f"A student department with the {field} {input_value} already exists"
+        self.user_message = f"A student department with the {field} {entry} already exists"
         self.log_message = f"Duplicate student department creation attempted: {detail}"
 
 
@@ -46,9 +46,9 @@ class StudentDepartmentInUseError(StudentOrganizationError, UniqueViolationError
 class DuplicateLevelError(StudentOrganizationError, UniqueViolationError):
     """Raised when users attempts a duplicate academic level field."""
 
-    def __init__(self, input_value: str, detail: str, field: str ):
+    def __init__(self, entry: str, detail: str, field: str ):
         UniqueViolationError.__init__(self, error=detail)
-        self.user_message = f"A level with {field} {input_value} already exists"
+        self.user_message = f"A level with {field} {entry} already exists"
         self.log_message = f"Duplicate level creation attempted: {detail}"
 
 
@@ -82,9 +82,9 @@ class LevelInUseError(StudentOrganizationError, UniqueViolationError):
 class DuplicateClassError(StudentOrganizationError, UniqueViolationError):
     """Raised when a duplicate class is created."""
 
-    def __init__(self, input_value: str, detail: str, field: str):
+    def __init__(self, entry: str, detail: str, field: str):
         UniqueViolationError.__init__(self, error=detail)
-        self.user_message = f"Class {input_value} already exists for academic level"
+        self.user_message = f"{field} {entry} already exists for class"
         self.log_message = f"Duplicate class creation attempted: {detail}"
 
 

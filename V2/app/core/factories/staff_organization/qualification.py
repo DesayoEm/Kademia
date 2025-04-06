@@ -41,16 +41,22 @@ class QualificationFactory:
             name=self.validator.validate_name(new_qualification.name),
             description=self.validator.validate_name(new_qualification.description),
             validity_type = new_qualification.validity_type,
-            valid_until = self.service.create_valid_until(new_qualification.validity_type, new_qualification.valid_until),
+            valid_until = self.service.create_valid_until(new_qualification.validity_type.value, new_qualification.valid_until),
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
         )
         try:
             return self.repository.create(qualification)
+
         except UniqueViolationError as e:
-            raise DuplicateQualificationError(#name is the only field with a unique constraint
-                input_value=new_qualification.name, detail=str(e), field = 'name'
-            )
+            error_message = str(e)
+            if 'uq_educator_qualification_name' in error_message:
+                raise DuplicateQualificationError(
+                    entry=new_qualification.name, detail=error_message, field = 'name'
+                )
+
+            raise DuplicateQualificationError(entry='unknown', detail=error_message, field='unknown')
+
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {
@@ -100,20 +106,34 @@ class QualificationFactory:
             existing = self.get_qualification(qualification_id)
             educator_id = existing.educator_id  # store separately for error handling
 
-            if 'name' in data:
-                existing.name = self.validator.validate_name(data['name'])
-            if 'description' in data:
-                existing.description = self.validator.validate_name(data['description'])
+            validations = {
+                "name": (self.validator.validate_name, "name"),
+                "description": (self.validator.validate_name, "description"),
+                "valid_until": (self.service.create_valid_until(
+                    existing.validity_type.value, data['valid_until']),"valid_until"),
+            }
+
+            for field, (validator_func, model_attr) in validations.items():
+                if field in data:
+                    validated_value = validator_func(data.pop(field))
+                    setattr(existing, model_attr, validated_value)
+
             existing.last_modified_by = SYSTEM_USER_ID
 
             return self.repository.update(qualification_id, existing)
+
         except EntityNotFoundError as e:
             raise QualificationNotFoundError(identifier=qualification_id, detail=str(e))
 
-        except UniqueViolationError as e:  # name is the only field with a unique constraint
-            raise DuplicateQualificationError(
-                input_value=original.get('name', 'unknown'), detail=str(e), field='name'
-            )
+        except UniqueViolationError as e:
+            error_message = str(e)
+            if 'uq_educator_qualification_name' in error_message:
+                raise DuplicateQualificationError(
+                    entry=original.get('name', 'unknown'), detail=error_message, field='name'
+                )
+
+            raise DuplicateQualificationError(entry='unknown', detail=error_message, field='unknown')
+
         except RelationshipError as e:
             error_message = str(e)
             fk_error_mapping = {

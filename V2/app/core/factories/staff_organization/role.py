@@ -39,10 +39,14 @@ class StaffRoleFactory:
         )
         try:
             return self.repository.create(role)
-        except UniqueViolationError as e:#name is the only field with a UC
-            raise DuplicateRoleError(
-                input_value=new_role.name, detail=str(e), field='name'
-            )
+
+        except UniqueViolationError as e:
+            error_message= str(e)
+            if 'staff_roles_name_key' in error_message:
+                raise DuplicateRoleError(
+                    entry=new_role.name, detail=error_message, field = 'name'
+                )
+            raise DuplicateRoleError(entry='unknown', detail=error_message, field='unknown')
 
     def get_all_roles(self, filters) -> List[StaffRole]:
         """Get all active staff roles with filtering.
@@ -75,21 +79,37 @@ class StaffRoleFactory:
             StaffRole: Updated role record
         """
         original = data.copy()
+
         try:
             existing = self.get_role(role_id)
-            if 'name' in data:
-                existing.name = self.validator.validate_name(data['name'])
-            if 'description' in data:
-                existing.description = self.validator.validate_name(data['description'])
-            existing.last_modified_by = SYSTEM_USER_ID
+            validations = {
+                "name": (self.validator.validate_name, "name"),
+                "description": (self.validator.validate_name, "description"),
+            }
+
+            for field, (validator_func, model_attr) in validations.items():
+                if field in data:
+                    validated_value = validator_func(data.pop(field))
+                    setattr(existing, model_attr, validated_value)
+
+            for key, value in data.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
 
             return self.repository.update(role_id, existing)
+
         except EntityNotFoundError as e:
             raise RoleNotFoundError(identifier=role_id, detail = str(e))
-        except UniqueViolationError as e:  # name is the only field with a UC
-            raise DuplicateRoleError(
-                input_value=original.get('name', 'unknown'), detail=str(e), field='name'
-            )
+
+        except UniqueViolationError as e:
+            error_message = str(e)
+            if 'staff_roles_name_key' in error_message:
+                raise DuplicateRoleError(
+                    entry=original.get('name', 'unknown'), detail=str(e), field = 'name'
+                )
+
+            raise DuplicateRoleError(entry='unknown', detail=error_message, field='unknown')
+
 
     def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRole:
         """Archive a role.

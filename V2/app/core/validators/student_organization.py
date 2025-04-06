@@ -1,4 +1,4 @@
-
+from ..errors.input_validation_errors import InvalidOrderNumberError
 from ...core.errors.input_validation_errors import (
     EmptyFieldError, BlankFieldError, TextTooShortError, InvalidCharacterError,InvalidCodeError
 )
@@ -18,6 +18,7 @@ class StudentOrganizationValidator:
             raise InvalidCharacterError(entry=value, domain=self.domain)
 
         return value.strip().title()
+
 
     def validate_level_name(self, value:str) -> str:
         if not value:
@@ -39,6 +40,13 @@ class StudentOrganizationValidator:
 
         return value.strip().capitalize()
 
+
+    @staticmethod
+    def validate_order(order:int) -> int:
+        if order <= 0:
+            raise InvalidOrderNumberError(entry=order)
+
+        return order
 
     def validate_code(self, value: str) -> str:
         if not value:

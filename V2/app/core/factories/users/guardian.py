@@ -2,7 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
-from ....core.services.email.onboarding import EmailService
+from ...services.email.onboarding import OnboardingService
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
 from ...errors.user_errors import DuplicateGuardianError,GuardianNotFoundError
 from ...services.auth.password_service import PasswordService
@@ -21,7 +21,7 @@ class GuardianFactory:
         self.repository = SQLAlchemyRepository(Guardian, session)
         self.validator = UserValidator()
         self.password_service = PasswordService(session)
-        self.email_service = EmailService()
+        self.onboarding_service= OnboardingService()
         
 
     def create_guardian(self, guardian_data) -> Guardian:
@@ -45,9 +45,10 @@ class GuardianFactory:
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
         )
+        full_name = f"{new_guardian.title.value}. {new_guardian.last_name}"
         try:
-            self.email_service.send_guardian_onboarding_email(
-                new_guardian.email_address, new_guardian.title, new_guardian.last_name, password
+            self.onboarding_service.send_guardian_onboarding_email(
+                new_guardian.email_address, full_name, password
             )
 
             return self.repository.create(new_guardian)
@@ -108,17 +109,18 @@ class GuardianFactory:
         try:
             existing = self.get_guardian(guardian_id)
 
-            if 'first_name' in data:
-                existing.first_name = self.validator.validate_name(data.pop('first_name'))
-            if 'last_name' in data:
-                existing.last_name = self.validator.validate_name(data.pop('last_name'))
-            if 'email_address' in data:
-                existing.email_address = self.validator.validate_email_address(data.pop('email_address'))
-            if 'address' in data:
-                existing.address = self.validator.validate_address(data.pop('address'))
-            if 'phone' in data:
-                existing.phone = self.validator.validate_phone(data.pop('phone'))
+            validations = {
+                "first_name": (self.validator.validate_name, "first_name"),
+                "last_name": (self.validator.validate_name, "last_name"),
+                "email_address": (self.validator.validate_email_address, "email_address"),
+                "phone": (self.validator.validate_phone, "phone"),
+                "address": (self.validator.validate_address, "address"),
+            }
 
+            for field, (validator_func, model_attr) in validations.items():
+                if field in data:
+                    validated_value = validator_func(data.pop(field))
+                    setattr(existing, model_attr, validated_value)
 
             for key, value in data.items():
                 if hasattr(existing, key):

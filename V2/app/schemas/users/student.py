@@ -3,9 +3,9 @@ from .base import UserBase, ProfileInDb
 from ..shared_models import *
 
 class StudentFilterParams(BaseFilterParams):
-    name: str | None = None
+    full_name: str | None = None
     student_id: str | None = None
-    order_by: Literal["name", "student_id"] = "name"
+    order_by: Literal["full_name", "student_id"] = "full_name"
 
 class StudentBase(UserBase):
     """Base model for students"""

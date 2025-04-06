@@ -32,7 +32,7 @@ class DocumentType(str, Enum):
 
 class StaffType(str, Enum):
     EDUCATOR = 'Educator'
-    OPERATIONS = 'Operations'
+    ADMIN = 'Admin'
     SUPPORT = 'Support'
     SYSTEM = 'System'
 

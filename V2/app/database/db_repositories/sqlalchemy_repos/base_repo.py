@@ -1,6 +1,6 @@
 from uuid import UUID
 from typing import Optional, List, Type
-from sqlalchemy import desc, asc, select, Select, func, or_
+from sqlalchemy import desc, asc, select, Select, func, or_, Enum
 from sqlalchemy.orm import Session
 from ....core.errors.database_errors import  EntityNotFoundError
 from ..base_repo import Repository, T
@@ -75,7 +75,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
 
             if value is not None:
 
-                if field == "name" and hasattr(self.model, "first_name") and hasattr(self.model, "last_name"):
+                if field == "full_name" and hasattr(self.model, "first_name") and hasattr(self.model, "last_name"):
                     full_name = func.concat(self.model.first_name, ' ', self.model.last_name)
                     reversed_full_name = func.concat(self.model.last_name, ' ', self.model.first_name)
 
@@ -89,8 +89,12 @@ class SQLAlchemyRepository(BaseRepository[T]):
                 elif hasattr(self.model, field):
                     column = getattr(self.model, field)
 
-                    if isinstance(value, str) and field in fields:
+                    if isinstance(column.type, Enum):
+                        stmt = stmt.where(column == value)
+
+                    elif isinstance(value, str) and field in fields:
                         stmt = stmt.where(column.ilike(f"%{value}%"))
+
                     else:
                         stmt = stmt.where(column == value)
 
@@ -108,7 +112,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
 
         order_func = desc if order_dir == 'desc' else asc
 
-        if order_by == "name":
+        if order_by == "full_name":
             stmt = stmt.order_by(
                 order_func(self.model.first_name),
                 order_func(self.model.last_name)

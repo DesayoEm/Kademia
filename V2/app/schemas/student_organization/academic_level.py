@@ -4,7 +4,6 @@ from ..shared_models import *
 
 class AcademicLevelFilterParams(BaseFilterParams):
     name: Optional[str] = None
-    description: Optional[str] = None
     order_by: Literal["order", "created_at"] = "order"
 
 class AcademicLevelBase(BaseModel):
