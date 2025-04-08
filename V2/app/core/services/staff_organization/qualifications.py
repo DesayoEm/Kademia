@@ -1,27 +1,36 @@
 from sqlalchemy.orm import Session
 
 from ...errors.input_validation_errors import DateFormatError
-from ...errors.staff_organisation_errors import LifetimeValidityConflictError
+from ...errors.staff_organisation_errors import LifetimeValidityConflictError, TemporaryValidityConflictError
 from ...validators.staff_organization import StaffOrganizationValidator
 from datetime import date
+from dateutil.parser import parse
 
 
 class QualificationsService:
     def __init__(self, session: Session):
         self.validator = StaffOrganizationValidator()
-        self.domain = "EDUCATOR QUALIFICATIONS"
+        self.domain = "EDUCATOR QUALIFICATION"
 
 
-    def create_valid_until(self, validity_type: str, value:date) -> date | str:
+    def parse_validity_date(self, value: str) -> date:
+        """convert date string to a date object"""
+        try:
+            return parse(value).date()
+
+        except ValueError:
+                raise TemporaryValidityConflictError(entry = value, domain = self.domain)
+
+
+    def validate_valid_until(self, validity_type: str, value:str) -> str:
         """Create a valid until date depending on input"""
+
         if validity_type.lower() == 'lifetime':
-            if isinstance(value, date):
-                raise LifetimeValidityConflictError(entry=value)
-            return 'Lifetime'
+            if value.lower().strip() != 'lifetime':
+                raise LifetimeValidityConflictError(entry = value)
+            return value.title()
 
-        if validity_type.lower() == 'temporary':
-            if isinstance(value, str):
-                raise DateFormatError(entry=value, domain = self.domain)
 
-            if isinstance(value, date):
-                return self.validator.validate_valid_until_date(value)
+        elif validity_type.lower() == 'temporary':
+            converted_str = self.parse_validity_date(value)
+            return str(self.validator.validate_valid_until_date(converted_str))

@@ -1,6 +1,12 @@
 from ..common_imports import *
 from ..shared_models import *
 from ..enums import ValidityType
+from pydantic import  field_validator
+from datetime import date, datetime
+
+
+
+from ...core.errors.input_validation_errors import DateFormatError
 
 
 class QualificationFilterParams(BaseFilterParams):
@@ -11,11 +17,12 @@ class QualificationFilterParams(BaseFilterParams):
 
 class QualificationBase(BaseModel):
     """Base model for educator qualifications"""
+
     educator_id: UUID
     name: str
     description: str | None = None
     validity_type : ValidityType
-    valid_until: date
+    valid_until: str
 
 
 
@@ -35,15 +42,17 @@ class QualificationBase(BaseModel):
 
 class QualificationCreate(QualificationBase):
     """Used for creating new educator qualifications"""
+
     pass
 
 
 class QualificationUpdate(BaseModel):
     """Used for updating educator qualifications"""
-    name: str
-    description: str | None
-    validity_type: ValidityType
-    valid_until: date
+
+    name: str | None = None
+    description: str | None = None
+    validity_type: ValidityType | None = None
+    valid_until: str | None = None
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -58,17 +67,20 @@ class QualificationUpdate(BaseModel):
     )
 
 
+
 class QualificationResponse(QualificationBase):
     """Response model for educator qualifications"""
+
     pass
 
 
 class QualificationInDB:
     """Represents stored educator qualifications"""
+
     id: UUID
     educator_id: UUID
     name: str
-    description: str | None = None
+    description: str
     validity_type : ValidityType
     valid_until: str
     created_at: datetime

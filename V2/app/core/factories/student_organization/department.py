@@ -45,15 +45,15 @@ class StudentDepartmentFactory:
             error_message = str(e).lower()
             if "student_departments_name_key" in error_message:
                 raise DuplicateStudentDepartmentError(
-                    input_value=new_department.name, detail=str(e), field = 'name'
+                    entry=new_department.name, detail=str(e), field = 'name'
                 )
             if "student_departments_code_key" in error_message:
                 raise DuplicateStudentDepartmentError(
-                    input_value=new_department.name, detail=str(e), field = 'name'
+                    entry=new_department.name, detail=str(e), field = 'name'
                 )
             else:
                 raise DuplicateStudentDepartmentError(
-                    input_value="unknown field", field="unknown", detail=error_message)
+                    entry="unknown field", field="unknown", detail=error_message)
 
         except RelationshipError as e:
             error_message = str(e)
@@ -104,10 +104,17 @@ class StudentDepartmentFactory:
         original = data.copy()
         try:
             existing = self.get_student_department(department_id)
-            if 'name' in data:
-                existing.name = self.validator.validate_name(data.pop('name'))
-            if 'description' in data:
-                existing.description = self.validator.validate_name(data.pop('description'))
+
+            validations = {
+                "name": (self.validator.validate_level_name, "name"),
+                "description": (self.validator.validate_name, "description")
+            }
+
+            for field, (validator_func, model_attr) in validations.items():
+                if field in data:
+                    validated_value = validator_func(data.pop(field))
+                    setattr(existing, model_attr, validated_value)
+
             for key, value in data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
@@ -119,7 +126,7 @@ class StudentDepartmentFactory:
 
         except UniqueViolationError as e:
             raise DuplicateStudentDepartmentError(
-                input_value=original.get('name', 'unknown'), detail=str(e), field='name')
+                entry=original.get('name', 'unknown'), detail=str(e), field='name')
 
         except RelationshipError as e:
             error_message = str(e)

@@ -30,6 +30,25 @@ class TextTooShortError(InputValidationError):
         self.user_message = f"Text has to be {min_length} characters or more"
         self.log_message = f"Domain: {domain}-- Input attempted with short text: {entry}"
 
+class DBTextTooLongError(InputValidationError):
+    """Raised when long text validation is unhandled at the application layer and
+    db(psycopg) raises a StringDataRightTruncation
+    """
+
+    def __init__(self, error: str):
+        super().__init__()
+        self.user_message = f"Text exceeds maximum allowed length for this field."
+        self.log_message = f"Unhandled StringDataRightTruncation. Detail : {error}"
+
+
+class TextTooLongError(InputValidationError):
+    """Raised when text is too long, specifically when it has more than the maximum required characters."""
+
+    def __init__(self, entry: str, max_length: int, domain=None):
+        super().__init__()
+        self.user_message = f"Text has to be {max_length} characters or less"
+        self.log_message = f"Domain: {domain}-- Input attempted with short long: {entry}."
+
 
 class DateError(InputValidationError):
     def __init__(self, date_input: date, domain=None):
@@ -41,8 +60,17 @@ class DateError(InputValidationError):
 class DateFormatError(InputValidationError):
     def __init__(self, entry: str, domain=None):
         super().__init__()
-        self.user_message = f"Input must be a valid date"
+        self.user_message = f"Date input must be in the following format - YYYY-MM-DD"
         self.log_message = f"Domain: {domain}-- Entry attempted with invalid date: {entry}"
+
+
+class PastDateError(InputValidationError):
+    """Raised when a date input is in the past."""
+
+    def __init__(self, entry: date, domain = None):
+        super().__init__()
+        self.user_message = f"Date cannot be in the past"
+        self.log_message = f"{domain}-Future date entered: {entry}"
 
 
 class InvalidValidityYearError(InputValidationError):
@@ -53,13 +81,6 @@ class InvalidValidityYearError(InputValidationError):
         self.user_message = f"Validity year cannot be in the past"
         self.log_message = f"Invalid session year entered: {year}"
 
-class PastDateError(InputValidationError):
-    """Raised when a date input is in the past."""
-
-    def __init__(self, entry: date):
-        super().__init__()
-        self.user_message = f"Date cannot be in the past"
-        self.log_message = f"future date entered: {entry}"
 
 class InvalidYearError(InputValidationError):
     """Raised when a year input contains a non-numeric value."""
@@ -77,6 +98,7 @@ class InvalidYearLengthError(InputValidationError):
         super().__init__()
         self.user_message = f"Year cannot contain a more than four digits!"
         self.log_message = f"Domain: {domain}-- Year input attempted with invalid length: {year}"
+
 
 class InvalidSessionYearError(InputValidationError):
     """Raised when session year is in the past or too far into the future."""

@@ -33,7 +33,7 @@ class StaffDepartmentFactory:
         department = StaffDepartment(
             id=uuid4(),
             name=self.validator.validate_name(new_department.name),
-            description=self.validator.validate_name(new_department.description),
+            description=self.validator.validate_description(new_department.description),
 
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
@@ -91,7 +91,7 @@ class StaffDepartmentFactory:
 
             validations = {
                 "name": (self.validator.validate_name, "name"),
-                "description": (self.validator.validate_name, "description"),
+                "description": (self.validator.validate_description, "description"),
             }
 
             for field, (validator_func, model_attr) in validations.items():

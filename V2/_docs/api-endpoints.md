@@ -3,11 +3,11 @@
 ## Authentication
 
 - [x] POST /auth/login - Authenticate user and get tokens
-- [ ] POST /auth/refresh - Refresh access token
-- [ ] POST /auth/logout - Invalidate tokens
+- [x] POST /auth/refresh - Refresh access token
+- [x] POST /auth/logout - Invalidate tokens
 - [ ] GET /auth/me - Get current user profile
-- [ ] PUT /auth/change-password - Change user password
-- - [ ] PUT /auth/forgot-password - Change user password
+- [x] PUT /auth/change-password - Change user password
+- [x] PUT /auth/forgot-password - Change user password
 
 ## Users - General
 - [x] GET /users/{id} - Get user by ID
@@ -64,7 +64,7 @@
 ## Educators
 
 - [ ] GET /educators/{id}/qualifications - Get educator qualifications
-- [ ] POST /educators/{id}/qualifications - Add educator qualification
+- [x] POST /educators/{id}/qualifications - Add educator qualification
 - [ ] GET /educators/{id}/subjects - Get educator's subject assignments
 - [ ] GET /educators/{id}/mentored-department - Get educator's mentored department
 - [ ] GET /educators/{id}/supervised-class - Get educator's supervised class
@@ -80,7 +80,7 @@
 - [x] POST /staff-departments/archived/{id}/restore - Restore archived staff department
 - [x] DELETE /staff-departments/archived/{id} - Permanently delete archived staff department
 - [ ] GET /staff-departments/{id}/staff - Get staff in department
-
+- [ ] assign manager
 ## Staff Roles
 
 - [x] POST /staff-roles - Create new staff role

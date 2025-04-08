@@ -60,9 +60,10 @@ class QualificationCrud:
         Returns:
             QualificationResponse: Updated qualification
         """
-        data = data.model_dump()
+        data = data.model_dump(exclude_unset=True)
         updated_qualification = self.factory.update_qualification(qualification_id, data)
         return QualificationResponse.model_validate(updated_qualification)
+
 
     def archive_qualification(self, qualification_id: UUID, reason: ArchiveReason) -> None:
         """Archive a qualification.

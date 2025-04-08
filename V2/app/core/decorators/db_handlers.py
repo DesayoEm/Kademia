@@ -1,14 +1,20 @@
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
+from psycopg2.errors import StringDataRightTruncation
 from ..errors.database_errors import (
     UniqueViolationError, RelationshipError,
     DBConnectionError, DatabaseError as TKDatabaseError
 )
+from ..errors.input_validation_errors import TextTooLongError, DBTextTooLongError
+
 
 def handle_write_errors(operation: str = "unknown"):
     def decorator(fn):
         def wrapper(self, *args, **kwargs):
             try:
                 return fn(self, *args, **kwargs)
+
+            except StringDataRightTruncation as e:
+                raise DBTextTooLongError(error= str(e))
 
             except IntegrityError as e:
                 self.session.rollback()

@@ -39,9 +39,9 @@ class QualificationFactory:
             id=uuid4(),
             educator_id=new_qualification.educator_id,
             name=self.validator.validate_name(new_qualification.name),
-            description=self.validator.validate_name(new_qualification.description),
+            description=self.validator.validate_description(new_qualification.description),
             validity_type = new_qualification.validity_type,
-            valid_until = self.service.create_valid_until(new_qualification.validity_type.value, new_qualification.valid_until),
+            valid_until = self.service.validate_valid_until(new_qualification.validity_type.value, new_qualification.valid_until),
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
         )
@@ -89,9 +89,11 @@ class QualificationFactory:
         """
         try:
             return self.repository.get_by_id(qualification_id)
+
         except EntityNotFoundError as e:
             error_message = str(e)
             raise QualificationNotFoundError(identifier=qualification_id, detail = error_message)
+
 
     def update_qualification(self, qualification_id: UUID, data: dict) -> EducatorQualification:
         """Update a qualification's information.
@@ -104,13 +106,27 @@ class QualificationFactory:
         original = data.copy()
         try:
             existing = self.get_qualification(qualification_id)
+
             educator_id = existing.educator_id  # store separately for error handling
+
+            if "validity_type" in data and "valid_until" in data:
+                existing.validity_type = data['validity_type']
+
+                existing.valid_until = self.service.validate_valid_until(
+                    data['validity_type'], data['valid_until'])
+
+            elif "valid_until" in data:
+                existing.valid_until = self.service.validate_valid_until(
+                    existing.validity_type, data['valid_until'])
+
+            elif "validity_type" in data:
+                existing.valid_until = self.service.validate_valid_until(
+                    data['validity_type'], existing.valid_until
+                )
 
             validations = {
                 "name": (self.validator.validate_name, "name"),
-                "description": (self.validator.validate_name, "description"),
-                "valid_until": (self.service.create_valid_until(
-                    existing.validity_type.value, data['valid_until']),"valid_until"),
+                "description": (self.validator.validate_description, "description"),
             }
 
             for field, (validator_func, model_attr) in validations.items():

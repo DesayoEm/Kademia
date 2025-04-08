@@ -50,12 +50,15 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         InvalidPhoneError: status.HTTP_400_BAD_REQUEST,
         EmailFormatError: status.HTTP_400_BAD_REQUEST,
         DateError: status.HTTP_400_BAD_REQUEST,
+        DateFormatError: status.HTTP_400_BAD_REQUEST,
         PastDateError: status.HTTP_400_BAD_REQUEST,
         InvalidValidityYearError: status.HTTP_400_BAD_REQUEST,
         InvalidYearError: status.HTTP_400_BAD_REQUEST,
         InvalidYearLengthError: status.HTTP_400_BAD_REQUEST,
         InvalidSessionYearError: status.HTTP_400_BAD_REQUEST,
         InvalidOrderNumberError: status.HTTP_400_BAD_REQUEST,
+        TextTooLongError: status.HTTP_400_BAD_REQUEST,
+        DBTextTooLongError: status.HTTP_400_BAD_REQUEST,
 
         # Staff organization errors
         DepartmentNotFoundError: status.HTTP_404_NOT_FOUND,
@@ -69,6 +72,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         QualificationNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateQualificationError: status.HTTP_409_CONFLICT,
         LifetimeValidityConflictError: status.HTTP_400_BAD_REQUEST,
+        TemporaryValidityConflictError: status.HTTP_400_BAD_REQUEST,
 
         # Student organization errors
         ClassNotFoundError: status.HTTP_404_NOT_FOUND,

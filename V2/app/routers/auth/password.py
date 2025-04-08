@@ -14,7 +14,7 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
-@router.post("/change-password")
+@router.put("/change-password")
 def change_password(
         password_data: PasswordChange,token_data: dict = Depends(access),
         db: Session = Depends(get_db)):
@@ -33,7 +33,7 @@ def change_password(
 
 
 
-@router.post("/forgot-password")
+@router.put("/forgot-password")
 def forgot_password(
         data: ForgotPassword, db: Session = Depends(get_db)
         ):
@@ -42,7 +42,7 @@ def forgot_password(
     return password_service.forgot_password(data.identifier, data.user_type)
 
 
-@router.post("/reset-password")
+@router.put("/reset-password")
 def reset_password(data: PasswordResetRequest, db: Session = Depends(get_db)):
     password_service = PasswordService(db)
 

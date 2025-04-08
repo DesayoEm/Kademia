@@ -50,17 +50,17 @@ class ClassFactory:
         try:
             return self.repository.create(class_data)
 
-        except UniqueViolationError as e:  # Could either be code or order
+        except UniqueViolationError as e:
             error_message = str(e)
             if "uq_class_level_code" in error_message.lower():
                 raise DuplicateClassError(
-                    input_value=class_data.code.value, field="", detail=error_message)#None is a filler attr hare
+                    entry=class_data.code.value, field="", detail=error_message)#None is a filler attr hare
             elif "uq_class_level_order" in error_message.lower():
                 raise DuplicateClassError(
-                    input_value=str(class_data.order), field="order", detail=error_message)
+                    entry=str(class_data.order), field="order", detail=error_message)
             else:
                 raise DuplicateClassError(
-                    input_value="unknown field", field="unknown", detail=error_message)
+                    entry="unknown field", field="unknown", detail=error_message)
 
         except RelationshipError as e:
             error_message = str(e)

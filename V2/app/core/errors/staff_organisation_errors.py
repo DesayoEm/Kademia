@@ -109,6 +109,15 @@ class LifetimeValidityConflictError(StaffOrganizationError):
 
     def __init__(self, entry):
         super().__init__()
-        self.user_message = f"Input must lifetime if validity type is lifetime"
+        self.user_message = f"Valid until field must 'lifetime' if validity type is lifetime"
         self.log_message = f" Lifetime validity Entry attempted with invalid str: {entry}"
 
+
+class TemporaryValidityConflictError(StaffOrganizationError):
+    def __init__(self, entry: str, domain=None):
+        super().__init__()
+        self.user_message = (
+            "If validity type is temporary, "
+            "Valid until field must be in the following date format - YYYY-MM-DD"
+        )
+        self.log_message = f"Domain: {domain}-- Entry attempted with invalid date: {entry}"

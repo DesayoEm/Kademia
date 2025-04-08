@@ -68,13 +68,13 @@
 - [ ] Profile management endpoints
 
 ### 2. Core Routes
-- [x] Staff routes
-- [x] Student routes
-- [x] Parent routes
-- [x]  Department routes
-- [x]  Class routes
-- [x]  Subject routes
-- [x]  Grade routes
+- [ ]  Staff routes
+- [ ]  Student routes
+- [ ]  Parent routes
+- [ ]  Department routes
+- [ ]  Class routes
+- [ ]  Subject routes
+- [ ]  Grade routes
 
 ### 4. Academic Services
 - [ ] Subject management service

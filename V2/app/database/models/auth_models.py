@@ -21,7 +21,8 @@ class AccessLevelChange(Base):
         )
 
     # Relationships
-    user: Mapped['Staff'] = relationship(back_populates='access_changes', foreign_keys="[AccessLevelChange.staff_id]")
+    user: Mapped['Staff'] = relationship(back_populates='access_changes',
+            foreign_keys="[AccessLevelChange.staff_id]", passive_deletes=True)
 
     __table_args__ = (
         Index('idx_staff_id', 'staff_id'),

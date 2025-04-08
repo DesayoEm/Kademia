@@ -14,6 +14,8 @@ class StudentOrganizationValidator:
             raise BlankFieldError(entry = value, domain = self.domain)
         if len(value.strip()) < 3:
             raise TextTooShortError(entry = value, domain = self.domain, min_length = 3)
+        if len(value.strip()) > 3:
+            raise TextTooShortError(entry = value, domain = self.domain, min_length = 3)
         if any(val.isnumeric() for val in value):
             raise InvalidCharacterError(entry=value, domain=self.domain)
 

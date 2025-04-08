@@ -33,7 +33,7 @@ class StaffRoleFactory:
         role = StaffRole(
             id=uuid4(),
             name=self.validator.validate_name(new_role.name),
-            description=self.validator.validate_name(new_role.description),
+            description=self.validator.validate_description(new_role.description),
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
         )
@@ -84,7 +84,7 @@ class StaffRoleFactory:
             existing = self.get_role(role_id)
             validations = {
                 "name": (self.validator.validate_name, "name"),
-                "description": (self.validator.validate_name, "description"),
+                "description": (self.validator.validate_description, "description"),
             }
 
             for field, (validator_func, model_attr) in validations.items():
@@ -141,7 +141,7 @@ class StaffRoleFactory:
         Returns:
             List[StaffRole]: List of archived role records
         """
-        fields = ['name', 'description']
+        fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
 

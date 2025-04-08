@@ -83,7 +83,8 @@ class ClassTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-                        ondelete='CASCADE',name='fk_student_department_transfers_students_student_id')
+                        ondelete='CASCADE',name='fk_student_department_transfers_students_student_id',
+                        passive_deletes=True)
                     )
     academic_year: Mapped[int] = mapped_column(Integer)
     previous_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
@@ -101,7 +102,8 @@ class ClassTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Relationships
-    transferred_student: Mapped['Student'] = relationship(back_populates='class_transfers', foreign_keys='[ClassTransfer.student_id]')
+    transferred_student: Mapped['Student'] = relationship(back_populates='class_transfers', foreign_keys='[ClassTransfer.student_id]',
+                         passive_deletes=True)
     previous_class: Mapped['Classes'] = relationship(foreign_keys='[ClassTransfer.previous_class_id]')
     new_class: Mapped['Classes'] = relationship(foreign_keys='[ClassTransfer.new_class_id]')
     status_changer: Mapped['Staff'] = relationship(foreign_keys='[ClassTransfer.status_updated_by]')
@@ -169,8 +171,9 @@ class StudentDepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixin
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-                    ondelete='CASCADE',name='fk_student_department_transfers_students_student_id')
-                                             )
+                    ondelete='CASCADE',name='fk_student_department_transfers_students_student_id'),
+                    passive_deletes=True)
+
     academic_year: Mapped[int] = mapped_column(Integer)
     previous_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
                     ondelete='RESTRICT', name='fk_student_department_transfers_academic_levels_previous_level')

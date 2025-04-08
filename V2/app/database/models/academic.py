@@ -79,8 +79,10 @@ class StudentSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     # Relationships
-    subject: Mapped['Subject'] = relationship(back_populates='students', foreign_keys='[StudentSubject.subject_id]')
-    student: Mapped['Student'] = relationship(back_populates='subjects_taken', foreign_keys='[StudentSubject.student_id]')
+    subject: Mapped['Subject'] = relationship(back_populates='students',
+            foreign_keys='[StudentSubject.subject_id]')
+    student: Mapped['Student'] = relationship(back_populates='subjects_taken',
+            foreign_keys='[StudentSubject.student_id]', passive_deletes=True)
 
     __table_args__ = (
         UniqueConstraint('student_id', 'subject_id', 'academic_year', 'term'),
@@ -142,7 +144,8 @@ class Grade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     # Relationships
     subject: Mapped['Subject'] = relationship(back_populates='grades', foreign_keys='[Grade.subject_id]')
-    student: Mapped['Student'] = relationship(back_populates='grades', foreign_keys='[Grade.student_id]')
+    student: Mapped['Student'] = relationship(back_populates='grades', foreign_keys='[Grade.student_id]',
+             passive_deletes=True)
     grader: Mapped['Educator'] = relationship(foreign_keys="[Grade.graded_by]")
 
     __table_args__ = (
@@ -178,7 +181,8 @@ class TotalGrade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     rank: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     # Relationships
-    student: Mapped['Student'] = relationship(back_populates='total_grades', foreign_keys='[TotalGrade.student_id]')
+    student: Mapped['Student'] = relationship(back_populates='total_grades', foreign_keys='[TotalGrade.student_id]',
+             passive_deletes=True)
     subject: Mapped['Subject'] = relationship(back_populates='total_grades', foreign_keys='[TotalGrade.subject_id]')
 
     __table_args__ = (
@@ -223,7 +227,8 @@ class Repetition(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Relationships
-    repeating_student: Mapped['Student'] = relationship(back_populates='classes_repeated', foreign_keys='[Repetition.student_id]')
+    repeating_student: Mapped['Student'] = relationship(back_populates='classes_repeated',
+                        foreign_keys='[Repetition.student_id]', passive_deletes=True)
     previous_level: Mapped['AcademicLevel'] = relationship(foreign_keys='[Repetition.previous_level_id]')
     new_level:Mapped['AcademicLevel'] =  relationship( foreign_keys='[Repetition.new_level_id]')
     previous_class: Mapped['Classes'] = relationship(foreign_keys='[Repetition.previous_class_id]')
@@ -250,7 +255,7 @@ class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __tablename__ = 'student_awards'
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     owner_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-         ondelete='CASCADE',name='fk_student_documents_students_owner_id'),default=uuid4
+         ondelete='CASCADE',name='fk_student_documents_students_owner_id')
         )
     title: Mapped[str] = mapped_column(String(50))
     description: Mapped[str] = mapped_column(String(225), nullable = True)
@@ -258,7 +263,8 @@ class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     file_url: Mapped[str] = mapped_column(String(225))
 
     # Relationships
-    owner: Mapped['Student'] = relationship(back_populates='awards_earned', foreign_keys='[StudentAward.owner_id]')
+    owner: Mapped['Student'] = relationship(back_populates='awards_earned',
+            foreign_keys='[StudentAward.owner_id]', passive_deletes=True)
 
     __table_args__ = (
         Index('idx_owner_title', 'owner_id', 'title'),

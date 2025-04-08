@@ -63,13 +63,13 @@ class EducatorQualification(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     description: Mapped[str] = mapped_column(String(500), nullable=True)
     validity_type: Mapped[ValidityType] = mapped_column(Enum(ValidityType, name='validitytype'),
                                     default=ValidityType.Temporary)
-    valid_until: Mapped[pydate] = mapped_column(Date, nullable=False)
-    # date is imported from Python as pydate
+    valid_until: Mapped[str] = mapped_column(Text, nullable=False)
+
 
     # Relationships
     educator: Mapped['Educator'] = relationship(
         'Educator', back_populates='qualifications',
-        foreign_keys="[EducatorQualification.educator_id]"
+        foreign_keys="[EducatorQualification.educator_id]", passive_deletes=True
     )
 
     __table_args__ = (
