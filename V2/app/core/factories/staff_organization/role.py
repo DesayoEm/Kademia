@@ -1,8 +1,12 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
+
+from ...errors.staff_organisation_errors import RoleArchivalDependencyError
+from ...services.utils.dependency_checker import DependencyChecker
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import StaffRole
+from ....database.models.users import Staff
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError
@@ -22,6 +26,7 @@ class StaffRoleFactory:
         """
         self.repository = SQLAlchemyRepository(StaffRole, session)
         self.validator = StaffOrganizationValidator()
+        self.dependency_checker = DependencyChecker(session)
 
     def create_role(self, new_role) -> StaffRole:
         """Create a new staff role.
@@ -47,6 +52,7 @@ class StaffRoleFactory:
                     entry=new_role.name, detail=error_message, field = 'name'
                 )
             raise DuplicateRoleError(entry='unknown', detail=error_message, field='unknown')
+
 
     def get_all_roles(self, filters) -> List[StaffRole]:
         """Get all active staff roles with filtering.
@@ -112,7 +118,7 @@ class StaffRoleFactory:
 
 
     def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRole:
-        """Archive a role.
+        """Archives a role if no active staff members are assigned to it.
         Args:
             role_id: id of role to archive
             reason: Reason for archiving
@@ -120,7 +126,23 @@ class StaffRoleFactory:
             StaffRole: Archived role record
         """
         try:
+            failed_dependencies = self.dependency_checker.check_active_dependencies_exists(
+                dependencies=[
+                    (Staff, "role_id")
+                ],
+                target_id=role_id,
+                is_archived_field="is_archived",
+                check_active_only=True
+            )
+
+            if failed_dependencies:
+                raise RoleArchivalDependencyError(
+                    entity_name=", ".join(failed_dependencies),
+                    identifier=str(role_id)
+                )
+
             return self.repository.archive(role_id, SYSTEM_USER_ID, reason)
+
         except EntityNotFoundError as e:
             raise RoleNotFoundError(identifier=role_id, detail = str(e))
 

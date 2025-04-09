@@ -46,6 +46,7 @@ class RelatedDepartmentNotFoundError(StaffOrganizationError, RelationshipError):
         self.user_message = f"Related department not found!"
         self.log_message = f"Error during during fk insertion of staff department with id:{identifier} during {action} operation. Detail {detail}"
 
+# Staff Roles
 
 class DuplicateRoleError(StaffOrganizationError, UniqueViolationError):
     """Raised when a duplicate role is created."""
@@ -74,6 +75,24 @@ class RelatedRoleNotFoundError(StaffOrganizationError, RelationshipError):
         self.log_message = f"Error during during fk insertion of role with id:{identifier} during {action} operation. Detail {detail}"
 
 
+class RoleArchivalDependencyError(StaffOrganizationError):
+    """Raised when attempting to archive a role that still has related active staff."""
+
+    def __init__(self, entity_name: str, identifier: str):
+        super().__init__()
+        self.user_message = f"Cannot archive role while it is still assigned to active {entity_name}."
+        self.log_message = f"Archival blocked: role {identifier} is still linked to {entity_name}"
+
+
+class RoleDeletionDependencyError(StaffOrganizationError):
+    """Raised when attempting to delete a role that still has related active staff."""
+
+    def __init__(self, entity_name: str, identifier: str):
+        super().__init__()
+        self.user_message = f"Cannot delete role while it is still assigned to {entity_name}."
+        self.log_message = f"Deletion blocked: role {identifier} is still linked to {entity_name}"
+
+# Qualifications
 class DuplicateQualificationError(StaffOrganizationError, UniqueViolationError):
     """Raised when a duplicate qualification is created."""
 

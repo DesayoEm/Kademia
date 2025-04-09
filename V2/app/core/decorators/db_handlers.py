@@ -33,6 +33,9 @@ def handle_write_errors(operation: str = "unknown"):
             except SQLAlchemyError as e:
                 self.session.rollback()
                 raise TKDatabaseError(error=str(e))
+
+            except Exception as e:
+                raise TKDatabaseError(error=str(e))
         return wrapper
     return decorator
 
@@ -48,6 +51,9 @@ def handle_read_errors():
 
             except SQLAlchemyError as e:
                 self.session.rollback()
+                raise TKDatabaseError(error=str(e))
+
+            except Exception as e:
                 raise TKDatabaseError(error=str(e))
         return wrapper
     return decorator

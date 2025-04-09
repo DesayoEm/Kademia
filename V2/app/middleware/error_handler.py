@@ -68,6 +68,8 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         RoleNotFoundError: status.HTTP_404_NOT_FOUND,
         RelatedRoleNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateRoleError: status.HTTP_409_CONFLICT,
+        RoleArchivalDependencyError: status.HTTP_409_CONFLICT,
+        RoleDeletionDependencyError: status.HTTP_409_CONFLICT,
 
         QualificationNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateQualificationError: status.HTTP_409_CONFLICT,
