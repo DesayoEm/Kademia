@@ -59,7 +59,7 @@ class StaffDepartmentCrud:
         Returns:
             StaffDepartmentResponse: Updated department
         """
-        data = data.model_dump()
+        data = data.model_dump(exclude_unset=True)
         updated_department = self.factory.update_staff_department(department_id, data)
         return StaffDepartmentResponse.model_validate(updated_department)
 

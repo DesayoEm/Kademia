@@ -173,10 +173,7 @@ class Educator(Staff):
     __tablename__ = 'educators'
 
     id: Mapped[UUID] = mapped_column(
-        ForeignKey(
-            'staff.id',
-            name='fk_educators_staff_id'
-        ),
+        ForeignKey('staff.id', ondelete='CASCADE', name='fk_educators_staff_id'),
         primary_key=True
     )
 
@@ -185,7 +182,8 @@ class Educator(Staff):
         'inherit_condition': (id == Staff.id)
     }
 
-    qualifications: Mapped[List['EducatorQualification']] = relationship(back_populates='educator')
+    qualifications: Mapped[List['EducatorQualification']] = relationship(back_populates='educator',
+                    cascade="all, delete-orphan")
     subject_assignments: Mapped[List['SubjectEducator']] = relationship(back_populates='teacher')
     mentored_department: Mapped[List['StudentDepartment']] = relationship(back_populates='mentor')
     supervised_class: Mapped['Classes'] = relationship(back_populates='supervisor')
@@ -200,9 +198,10 @@ class AdminStaff(Staff):
     """
     __tablename__ = 'admin_staff'
 
-    id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-            name='fk_operations_staff_id'),primary_key=True
-        )
+    id: Mapped[UUID] = mapped_column(
+        ForeignKey('staff.id', ondelete='CASCADE', name='fk_operations_staff_id'),
+        primary_key=True
+    )
 
     __mapper_args__ = {
         'polymorphic_identity': 'Admin',
@@ -220,8 +219,8 @@ class SupportStaff(Staff):
     __tablename__ = 'support_staff'
 
     id: Mapped[UUID] = mapped_column(
-        ForeignKey('staff.id',
-            name='fk_support_staff_id'),primary_key=True
+        ForeignKey('staff.id', ondelete='CASCADE', name='fk_support_staff_id'),
+        primary_key=True
     )
 
     __mapper_args__ = {
@@ -239,9 +238,10 @@ class System(Staff):
     """
     __tablename__ = 'system'
 
-    id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-            name='fk_system_staff_id'),primary_key=True
-        )
+    id: Mapped[UUID] = mapped_column(
+        ForeignKey('staff.id', ondelete='CASCADE', name='fk_system_staff_id'),
+        primary_key=True
+    )
 
     __mapper_args__ = {
         'polymorphic_identity': 'System',

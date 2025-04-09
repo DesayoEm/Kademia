@@ -9,6 +9,7 @@ class DepartmentFilterParams(BaseFilterParams):
 
 class StaffDepartmentBase(BaseModel):
     """Base model for staff departments"""
+
     name: str
     description: str
 
@@ -27,12 +28,26 @@ class StaffDepartmentBase(BaseModel):
 
 class StaffDepartmentCreate(StaffDepartmentBase):
     """Used for creating new staff departments"""
+
     pass
 
 
 class StaffDepartmentUpdate(StaffDepartmentBase):
     """Used for updating staff departments"""
-    pass
+
+    name: str | None = None
+    description: str | None = None
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
+                "name": "Academic Affairs",
+                "description": "Manages academic programs",
+            }
+        }
+    )
 
 
 class StaffDepartmentResponse(StaffDepartmentBase):

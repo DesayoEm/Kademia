@@ -83,8 +83,7 @@ class ClassTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-                        ondelete='CASCADE',name='fk_student_department_transfers_students_student_id',
-                        passive_deletes=True)
+                        ondelete='CASCADE',name='fk_student_department_transfers_students_student_id')
                     )
     academic_year: Mapped[int] = mapped_column(Integer)
     previous_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
@@ -171,8 +170,7 @@ class StudentDepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixin
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-                    ondelete='CASCADE',name='fk_student_department_transfers_students_student_id'),
-                    passive_deletes=True)
+                    ondelete='CASCADE',name='fk_student_department_transfers_students_student_id'))
 
     academic_year: Mapped[int] = mapped_column(Integer)
     previous_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
@@ -203,7 +201,8 @@ class StudentDepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixin
     rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Relationships
-    transferred_student: Mapped['Student'] = relationship(back_populates='department_transfers', foreign_keys='[StudentDepartmentTransfer.student_id]')
+    transferred_student: Mapped['Student'] = relationship(back_populates='department_transfers', foreign_keys='[StudentDepartmentTransfer.student_id]',
+                         passive_deletes=True)
     former_dept: Mapped['StudentDepartment'] = relationship(foreign_keys='[StudentDepartmentTransfer.previous_department_id]')
     new_dept: Mapped['StudentDepartment'] = relationship(foreign_keys='[StudentDepartmentTransfer.new_department_id]')
     former_class_rel: Mapped['Classes'] = relationship(foreign_keys='[StudentDepartmentTransfer.previous_class_id]')

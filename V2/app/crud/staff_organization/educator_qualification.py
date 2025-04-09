@@ -30,6 +30,7 @@ class QualificationCrud:
         qualification = self.factory.create_qualification(data)
         return QualificationResponse.model_validate(qualification)
 
+
     def get_qualification(self, qualification_id: UUID) -> QualificationResponse:
         """Get a qualification by ID.
         Args:

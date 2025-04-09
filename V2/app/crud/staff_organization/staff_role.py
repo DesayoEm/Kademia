@@ -61,7 +61,7 @@ class StaffRoleCrud:
         Returns:
             StaffRoleResponse: Updated role
         """
-        data = data.model_dump()
+        data = data.model_dump(exclude_unset=True)
         updated_role = self.factory.update_role(role_id, data)
         return StaffRoleResponse.model_validate(updated_role)
 

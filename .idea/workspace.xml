@@ -5,34 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d49e4f62-7add-4eb8-a665-00ba3b079643" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/V2/_docs/database/rand.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/_docs/api-endpoints.md" beforeDir="false" afterPath="$PROJECT_DIR$/V2/_docs/api-endpoints.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/_docs/workflow.md" beforeDir="false" afterPath="$PROJECT_DIR$/V2/_docs/workflow.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/decorators/db_handlers.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/decorators/db_handlers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/errors/input_validation_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/input_validation_errors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/errors/staff_organisation_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/staff_organisation_errors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/department.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/department.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/qualification.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/qualification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/role.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/role.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/student_organization/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/classes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/student_organization/department.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/student_organization/department.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/services/staff_organization/qualifications.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/staff_organization/qualifications.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/validators/staff_organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/validators/staff_organization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/validators/student_organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/validators/student_organization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/educator_qualification.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/educator_qualification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/database/models/academic.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/academic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/database/models/auth_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/auth_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/database/models/staff_organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/staff_organization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_department.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_department.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_role.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_role.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/database/models/student_organization.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/student_organization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/routers/auth/password.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/auth/password.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/schemas/staff_organization/educator_qualification.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/staff_organization/educator_qualification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/logs/app_2025-03-19.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/logs/app_2025-03-20.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/logs/app_2025-03-21.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/logs/app_2025-03-22.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/logs/app_2025-03-23.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/models/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/schemas/staff_organization/department.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/staff_organization/department.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/schemas/staff_organization/role.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/staff_organization/role.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

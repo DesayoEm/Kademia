@@ -17,7 +17,7 @@ class StaffOrganizationValidator:
             raise BlankFieldError(entry=value, domain = self.domain)
         if len(value.strip()) < 3:
             raise TextTooShortError(entry = value, min_length = 3, domain = self.domain)
-        if len(value.strip()) > 500:
+        if len(value.strip()) > 100:
             raise TextTooLongError(entry = value, max_length = 100, domain = self.domain)
         if any(val.isnumeric() for val in value):
             raise InvalidCharacterError(entry=value, domain = self.domain)

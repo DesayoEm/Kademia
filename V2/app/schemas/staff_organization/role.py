@@ -32,7 +32,19 @@ class StaffRoleCreate(StaffRoleBase):
 
 class StaffRoleUpdate(StaffRoleBase):
     """Used for updating staff roles"""
-    pass
+    name: str | None = None
+    description: str | None = None
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="forbid",
+        json_schema_extra={
+            "example": {
+                "name": "Biology Teacher",
+                "description": "Teaches biology"
+            }
+        }
+    )
 
 
 class StaffRoleResponse(StaffRoleBase):

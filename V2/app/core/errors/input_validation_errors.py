@@ -47,7 +47,7 @@ class TextTooLongError(InputValidationError):
     def __init__(self, entry: str, max_length: int, domain=None):
         super().__init__()
         self.user_message = f"Text has to be {max_length} characters or less"
-        self.log_message = f"Domain: {domain}-- Input attempted with short long: {entry}."
+        self.log_message = f"Domain: {domain}-- Input attempted with LONG TEXT: {entry}."
 
 
 class DateError(InputValidationError):
