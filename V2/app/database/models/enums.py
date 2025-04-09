@@ -115,3 +115,9 @@ class ArchiveReason(str, Enum):
     TRANSFERRED = 'TRANSFERRED'
     WITHDRAWN = 'WITHDRAWN'
     ADMINISTRATIVE = 'ADMINISTRATIVE'
+
+
+class ExportFormat(str, Enum):
+    PDF = 'PDF'
+    CSV = 'CSV'
+    EXCEL = 'EXCEL'

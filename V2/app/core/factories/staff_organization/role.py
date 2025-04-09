@@ -3,7 +3,7 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from ...errors.staff_organisation_errors import RoleArchivalDependencyError
-from ...services.utils.dependency_checker import DependencyChecker
+from ...utils.archival_helper import DependencyChecker
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import StaffRole
 from ....database.models.users import Staff
