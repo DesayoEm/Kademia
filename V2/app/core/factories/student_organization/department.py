@@ -32,10 +32,9 @@ class StudentDepartmentFactory:
         department = StudentDepartment(
             id = uuid4(),
             name = self.validator.validate_name(new_department.name),
+            description=self.validator.validate_description(new_department.description),
             code=self.validator.validate_code(new_department.code),
-            description = self.validator.validate_name(new_department.description),
-            student_rep_id = new_department.student_rep_id,
-            assistant_rep_id = new_department.assistant_rep_id,
+
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID
         )
@@ -49,26 +48,14 @@ class StudentDepartmentFactory:
                 )
             if "student_departments_code_key" in error_message:
                 raise DuplicateStudentDepartmentError(
-                    entry=new_department.name, detail=str(e), field = 'name'
+                    entry=new_department.code, detail=str(e), field = 'code'
                 )
             else:
                 raise DuplicateStudentDepartmentError(
                     entry="unknown field", field="unknown", detail=error_message)
 
-        except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'fk_student_departments_educators_mentor_id': ('mentor_id', RelatedEducatorNotFoundError),
-                'fk_student_departments_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
-                'fk_student_departments_assistant_student_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
-            }
-
-            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    entity_id = getattr(new_department, attr_name, None)
-                    if entity_id:
-                        raise error_class(identifier=entity_id, detail=error_message, action='create')
-            raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
+        except RelationshipError as e:# Unlikely as there are no fks
+            raise RelationshipError(error=str(e), operation='create', entity='unknown_entity')
 
 
     def get_student_department(self, department_id: UUID) -> StudentDepartment:
@@ -80,6 +67,7 @@ class StudentDepartmentFactory:
         """
         try:
             return self.repository.get_by_id(department_id)
+
         except EntityNotFoundError as e:
             raise StudentDepartmentNotFoundError(identifier=department_id, detail=str(e))
 
@@ -107,7 +95,8 @@ class StudentDepartmentFactory:
 
             validations = {
                 "name": (self.validator.validate_level_name, "name"),
-                "description": (self.validator.validate_name, "description")
+                "description": (self.validator.validate_description, "description"),
+                "code": (self.validator.validate_code, "code")
             }
 
             for field, (validator_func, model_attr) in validations.items():
@@ -118,6 +107,7 @@ class StudentDepartmentFactory:
             for key, value in data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
+
             existing.last_modified_by = SYSTEM_USER_ID
             return self.repository.update(department_id, existing)
 
@@ -129,19 +119,7 @@ class StudentDepartmentFactory:
                 entry=original.get('name', 'unknown'), detail=str(e), field='name')
 
         except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'fk_student_departments_educators_mentor_id': ('mentor_id', RelatedEducatorNotFoundError),
-                'fk_classes_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
-                'fk_classes_students_assistant_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
-            }
-
-            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    entity_id = data.get(attr_name, None)
-                    if entity_id:
-                        raise error_class(id=entity_id, detail=error_message, action='update')
-            raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
+            raise RelationshipError(error=str(e), operation='update', entity='unknown_entity')
 
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StudentDepartment:

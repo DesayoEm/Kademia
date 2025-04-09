@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from ...schemas.student_organization.student_department import(
+from ...schemas.student_organization.department import(
      DepartmentFilterParams, DepartmentResponse
 )
 from fastapi import Depends, APIRouter

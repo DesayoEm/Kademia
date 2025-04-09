@@ -34,7 +34,8 @@ class ClassBase(BaseModel):
 class ClassUpdate(BaseModel):
     """Used for updating class levels"""
 
-    order: int
+    order: int |None = None
+    code: ClassCode | None = None
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -42,6 +43,7 @@ class ClassUpdate(BaseModel):
         json_schema_extra={
             "example": {
                 "order": "0",
+                "code": "B"
             }}
     )
 

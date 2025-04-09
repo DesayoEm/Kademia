@@ -1,7 +1,9 @@
 from typing import List
 from uuid import uuid4, UUID
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
+from sqlalchemy import select
 
+from ...errors.student_organisation_errors import LevelInUseError
 from ....core.services.student_organization.academic_level import AcademicLevelService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
@@ -20,6 +22,8 @@ class AcademicLevelFactory:
         self.repository = SQLAlchemyRepository(AcademicLevel, session)
         self.validator = StudentOrganizationValidator()
         self.service = AcademicLevelService(session)
+        self.session = session
+
 
     def create_academic_level(self, new_academic_level) -> AcademicLevel:
         """Create a new academic level.
@@ -31,7 +35,7 @@ class AcademicLevelFactory:
         academic_level = AcademicLevel(
             id = uuid4(),
             name = self.validator.validate_level_name(new_academic_level.name),
-            description = self.validator.validate_name(new_academic_level.description),
+            description = self.validator.validate_description(new_academic_level.description),
             order = self.service.return_default_order(),
 
             created_by=SYSTEM_USER_ID,
@@ -44,13 +48,13 @@ class AcademicLevelFactory:
             error_message = str(e).lower()
             if "academic_levels_name_key" in error_message:
                 raise DuplicateLevelError(
-                    input_value=new_academic_level.name, field = "name",detail=error_message)
+                    entry=new_academic_level.name, field = "name",detail=error_message)
             elif "academic_levels_order_key" in error_message:
                 raise DuplicateLevelError(
-                    input_value=str(new_academic_level.order),field = "order",detail=error_message)
+                    entry=str(new_academic_level.order),field = "order",detail=error_message)
             else:
                 raise DuplicateLevelError(
-                    input_value="unknown field", field = "unknown", detail=error_message)
+                    entry="unknown field", field = "unknown", detail=error_message)
 
 
     def get_academic_level(self, academic_level_id: UUID) -> AcademicLevel:
@@ -90,7 +94,7 @@ class AcademicLevelFactory:
 
             validations = {
                 "name": (self.validator.validate_level_name, "name"),
-                "description": (self.validator.validate_name, "description"),
+                "description": (self.validator.validate_description, "description"),
                 "order": (self.validator.validate_order, "order"),
             }
 
@@ -143,16 +147,24 @@ class AcademicLevelFactory:
             academic_level_id (UUID): ID of academic_level to delete
         """
         try:
+            level = self.session.execute(
+                select(AcademicLevel)
+                .options(selectinload(AcademicLevel.classes))
+                .where(AcademicLevel.id == academic_level_id)
+            ).scalar_one_or_none()
+
+            if level.classes:
+                raise LevelInUseError(entity_name="a class",
+                    detail=f"Deletion attempt blocked for AcademicLevel {academic_level_id}: linked to a class. "
+                    f"Raised manually during pre-deletion validation.")
+
             self.repository.delete(academic_level_id)
 
         except EntityNotFoundError as e:
             raise LevelNotFoundError(identifier=academic_level_id, detail=str(e))
 
-        except RelationshipError as e:
-            error_message = str(e)
-            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
-            # but it is being kept for unexpected constraint issues.
-            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
+        except RelationshipError as e: #Failsafe
+            raise RelationshipError(error=str(e), operation='delete', entity='unknown_entity')
 
 
     def get_all_archived_academic_levels(self, filters) -> List[AcademicLevel]:

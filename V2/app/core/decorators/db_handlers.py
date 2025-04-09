@@ -23,6 +23,7 @@ def handle_write_errors(operation: str = "unknown"):
                     raise UniqueViolationError(error=msg)
                 if 'foreign key' in msg:
                     raise RelationshipError(operation=operation, error=msg, entity=self.model.__name__)
+
                 raise TKDatabaseError(error=f"Database integrity error: {msg}")
 
             except OperationalError as e:

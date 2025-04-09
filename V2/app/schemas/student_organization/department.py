@@ -11,11 +11,9 @@ class DepartmentFilterParams(BaseFilterParams):
 class DepartmentBase(BaseModel):
     """Base model for class levels"""
     name: str
-    code: str
     description: str
-    mentor_id: UUID | None = None
-    student_rep_id: UUID | None = None
-    assistant_rep_id: UUID | None = None
+    code: str
+
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -24,17 +22,26 @@ class DepartmentBase(BaseModel):
         "example": {
             "name": "Science",
             "code": "SCI",
-            "description": "Science Classes",
-            "mentor_id": "00000000-0000-0000-0000-000000000099",
-            "student_rep_id": "00000000-0000-0000-0000-000000000099",
-            "assistant_rep_id":  "00000000-0000-0000-0000-000000000099"
+            "description": "Science Classes"
         }}
         )
 
 class DepartmentUpdate(DepartmentBase):
     """Used for updating class levels"""
-    pass
+    name: str | None = None
+    description: str | None = None
+    code: str | None = None
 
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
+                "name": "Science",
+                "code": "SCC",
+                "description": "Sciences"
+            }}
+    )
 
 class DepartmentCreate(DepartmentBase):
     """Used for creating new class levels"""

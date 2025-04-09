@@ -59,7 +59,7 @@ class ClassCrud:
         Returns:
             ClassResponse: Updated class
         """
-        data = data.model_dump()
+        data = data.model_dump(exclude_unset=True)
         updated_class = self.factory.update_class(class_id, data)
         return ClassResponse.model_validate(updated_class)
 

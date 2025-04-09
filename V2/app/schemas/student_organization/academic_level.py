@@ -29,7 +29,9 @@ class AcademicLevelCreate(AcademicLevelBase):
 
 class AcademicLevelUpdate(AcademicLevelBase):
     """For updating academic levels"""
-    order: int
+    name: str | None = None
+    description: str | None = None
+    order: int | None = None
 
     model_config = ConfigDict(
         from_attributes=True,

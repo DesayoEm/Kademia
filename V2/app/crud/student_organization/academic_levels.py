@@ -59,9 +59,10 @@ class AcademicLevelCrud:
         Returns:
             AcademicLevelResponse: Updated academic level
         """
-        data = data.model_dump()
+        data = data.model_dump(exclude_unset=True)
         updated_level = self.factory.update_academic_level(level_id, data)
         return AcademicLevelResponse.model_validate(updated_level)
+
 
     def archive_level(self, level_id: UUID, reason: ArchiveReason) -> None:
         """Archive an academic level.

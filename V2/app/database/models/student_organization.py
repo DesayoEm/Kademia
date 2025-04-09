@@ -9,7 +9,7 @@ class AcademicLevel(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     __tablename__ = 'academic_levels'
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    name: Mapped[str] = mapped_column(String(30), unique=True)
+    name: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str] = mapped_column(String(500))
     order: Mapped[int] = mapped_column(Integer, unique=True)
 
@@ -131,7 +131,7 @@ class StudentDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    name: Mapped[str] = mapped_column(String(30), unique=True)
+    name: Mapped[str] = mapped_column(String(100), unique=True)
     code: Mapped[str] = mapped_column(String(3), unique=True)
     description: Mapped[str] = mapped_column(String(500))
     mentor_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',

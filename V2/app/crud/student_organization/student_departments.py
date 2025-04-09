@@ -1,5 +1,5 @@
 from ...database.models.enums import ArchiveReason
-from ...schemas.student_organization.student_department import (
+from ...schemas.student_organization.department import (
     DepartmentCreate, DepartmentUpdate, DepartmentResponse, DepartmentFilterParams
 )
 from ...core.factories.student_organization.department import StudentDepartmentFactory
@@ -59,7 +59,7 @@ class DepartmentCrud:
         Returns:
             DepartmentResponse: Updated department
         """
-        data = data.model_dump()
+        data = data.model_dump(exclude_unset=True)
         updated_department = self.factory.update_student_department(department_id, data)
         return DepartmentResponse.model_validate(updated_department)
 
