@@ -1,10 +1,13 @@
 from uuid import UUID
+from ...database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 class DeletionHelper:
-    def __init__(self, session, export_service, repository):
+    def __init__(self, session, model):
         self.session = session
-        self.export_service = export_service
-        self.repository = repository
+        self.export_service = "export_service"
+        self.model = model
+        self.repository = SQLAlchemyRepository(model, session)
+
 
     def export_and_delete(
         self,
@@ -20,24 +23,17 @@ class DeletionHelper:
             archive_after_export (bool): If True, archive instead of delete.
 
         Returns:
-            str: Download link or file path to exported file.
+            str: Download link
         """
 
-        # 1. Fetch entity
         entity = self.repository.get_by_id(entity_id)
 
-        # 2. Export it
-        file_path = self.export_service.export(entity, format=export_format)
 
-        # 3. Mark entity as exported
+        download_str = self.export_service.export(entity, format=export_format)
+
+
         entity.is_exported = True
         self.session.commit()
+        self.repository.delete(entity_id)
 
-        # 4. Delete or archive
-        if archive_after_export:
-            entity.is_archived = True
-            self.session.commit()
-        else:
-            self.repository.delete(entity_id)
-
-        return file_path
+        return download_str

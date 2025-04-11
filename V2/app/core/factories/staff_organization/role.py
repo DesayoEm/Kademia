@@ -3,7 +3,8 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from ...errors.staff_organisation_errors import RoleArchivalDependencyError
-from ...utils.archival_helper import DependencyChecker
+from ...services.export_service.export import ExportService
+from ...utils.archive_helper import ArchiveHelper
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import StaffRole
 from ....database.models.users import Staff
@@ -26,7 +27,9 @@ class StaffRoleFactory:
         """
         self.repository = SQLAlchemyRepository(StaffRole, session)
         self.validator = StaffOrganizationValidator()
-        self.dependency_checker = DependencyChecker(session)
+        self.archive_helper = ArchiveHelper(session)
+        self.export = ExportService(session)
+
 
     def create_role(self, new_role) -> StaffRole:
         """Create a new staff role.
@@ -118,7 +121,7 @@ class StaffRoleFactory:
 
 
     def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRole:
-        """Archives a role if no active staff members are assigned to it.
+        """Archive a role if no active staff members are assigned to it.
         Args:
             role_id: id of role to archive
             reason: Reason for archiving
@@ -126,13 +129,9 @@ class StaffRoleFactory:
             StaffRole: Archived role record
         """
         try:
-            failed_dependencies = self.dependency_checker.check_active_dependencies_exists(
-                dependencies=[
-                    (Staff, "role_id")
-                ],
-                target_id=role_id,
-                is_archived_field="is_archived",
-                check_active_only=True
+            failed_dependencies = self.archive_helper.check_active_dependencies_exists(
+                dependencies=[(Staff, "role_id", "staff")],
+                target_id=role_id
             )
 
             if failed_dependencies:
@@ -203,3 +202,4 @@ class StaffRoleFactory:
             self.repository.delete_archive(role_id)
         except EntityNotFoundError as e:
             raise RoleNotFoundError(identifier=role_id, detail = str(e))
+

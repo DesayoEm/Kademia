@@ -4,6 +4,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 import time
 import uuid
 from ..core.errors.database_errors import *
+from ..core.errors.export_errors import UnimplementedGathererError
 from ..core.errors.staff_organisation_errors import *
 from ..core.errors.input_validation_errors import *
 from ..core.errors.student_organisation_errors import *
@@ -103,6 +104,10 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         GuardianNotFoundError: status.HTTP_404_NOT_FOUND,
         RelatedGuardianNotFoundError: status.HTTP_404_NOT_FOUND,
         DuplicateGuardianError: status.HTTP_409_CONFLICT,
+
+        # Export errors
+        UnimplementedGathererError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+
     }
 
 
