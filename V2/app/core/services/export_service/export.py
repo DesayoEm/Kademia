@@ -1,10 +1,14 @@
 from fpdf import FPDF
+import csv
 import os
-from uuid import uuid4
+import openpyxl
+from openpyxl.utils import get_column_letter
 
-EXPORT_DIR = "exports"
+
 from uuid import UUID
 
+from ...errors.export_errors import ExportFormatError
+from ....config import config
 from ....database.models import *
 from .gather_data import GatherData
 from ...errors.database_errors import EntityNotFoundError
@@ -15,6 +19,7 @@ class ExportService:
     def __init__(self, session):
         self.session = session
         self.gatherer = GatherData()
+        self.export_dir = config.EXPORT_DIR
 
     def export_entity(
             self,
@@ -52,32 +57,31 @@ class ExportService:
                     error="Object not found."
                 )
 
-        data = self.gatherer.gather(entity)
+        data, suffix = self.gatherer.gather(entity)
 
         if export_format == "pdf":
-            return self.export_to_pdf(data)
+            return self.export_to_pdf(data, suffix)
         elif export_format == "csv":
-            return self.export_to_csv(data)
+            return self.export_to_csv(data, suffix)
         elif export_format == "excel":
-            return self.export_to_excel(data)
+            return self.export_to_excel(data, suffix)
         else:
-            raise ValueError(f"Unsupported export export_format: {export_format}")
+            raise ExportFormatError(format_entry=export_format)
 
 
 
-    def export_to_pdf(self, data: dict) -> str:
+    def export_to_pdf(self, data: dict, suffix: str) -> str:
         pdf = FPDF()
         pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
-        pdf.set_font("Arial", size=12)
+        pdf.set_font("Arial", size=10)
 
 
         self.write_dict_to_pdf(pdf, data)
 
+        os.makedirs(self.export_dir, exist_ok=True)
 
-        os.makedirs(EXPORT_DIR, exist_ok=True)
-
-        filename = f"{EXPORT_DIR}/export_{uuid4()}.pdf"
+        filename = f"{self.export_dir}/{suffix}.pdf"
         pdf.output(filename)
 
         return filename
@@ -100,8 +104,71 @@ class ExportService:
                 pdf.cell(0, 10, f"{' ' * indent}{key}: {value}", ln=True)
 
 
-    def export_to_csv(self, data) -> str:
-        pass
+    def export_to_csv(self, data: dict, suffix: str) -> str:
+        os.makedirs(self.export_dir, exist_ok=True)
 
-    def export_to_excel(self, entity) -> str:
-        pass
+        filename = f"{self.export_dir}/{suffix}.csv"
+
+        with open(filename, mode='w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+
+            # Write the data
+            self._write_dict_to_csv(writer, data)
+
+        return filename
+
+    def _write_dict_to_csv(self, writer, data: dict, parent_key=""):
+        """
+        Recursively write dictionary items to a CSV.
+        """
+        for key, value in data.items():
+            full_key = f"{parent_key}.{key}" if parent_key else key
+
+            if isinstance(value, dict):
+                self._write_dict_to_csv(writer, value, parent_key=full_key)
+            elif isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict):
+                        self._write_dict_to_csv(writer, item, parent_key=full_key)
+                    else:
+                        writer.writerow([full_key, item])
+            else:
+                writer.writerow([full_key, value])
+
+    def export_to_excel(self, data: dict, suffix: str) -> str:
+        os.makedirs(self.export_dir, exist_ok=True)
+
+        filename = f"{self.export_dir}/{suffix}.xlsx"  
+
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Exported Data"
+
+        self._write_dict_to_excel(ws, data)
+
+        wb.save(filename)
+
+        return filename
+
+    def _write_dict_to_excel(self, ws, data: dict, row=1, col=1):
+        """
+        Recursively write dictionary items to an Excel worksheet.
+        """
+        for key, value in data.items():
+            if isinstance(value, dict):
+                ws.cell(row=row, column=col, value=key)
+                row = self._write_dict_to_excel(ws, value, row + 1, col + 1)
+            elif isinstance(value, list):
+                ws.cell(row=row, column=col, value=key)
+                for item in value:
+                    if isinstance(item, dict):
+                        row = self._write_dict_to_excel(ws, item, row + 1, col + 1)
+                    else:
+                        ws.cell(row=row, column=col + 1, value=item)
+                        row += 1
+            else:
+                ws.cell(row=row, column=col, value=key)
+                ws.cell(row=row, column=col + 1, value=value)
+                row += 1
+
+        return row

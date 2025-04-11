@@ -8,12 +8,13 @@ class GatherData:
     def __init__(self):
         pass
 
-    def gather(self, entity) -> dict:
+    def gather(self, entity) -> tuple:
         """Dispatch to the correct gather method based on entity type."""
 
         gatherers = {
             StaffRole: self.gather_role_data,
         }
+
         entity_type = type(entity)
         gather_function = gatherers.get(entity_type)
 
@@ -24,11 +25,12 @@ class GatherData:
 
 
     @staticmethod
-    def gather_role_data(role: StaffRole) -> dict:
+    def gather_role_data(role: StaffRole) -> tuple:
         """Gather data for StaffRole entity."""
         staff_assigned = role.staff
+        file_suffix = f"staff_role_{role.name}"
 
-        return {
+        return ({
             "role": {
                 "id": str(role.id),
                 "name": role.name,
@@ -39,8 +41,14 @@ class GatherData:
                     "id": str(staff.id),
                     "first_name": staff.first_name,
                     "last_name": staff.last_name,
-                    "email": staff.email_address
+                    "gender": staff.gender,
+                    "email": staff.email_address,
+                    "access_level": staff.access_level,
+                    "date_joined": str(staff.date_joined),
+                    "date_left": str(staff.date_left),
+
                 }
                 for staff in staff_assigned
             ]
-        }
+        },
+            file_suffix)
