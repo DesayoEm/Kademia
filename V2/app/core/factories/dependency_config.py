@@ -1,10 +1,10 @@
 from ...database.models import *
-
+#relationship, fk, display name
 DEPENDENCY_CONFIG = {
-    StaffRole: [("staff", "staff")],
+    StaffRole: [("staff", "role_id" "staff")],
 
 
-    StaffDepartment: [("staff", "staff")],
+    StaffDepartment: [("staff", "department_id", "staff")],
 
     Educator: [("qualifications", "qualifications"), ("subject_assignments", "assigned subjects"),
                ("mentored_department", "mentored departments"), ("supervised_class", "supervised classes")

@@ -3,7 +3,6 @@ from uuid import UUID
 from ...errors.export_errors import UnimplementedGathererError
 from ....database.models import *
 
-
 class GatherData:
     def __init__(self):
         pass
@@ -28,7 +27,7 @@ class GatherData:
     def gather_role_data(role: StaffRole) -> tuple:
         """Gather data for StaffRole entity."""
         staff_assigned = role.staff
-        file_suffix = f"StaffRole_{role.name}"
+        file_name = f"StaffRole_{role.name}"
 
         return ({
             "role": {
@@ -55,4 +54,4 @@ class GatherData:
                 for staff in staff_assigned
             ]
         },
-            file_suffix)
+            file_name)

@@ -1,5 +1,6 @@
 from .base_error import KademiaError
 from .database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
+from .archive_delete_errors import DeletionDependencyError
 
 from uuid import UUID
 
@@ -84,13 +85,17 @@ class RoleArchivalDependencyError(StaffOrganizationError):
         self.log_message = f"Archival blocked: role {identifier} is still linked to {entity_name}"
 
 
-class RoleDeletionDependencyError(StaffOrganizationError):
-    """Raised when attempting to delete a role that still has related active staff."""
+class RoleDeletionDependencyError(StaffOrganizationError, DeletionDependencyError):
+    """Raised when attempting to delete a role that still has related active entities."""
 
-    def __init__(self, entity_name: str, identifier: str):
-        super().__init__()
-        self.user_message = f"Cannot delete role while it is still assigned to {entity_name}."
+    def __init__(self, entity_name: str, identifier: UUID, related_entities: str):
+        super().__init__(
+            entity_name="role", identifier=identifier, related_entities=related_entities
+        )
+        self.user_message = f"Cannot delete {entity_name} while it is still assigned to {related_entities}."
         self.log_message = f"Deletion blocked: role {identifier} is still linked to {entity_name}"
+
+
 
 # Qualifications
 class DuplicateQualificationError(StaffOrganizationError, UniqueViolationError):

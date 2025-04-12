@@ -5,19 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d49e4f62-7add-4eb8-a665-00ba3b079643" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/V2/app/core/services/lifecycle_service/delete_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/V2/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/errors/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/errors/all_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/error_map.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/errors/archive_delete_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/archive_delete_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/errors/staff_organisation_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/staff_organisation_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/dependency_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/dependency_config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/role.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/role.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/services/export_service/export.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/export_service/export.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/services/export_service/gather_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/export_service/gather_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/utils/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/utils/archive_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/lifecycle_service/archive_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/utils/delete_helper.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_role.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_role.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/database/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/routers/staff_organization/staff_roles.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/staff_organization/staff_roles.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/schemas/shared_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/shared_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/services/lifecycle_service/archive_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/lifecycle_service/archive_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/services/lifecycle_service/delete_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/lifecycle_service/delete_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

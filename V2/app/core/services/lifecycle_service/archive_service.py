@@ -1,18 +1,18 @@
 from sqlalchemy import select, exists
 from sqlalchemy.orm import Session
-from typing import Type, List, Tuple
+from typing import List
 from uuid import UUID
 from ...factories.dependency_config import DEPENDENCY_CONFIG
 
 
 
-class ArchiveHelper:
+class ArchiveService:
     def __init__(self, session: Session):
         self.session = session
 
     def check_active_dependencies_exists(
             self,
-            dependencies: List[Tuple[Type, str, str]],
+            entity_type,
             target_id: UUID,
             is_archived_field: str = "is_archived"
     ) -> List[str]:
@@ -21,8 +21,7 @@ class ArchiveHelper:
         Check active dependencies for a given entity.
 
         Args:
-            dependencies (List[Tuple[Model, ForeignKeyField, DisplayName]]):
-                List of (model, fk_field, display_name) triples
+            entity_type: Model:
             target_id (UUID): The ID to check against
             is_archived_field (str): Field name to filter by active status
 
@@ -30,8 +29,10 @@ class ArchiveHelper:
             List[str]: List of display names where active dependencies exist
         """
 
+        dependencies = DEPENDENCY_CONFIG.get(entity_type)
 
         failed = []
+
         for dependent_model, fk_field, display_name in dependencies:
             conditions = [getattr(dependent_model, fk_field) == target_id]
 

@@ -1,4 +1,3 @@
-# Academic Management System
 
 ## Version History
 

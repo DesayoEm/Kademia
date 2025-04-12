@@ -4,10 +4,9 @@ from sqlalchemy.orm import Session
 
 from ...errors.staff_organisation_errors import RoleArchivalDependencyError
 from ...services.export_service.export import ExportService
-from V2.app.core.services.lifecycle_service.archive_service import ArchiveHelper
+from ...services.lifecycle_service.archive_service import ArchiveService
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import StaffRole
-from ....database.models.users import Staff
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError
@@ -27,7 +26,7 @@ class StaffRoleFactory:
         """
         self.repository = SQLAlchemyRepository(StaffRole, session)
         self.validator = StaffOrganizationValidator()
-        self.archive_helper = ArchiveHelper(session)
+        self.archive_helper = ArchiveService(session)
         self.export = ExportService(session)
 
 
@@ -130,7 +129,7 @@ class StaffRoleFactory:
         """
         try:
             failed_dependencies = self.archive_helper.check_active_dependencies_exists(
-                dependencies=[(Staff, "role_id", "staff")],
+                entity_type=StaffRole,
                 target_id=role_id
             )
 

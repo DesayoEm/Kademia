@@ -6,11 +6,10 @@ from openpyxl.utils import get_column_letter
 
 from uuid import UUID
 from ...errors.export_errors import ExportFormatError
+from ...errors.error_map import not_found_map
 from ....config import config
-from ....database.models import *
 from .gather_data import GatherData
 from ...errors.database_errors import EntityNotFoundError
-from ...errors.staff_organisation_errors import RoleNotFoundError
 
 
 class ExportService:
@@ -36,33 +35,30 @@ class ExportService:
         Returns:
             str: Path to the exported file.
         """
-        error_map = {
-            StaffRole: (RoleNotFoundError, "Role")
-        }
 
         entity = self.session.get(entity_model, entity_id)
 
         if not entity:
-            error_info = error_map.get(entity_model)
+            error_info = not_found_map.get(entity_model)
 
             if error_info:
-                error_class, display_name = error_info
-                raise error_class(identifier=entity_id, detail=f"{display_name} not found.")
+                error_class, _, _ = error_info
+                raise error_class(identifier=entity_id, detail=f"{entity_model} not found!.")
             else:
                 raise EntityNotFoundError(
-                    entity_type=entity_model.__name__,
+                    entity_type=entity_model,
                     identifier=str(entity_id),
-                    error="Object not found."
+                    error="Object not found during export."
                 )
 
-        data, suffix = self.gatherer.gather(entity)
+        data, file_name = self.gatherer.gather(entity)
 
         if export_format == "pdf":
-            return self.export_to_pdf(data, suffix)
+            return self.export_to_pdf(data, file_name)
         elif export_format == "csv":
-            return self.export_to_csv(data, suffix)
+            return self.export_to_csv(data, file_name)
         elif export_format == "excel":
-            return self.export_to_excel(data, suffix)
+            return self.export_to_excel(data, file_name)
         else:
             raise ExportFormatError(format_entry=export_format)
 
@@ -114,6 +110,7 @@ class ExportService:
 
         return filename
 
+
     def _write_dict_to_csv(self, writer, data: dict, parent_key=""):
         """
         Recursively write dictionary items to a CSV.
@@ -132,6 +129,7 @@ class ExportService:
             else:
                 writer.writerow([full_key, value])
 
+
     def export_to_excel(self, data: dict, suffix: str) -> str:
         os.makedirs(self.export_dir, exist_ok=True)
 
@@ -146,6 +144,7 @@ class ExportService:
         wb.save(filename)
 
         return filename
+
 
     def _write_dict_to_excel(self, ws, data: dict, row=1, col=1):
         """
