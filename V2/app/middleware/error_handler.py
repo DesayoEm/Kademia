@@ -3,6 +3,8 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 import time
 import uuid
+
+from ..core.errors.archive_delete_errors import CascadeDeletionError
 from ..core.errors.database_errors import *
 from ..core.errors.export_errors import UnimplementedGathererError, ExportFormatError
 from ..core.errors.staff_organisation_errors import *
@@ -108,6 +110,9 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         # Export errors
         UnimplementedGathererError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         ExportFormatError: status.HTTP_400_BAD_REQUEST,
+
+        # Archive/delete errors
+        CascadeDeletionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
 
     }
 

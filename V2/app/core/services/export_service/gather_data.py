@@ -28,13 +28,17 @@ class GatherData:
     def gather_role_data(role: StaffRole) -> tuple:
         """Gather data for StaffRole entity."""
         staff_assigned = role.staff
-        file_suffix = f"staff_role_{role.name}"
+        file_suffix = f"StaffRole_{role.name}"
 
         return ({
             "role": {
                 "id": str(role.id),
                 "name": role.name,
-                "description": role.description
+                "description": role.description,
+                "created_by": role.created_by_staff,
+                "created_at": role.created_at,
+                "last_modified_at": role.last_modified_at,
+                "last_modified_by": role.last_modified_by_staff,
             },
             "staff_assigned": [
                 {
@@ -43,7 +47,7 @@ class GatherData:
                     "last_name": staff.last_name,
                     "gender": staff.gender,
                     "email": staff.email_address,
-                    "access_level": staff.access_level,
+                    "access_level": str(staff.access_level),
                     "date_joined": str(staff.date_joined),
                     "date_left": str(staff.date_left),
 

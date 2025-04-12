@@ -5,12 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d49e4f62-7add-4eb8-a665-00ba3b079643" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/V2/app/core/services/lifecycle_service/delete_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2/app/core/errors/export_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/errors/export_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/role.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/factories/staff_organization/role.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/services/export_service/export.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/export_service/export.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/core/services/export_service/gather_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/export_service/gather_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/utils/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/utils/archive_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/core/services/lifecycle_service/archive_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/core/utils/delete_helper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_role.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/crud/staff_organization/staff_role.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/database/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/database/models/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/middleware/error_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/routers/staff_organization/staff_roles.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/routers/staff_organization/staff_roles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2/app/schemas/shared_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2/app/schemas/shared_models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,11 +87,11 @@
       <recent name="C:\Users\dell\Desktop\Engineering\Projects\TraKademik\V2\app\services\profiles" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\services\lifecycle_service" />
       <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2" />
       <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core" />
       <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\services\email" />
       <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\factories\staff_organization" />
-      <recent name="C:\Users\dell\Desktop\Engineering\Projects\Kademia\V2\app\core\validators" />
     </key>
   </component>
   <component name="RunManager">

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from ...errors.staff_organisation_errors import RoleArchivalDependencyError
 from ...services.export_service.export import ExportService
-from ...utils.archive_helper import ArchiveHelper
+from V2.app.core.services.lifecycle_service.archive_service import ArchiveHelper
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import StaffRole
 from ....database.models.users import Staff

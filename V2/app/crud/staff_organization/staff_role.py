@@ -1,3 +1,5 @@
+from ...core.services.export_service.export import ExportService
+from ...database.models import StaffRole
 from ...database.models.enums import ArchiveReason
 from ...schemas.staff_organization.role import (
     StaffRoleCreate, StaffRoleUpdate, StaffRoleResponse, RolesFilterParams
@@ -18,6 +20,7 @@ class StaffRoleCrud:
         """
         self.session = session
         self.factory = StaffRoleFactory(session)
+        self.export_service = ExportService(session)
 
     # Active role operations
     def create_role(self, data: StaffRoleCreate) -> StaffRoleResponse:
@@ -29,6 +32,7 @@ class StaffRoleCrud:
         """
         role = self.factory.create_role(data)
         return StaffRoleResponse.model_validate(role)
+
 
 
     def get_role(self, role_id: UUID) -> StaffRoleResponse:
@@ -65,6 +69,7 @@ class StaffRoleCrud:
         updated_role = self.factory.update_role(role_id, data)
         return StaffRoleResponse.model_validate(updated_role)
 
+
     def archive_role(self, role_id: UUID, reason: ArchiveReason) -> None:
         """Archive a staff role.
         Args:
@@ -75,6 +80,16 @@ class StaffRoleCrud:
         """
         self.factory.archive_role(role_id, reason)
 
+
+    def export_role(self, role_id: UUID, export_format: str) -> str:
+        """Export role and its associated data
+        Args:
+            role_id: Role UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            StaffRole, role_id, export_format
+        )
 
 
     def delete_role(self, role_id: UUID) -> None:

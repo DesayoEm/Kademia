@@ -4,9 +4,7 @@ import os
 import openpyxl
 from openpyxl.utils import get_column_letter
 
-
 from uuid import UUID
-
 from ...errors.export_errors import ExportFormatError
 from ....config import config
 from ....database.models import *
@@ -74,7 +72,7 @@ class ExportService:
         pdf = FPDF()
         pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
-        pdf.set_font("Arial", size=10)
+        pdf.set_font("Arial", size=8)
 
 
         self.write_dict_to_pdf(pdf, data)
@@ -112,7 +110,6 @@ class ExportService:
         with open(filename, mode='w', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
 
-            # Write the data
             self._write_dict_to_csv(writer, data)
 
         return filename
@@ -138,7 +135,7 @@ class ExportService:
     def export_to_excel(self, data: dict, suffix: str) -> str:
         os.makedirs(self.export_dir, exist_ok=True)
 
-        filename = f"{self.export_dir}/{suffix}.xlsx"  
+        filename = f"{self.export_dir}/{suffix}.xlsx"
 
         wb = openpyxl.Workbook()
         ws = wb.active
