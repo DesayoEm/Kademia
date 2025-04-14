@@ -13,29 +13,49 @@ from ...errors.database_errors import EntityNotFoundError
 
 
 class ExportService:
+    """
+    Service for exporting entities and their related data to various file formats.
+
+    Provides methods to export database entities to PDF, CSV, or Excel formats,
+    handling entity retrieval, data gathering, and file generation.
+
+    Attributes:
+        session: SQLAlchemy database session
+        gatherer (GatherData): Service for gathering entity data for export
+        export_dir (str): Directory path where exported files will be saved
+    """
+
     def __init__(self, session):
+        """
+        Initialize the export service with a database session.
+
+        Args:
+            session: SQLAlchemy database session
+        """
         self.session = session
         self.gatherer = GatherData()
         self.export_dir = config.EXPORT_DIR
 
     def export_entity(
-            self,
-            entity_model,
-            entity_id: UUID,
-            export_format: str
-    ) -> str:
+            self, entity_model, entity_id: UUID, export_format: str) -> str:
         """
-        Export an entity and its related data.
+        Export an entity and its related data to the specified format.
+
+        Retrieves the entity from the database, gathers its data using the
+        GatherData service, and exports it to the requested format.
 
         Args:
-            entity_model: Base SQLAlchemy model of the entity.
-            entity_id (UUID): ID of the entity.
-            export_format (str): Export format ("pdf", "csv", "excel").
+            entity_model: SQLAlchemy model class for the entity
+            entity_id (UUID): Unique identifier of the entity to export
+            export_format (str): Format to export to ("pdf", "csv", "excel")
 
         Returns:
-            str: Path to the exported file.
-        """
+            str: Path to the exported file
 
+        Raises:
+            EntityNotFoundError: If the entity doesn't exist
+            ExportFormatError: If the requested export format is not supported
+        """
         entity = self.session.get(entity_model, entity_id)
 
         if not entity:
@@ -63,13 +83,23 @@ class ExportService:
             raise ExportFormatError(format_entry=export_format)
 
 
-
     def export_to_pdf(self, data: dict, suffix: str) -> str:
+        """
+        Export data to a PDF file.
+
+        Creates a PDF document containing the structured data from the entity.
+
+        Args:
+            data (dict): Structured data to include in the PDF
+            suffix (str): Filename suffix for the exported file
+
+        Returns:
+            str: Path to the created PDF file
+        """
         pdf = FPDF()
         pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
         pdf.set_font("Arial", size=8)
-
 
         self.write_dict_to_pdf(pdf, data)
 
@@ -82,7 +112,17 @@ class ExportService:
 
 
     def write_dict_to_pdf(self, pdf, data: dict, indent=0):
-        """Recursively write a dictionary into the PDF."""
+        """
+        Recursively write a dictionary into the PDF.
+
+        Formats dictionary keys and values with proper indentation and handles
+        nested dictionaries and lists appropriately.
+
+        Args:
+            pdf: FPDF object to write to
+            data (dict): Dictionary containing the data to write
+            indent (int): Current indentation level for formatting
+        """
         for key, value in data.items():
             if isinstance(value, dict):
                 pdf.cell(0, 10, f"{' ' * indent}{key}:", ln=True)
@@ -99,6 +139,19 @@ class ExportService:
 
 
     def export_to_csv(self, data: dict, suffix: str) -> str:
+        """
+        Export data to a CSV file.
+
+        Creates a CSV file containing the structured data from the entity.
+        Handles nested structures by flattening keys with dot notation.
+
+        Args:
+            data (dict): Structured data to include in the CSV
+            suffix (str): Filename suffix for the exported file
+
+        Returns:
+            str: Path to the created CSV file
+        """
         os.makedirs(self.export_dir, exist_ok=True)
 
         filename = f"{self.export_dir}/{suffix}.csv"
@@ -114,6 +167,14 @@ class ExportService:
     def _write_dict_to_csv(self, writer, data: dict, parent_key=""):
         """
         Recursively write dictionary items to a CSV.
+
+        Flattens the dictionary hierarchy using dot notation for keys
+        and writes each key-value pair as a row in the CSV.
+
+        Args:
+            writer: CSV writer object to write to
+            data (dict): Dictionary containing the data to write
+            parent_key (str): Parent key for nested dictionaries
         """
         for key, value in data.items():
             full_key = f"{parent_key}.{key}" if parent_key else key
@@ -131,6 +192,18 @@ class ExportService:
 
 
     def export_to_excel(self, data: dict, suffix: str) -> str:
+        """
+        Export data to an Excel file.
+
+        Creates an Excel workbook containing the structured data from the entity.
+
+        Args:
+            data (dict): Structured data to include in the Excel file
+            suffix (str): Filename suffix for the exported file
+
+        Returns:
+            str: Path to the created Excel file
+        """
         os.makedirs(self.export_dir, exist_ok=True)
 
         filename = f"{self.export_dir}/{suffix}.xlsx"
@@ -149,6 +222,18 @@ class ExportService:
     def _write_dict_to_excel(self, ws, data: dict, row=1, col=1):
         """
         Recursively write dictionary items to an Excel worksheet.
+
+        Formats the data in a hierarchical structure in the worksheet,
+        with proper indentation for nested items.
+
+        Args:
+            ws: Excel worksheet object to write to
+            data (dict): Dictionary containing the data to write
+            row (int): Current row position in the worksheet
+            col (int): Current column position in the worksheet
+
+        Returns:
+            int: The next available row number after writing
         """
         for key, value in data.items():
             if isinstance(value, dict):
