@@ -39,7 +39,7 @@ class StaffRole(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     description: Mapped[str] = mapped_column(String(500))
 
     # Relationships
-    staff: Mapped[List["Staff"]] = relationship(back_populates='role',
+    staff_members: Mapped[List["Staff"]] = relationship(back_populates='role',
             primaryjoin="Staff.role_id == StaffRole.id")
 
     __table_args__ = (

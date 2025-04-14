@@ -1,7 +1,7 @@
 from uuid import UUID
 from ...errors.archive_delete_errors import CascadeDeletionError, DeletionDependencyError
 from ...errors.error_map import deletion_dependency_map
-from ...factories.dependency_config import DEPENDENCY_CONFIG
+from V2.app.core.services.lifecycle_service.dependency_config import DEPENDENCY_CONFIG
 from ..export_service.export import ExportService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 

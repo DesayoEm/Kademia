@@ -1,8 +1,9 @@
-from ...database.models import *
-#relationship, fk, display name
-DEPENDENCY_CONFIG = {
-    StaffRole: [("staff", "role_id" "staff")],
+from V2.app.database.models import *
+#[(relationship_name, model_class, fk, display name), ...]
 
+
+DEPENDENCY_CONFIG = {
+    StaffRole: [("staff_members", Staff, "role_id" "staff members")],
 
     StaffDepartment: [("staff", "department_id", "staff")],
 

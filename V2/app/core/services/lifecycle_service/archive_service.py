@@ -2,9 +2,7 @@ from sqlalchemy import select, exists
 from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
-from ...factories.dependency_config import DEPENDENCY_CONFIG
-
-
+from V2.app.core.services.lifecycle_service.dependency_config import DEPENDENCY_CONFIG
 
 class ArchiveService:
     def __init__(self, session: Session):
@@ -30,14 +28,13 @@ class ArchiveService:
         """
 
         dependencies = DEPENDENCY_CONFIG.get(entity_type)
-
         failed = []
 
-        for dependent_model, fk_field, display_name in dependencies:
-            conditions = [getattr(dependent_model, fk_field) == target_id]
+        for relationship_title, model_class, fk_field, display_name in dependencies:
+            table = model_class.__table__
 
-            if hasattr(dependent_model, is_archived_field):
-                conditions.append(getattr(dependent_model, is_archived_field) == False)
+            conditions = [table.c[fk_field] == target_id,
+                          table.c[is_archived_field] == False]
 
             stmt = select(exists().where(*conditions))
             if self.session.execute(stmt).scalar_one():
