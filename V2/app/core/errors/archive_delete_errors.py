@@ -23,3 +23,12 @@ class DeletionDependencyError(ArchiveAndDeleteError):
         self.user_message = f"Cannot delete {entity_name} while it is still assigned to {related_entities}."
         self.log_message = f"Deletion blocked: {entity_name}- id: {identifier} is still linked to {related_entities}"
 
+
+class ForeignKeyConstraintMisconfiguredError (ArchiveAndDeleteError):
+    """Raised when attempting to delete an entity that has related records"""
+
+    def __init__(self, fk_name: str, entity_name: str):
+        super().__init__()
+        self.user_message = f"Error: Cannot delete {entity_name}."
+        self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not be SET NULL for safe deletion"
+

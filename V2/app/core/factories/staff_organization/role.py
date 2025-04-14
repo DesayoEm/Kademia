@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from ...errors.staff_organisation_errors import RoleArchivalDependencyError
 from ...services.export_service.export import ExportService
 from ...services.lifecycle_service.archive_service import ArchiveService
+from ...services.lifecycle_service.delete_service import DeleteService
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import StaffRole
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -19,15 +20,21 @@ SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 class StaffRoleFactory:
     """Factory class for managing staff role operations."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, model=StaffRole):
         """Initialize factory with database session.
         Args:
             session: SQLAlchemy database session
+            model: Model class, defaults to StaffRole
         """
-        self.repository = SQLAlchemyRepository(StaffRole, session)
+        self.model = model
+        self.repository = SQLAlchemyRepository(self.model, session)
+        self.delete_service = DeleteService(self.model, session)
+        self.archive_service = ArchiveService(session)
+        self.export_service = ExportService(session)
         self.validator = StaffOrganizationValidator()
-        self.archive_helper = ArchiveService(session)
-        self.export = ExportService(session)
+
+
+
 
 
     def create_role(self, new_role) -> StaffRole:
@@ -128,7 +135,7 @@ class StaffRoleFactory:
             StaffRole: Archived role record
         """
         try:
-            failed_dependencies = self.archive_helper.check_active_dependencies_exists(
+            failed_dependencies = self.archive_service.check_active_dependencies_exists(
                 entity_type=StaffRole,
                 target_id=role_id
             )
@@ -145,17 +152,36 @@ class StaffRoleFactory:
             raise RoleNotFoundError(identifier=role_id, detail = str(e))
 
 
-    def delete_role(self, role_id: UUID) -> None:
-        """Permanently delete a staff role.
+    def safe_delete_role(self, role_id: UUID) -> None:
+        """Permanently delete a staff role if there are no dependent records.
         Args:
             role_id: id of role to delete
         """
         try:
-            self.repository.delete(role_id)
+            self.delete_service.safe_delete(self.model, role_id)
+            return self.repository.delete(role_id)
+
         except EntityNotFoundError as e :
             raise RoleNotFoundError(identifier=role_id, detail = str(e))
 
 
+    def hard_delete_role(self, role_id: UUID, export_format: str) -> None:
+        """Export and FORCE delete a staff role.
+        Args:
+            role_id: id of role to delete
+            export_format: Preferred export format
+        """
+        try:
+            #careful - role is SET NULL on delete therefore deletion should not be cascaded
+            self.delete_service.export_and_null_delete(self.model, role_id, export_format)
+            return self.repository.delete(role_id)
+
+        except EntityNotFoundError as e:
+            raise RoleNotFoundError(identifier=role_id, detail=str(e))
+
+
+
+    #Archive methods
     def get_all_archived_roles(self, filters) -> List[StaffRole]:
         """Get all archived staff roles with filtering.
         Returns:
@@ -176,6 +202,7 @@ class StaffRoleFactory:
             return self.repository.get_archive_by_id(role_id)
         except EntityNotFoundError as e:
             raise RoleNotFoundError(identifier=role_id, detail = str(e))
+
 
     def restore_role(self, role_id: UUID) -> StaffRole:
         """Restore an archived role.
@@ -198,6 +225,7 @@ class StaffRoleFactory:
             role_id: id of role to delete
         """
         try:
+            self.delete_service.safe_delete(self.model, role_id)
             self.repository.delete_archive(role_id)
         except EntityNotFoundError as e:
             raise RoleNotFoundError(identifier=role_id, detail = str(e))

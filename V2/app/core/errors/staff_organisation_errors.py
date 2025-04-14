@@ -1,6 +1,6 @@
 from .base_error import KademiaError
 from .database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
-from .archive_delete_errors import DeletionDependencyError
+from .archive_delete_errors import DeletionDependencyError, ForeignKeyConstraintMisconfiguredError
 
 from uuid import UUID
 
@@ -94,6 +94,17 @@ class RoleDeletionDependencyError(StaffOrganizationError, DeletionDependencyErro
         )
         self.user_message = f"Cannot delete {entity_name} while it is still assigned to {related_entities}."
         self.log_message = f"Deletion blocked: role {identifier} is still linked to {entity_name}"
+
+
+class RoleDeletionConstraintError(StaffOrganizationError, ForeignKeyConstraintMisconfiguredError):
+    """Raised when attempting to delete an entity that's not srt to null on delete"""
+
+    def __init__(self, fk_name: str, display_name: str = 'role'):
+        super().__init__(
+            fk_name = fk_name, entity_name = display_name
+        )
+        self.user_message = f"Error: Cannot delete {display_name}."
+        self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not be SET NULL for safe deletion"
 
 
 

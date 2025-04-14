@@ -1,16 +1,18 @@
 from uuid import UUID
-from ...errors.archive_delete_errors import CascadeDeletionError, DeletionDependencyError
-from ...errors.error_map import deletion_dependency_map
+from sqlalchemy import inspect
+from sqlalchemy.orm import Session
+from ...errors.archive_delete_errors import CascadeDeletionError, DeletionDependencyError, ForeignKeyConstraintMisconfiguredError
+from ...errors.error_map import deletion_dependency_map, deletion_constraint_map
 from V2.app.core.services.lifecycle_service.dependency_config import DEPENDENCY_CONFIG
 from ..export_service.export import ExportService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 
-class DeletionService:
-    def __init__(self, session, model):
+class DeleteService:
+    def __init__(self,  model, session: Session):
         self.session = session
-        self.export_service = ExportService(session)
         self.model = model
+        self.export_service = ExportService(session)
         self.repository = SQLAlchemyRepository(model, session)
 
 
@@ -18,10 +20,11 @@ class DeletionService:
     def check_dependent_entities(entity, entity_model):
         """Check if the entity has active related entities."""
 
+        dependencies = DEPENDENCY_CONFIG.get(entity_model)
         dependent_fields = []
 
-        for field_name, _, display_name in DEPENDENCY_CONFIG.get(entity_model, []):
-            related = getattr(entity, field_name, None)
+        for relationship_title, model_class, fk_field, display_name in dependencies:
+            related = getattr(entity, relationship_title, None)
 
             if related:
                 if isinstance(related, list) and len(related) > 0:
@@ -53,19 +56,17 @@ class DeletionService:
                     identifier=entity_id, related_entities=", ".join(dependent_fields)
                 )
 
-        self.session.delete(entity)
-        self.session.commit()
 
 
-    def cascade_deletion(self, entity, related_entities: list):
+    def cascade_deletion(self, entity, relationship_names: list):
         """Cascade delete related entities first, then delete the main entity."""
         try:
             with self.session.begin():
                 if not entity.is_exported:
                     raise CascadeDeletionError(error="Entity not exported before attempted deletion")
 
-                for field_name in related_entities:
-                    related = getattr(entity, field_name, None)
+                for relationship_name in relationship_names:
+                    related = getattr(entity, relationship_name, None)
 
                     if related is None:
                         continue
@@ -83,19 +84,54 @@ class DeletionService:
             raise CascadeDeletionError(error=str(e))
 
 
-    def export_and_force_delete(self, entity_model,
-                                entity_id: UUID,
-                                export_format: str
-                    ) -> str:
+    def export_and_cascade_delete(self, entity_model,entity_id: UUID,
+                                export_format: str) -> str:
         """Export the entity, then force delete it and its related entities."""
 
-        dependent_models = [
-            dependent_model for dependent_model, _, _ in DEPENDENCY_CONFIG.get(entity_model)
+        relationship_names = [
+            relationship_name for relationship_name, _, _ , _ in DEPENDENCY_CONFIG.get(entity_model)
         ]
 
         export_path = self.export_service.export_entity(entity_model, entity_id, export_format)
         entity = self.repository.get_by_id(entity_id)
         entity.is_exported = True
-        self.cascade_deletion(entity, dependent_models)
+        self.cascade_deletion(entity, relationship_names)
+
+        return export_path
+
+
+    def export_and_null_delete(self, entity_model,entity_id: UUID,
+                                export_format: str) -> str:
+        """Export the entity, then verify foreign key constraints before deletion.
+        Args:
+        entity_model: SQLAlchemy model class
+        entity_id: UUID of the entity to delete
+        export_format: Format for export (pdf, csv, etc.)
+
+    Returns:
+        str: Path to exported file
+
+    Raises:
+        DeletionConstraintError: If any foreign key constraints are not SET NULL
+    """
+        inspector = inspect(self.session.bind)
+        table_name = entity_model.__tablename__
+
+        error_detail = deletion_constraint_map.get(entity_model)
+        error_class, display_name = error_detail
+
+        for fk in inspector.get_foreign_keys(table_name):
+            fk_name = fk['name']
+            if fk.get('ondelete', '').upper() != 'SET NULL':
+                if error_detail:
+                    raise error_class(fk_name = fk_name)
+                else:
+                    raise ForeignKeyConstraintMisconfiguredError(
+                        fk_name=fk_name, entity_name ="unknown"
+                    )
+
+        export_path = self.export_service.export_entity(entity_model, entity_id, export_format)
+        entity = self.repository.get_by_id(entity_id)
+        entity.is_exported = True
 
         return export_path
