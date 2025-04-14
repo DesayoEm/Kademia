@@ -4,7 +4,7 @@ from ...database.models.enums import ArchiveReason
 from ...schemas.staff_organization.role import (
     StaffRoleCreate, StaffRoleUpdate, StaffRoleResponse, RolesFilterParams
 )
-from ...core.factories.staff_organization.role import StaffRoleFactory
+from ...core.factories.staff_organization.staff_role import StaffRoleFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
@@ -92,12 +92,22 @@ class StaffRoleCrud:
         )
 
 
-    def delete_role(self, role_id: UUID) -> None:
-        """Permanently delete a staff role.
+    def safe_delete_role(self, role_id: UUID) -> None:
+        """Permanently delete a staff role if there are no dependent records.
         Args:
             role_id: Role UUID
         """
-        self.factory.delete_role(role_id)
+        return self.factory.safe_delete_role(role_id)
+
+
+    def force_delete_role(self, role_id: UUID, export_format: str) -> None:
+        """Export and FORCE delete a staff role.
+        Args:
+            role_id: id of role to delete
+            export_format: Preferred export format
+        """
+        return self.factory.force_delete_role(role_id, export_format)
+
 
     # Archived role operations
     def get_archived_role(self, role_id: UUID) -> StaffRoleResponse:
@@ -130,10 +140,18 @@ class StaffRoleCrud:
         role = self.factory.restore_role(role_id)
         return StaffRoleResponse.model_validate(role)
 
-
-    def delete_archived_role(self, role_id: UUID) -> None:
-        """Permanently delete an archived staff role.
+    def safe_delete_archived_role(self, role_id: UUID) -> None:
+        """Permanently delete a staff role if there are no dependent records.
         Args:
             role_id: Role UUID
         """
-        self.factory.delete_archived_role(role_id)
+        return self.factory.safe_delete_archived_role(role_id)
+
+
+    def force_delete_archived_role(self, role_id: UUID, export_format: str) -> None:
+        """Export and FORCE delete a staff role.
+        Args:
+            role_id: id of role to delete
+            export_format: Preferred export format
+        """
+        return self.factory.force_delete_archived_role(role_id, export_format)

@@ -69,7 +69,7 @@ class DeleteService:
 
 
 
-    def safe_delete(self, entity_model, entity_id: UUID):
+    def safe_delete(self, entity_model, entity_id: UUID, is_archived):
         """
         Safely delete an entity only if no dependent entities exist.
 
@@ -79,14 +79,17 @@ class DeleteService:
         Args:
             entity_model: SQLAlchemy model class for the entity
             entity_id (UUID): Unique identifier of the entity to delete
+            is_archived: Whether to check archived or active entities
 
         Raises:
             DeletionDependencyError: If active dependencies exist that prevent deletion
             EntityNotFoundError: If the entity doesn't exist
         """
-        entity = self.repository.get_by_id(entity_id)
-        error_info = deletion_dependency_map.get(entity_model)
 
+        entity = (self.repository.get_archive_by_id(entity_id) if is_archived
+                  else self.repository.get_by_id(entity_id))
+
+        error_info = deletion_dependency_map.get(entity_model)
         error_class, display_name = error_info
 
         dependent_fields = self.check_dependent_entities(entity, entity_model)
@@ -141,7 +144,7 @@ class DeleteService:
 
 
     def export_and_cascade_delete(self, entity_model, entity_id: UUID,
-                                  export_format: str) -> str:
+                                  export_format: str, is_archived) -> str:
         """
         Export the entity, then force delete it and all its related entities.
 
@@ -153,6 +156,7 @@ class DeleteService:
             entity_model: SQLAlchemy model class for the entity
             entity_id (UUID): Unique identifier of the entity to delete
             export_format (str): Format for export (pdf, csv, excel)
+            is_archived: Whether to check archived or active entities
 
         Returns:
             str: Path to the exported file
@@ -166,7 +170,9 @@ class DeleteService:
         ]
 
         export_path = self.export_service.export_entity(entity_model, entity_id, export_format)
-        entity = self.repository.get_by_id(entity_id)
+
+        entity = (self.repository.get_archive_by_id(entity_id) if is_archived
+                  else self.repository.get_by_id(entity_id))
         entity.is_exported = True
         self.cascade_deletion(entity, relationship_names)
 
@@ -174,7 +180,7 @@ class DeleteService:
 
 
     def export_and_null_delete(self, entity_model, entity_id: UUID,
-                               export_format: str) -> str:
+                               export_format: str, is_archived) -> str:
         """
         Export the entity, verify foreign key constraints, then delete the entity.
 
@@ -186,6 +192,7 @@ class DeleteService:
             entity_model: SQLAlchemy model class for the entity
             entity_id (UUID): Unique identifier of the entity to delete
             export_format (str): Format for export (pdf, csv, excel)
+            is_archived: Whether to check archived or active entities
 
         Returns:
             str: Path to the exported file
@@ -211,7 +218,9 @@ class DeleteService:
                     )
 
         export_path = self.export_service.export_entity(entity_model, entity_id, export_format)
-        entity = self.repository.get_by_id(entity_id)
+        entity = (self.repository.get_archive_by_id(entity_id) if is_archived
+                  else self.repository.get_by_id(entity_id))
+
         entity.is_exported = True
 
         return export_path

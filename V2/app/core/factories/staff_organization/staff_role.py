@@ -152,28 +152,30 @@ class StaffRoleFactory:
             raise RoleNotFoundError(identifier=role_id, detail = str(e))
 
 
-    def safe_delete_role(self, role_id: UUID) -> None:
+    def safe_delete_role(self, role_id: UUID, is_archived = False) -> None:
         """Permanently delete a staff role if there are no dependent records.
         Args:
             role_id: id of role to delete
+            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.safe_delete(self.model, role_id)
+            self.delete_service.safe_delete(self.model, role_id, is_archived)
             return self.repository.delete(role_id)
 
         except EntityNotFoundError as e :
             raise RoleNotFoundError(identifier=role_id, detail = str(e))
 
 
-    def hard_delete_role(self, role_id: UUID, export_format: str) -> None:
+    def force_delete_role(self, role_id: UUID, export_format: str, is_archived = False) -> None:
         """Export and FORCE delete a staff role.
         Args:
             role_id: id of role to delete
             export_format: Preferred export format
+            is_archived: Whether to check archived or active entities
         """
         try:
             #careful - role is SET NULL on delete therefore deletion should not be cascaded
-            self.delete_service.export_and_null_delete(self.model, role_id, export_format)
+            self.delete_service.export_and_null_delete(self.model, role_id, export_format, is_archived)
             return self.repository.delete(role_id)
 
         except EntityNotFoundError as e:
@@ -219,14 +221,29 @@ class StaffRoleFactory:
             raise RoleNotFoundError(identifier=role_id, detail = str(e))
 
 
-    def delete_archived_role(self, role_id: UUID) -> None:
+    def safe_delete_archived_role(self, role_id: UUID, is_archived = True) -> None:
         """Permanently delete an archived role.
         Args:
             role_id: id of role to delete
+            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.safe_delete(self.model, role_id)
+            self.delete_service.safe_delete(self.model, role_id, is_archived)
             self.repository.delete_archive(role_id)
         except EntityNotFoundError as e:
             raise RoleNotFoundError(identifier=role_id, detail = str(e))
 
+    def force_delete_archived_role(self, role_id: UUID, export_format: str, is_archived = False) -> None:
+        """Export and FORCE delete a staff role.
+        Args:
+            role_id: id of role to delete
+            export_format: Preferred export format
+            is_archived: Whether to check archived or active entities
+        """
+        try:
+            #careful - role is SET NULL on delete therefore deletion should not be cascaded
+            self.delete_service.export_and_null_delete(self.model, role_id, export_format, is_archived)
+            return self.repository.delete_archive(role_id)
+
+        except EntityNotFoundError as e:
+            raise RoleNotFoundError(identifier=role_id, detail=str(e))

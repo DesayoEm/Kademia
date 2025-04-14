@@ -1,10 +1,7 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
-
-from ...core.services.export_service.export import ExportService
-from ...database.models import StaffRole
-from ...database.models.enums import ArchiveReason
 from fastapi.responses import FileResponse
+from ...schemas.enums import ExportFormat
 from ...schemas.staff_organization.role import (
     StaffRoleCreate, StaffRoleUpdate, RolesFilterParams, StaffRoleResponse
 )
@@ -52,15 +49,21 @@ def archive_role(role_id: UUID, reason:ArchiveRequest,
 
 
 @router.delete("/{role_id}", status_code=204)
-def delete_role(role_id: UUID, db: Session = Depends(get_db)):
+def safe_delete_role(role_id: UUID, db: Session = Depends(get_db)):
         roles_crud = StaffRoleCrud(db)
-        return roles_crud.delete_role(role_id)
+        return roles_crud.safe_delete_role(role_id)
 
 
-@router.post("/{role_id}", response_class=FileResponse)
-def export_role(role_id: UUID, payload: ExportRequest, db: Session = Depends(get_db)):
+@router.delete("/{role_id}", response_class=FileResponse, status_code=204)
+def force_delete_role(role_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
+        roles_crud = StaffRoleCrud(db)
+        return roles_crud.force_delete_role(role_id,export_format.value)
+
+
+@router.post("/{role_id}", response_class=FileResponse,  status_code=204)
+def export_role(role_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
     roles_crud = StaffRoleCrud(db)
-    file_path= roles_crud.export_role(role_id, payload.export_format.value)
+    file_path= roles_crud.export_role(role_id, export_format.value)
 
     return FileResponse(
         path=file_path,
