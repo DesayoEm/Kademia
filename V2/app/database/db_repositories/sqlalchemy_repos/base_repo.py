@@ -42,6 +42,18 @@ class SQLAlchemyRepository(BaseRepository[T]):
         self.session.refresh(entity)
         return entity
 
+
+    @handle_read_errors()
+    def exists(self, entity_id: UUID) -> bool:
+        """Check if an active entity exists by ID."""
+        stmt = select(func.count()).select_from(self.model).where(
+            self.model.id == entity_id,
+            self.model.is_archived == False
+        )
+        count = self.session.execute(stmt).scalar()
+        return count > 0
+
+
     @handle_read_errors()
     def get_by_id(self, entity_id: UUID) -> Optional[T]:
         """Get an active entity by its id."""

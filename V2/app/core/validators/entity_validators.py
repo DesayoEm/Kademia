@@ -3,9 +3,7 @@ from uuid import UUID
 from sqlalchemy import select, exists
 
 from ..errors.database_errors import RelationshipError
-from ..errors.staff_organisation_errors import RelatedRoleNotFoundError
-from ..errors.user_errors import RelatedStaffNotFoundError
-
+from ...database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 
 class EntityValidator:
@@ -13,15 +11,15 @@ class EntityValidator:
 
     def __init__(self, session: Session):
         self.session = session
+        self.repository = SQLAlchemyRepository
 
     def validate_department_exists(self, department_id: UUID) -> UUID:#Cache later
         """Validate that a staff department exists."""
         from ...database.models import StaffDepartment
 
-        stmt = select(
-            exists().where(StaffDepartment.id == department_id)
-        )
-        if not self.session.execute(stmt).scalar():
+        repo = self.repository(StaffDepartment, self.session)
+        if not repo.exists(department_id):
+
             #Note: The error message here is hardcoded because RelationshipError is not triggered organically
             raise RelationshipError(
                     error=f"Failed to validate department with id {department_id}",
@@ -35,10 +33,8 @@ class EntityValidator:
         """Validate that a role exists."""
         from ...database.models import StaffRole
 
-        stmt = select(
-            exists().where(StaffRole.id == role_id)
-        )
-        if not self.session.execute(stmt).scalar():
+        repo = self.repository(StaffRole, self.session)
+        if not repo.exists(role_id):
             # Note: The error message here is hardcoded because RelationshipError is not triggered organically
             raise RelationshipError(
                 error=f"Failed to validate role with id {role_id}",
@@ -53,10 +49,8 @@ class EntityValidator:
         """Validate that a staff member id exists."""
         from ...database.models import Staff
 
-        stmt = select(
-            exists().where(Staff.id == staff_id)
-        )
-        if not self.session.execute(stmt).scalar():
+        repo = self.repository(Staff, self.session)
+        if not repo.exists(staff_id):
             raise RelationshipError(
                 error=f"Failed to validate staff with id {staff_id}",
                 operation="create",

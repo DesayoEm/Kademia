@@ -25,6 +25,17 @@ class Repository(ABC, Generic[T]):
         pass
 
     @abstractmethod
+    def exists(self, entity_id: UUID) -> bool:
+        """
+        Check if an active (non-archived) entity exists in the database.
+        Args:
+            entity_id (UUID): The unique identifier of the entity to check.
+        Returns:
+            bool: True if the entity exists and is active, False otherwise.
+        """
+        pass
+
+    @abstractmethod
     def get_by_id(self, entity_id: UUID) -> Optional[T]:
         """
         Retrieve an active entity by its ID.

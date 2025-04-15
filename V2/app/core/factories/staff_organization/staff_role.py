@@ -34,9 +34,6 @@ class StaffRoleFactory:
         self.validator = StaffOrganizationValidator()
 
 
-
-
-
     def create_role(self, new_role) -> StaffRole:
         """Create a new staff role.
         Args:
