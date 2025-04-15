@@ -29,6 +29,7 @@ class EntityValidator:
             )
         return department_id
 
+
     def validate_role_exists(self, role_id: UUID) -> UUID:#Cache later
         """Validate that a role exists."""
         from ...database.models import StaffRole

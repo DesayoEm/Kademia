@@ -14,11 +14,11 @@ class ProfileInDb(BaseModel):
     id: UUID
     password_hash:str
     created_at: datetime
-    created_by: UUID
+    created_by: UUID | None
     last_login: datetime
     deletion_eligible: bool
     last_modified_at: datetime
-    last_modified_by: UUID
+    last_modified_by: UUID | None
     is_archived: bool
     archived_at: datetime | None = None
     archived_by: UUID | None = None

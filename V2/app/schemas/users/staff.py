@@ -14,8 +14,8 @@ class StaffBase(UserBase):
     email_address: str
     address: str
     phone: str
-    department_id: UUID
-    role_id: UUID
+    department_id: UUID | None
+    role_id: UUID | None
 
 
 
