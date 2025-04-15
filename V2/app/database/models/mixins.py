@@ -30,14 +30,14 @@ class AuditMixins:
     @declared_attr
     def created_by(cls):
         return mapped_column(ForeignKey('staff.id',ondelete='SET NULL',
-            name=f'fk_{cls.__tablename__}_staff_created_by'),nullable=False
-        )
+            name=f'fk_{cls.__tablename__}_staff_created_by'),nullable = True
+        )# review deletion constraint
 
     @declared_attr
     def last_modified_by(cls):
         return mapped_column(
-            ForeignKey('staff.id',ondelete='RESTRICT',
-            name=f'fk_{cls.__tablename__}_staff_last_modified_by'),nullable=False
+            ForeignKey('staff.id',ondelete='SET NULL',
+            name=f'fk_{cls.__tablename__}_staff_last_modified_by'),nullable = True
         )
 
     @declared_attr

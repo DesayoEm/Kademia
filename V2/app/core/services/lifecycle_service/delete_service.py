@@ -1,10 +1,11 @@
 from uuid import UUID
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
 from sqlalchemy.orm import Session
 from ...errors.archive_delete_errors import CascadeDeletionError, DeletionDependencyError, \
     ForeignKeyConstraintMisconfiguredError
 from ...errors.error_map import deletion_dependency_map, deletion_constraint_map
-from V2.app.core.services.lifecycle_service.dependency_config import DEPENDENCY_CONFIG
+from .dependency_config import DEPENDENCY_CONFIG
+from ....config import config
 from ..export_service.export import ExportService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
@@ -36,6 +37,7 @@ class DeleteService:
         self.model = model
         self.export_service = ExportService(session)
         self.repository = SQLAlchemyRepository(model, session)
+        self.anonymous_user = UUID(config.ANONYMIZED_ID)
 
 
     @staticmethod
@@ -66,7 +68,6 @@ class DeleteService:
                     dependent_fields.append(display_name)
 
         return dependent_fields
-
 
 
     def safe_delete(self, entity_model, entity_id: UUID, is_archived):
@@ -179,6 +180,34 @@ class DeleteService:
         return export_path
 
 
+    def get_fk_delete_rules_from_info_schema(self, table_name: str) -> dict:
+        """
+        Returns a mapping of FK constraint names to their delete rules
+        for a given table using information_schema.
+
+        Args:
+            table_name (str): Name of the table to inspect
+
+        Returns:
+            dict: Mapping {constraint_name: delete_rule}
+        """
+        query = text("""
+            SELECT
+                tc.constraint_name,
+                rc.delete_rule
+            FROM
+                information_schema.table_constraints tc
+            JOIN
+                information_schema.referential_constraints rc
+                ON tc.constraint_name = rc.constraint_name
+            WHERE
+                tc.constraint_type = 'FOREIGN KEY'
+                AND tc.table_name = :table_name
+        """)
+        result = self.session.execute(query, {'table_name': table_name}).fetchall()
+        return {row.constraint_name: row.delete_rule.upper() for row in result}
+
+
     def export_and_null_delete(self, entity_model, entity_id: UUID,
                                export_format: str, is_archived) -> str:
         """
@@ -203,18 +232,18 @@ class DeleteService:
         """
         inspector = inspect(self.session.bind)
         table_name = entity_model.__tablename__
+        fk_rules = self.get_fk_delete_rules_from_info_schema(table_name)
 
         error_detail = deletion_constraint_map.get(entity_model)
         error_class, display_name = error_detail
 
-        for fk in inspector.get_foreign_keys(table_name):
-            fk_name = fk['name']
-            if fk.get('ondelete', '').upper() != 'SET NULL':
+        for fk_name, rule in fk_rules.items():
+            if rule != 'SET NULL':
                 if error_detail:
                     raise error_class(fk_name=fk_name)
                 else:
                     raise ForeignKeyConstraintMisconfiguredError(
-                        fk_name=fk_name, entity_name="unknown"
+                        fk_name=fk_name, entity_name=table_name
                     )
 
         export_path = self.export_service.export_entity(entity_model, entity_id, export_format)

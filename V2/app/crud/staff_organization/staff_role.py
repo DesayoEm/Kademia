@@ -100,7 +100,7 @@ class StaffRoleCrud:
         return self.factory.safe_delete_role(role_id)
 
 
-    def force_delete_role(self, role_id: UUID, export_format: str) -> None:
+    def force_delete_role(self, role_id: UUID, export_format: str) -> str:
         """Export and FORCE delete a staff role.
         Args:
             role_id: id of role to delete
@@ -140,6 +140,7 @@ class StaffRoleCrud:
         role = self.factory.restore_role(role_id)
         return StaffRoleResponse.model_validate(role)
 
+
     def safe_delete_archived_role(self, role_id: UUID) -> None:
         """Permanently delete a staff role if there are no dependent records.
         Args:
@@ -148,7 +149,7 @@ class StaffRoleCrud:
         return self.factory.safe_delete_archived_role(role_id)
 
 
-    def force_delete_archived_role(self, role_id: UUID, export_format: str) -> None:
+    def force_delete_archived_role(self, role_id: UUID, export_format: str) -> str:
         """Export and FORCE delete a staff role.
         Args:
             role_id: id of role to delete

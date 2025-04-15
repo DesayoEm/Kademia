@@ -62,7 +62,7 @@ class ExportService:
             error_info = not_found_map.get(entity_model)
 
             if error_info:
-                error_class, _, _ = error_info
+                error_class, _, = error_info
                 raise error_class(identifier=entity_id, detail=f"{entity_model} not found!.")
             else:
                 raise EntityNotFoundError(

@@ -5,6 +5,7 @@ load_dotenv()
 
 class Settings(BaseSettings):
     APP_NAME: str = "Kademia"
+    ANONYMIZED_ID: str
     DEBUG: bool = False
 
     DATABASE_URL: str
@@ -18,6 +19,7 @@ class Settings(BaseSettings):
     REDIS_PORT: int = 6379
 
     EXPORT_DIR: str
+
 
 
 

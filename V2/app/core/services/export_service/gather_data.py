@@ -26,7 +26,7 @@ class GatherData:
     @staticmethod
     def gather_role_data(role: StaffRole) -> tuple:
         """Gather data for StaffRole entity."""
-        staff_assigned = role.staff
+        staff_assigned = role.staff_members
         file_name = f"StaffRole_{role.name}"
 
         return ({

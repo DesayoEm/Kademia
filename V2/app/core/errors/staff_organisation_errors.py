@@ -104,7 +104,7 @@ class RoleDeletionConstraintError(StaffOrganizationError, ForeignKeyConstraintMi
             fk_name = fk_name, entity_name = display_name
         )
         self.user_message = f"Error: Cannot delete {display_name}."
-        self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not be SET NULL for safe deletion"
+        self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not SET NULL for safe deletion"
 
 
 

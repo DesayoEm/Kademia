@@ -2,7 +2,7 @@ from sqlalchemy import select, exists
 from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
-from V2.app.core.services.lifecycle_service.dependency_config import DEPENDENCY_CONFIG
+from .dependency_config import DEPENDENCY_CONFIG
 
 
 class ArchiveService:

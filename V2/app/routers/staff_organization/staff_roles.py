@@ -48,18 +48,6 @@ def archive_role(role_id: UUID, reason:ArchiveRequest,
         return roles_crud.archive_role(role_id, reason.reason)
 
 
-@router.delete("/{role_id}", status_code=204)
-def safe_delete_role(role_id: UUID, db: Session = Depends(get_db)):
-        roles_crud = StaffRoleCrud(db)
-        return roles_crud.safe_delete_role(role_id)
-
-
-@router.delete("/{role_id}", response_class=FileResponse, status_code=204)
-def force_delete_role(role_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
-        roles_crud = StaffRoleCrud(db)
-        return roles_crud.force_delete_role(role_id,export_format.value)
-
-
 @router.post("/{role_id}", response_class=FileResponse,  status_code=204)
 def export_role(role_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
     roles_crud = StaffRoleCrud(db)
@@ -72,4 +60,20 @@ def export_role(role_id: UUID, export_format: ExportFormat, db: Session = Depend
     )
 
 
+@router.delete("/{role_id}", status_code=204)
+def safe_delete_role(role_id: UUID, db: Session = Depends(get_db)):
+        roles_crud = StaffRoleCrud(db)
+        return roles_crud.safe_delete_role(role_id)
+
+
+@router.delete("/{role_id}/force", response_class=FileResponse, status_code=204)
+def force_delete_role(role_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
+    roles_crud = StaffRoleCrud(db)
+
+    file_path= roles_crud.force_delete_role(role_id, export_format.value)
+    return FileResponse(
+        path=file_path,
+        filename=file_path.split("/")[-1],
+        media_type="application/octet-stream"
+    )
 
