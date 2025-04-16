@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from sqlalchemy import select, exists
 
-from ..errors.database_errors import RelationshipError
+from ..errors.database_errors import RelationshipError, RelatedEntityNotFoundError
 from ...database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 
@@ -20,11 +20,9 @@ class EntityValidator:
         repo = self.repository(StaffDepartment, self.session)
         if not repo.exists(department_id):
 
-            #Note: The error message here is hardcoded because RelationshipError is not triggered organically
-            raise RelationshipError(
-                    error=f"Failed to validate department with id {department_id}",
-                    operation="create",
-                    entity="department"
+            raise RelatedEntityNotFoundError(
+                    entity_model=StaffDepartment, display_name="department",
+                    identifier=department_id, operation="create"
                 # Operation field will be overriden in the creation layer but 'create' is a fail-safe
             )
         return department_id
@@ -36,13 +34,12 @@ class EntityValidator:
 
         repo = self.repository(StaffRole, self.session)
         if not repo.exists(role_id):
-            # Note: The error message here is hardcoded because RelationshipError is not triggered organically
-            raise RelationshipError(
-                error=f"Failed to validate role with id {role_id}",
-                operation="create",
-                entity="role"
+            raise RelatedEntityNotFoundError(
+                entity_model=StaffRole, display_name="role",
+                identifier=role_id, operation="create"
                 # Operation field will be overriden in the creation layer but 'create' is a fail-safe
             )
+
         return role_id
 
 
@@ -52,11 +49,11 @@ class EntityValidator:
 
         repo = self.repository(Staff, self.session)
         if not repo.exists(staff_id):
-            raise RelationshipError(
-                error=f"Failed to validate staff with id {staff_id}",
-                operation="create",
-                entity="staff"
+            raise RelatedEntityNotFoundError(
+                entity_model=Staff, display_name="staff",
+                identifier=staff_id, operation="create"
                 # Operation field will be overriden in the creation layer but 'create' is a fail-safe
             )
+
         return staff_id
 

@@ -1,7 +1,7 @@
-from ..errors.input_validation_errors import InvalidValidityYearError, InvalidYearError, InvalidYearLengthError, \
+from ..errors.entry_validation_errors import InvalidYearError, InvalidYearLengthError, \
     PastDateError, TextTooLongError
-from ...core.errors.input_validation_errors import (
-    EmptyFieldError, BlankFieldError, InvalidCharacterError, TextTooShortError
+from ...core.errors.entry_validation_errors import (
+    EmptyFieldError, InvalidCharacterError, TextTooShortError
 )
 from datetime import datetime, date
 
@@ -14,7 +14,7 @@ class StaffOrganizationValidator:
     def validate_name(self, value:str) -> str:
         value = (value or "").strip()
         if not value:
-            raise BlankFieldError(entry=value, domain = self.domain)
+            raise EmptyFieldError(entry=value, domain = self.domain)
         if len(value.strip()) < 3:
             raise TextTooShortError(entry = value, min_length = 3, domain = self.domain)
         if len(value.strip()) > 100:
@@ -28,30 +28,13 @@ class StaffOrganizationValidator:
     def validate_description(self, value: str) -> str:
         value = (value or "").strip()
         if not value:
-            raise BlankFieldError(entry=value, domain = self.domain)
+            raise EmptyFieldError(entry=value, domain = self.domain)
         if len(value.strip()) < 3:
             raise TextTooShortError(entry=value, min_length=3, domain = self.domain)
         if len(value.strip()) > 500:
             raise TextTooLongError(entry=value, max_length=500, domain=self.domain)
 
         return value.strip().capitalize()
-
-
-    def validate_valid_until_year(self, value: str) -> str:
-        value = value.strip()
-
-        if len(value) != 4:
-            raise InvalidYearLengthError(year=value, domain = self.domain)
-
-        if not value.isdigit():
-            raise InvalidYearError(year = value, domain = self.domain)
-
-        year = int(value)
-        current_year = datetime.now().year
-        if year < current_year:
-            raise InvalidValidityYearError(year = year)
-
-        return str(year)
 
 
     def validate_valid_until_date(self, value: date) -> date:

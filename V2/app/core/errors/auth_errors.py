@@ -3,6 +3,7 @@ from .base_error import KademiaError
 class AuthError(KademiaError):
     """Base exception for all authorization and authentication-related errors"""
 
+
 class InvalidCredentialsError(AuthError):
     def __init__(self, credential: str):
         self.user_message = "Invalid credentials"

@@ -6,7 +6,7 @@ from ..errors.database_errors import (
     UniqueViolationError, RelationshipError,
     DBConnectionError, DatabaseError as TKDatabaseError
 )
-from ..errors.input_validation_errors import TextTooLongError, DBTextTooLongError
+from ..errors.entry_validation_errors import TextTooLongError, DBTextTooLongError
 
 
 def handle_write_errors(operation: str = "unknown"):

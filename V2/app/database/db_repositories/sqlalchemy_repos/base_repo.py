@@ -62,8 +62,8 @@ class SQLAlchemyRepository(BaseRepository[T]):
 
         if not entity:
             raise EntityNotFoundError(
-                entity_type=self.model.__name__,
-                identifier=str(entity_id), error = NOT_FOUND_ERROR
+                entity_model=self.model.__name__,
+                identifier=entity_id, error = NOT_FOUND_ERROR, display_name="Unknown"
             )
             
         return entity
@@ -152,11 +152,11 @@ class SQLAlchemyRepository(BaseRepository[T]):
         existing = self.session.execute(stmt).scalar_one_or_none()
 
         if not existing:
-            raise EntityNotFoundError(
-                entity_type=self.model.__name__,
-                identifier=str(entity_id),
-                error=NOT_FOUND_ERROR
-             )
+            if not entity:
+                raise EntityNotFoundError(
+                    entity_model=self.model.__name__,
+                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                )
         self.session.commit()
         self.session.refresh(entity)
         return entity
@@ -169,11 +169,11 @@ class SQLAlchemyRepository(BaseRepository[T]):
         entity = self.session.execute(stmt).scalar_one_or_none()
 
         if not entity:
-            raise EntityNotFoundError(
-                entity_type=self.model.__name__,
-                identifier=str(entity_id),
-                error=NOT_FOUND_ERROR
-            )
+            if not entity:
+                raise EntityNotFoundError(
+                    entity_model=self.model.__name__,
+                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                )
 
         entity.archive(archived_by_id, reason)
         self.session.commit()
@@ -188,11 +188,11 @@ class SQLAlchemyRepository(BaseRepository[T]):
         entity = self.session.execute(stmt).scalar_one_or_none()
 
         if not entity:
-            raise EntityNotFoundError(
-                entity_type=self.model.__name__,
-                identifier=str(entity_id),
-                error=NOT_FOUND_ERROR
-            )
+            if not entity:
+                raise EntityNotFoundError(
+                    entity_model=self.model.__name__,
+                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                )
 
         self.session.delete(entity)
         self.session.commit()
@@ -204,10 +204,11 @@ class SQLAlchemyRepository(BaseRepository[T]):
         stmt = self.archive_query().where(self.model.id == entity_id)
         entity = self.session.execute(stmt).scalar_one_or_none()
         if not entity:
-            raise EntityNotFoundError(
-                entity_type=self.model.__name__,
-                identifier=str(entity_id), error=NOT_FOUND_ERROR
-            )
+            if not entity:
+                raise EntityNotFoundError(
+                    entity_model=self.model.__name__,
+                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                )
 
         return entity
 
@@ -241,11 +242,11 @@ class SQLAlchemyRepository(BaseRepository[T]):
         entity = self.session.execute(stmt).scalar_one_or_none()
 
         if not entity:
-            raise EntityNotFoundError(
-                entity_type=self.model.__name__,
-                identifier=str(entity_id),
-                error=NOT_FOUND_ERROR
-            )
+            if not entity:
+                raise EntityNotFoundError(
+                    entity_model=self.model.__name__,
+                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                )
 
         entity.restore()
         self.session.commit()
@@ -260,11 +261,11 @@ class SQLAlchemyRepository(BaseRepository[T]):
         entity = self.session.execute(stmt).scalar_one_or_none()
 
         if not entity:
-            raise EntityNotFoundError(
-                entity_type=self.model.__name__,
-                identifier=str(entity_id),
-                error=NOT_FOUND_ERROR
-            )
+            if not entity:
+                raise EntityNotFoundError(
+                    entity_model=self.model.__name__,
+                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                )
 
         self.session.delete(entity)
         self.session.commit()

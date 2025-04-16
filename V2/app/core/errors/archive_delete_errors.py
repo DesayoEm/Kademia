@@ -15,20 +15,32 @@ class CascadeDeletionError(ArchiveAndDeleteError):
         super().__init__(f"")
 
 
-class DeletionDependencyError(ArchiveAndDeleteError):
-    """Raised when attempting to delete an entity that has related records"""
+class ArchiveDependencyError(ArchiveAndDeleteError):
+    """Raised when attempting to archive an entity that is referenced by active records"""
 
-    def __init__(self, entity_name: str, identifier: UUID, related_entities):
+    def __init__(self, entity_model, identifier: UUID, display_name: str,  related_entities: str):
         super().__init__()
-        self.user_message = f"Cannot delete {entity_name} while it is still assigned to {related_entities}."
-        self.log_message = f"Deletion blocked: {entity_name}- id: {identifier} is still linked to {related_entities}"
+        self.user_message = f"Cannot archive {display_name} while it is still linked to active {related_entities}."
+        self.log_message = f"Deletion blocked: {entity_model}- id: {identifier} is still linked to {related_entities}"
 
 
-class ForeignKeyConstraintMisconfiguredError (ArchiveAndDeleteError):
-    """Raised when attempting to delete an entity that has related records"""
+class NullFKConstraintMisconfiguredError (ArchiveAndDeleteError):
+    """Raised when a fk delete action is not set as predicted"""
+
+    def __init__(self, fk_name: str, display_name: str):
+        super().__init__()
+        self.user_message = f"Error: Cannot delete {display_name}."
+        self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not SET NULL"
+
+
+class CascadeFKConstraintMisconfiguredError (ArchiveAndDeleteError):
+    """Raised when a fk delete action is not set as predicted"""
 
     def __init__(self, fk_name: str, entity_name: str):
         super().__init__()
         self.user_message = f"Error: Cannot delete {entity_name}."
-        self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not be SET NULL for safe deletion"
+        self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not set to CASCADE"
+
+
+
 

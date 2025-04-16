@@ -6,7 +6,7 @@ from datetime import date, datetime
 
 
 
-from ...core.errors.input_validation_errors import DateFormatError
+from ...core.errors.entry_validation_errors import DateFormatError
 
 
 class QualificationFilterParams(BaseFilterParams):

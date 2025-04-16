@@ -1,18 +1,8 @@
-from .staff_organisation_errors import RoleDeletionConstraintError
 from ...database.models import *
 from ..errors import *
 
 
-
-not_found_map = {
-            StaffRole: (RoleNotFoundError, "role")
+# Entity: entity_model, display_name
+error_map = {
+            StaffRole: (StaffRole, "role")
         }
-
-deletion_dependency_map = {
-    StaffRole: (RoleDeletionDependencyError, "role")
-}
-
-
-deletion_constraint_map = {
-    StaffRole: (RoleDeletionConstraintError, "role")
-}

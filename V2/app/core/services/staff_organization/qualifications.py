@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from ...errors.input_validation_errors import DateFormatError
+from ...errors.entry_validation_errors import DateFormatError
 from ...errors.staff_organisation_errors import LifetimeValidityConflictError, TemporaryValidityConflictError
 from ...validators.staff_organization import StaffOrganizationValidator
 from datetime import date
