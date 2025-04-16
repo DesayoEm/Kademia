@@ -39,7 +39,7 @@ class UniqueViolationError(DBError):
 class DuplicateEntityError(UniqueViolationError):
     """Raised when creation of a duplicate entity is attempted."""
 
-    def __init__(self, entity_model, entry: str, detail: str, field: str, display_name: str):
+    def __init__(self, entity_model, entry: str, field: str, display_name: str, detail: str):
         UniqueViolationError.__init__(self, error=detail)
         self.user_message = f"A {display_name} with {field} {entry} already exists"
         self.log_message = f"Duplicate {entity_model} creation attempted: {detail}"

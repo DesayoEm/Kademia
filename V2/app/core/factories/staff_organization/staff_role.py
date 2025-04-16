@@ -1,8 +1,8 @@
-from typing import List
+from sqlalchemy import Session
 from uuid import uuid4, UUID
-from sqlalchemy.orm import Session
 
-from ...errors.staff_organisation_errors import RoleArchivalDependencyError
+from ...errors.archive_delete_errors import ArchiveDependencyError
+from ...errors.database_errors import DuplicateEntityError
 from ...services.export_service.export import ExportService
 from ...services.lifecycle_service.archive_service import ArchiveService
 from ...services.lifecycle_service.delete_service import DeleteService
@@ -10,9 +10,10 @@ from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import StaffRole
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
-from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError
-from ....core.errors.staff_organisation_errors import RoleNotFoundError, DuplicateRoleError
-
+from ....core.errors.error_map import error_map
+from ....core.errors.database_errors import (
+    EntityNotFoundError, UniqueViolationError
+)
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
@@ -32,6 +33,8 @@ class StaffRoleFactory:
         self.archive_service = ArchiveService(session)
         self.export_service = ExportService(session)
         self.validator = StaffOrganizationValidator()
+        self.error_details = error_map.get(self.model)
+        self.entity_model, self.display_name = self.error_details
 
 
     def create_role(self, new_role) -> StaffRole:
@@ -53,14 +56,19 @@ class StaffRoleFactory:
 
         except UniqueViolationError as e:
             error_message= str(e)
+
             if 'staff_roles_name_key' in error_message:
-                raise DuplicateRoleError(
-                    entry=new_role.name, detail=error_message, field = 'name'
-                )
-            raise DuplicateRoleError(entry='unknown', detail=error_message, field='unknown')
+                raise DuplicateEntityError(
+                    entity_model = self.entity_model, entry=new_role.name, field = 'name',
+                    display_name = self.display_name, detail=error_message)
+
+            raise DuplicateEntityError(
+                entity_model=self.entity_model, entry="unknown", field='unknown',
+                display_name="unknown", detail=error_message)
 
 
-    def get_all_roles(self, filters) -> List[StaffRole]:
+
+    def get_all_roles(self, filters) -> list[StaffRole]:
         """Get all active staff roles with filtering.
         Returns:
             List[StaffRole]: List of active role records
@@ -78,8 +86,12 @@ class StaffRoleFactory:
         """
         try:
             return self.repository.get_by_id(role_id)
+
         except EntityNotFoundError as e:
-            raise RoleNotFoundError(identifier=role_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model = self.entity_model, identifier=role_id, error = str(e),
+                display_name = self.display_name
+            )
 
 
     def update_role(self, role_id: UUID, data: dict) -> StaffRole:
@@ -111,16 +123,21 @@ class StaffRoleFactory:
             return self.repository.update(role_id, existing)
 
         except EntityNotFoundError as e:
-            raise RoleNotFoundError(identifier=role_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=role_id, error=str(e),
+                display_name=self.display_name
+            )
 
         except UniqueViolationError as e:
             error_message = str(e)
             if 'staff_roles_name_key' in error_message:
-                raise DuplicateRoleError(
-                    entry=original.get('name', 'unknown'), detail=str(e), field = 'name'
-                )
+                raise DuplicateEntityError(
+                    entity_model=self.entity_model, entry=data.get('name'), field='name',
+                    display_name=self.display_name, detail=error_message)
 
-            raise DuplicateRoleError(entry='unknown', detail=error_message, field='unknown')
+            raise DuplicateEntityError(
+                entity_model=self.entity_model, entry="unknown", field='unknown',
+                display_name="unknown", detail=error_message)
 
 
     def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRole:
@@ -131,6 +148,7 @@ class StaffRoleFactory:
         Returns:
             StaffRole: Archived role record
         """
+
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
                 entity_model=StaffRole,
@@ -138,15 +156,18 @@ class StaffRoleFactory:
             )
 
             if failed_dependencies:
-                raise RoleArchivalDependencyError(
-                    entity_name=", ".join(failed_dependencies),
-                    identifier=str(role_id)
+                raise ArchiveDependencyError(
+                    entity_model=self.entity_model, identifier=role_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
 
             return self.repository.archive(role_id, SYSTEM_USER_ID, reason)
 
         except EntityNotFoundError as e:
-            raise RoleNotFoundError(identifier=role_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=role_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
     def safe_delete_role(self, role_id: UUID, is_archived = False) -> None:
@@ -160,7 +181,10 @@ class StaffRoleFactory:
             return self.repository.delete(role_id)
 
         except EntityNotFoundError as e :
-            raise RoleNotFoundError(identifier=role_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=role_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
     def force_delete_role(self, role_id: UUID, export_format: str, is_archived = False) -> str:
@@ -171,7 +195,7 @@ class StaffRoleFactory:
             is_archived: Whether to check archived or active entities
         """
         try:
-            # careful - role is SET NULL on delete therefore deletion should not be cascaded
+            # careful - role is SET NULL on delete therefore related entities will be orphaned
             export_path = self.delete_service.export_and_null_delete(
                 self.model, role_id, export_format, is_archived
             )
@@ -179,12 +203,15 @@ class StaffRoleFactory:
             return export_path
 
         except EntityNotFoundError as e:
-            raise RoleNotFoundError(identifier=role_id, detail=str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=role_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
 
     #Archive methods
-    def get_all_archived_roles(self, filters) -> List[StaffRole]:
+    def get_all_archived_roles(self, filters) -> list[StaffRole]:
         """Get all archived staff roles with filtering.
         Returns:
             List[StaffRole]: List of archived role records
@@ -203,7 +230,10 @@ class StaffRoleFactory:
         try:
             return self.repository.get_archive_by_id(role_id)
         except EntityNotFoundError as e:
-            raise RoleNotFoundError(identifier=role_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=role_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
     def restore_role(self, role_id: UUID) -> StaffRole:
@@ -218,7 +248,10 @@ class StaffRoleFactory:
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(role_id)
         except EntityNotFoundError as e:
-            raise RoleNotFoundError(identifier=role_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=role_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
     def safe_delete_archived_role(self, role_id: UUID, is_archived = True) -> None:
@@ -231,8 +264,10 @@ class StaffRoleFactory:
             self.delete_service.safe_delete(self.model, role_id, is_archived)
             self.repository.delete_archive(role_id)
         except EntityNotFoundError as e:
-            raise RoleNotFoundError(identifier=role_id, detail = str(e))
-
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=role_id, error=str(e),
+                display_name=self.display_name
+            )
 
     def force_delete_archived_role(self, role_id: UUID, export_format: str, is_archived = True) -> str:
         """Export and FORCE delete a staff role.
@@ -242,7 +277,7 @@ class StaffRoleFactory:
             is_archived: Whether to check archived or active entities
         """
         try:
-            # careful - role is SET NULL on delete therefore deletion should not be cascaded
+            # careful - role is SET NULL on delete therefore related entities will be orphaned
             export_path = self.delete_service.export_and_null_delete(
                 self.model, role_id, export_format, is_archived
             )
@@ -250,4 +285,7 @@ class StaffRoleFactory:
             return export_path
 
         except EntityNotFoundError as e:
-            raise RoleNotFoundError(identifier=role_id, detail=str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=role_id, error=str(e),
+                display_name=self.display_name
+            )
