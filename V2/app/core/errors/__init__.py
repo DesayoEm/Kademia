@@ -1,18 +1,15 @@
-# __init__.py
-
-# Standard library imports
 import sys
 import inspect
 import pkgutil
 import logging
 
-# Explicit imports so editor knows about the classes
+
 from .base_error import KademiaError
 
 from .archive_delete_errors import (
     ArchiveAndDeleteError,
     CascadeDeletionError,
-    DeletionDependencyError,
+    ArchiveDependencyError,
 )
 
 from .auth_errors import (
@@ -33,11 +30,16 @@ from .auth_errors import (
 from .database_errors import (
     DBError,
     EntityNotFoundError,
+    RelatedEntityNotFoundError,
     UniqueViolationError,
+    DuplicateEntityError,
+    EntityInUseError,
     RelationshipError,
     TransactionError,
     DBConnectionError,
     DatabaseError,
+    NullFKConstraintMisconfiguredError,
+    CascadeFKConstraintMisconfiguredError,
 )
 
 from .email_errors import (
@@ -54,18 +56,14 @@ from .export_errors import (
 from .entry_validation_errors import (
     InputValidationError,
     EmptyFieldError,
-    BlankFieldError,
     TextTooShortError,
     DBTextTooLongError,
     TextTooLongError,
-    DateError,
+    FutureDateError,
     DateFormatError,
     PastDateError,
-    InvalidValidityYearError,
     InvalidYearError,
     InvalidYearLengthError,
-    InvalidSessionYearError,
-    InvalidCodeError,
     InvalidOrderNumberError,
     InvalidCharacterError,
     InvalidPhoneError,
@@ -74,54 +72,20 @@ from .entry_validation_errors import (
 
 from .staff_organisation_errors import (
     StaffOrganizationError,
-    DuplicateDepartmentError,
-    DepartmentInUseError,
-    DepartmentNotFoundError,
-    RelatedDepartmentNotFoundError,
-    DuplicateRoleError,
-    RoleNotFoundError,
-    RelatedRoleNotFoundError,
-    RoleArchivalDependencyError,
-    RoleDeletionDependencyError,
-    DuplicateQualificationError,
-    QualificationNotFoundError,
-    QualificationInUseError,
     LifetimeValidityConflictError,
     TemporaryValidityConflictError,
 )
 
 from .student_organisation_errors import (
     StudentOrganizationError,
-    DuplicateStudentDepartmentError,
-    StudentDepartmentNotFoundError,
-    RelatedStudentDepartmentNotFoundError,
-    StudentDepartmentInUseError,
-    DuplicateLevelError,
-    LevelNotFoundError,
-    RelatedLevelNotFoundError,
-    LevelInUseError,
-    DuplicateClassError,
-    ClassNotFoundError,
-    RelatedClassNotFoundError,
-    ClassInUseError,
+    InvalidCodeError,
 )
 
 from .user_errors import (
     UserProfileError,
-    DuplicateStaffError,
-    StaffNotFoundError,
-    RelatedStaffNotFoundError,
-    RelatedEducatorNotFoundError,
-    StaffInUseError,
     StaffTypeError,
     DuplicateStudentIDError,
-    DuplicateStudentError,
-    StudentNotFoundError,
-    RelatedStudentNotFoundError,
-    StudentInUseError,
-    RelatedGuardianNotFoundError,
-    DuplicateGuardianError,
-    GuardianNotFoundError,
+    InvalidSessionYearError
 )
 
 logging.basicConfig(level=logging.INFO)

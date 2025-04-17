@@ -126,6 +126,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
         log_message = f"Unhandled exception | {request_id} | {str(e)}"
 
+
        #Uncaught errors
         logger.error(log_message, exc_info=True)
         return JSONResponse(

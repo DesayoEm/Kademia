@@ -1,25 +1,38 @@
 import logging
 import os
-from datetime import datetime
+from logging.handlers import TimedRotatingFileHandler
 
 def setup_logging():
     if not os.path.exists('logs'):
         os.makedirs('logs')
 
-    today = datetime.now().strftime('%Y-%m-%d')
+    logger = logging.getLogger('kademia')
+    logger.setLevel(logging.INFO)
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.StreamHandler(),
-            logging.FileHandler(f'logs/app_{today}.log')
-        ]
-    )
+    if not logger.handlers:
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+
+        file_handler = TimedRotatingFileHandler(
+            filename='logs/app.log',
+            when='midnight',
+            interval=1,
+            backupCount=7,
+            encoding='utf-8'
+        )
+        file_handler.setFormatter(formatter)
+
+        logger.addHandler(stream_handler)
+        logger.addHandler(file_handler)
 
     logging.getLogger('uvicorn.access').setLevel(logging.WARNING)
     logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 
-    return logging.getLogger('kademia')
+    return logger
+
 
 logger = setup_logging()
+
+

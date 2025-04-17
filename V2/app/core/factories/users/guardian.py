@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 
 from ...services.email.onboarding import OnboardingService
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
-from ...errors.user_errors import DuplicateGuardianError,GuardianNotFoundError
 from ...services.auth.password_service import PasswordService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason

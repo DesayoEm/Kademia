@@ -2,17 +2,11 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ...errors.user_errors import RelatedEducatorNotFoundError
-from ....core.errors.user_errors import RelatedStudentNotFoundError
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
 from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import StudentDepartment
-from ....core.errors.student_organisation_errors import (
-     DuplicateStudentDepartmentError, StudentDepartmentNotFoundError,
-     StudentDepartmentInUseError as DepartmentInUseError
-    )
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 

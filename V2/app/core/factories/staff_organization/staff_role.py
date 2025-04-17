@@ -1,4 +1,4 @@
-from sqlalchemy import Session
+from sqlalchemy.orm import Session
 from uuid import uuid4, UUID
 
 from ...errors.archive_delete_errors import ArchiveDependencyError
@@ -195,7 +195,7 @@ class StaffRoleFactory:
             is_archived: Whether to check archived or active entities
         """
         try:
-            # careful - role is SET NULL on delete therefore related entities will be orphaned
+            # WARNING - role is SET NULL on delete therefore related entities will be orphaned
             export_path = self.delete_service.export_and_null_delete(
                 self.model, role_id, export_format, is_archived
             )
@@ -277,7 +277,7 @@ class StaffRoleFactory:
             is_archived: Whether to check archived or active entities
         """
         try:
-            # careful - role is SET NULL on delete therefore related entities will be orphaned
+            # WARNING - role is SET NULL on delete therefore related entities will be orphaned
             export_path = self.delete_service.export_and_null_delete(
                 self.model, role_id, export_format, is_archived
             )

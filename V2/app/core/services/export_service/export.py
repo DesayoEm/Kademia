@@ -6,7 +6,7 @@ from openpyxl.utils import get_column_letter
 
 from uuid import UUID
 from ...errors.export_errors import ExportFormatError
-from ...errors.error_map import not_found_map
+from ...errors.error_map import error_map
 from ....config import config
 from .gather_data import GatherData
 from ...errors.database_errors import EntityNotFoundError
@@ -59,17 +59,20 @@ class ExportService:
         entity = self.session.get(entity_model, entity_id)
 
         if not entity:
-            error_info = not_found_map.get(entity_model)
+            error_details = error_map.get(entity_model)
+            if error_details:
+                _, display_name  = error_details
 
-            if error_info:
-                error_class, _, = error_info
-                raise error_class(identifier=entity_id, detail=f"{entity_model} not found!.")
+                raise EntityNotFoundError(
+                    entity_model=entity_model,identifier=entity_id,
+                    display_name=display_name, error = "Object not found during export."
+                )
             else:
                 raise EntityNotFoundError(
-                    entity_type=entity_model,
-                    identifier=str(entity_id),
-                    error="Object not found during export."
+                    entity_model=entity_model, identifier=entity_id,
+                    display_name="", error="Object not found during export."
                 )
+
 
         data, file_name = self.gatherer.gather(entity)
 

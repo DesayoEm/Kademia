@@ -48,14 +48,35 @@ class DuplicateEntityError(UniqueViolationError):
 class EntityInUseError(UniqueViolationError):
     """Raised when attempting to delete an entity that is referenced as a fk by another entity."""
 
-    def __init__(self, entity_model, dependencies: str, detail: str, display_name: str, ):
+    def __init__(self, entity_model, dependencies: str,  display_name: str, detail: str):
         super().__init__(error=detail)
         self.user_message = f"Cannot delete {display_name} while linked to {dependencies}"
         self.log_message = f"Deletion blocked: {entity_model} is still linked to {dependencies}. Detail: {detail}"
 
 
+class NullFKConstraintMisconfiguredError (DBError):
+    """Raised when a fk delete action is not set to NULL as expected"""
+
+    def __init__(self, fk_name: str, entity_model, display_name: str):
+        super().__init__()
+        self.user_message = f"Error: Cannot delete {display_name}."
+        self.log_message = (f"{entity_model} Deletion blocked: Foreign key constraint {fk_name} "
+                            f"not set to NULL on delete")
+
+
+class CascadeFKConstraintMisconfiguredError (DBError):
+    """Raised when a fk delete action is not set as predicted"""
+
+    def __init__(self, fk_name: str, entity_name: str):
+        super().__init__()
+        self.user_message = f"Error: Cannot delete {entity_name}."
+        self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not set to CASCADE on delete"
+
+
+
 class RelationshipError(DBError):
     """Raised when a foreign key constraint is violated during data operations"""
+
     def __init__(self, error: str, operation: str, entity_model, domain: str):
 
         self.user_message = f"Cannot {operation} record because related {entity_model} does not exist"
@@ -95,5 +116,8 @@ class DatabaseError(DBError):
         self.user_message = "An unexpected error occurred"
         self.log_message = f"Database operation failed. Detail: {error}"
 
-        super().__init__(self.log_message)
+        super().__init__()
+
+    def __str__(self):
+        return self.log_message
 

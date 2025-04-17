@@ -1,17 +1,15 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-
-from ...errors.staff_organisation_errors import QualificationInUseError
 from ...services.staff_organization.qualifications import QualificationsService
-from ....core.errors.user_errors import RelatedEducatorNotFoundError
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import EducatorQualification
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.errors.database_errors import (
-    EntityNotFoundError, UniqueViolationError, RelationshipError)
-from ....core.errors.staff_organisation_errors import QualificationNotFoundError, DuplicateQualificationError
+    EntityNotFoundError, UniqueViolationError, RelationshipError, RelatedEntityNotFoundError,
+    EntityInUseError, DuplicateEntityError
+)
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')

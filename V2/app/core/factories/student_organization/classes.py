@@ -2,13 +2,8 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ...errors.student_organisation_errors import LevelInUseError, ClassInUseError
 from ....core.errors.database_errors import RelationshipError
-from ....core.errors.user_errors import RelatedEducatorNotFoundError, RelatedStudentNotFoundError
-from ....core.errors.student_organisation_errors import  RelatedLevelNotFoundError
-from ....core.errors.student_organisation_errors import (
-    DuplicateClassError, ClassNotFoundError
-)
+
 from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason

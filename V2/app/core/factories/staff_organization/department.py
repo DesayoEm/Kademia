@@ -2,15 +2,12 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ...errors.staff_organisation_errors import DepartmentInUseError
-from ....core.errors.user_errors import RelatedStaffNotFoundError
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....core.validators.entity_validators import EntityValidator
 from ....database.models.staff_organization import StaffDepartment
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
-from ....core.errors.staff_organisation_errors import DepartmentNotFoundError, DuplicateDepartmentError
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')

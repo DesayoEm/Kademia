@@ -2,10 +2,8 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ...errors.staff_organisation_errors import RelatedRoleNotFoundError, RelatedDepartmentNotFoundError
 from ...services.email.onboarding import OnboardingService
 from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
-from ....core.errors.user_errors import DuplicateStaffError, StaffNotFoundError, StaffTypeError
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator

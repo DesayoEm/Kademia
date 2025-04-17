@@ -24,23 +24,5 @@ class ArchiveDependencyError(ArchiveAndDeleteError):
         self.log_message = f"Deletion blocked: {entity_model}- id: {identifier} is still linked to {related_entities}"
 
 
-class NullFKConstraintMisconfiguredError (ArchiveAndDeleteError):
-    """Raised when a fk delete action is not set as predicted"""
-
-    def __init__(self, fk_name: str, display_name: str):
-        super().__init__()
-        self.user_message = f"Error: Cannot delete {display_name}."
-        self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not SET NULL"
-
-
-class CascadeFKConstraintMisconfiguredError (ArchiveAndDeleteError):
-    """Raised when a fk delete action is not set as predicted"""
-
-    def __init__(self, fk_name: str, entity_name: str):
-        super().__init__()
-        self.user_message = f"Error: Cannot delete {entity_name}."
-        self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not set to CASCADE"
-
-
 
 

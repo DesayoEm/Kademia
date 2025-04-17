@@ -1,18 +1,14 @@
 from typing import List
 from uuid import uuid4, UUID
-from sqlalchemy.orm import Session, selectinload
-from sqlalchemy import select
+from sqlalchemy.orm import Session
 
-from ...errors.student_organisation_errors import LevelInUseError
 from ....core.services.student_organization.academic_level import AcademicLevelService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
 from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import AcademicLevel
-from ....core.errors.student_organisation_errors import (
-    DuplicateLevelError, LevelNotFoundError
-)
+
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 

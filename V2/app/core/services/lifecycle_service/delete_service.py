@@ -1,9 +1,9 @@
 from uuid import UUID
-from sqlalchemy import inspect, text
+from sqlalchemy import text
 from sqlalchemy.orm import Session
-from ...errors.archive_delete_errors import CascadeDeletionError, DeletionDependencyError, \
-    ForeignKeyConstraintMisconfiguredError
-from ...errors.error_map import deletion_dependency_map, deletion_constraint_map
+from ...errors.archive_delete_errors import CascadeDeletionError
+from ...errors.database_errors import EntityInUseError, NullFKConstraintMisconfiguredError
+from ...errors.error_map import error_map
 from .dependency_config import DEPENDENCY_CONFIG
 from ....config import config
 from ..export_service.export import ExportService
@@ -90,20 +90,16 @@ class DeleteService:
         entity = (self.repository.get_archive_by_id(entity_id) if is_archived
                   else self.repository.get_by_id(entity_id))
 
-        error_info = deletion_dependency_map.get(entity_model)
-        error_class, display_name = error_info
+        error_info = error_map.get(entity_model)
+        _, display_name = error_info
 
         dependent_fields = self.check_dependent_entities(entity, entity_model)
 
         if dependent_fields:
-            if error_info:
-                raise error_class(entity_name=display_name,
-                    identifier=entity_id, related_entities=", ".join(dependent_fields)
+                raise EntityInUseError(entity_model=entity_model, dependencies=", ".join(dependent_fields),
+                    display_name=display_name, detail=""
                     )
-            else:  # fallback
-                raise DeletionDependencyError(entity_name=display_name,
-                        identifier=entity_id, related_entities=", ".join(dependent_fields)
-                    )
+
 
 
     def cascade_deletion(self, entity, relationship_names: list):
@@ -230,20 +226,17 @@ class DeleteService:
             ForeignKeyConstraintMisconfiguredError: If foreign keys aren't set to ON DELETE SET NULL
             EntityNotFoundError: If the entity doesn't exist
         """
-        inspector = inspect(self.session.bind)
+
         table_name = entity_model.__tablename__
         fk_rules = self.get_fk_delete_rules_from_info_schema(table_name)
 
-        error_detail = deletion_constraint_map.get(entity_model)
-        error_class, display_name = error_detail
+        error_info = error_map.get(entity_model)
+        _, display_name = error_info
 
         for fk_name, rule in fk_rules.items():
             if rule != 'SET NULL':
-                if error_detail:
-                    raise error_class(fk_name=fk_name)
-                else:
-                    raise ForeignKeyConstraintMisconfiguredError(
-                        fk_name=fk_name, entity_name=table_name
+                raise NullFKConstraintMisconfiguredError(
+                        fk_name=fk_name, entity_model=entity_model, display_name=display_name,
                     )
 
         export_path = self.export_service.export_entity(entity_model, entity_id, export_format)

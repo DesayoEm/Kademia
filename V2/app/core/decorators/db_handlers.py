@@ -1,12 +1,10 @@
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from psycopg2.errors import StringDataRightTruncation
-
-from ..errors import EntityNotFoundError
 from ..errors.database_errors import (
     UniqueViolationError, RelationshipError,
     DBConnectionError, DatabaseError as TKDatabaseError
 )
-from ..errors.entry_validation_errors import TextTooLongError, DBTextTooLongError
+from ..errors.entry_validation_errors import DBTextTooLongError
 
 
 def handle_write_errors(operation: str = "unknown"):
@@ -24,7 +22,8 @@ def handle_write_errors(operation: str = "unknown"):
                 if 'unique' in msg:
                     raise UniqueViolationError(error=msg)
                 if 'foreign key' in msg:
-                    raise RelationshipError(operation=operation, error=msg, entity=self.model.__name__)
+                    raise RelationshipError(operation=operation, error=msg,
+                                entity_model=self.model.__name__, domain = "None")
 
                 raise TKDatabaseError(error=f"Database integrity error: {msg}")
 
@@ -47,8 +46,6 @@ def handle_read_errors():
         def wrapper(self, *args, **kwargs):
             try:
                 return fn(self, *args, **kwargs)
-            except EntityNotFoundError:
-                raise
             except OperationalError as e:
                 self.session.rollback()
                 raise DBConnectionError(error=str(e))
