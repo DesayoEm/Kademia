@@ -5,6 +5,15 @@ from ....database.models import *
 DEPENDENCY_CONFIG = {
     StaffRole: [("staff_members", Staff, "role_id", "staff members")],
     StaffDepartment: [("staff_members", Staff, "department_id", "staff members")],
+    EducatorQualification: [],
+
+    StudentDepartment: [("students", Student, "department_id", "students")],
+
+    AcademicLevel: [("subjects", AcademicLevelSubject, "level_id", "subjects"),
+                    ("classes", Classes, "level_id", "subjects"),
+                    ("students", Student, "level_id", "students")],
+
+    Classes: ["students", Student, "class_id", "students"],
 
 
     # Educator: [("qualifications", "qualifications"), ("subject_assignments", "assigned subjects"),
@@ -15,18 +24,13 @@ DEPENDENCY_CONFIG = {
     #            ("grades", "grades"), ("total_grades", "total grades"), ("classes_repeated", "repeated classes"),
     #             ("department_transfers", "department transfers"), ("class_transfers", "class transfers"),
     #         ],
+
     #
-    # StudentDepartment: [("students", "students")],
-    #
-    # AcademicLevel: [("classes", "classes"), ("subjects", "subjects"), ("students", "students")],
-    #
-    # Classes: [("students", "students")],
     #
     # Subject: [("students", "students"), ("educators", "educators"), ("grades", "grades"),
     #           ("total_grades", "total grades"), ("academic_levels", "academic levels")],
     #
     # StudentDocument: [],
-     EducatorQualification: [],
     # StudentAward: [],
     # StudentSubject: [],
     # Grade: [],

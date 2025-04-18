@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from uuid import uuid4, UUID
 
+from ...errors.fk_resolver import FKResolver
 from ...services.export_service.export import ExportService
 from ...services.lifecycle_service.archive_service import ArchiveService
 from ...services.lifecycle_service.delete_service import DeleteService
@@ -8,11 +9,13 @@ from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import StaffRole
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
-from ....core.errors.error_map import error_map
-from ...errors.archive_delete_errors import ArchiveDependencyError
-from ....core.errors.database_errors import (
-    EntityNotFoundError, UniqueViolationError, DuplicateEntityError
+
+from V2.app.core.errors.maps.error_map import error_map
+from ....core.errors.maps.fk_mapper import fk_error_map
+from ...errors import (
+    DuplicateEntityError, ArchiveDependencyError, EntityNotFoundError, UniqueViolationError, RelationshipError
 )
+
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
@@ -34,6 +37,7 @@ class StaffRoleFactory:
         self.validator = StaffOrganizationValidator()
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
+        self.domain = "Staff role"
 
 
     def create_role(self, new_role) -> StaffRole:
@@ -65,6 +69,17 @@ class StaffRoleFactory:
                 entity_model=self.entity_model, entry="unknown", field='unknown',
                 display_name="unknown", detail=error_message)
 
+        except RelationshipError as e:
+            resolved = FKResolver.resolve_fk_violation(
+                factory_class=self.__class__, error_message=str(e), context_obj=new_role,
+                operation="create", fk_map=fk_error_map
+            )
+            if resolved:
+                raise resolved
+
+            raise RelationshipError(
+                error=str(e), operation="create", entity_model="unknown",domain=self.domain
+            )
 
 
     def get_all_roles(self, filters) -> list[StaffRole]:
@@ -138,6 +153,18 @@ class StaffRoleFactory:
                 entity_model=self.entity_model, entry="unknown", field='unknown',
                 display_name="unknown", detail=error_message)
 
+        except RelationshipError as e:
+            resolved = FKResolver.resolve_fk_violation(
+                factory_class=self.__class__, error_message=str(e), context_obj=existing,
+                operation="update", fk_map=fk_error_map
+            )
+
+            if resolved:
+                raise resolved
+            raise RelationshipError(
+                error=str(e), operation="update", entity_model="unknown",domain=self.domain
+            )
+
 
     def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRole:
         """Archive a role if no active staff members are assigned to it.
@@ -169,14 +196,14 @@ class StaffRoleFactory:
             )
 
 
-    def safe_delete_role(self, role_id: UUID, is_archived = False) -> None:
-        """Permanently delete a staff role if there are no dependent records.
+    def delete_role(self, role_id: UUID, is_archived = False) -> None:
+        """Permanently delete a staff role if there are no dependent entities.
         Args:
             role_id: id of role to delete
             is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.safe_delete(self.model, role_id, is_archived)
+            self.delete_service.check_safe_delete(self.model, role_id, is_archived)
             return self.repository.delete(role_id)
 
         except EntityNotFoundError as e :
@@ -184,6 +211,11 @@ class StaffRoleFactory:
                 entity_model=self.entity_model, identifier=role_id, error=str(e),
                 display_name=self.display_name
             )
+
+        except RelationshipError as e:
+            raise RelationshipError(
+                error=str(e), operation='delete', entity_model='unknown_entity', domain=self.domain)
+
 
 
     def force_delete_role(self, role_id: UUID, export_format: str, is_archived = False) -> str:
@@ -254,7 +286,7 @@ class StaffRoleFactory:
 
 
     def delete_archived_role(self, role_id: UUID, is_archived = True) -> None:
-        """Permanently delete an archived role.
+        """Permanently delete an archived role if there are no dependent entities.
         Args:
             role_id: id of role to delete
             is_archived: Whether to check archived or active entities
@@ -268,6 +300,11 @@ class StaffRoleFactory:
                 entity_model=self.entity_model, identifier=role_id, error=str(e),
                 display_name=self.display_name
             )
+
+        except RelationshipError as e:
+            raise RelationshipError(
+                error=str(e), operation='delete', entity_model='unknown_entity', domain=self.domain)
+
 
     def force_delete_archived_role(self, role_id: UUID, export_format: str, is_archived = True) -> str:
         """Export and FORCE delete a staff role.

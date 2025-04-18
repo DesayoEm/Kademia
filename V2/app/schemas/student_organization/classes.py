@@ -15,9 +15,7 @@ class ClassBase(BaseModel):
     """Base model for class levels"""
     level_id: UUID
     code: ClassCode
-    supervisor_id: UUID | None = None
-    student_rep_id: UUID | None = None
-    assistant_rep_id: UUID | None = None
+
 
 
     model_config = ConfigDict(
@@ -55,6 +53,7 @@ class ClassCreate(ClassBase):
 class ClassResponse(ClassBase):
     """Response model for class levels"""
     order: int
+
 
 class ClassInDB:
     """Represents stored class levels"""

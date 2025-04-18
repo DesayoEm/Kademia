@@ -1,26 +1,47 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-
-from ....core.errors.database_errors import RelationshipError
-
-from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError
-from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....database.models.enums import ArchiveReason
 from ....core.services.student_organization.classes import ClassService
-from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import Classes
 
+from ....core.validators.student_organization import StudentOrganizationValidator
+from ...errors.fk_resolver import FKResolver
+from ...services.export_service.export import ExportService
+from ...services.lifecycle_service.archive_service import ArchiveService
+from ...services.lifecycle_service.delete_service import DeleteService
+from ...validators.entity_validators import EntityValidator
+from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from ....database.models.enums import ArchiveReason
+from V2.app.core.errors.maps.error_map import error_map
+from ....core.errors.maps.fk_mapper import fk_error_map
+from ...errors import (
+    DuplicateEntityError, ArchiveDependencyError, EntityNotFoundError, UniqueViolationError, RelationshipError
+)
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
 class ClassFactory:
     """Factory class for managing class operations."""
-    def __init__(self, session: Session):
-        self.repository = SQLAlchemyRepository(Classes, session)
+
+    def __init__(self, session: Session, model = Classes):
+        """Initialize factory with database session.
+            Args:
+                session: SQLAlchemy database session
+                model: Model class, defaults to Classes
+        """
+        self.model = model
+        self.repository = SQLAlchemyRepository(self.model, session)
+        self.entity_validator = EntityValidator(session)
         self.validator = StudentOrganizationValidator()
+        self.repository = SQLAlchemyRepository(self.model, session)
         self.service = ClassService(session)
+        self.delete_service = DeleteService(self.model, session)
+        self.archive_service = ArchiveService(session)
+        self.export_service = ExportService(session)
+        self.error_details = error_map.get(self.model)
+        self.entity_model, self.display_name = self.error_details
+        self.domain = "Class"
 
 
     def create_class(self, new_class) -> Classes:
@@ -35,9 +56,7 @@ class ClassFactory:
             level_id = new_class.level_id,
             order = self.service.create_order(new_class.level_id),
             code=new_class.code,
-            supervisor_id = new_class.supervisor_id,
-            student_rep_id =  new_class.student_rep_id,
-            assistant_rep_id = new_class.assistant_rep_id,
+
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
 
@@ -46,33 +65,34 @@ class ClassFactory:
             return self.repository.create(class_data)
 
         except UniqueViolationError as e:
-            error_message = str(e)
-            if "uq_class_level_code" in error_message.lower():
-                raise DuplicateClassError(
-                    entry=class_data.code.value, field="", detail=error_message)#None is a filler attr hare
-            elif "uq_class_level_order" in error_message.lower():
-                raise DuplicateClassError(
-                    entry=str(class_data.order), field="order", detail=error_message)
-            else:
-                raise DuplicateClassError(
-                    entry="unknown field", field="unknown", detail=error_message)
+            error_message = str(e).lower()
+            unique_violation_map = {
+                "uq_class_level_code": ("code", new_class.code.value),
+                "uq_class_level_order": ("order", str(new_class.order)),
+            }
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value,
+                        field=field_name, display_name=self.display_name,
+                        detail=error_message
+                    )
+
+            raise DuplicateEntityError(
+                entity_model=self.entity_model, entry="unknown",field="unknown",
+                display_name=self.display_name, detail=error_message
+            )
 
         except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'fk_classes_academic_levels_level_id': ('level_id', RelatedLevelNotFoundError),
-                'fk_classes_educators_supervisor_id': ('supervisor_id', RelatedEducatorNotFoundError),
-                'fk_classes_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
-                'fk_classes_students_assistant_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
-            }
-
-            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    entity_id = getattr(new_class, attr_name, None)
-                    if entity_id:
-                        raise error_class(identifier=entity_id, detail=error_message, action='create')
-
-            raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
+            resolved = FKResolver.resolve_fk_violation(
+                factory_class=self.__class__, error_message=str(e), context_obj=new_class,
+                operation="create", fk_map=fk_error_map
+            )
+            if resolved:
+                raise resolved
+            raise RelationshipError(
+                error=str(e), operation="create", entity_model="unknown", domain=self.domain
+            )
 
 
     def get_class(self, class_id: UUID) -> Classes:
@@ -84,8 +104,13 @@ class ClassFactory:
         """
         try:
             return self.repository.get_by_id(class_id)
+
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(identifier=class_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=class_id, error=str(e),
+                display_name=self.display_name
+
+            )
 
 
     def get_all_classes(self, filters) -> List[Classes]:
@@ -124,35 +149,41 @@ class ClassFactory:
             existing.last_modified_by = SYSTEM_USER_ID
             return self.repository.update(class_id, existing)
 
+
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(identifier=class_id, detail = str(e))
-
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=class_id, error=str(e),
+                display_name=self.display_name
+            )
         except UniqueViolationError as e:
-            error_message= str(e)
-            if "uq_class_level_order" in error_message.lower():
-                raise DuplicateClassError(
-                    entry=str(original.get('order', 'unknown')), field="order", detail=error_message)
-            else:
-                raise DuplicateClassError(
-                    entry="unknown entry", field="unknown", detail=error_message)
-
-
-        except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'fk_classes_academic_levels_level_id': ('level_id', RelatedLevelNotFoundError),
-                'fk_classes_educators_supervisor_id': ('supervisor_id', RelatedEducatorNotFoundError),
-                'fk_classes_students_student_rep': ('student_rep_id', RelatedStudentNotFoundError),
-                'fk_classes_students_assistant_rep': ('assistant_rep_id', RelatedStudentNotFoundError),
+            error_message = str(e).lower()
+            unique_violation_map = {
+                "uq_class_level_order": ("order", str(data.get('order', 'unknown')))
             }
 
-            for fk_constraint, (attr_name, error_class) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    entity_id = data.get(attr_name, None)
-                    if entity_id:
-                        raise error_class(identifier=entity_id, detail=error_message, action='update')
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
 
-            raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
+                raise DuplicateEntityError(
+                    entity_model=self.entity_model, entry="unknown", field="unknown",
+                    display_name=self.display_name, detail=error_message
+                )
+
+        except RelationshipError as e:
+            resolved = FKResolver.resolve_fk_violation(
+                factory_class=self.__class__, error_message=str(e), context_obj=existing,
+                operation="update", fk_map=fk_error_map
+            )
+            if resolved:
+                raise resolved
+
+            raise RelationshipError(
+                error=str(e), operation="update", entity_model="unknown", domain=self.domain
+            )
 
 
     def archive_class(self, class_id: UUID, reason: ArchiveReason) -> Classes:
@@ -164,35 +195,43 @@ class ClassFactory:
             Classes: Archived class record
         """
         try:
+            failed_dependencies = self.archive_service.check_active_dependencies_exists(
+                entity_model=self.model,
+                target_id=class_id
+            )
+            if failed_dependencies:
+                raise ArchiveDependencyError(
+                    entity_model=self.entity_model, identifier=class_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             return self.repository.archive(class_id, SYSTEM_USER_ID, reason)
+
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(identifier=class_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=class_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
-    def delete_class(self, class_id: UUID) -> None:
-        """Permanently delete a class.
+    def delete_class(self, class_id: UUID, is_archived=False) -> None:
+        """Permanently delete a class if there are no dependent entities
         Args:
             class_id (UUID): ID of class to delete
+            is_archived: Whether to check archived or active entities
         """
         try:
-            self.repository.delete(class_id)
+            self.delete_service.check_safe_delete(self.model, class_id, is_archived)
+            return self.repository.delete(class_id)
 
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(identifier=class_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=class_id, error=str(e),
+                display_name=self.display_name
+            )
 
         except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'fk_classes_academic_levels_level_id': ('level_id', ClassInUseError, "Level"),
-                'fk_classes_educators_supervisor_id': ('supervisor_id', ClassInUseError, "Supervisor"),
-                'fk_classes_students_student_rep': ('student_rep_id', ClassInUseError, "Student representative"),
-                'fk_classes_students_assistant_rep': ('assistant_rep_id', ClassInUseError, "Student representative"),
-            }
-
-            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    raise error_class(entity_name=entity_name, detail=error_message)
-            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
+            raise RelationshipError(
+                error=str(e), operation='delete', entity_model=self.model.__name__, domain=self.domain)
 
 
     def get_all_archived_classes(self, filters) -> List[Classes]:
@@ -214,7 +253,10 @@ class ClassFactory:
         try:
             return self.repository.get_archive_by_id(class_id)
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(identifier=class_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=class_id, error=str(e),
+                display_name=self.display_name
+            )
 
     def restore_class(self, class_id: UUID) -> Classes:
         """Restore an archived class.
@@ -224,36 +266,34 @@ class ClassFactory:
             Classes: Restored class record
         """
         try:
-            archived = self.get_archived_class(class_id)
-            archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(class_id)
         except EntityNotFoundError as e:
-            raise ClassNotFoundError(identifier=class_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=class_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
-    def delete_archived_class(self, class_id: UUID) -> None:
-        """Permanently delete an archived class.
-        Args:
-            class_id: ID of class to delete
-        """
-        try:
-            self.repository.delete_archive(class_id)
+    def delete_archived_class(self, class_id: UUID, is_archived = True) -> None:
+            """Permanently delete an archived class if there are no dependent entities.
+            Args:
+                class_id: ID of class to delete
+                is_archived: Whether to check archived or active entities
+            """
+            try:
+                self.delete_service.check_safe_delete(self.model, class_id, is_archived)
+                self.repository.delete_archive(class_id)
 
-        except EntityNotFoundError as e:
-            raise ClassNotFoundError(identifier=class_id, detail = str(e))
+            except EntityNotFoundError as e:
+                raise EntityNotFoundError(
+                    entity_model=self.entity_model, identifier=class_id, error=str(e),
+                    display_name=self.display_name
+                )
 
-        except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'fk_classes_academic_levels_level_id': ('level_id', ClassInUseError, "Level"),
-                'fk_classes_educators_supervisor_id': ('supervisor_id', ClassInUseError, "Supervisor"),
-                'fk_classes_students_student_rep': ('student_rep_id', ClassInUseError, "Student representative"),
-                'fk_classes_students_assistant_rep': ('assistant_rep_id', ClassInUseError, "Student representative"),
-            }
+            except RelationshipError as e:  # Failsafe
+                raise RelationshipError(
+                    error=str(e), operation='delete', entity_model='unknown_entity', domain=self.domain)
 
-            for fk_constraint, (attr_name, error_class, entity_name) in fk_error_mapping.items():
-                if fk_constraint in error_message:
-                    raise error_class(entity_name=entity_name, detail=error_message)
-            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
+
 
 

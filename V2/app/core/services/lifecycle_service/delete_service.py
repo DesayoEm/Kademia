@@ -3,7 +3,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 from ...errors.archive_delete_errors import CascadeDeletionError
 from ...errors.database_errors import EntityInUseError, NullFKConstraintMisconfiguredError
-from ...errors.error_map import error_map
+from V2.app.core.errors.maps.error_map import error_map
 from .dependency_config import DEPENDENCY_CONFIG
 from ....config import config
 from ..export_service.export import ExportService

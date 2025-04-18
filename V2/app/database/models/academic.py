@@ -5,10 +5,7 @@ from .mixins import AuditMixins, ArchiveMixins, TimeStampMixins
 
 class Subject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
-    Represents an educational subject with attributes like name, class level,
-    department, and compulsory status. Includes relationships to grades, students,
-    and educators.
-
+    Represents an educational subject
     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
     __tablename__ = 'subjects'

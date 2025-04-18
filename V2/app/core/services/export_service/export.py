@@ -2,11 +2,10 @@ from fpdf import FPDF
 import csv
 import os
 import openpyxl
-from openpyxl.utils import get_column_letter
 
 from uuid import UUID
 from ...errors.export_errors import ExportFormatError
-from ...errors.error_map import error_map
+from V2.app.core.errors.maps.error_map import error_map
 from ....config import config
 from .gather_data import GatherData
 from ...errors.database_errors import EntityNotFoundError
