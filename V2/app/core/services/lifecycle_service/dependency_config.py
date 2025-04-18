@@ -4,9 +4,9 @@ from ....database.models import *
 
 DEPENDENCY_CONFIG = {
     StaffRole: [("staff_members", Staff, "role_id", "staff members")],
-    #
-    # StaffDepartment: [("staff", "department_id", "staff")],
-    #
+    StaffDepartment: [("staff_members", Staff, "department_id", "staff members")],
+
+
     # Educator: [("qualifications", "qualifications"), ("subject_assignments", "assigned subjects"),
     #            ("mentored_department", "mentored departments"), ("supervised_class", "supervised classes")
     #            ],
@@ -26,6 +26,7 @@ DEPENDENCY_CONFIG = {
     #           ("total_grades", "total grades"), ("academic_levels", "academic levels")],
     #
     # StudentDocument: [],
+     EducatorQualification: [],
     # StudentAward: [],
     # StudentSubject: [],
     # Grade: [],

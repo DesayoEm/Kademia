@@ -1,5 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from psycopg2.errors import StringDataRightTruncation
+
+from ..errors import EntityNotFoundError
 from ..errors.database_errors import (
     UniqueViolationError, RelationshipError,
     DBConnectionError, DatabaseError as TKDatabaseError
@@ -46,6 +48,10 @@ def handle_read_errors():
         def wrapper(self, *args, **kwargs):
             try:
                 return fn(self, *args, **kwargs)
+
+            except EntityNotFoundError:
+                raise EntityNotFoundError
+
             except OperationalError as e:
                 self.session.rollback()
                 raise DBConnectionError(error=str(e))

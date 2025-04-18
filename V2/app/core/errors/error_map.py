@@ -13,12 +13,12 @@
 # Example:
 #     Student: (Student, "Student")
 
-
-
 from ...database.models import *
 from ..errors import *
 
 # Entity: entity_model, display_name
 error_map = {
-            StaffRole: (StaffRole, "role")
+            StaffRole: (StaffRole, "role"),
+            StaffDepartment: (StaffDepartment, "department"),
+            EducatorQualification: (EducatorQualification, "qualification"),
         }

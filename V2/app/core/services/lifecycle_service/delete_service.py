@@ -70,7 +70,7 @@ class DeleteService:
         return dependent_fields
 
 
-    def safe_delete(self, entity_model, entity_id: UUID, is_archived):
+    def check_safe_delete(self, entity_model, entity_id: UUID, is_archived):
         """
         Safely delete an entity only if no dependent entities exist.
 
@@ -96,48 +96,38 @@ class DeleteService:
         dependent_fields = self.check_dependent_entities(entity, entity_model)
 
         if dependent_fields:
-                raise EntityInUseError(entity_model=entity_model, dependencies=", ".join(dependent_fields),
-                    display_name=display_name, detail=""
-                    )
+                raise EntityInUseError(
+                    entity_model=entity_model, dependencies=", ".join(dependent_fields),
+                    display_name=display_name,
+                    detail="Could not safely delete"
+            )
 
-
-
-    def cascade_deletion(self, entity, relationship_names: list):
+    def get_fk_delete_rules_from_info_schema(self, table_name: str) -> dict:
         """
-        Cascade delete related entities first, then delete the main entity.
-
-        Used for true parent-child relationships where child entities shouldn't
-        exist without their parent. Requires the entity to be exported first.
+        Returns a mapping of FK constraint names to their delete rules
+        for a given table using information_schema.
 
         Args:
-            entity: The entity instance to delete
-            relationship_names (list): Names of relationship attributes to cascade delete
+            table_name (str): Name of the table to inspect
 
-        Raises:
-            CascadeDeletionError: If the entity hasn't been exported or if deletion fails
+        Returns:
+            dict: Mapping {constraint_name: delete_rule}
         """
-        try:
-            with self.session.begin():
-                if not entity.is_exported:
-                    raise CascadeDeletionError(error="Entity not exported before attempted deletion")
-
-                for relationship_name in relationship_names:
-                    related = getattr(entity, relationship_name, None)
-
-                    if related is None:
-                        continue
-
-                    if isinstance(related, list):
-                        for item in related:
-                            if item is not None:
-                                self.repository.delete(item)
-                    else:
-                        self.repository.delete(related)
-
-                self.repository.delete(entity)
-
-        except Exception as e:
-            raise CascadeDeletionError(error=str(e))
+        query = text("""
+               SELECT
+                   tc.constraint_name,
+                   rc.delete_rule
+               FROM
+                   information_schema.table_constraints tc
+               JOIN
+                   information_schema.referential_constraints rc
+                   ON tc.constraint_name = rc.constraint_name
+               WHERE
+                   tc.constraint_type = 'FOREIGN KEY'
+                   AND tc.table_name = :table_name
+           """)
+        result = self.session.execute(query, {'table_name': table_name}).fetchall()
+        return {row.constraint_name: row.delete_rule.upper() for row in result}
 
 
     def export_and_cascade_delete(self, entity_model, entity_id: UUID,
@@ -175,33 +165,42 @@ class DeleteService:
 
         return export_path
 
-
-    def get_fk_delete_rules_from_info_schema(self, table_name: str) -> dict:
+    def cascade_deletion(self, entity, relationship_names: list):
         """
-        Returns a mapping of FK constraint names to their delete rules
-        for a given table using information_schema.
+        Cascade delete related entities first, then delete the main entity.
+
+        Used for true parent-child relationships where child entities shouldn't
+        exist without their parent. Requires the entity to be exported first.
 
         Args:
-            table_name (str): Name of the table to inspect
+            entity: The entity instance to delete
+            relationship_names (list): Names of relationship attributes to cascade delete
 
-        Returns:
-            dict: Mapping {constraint_name: delete_rule}
+        Raises:
+            CascadeDeletionError: If the entity hasn't been exported or if deletion fails
         """
-        query = text("""
-            SELECT
-                tc.constraint_name,
-                rc.delete_rule
-            FROM
-                information_schema.table_constraints tc
-            JOIN
-                information_schema.referential_constraints rc
-                ON tc.constraint_name = rc.constraint_name
-            WHERE
-                tc.constraint_type = 'FOREIGN KEY'
-                AND tc.table_name = :table_name
-        """)
-        result = self.session.execute(query, {'table_name': table_name}).fetchall()
-        return {row.constraint_name: row.delete_rule.upper() for row in result}
+        try:
+            with self.session.begin():
+                if not entity.is_exported:
+                    raise CascadeDeletionError(error="Entity not exported before attempted deletion")
+
+                for relationship_name in relationship_names:
+                    related = getattr(entity, relationship_name, None)
+
+                    if related is None:
+                        continue
+
+                    if isinstance(related, list):
+                        for item in related:
+                            if item is not None:
+                                self.repository.delete(item)
+                    else:
+                        self.repository.delete(related)
+
+                self.repository.delete(entity)
+
+        except Exception as e:
+            raise CascadeDeletionError(error=str(e))
 
 
     def export_and_null_delete(self, entity_model, entity_id: UUID,

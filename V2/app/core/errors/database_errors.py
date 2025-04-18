@@ -6,6 +6,7 @@ from uuid import UUID
 class DBError(KademiaError):
     """Base exception class for all database related errors"""
 
+
 class EntityNotFoundError(DBError):
     """Raised when an entity cannot be found in the database"""
     def __init__(self, entity_model, identifier: UUID, error: str, display_name: str ):
@@ -78,7 +79,6 @@ class RelationshipError(DBError):
     """Raised when a foreign key constraint is violated during data operations"""
 
     def __init__(self, error: str, operation: str, entity_model, domain: str):
-
         self.user_message = f"Cannot {operation} record because related {entity_model} does not exist"
         self.log_message = (f"Domain: {domain}Foreign key constraint violation during {operation} operation. "
                             f"Detail: {error}")

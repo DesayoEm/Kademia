@@ -137,7 +137,7 @@ class Staff(UserBase):
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
 
     # Relationships
-    department: Mapped["StaffDepartment"] = relationship(back_populates='staff', foreign_keys="[Staff.department_id]")
+    department: Mapped["StaffDepartment"] = relationship(back_populates='staff_members', foreign_keys="[Staff.department_id]")
     role: Mapped["StaffRole"] = relationship(back_populates='staff_members', foreign_keys='[Staff.role_id]')
     access_changes: Mapped[List["AccessLevelChange"]] = relationship(
         "AccessLevelChange",

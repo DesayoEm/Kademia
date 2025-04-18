@@ -4,6 +4,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 import time
 import uuid
 
+from ..core.errors import ArchiveDependencyError
 from ..core.errors.archive_delete_errors import CascadeDeletionError
 from ..core.errors.database_errors import *
 from ..core.errors.export_errors import UnimplementedGathererError, ExportFormatError
@@ -82,6 +83,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
         # Archive/delete errors
         CascadeDeletionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+        ArchiveDependencyError: status.HTTP_409_CONFLICT,
 
     }
 

@@ -2,12 +2,19 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
+from ...services.export_service.export import ExportService
+from ...services.lifecycle_service.archive_service import ArchiveService
+from ...services.lifecycle_service.delete_service import DeleteService
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....core.validators.entity_validators import EntityValidator
 from ....database.models.staff_organization import StaffDepartment
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
-from ....core.errors.database_errors import EntityNotFoundError, UniqueViolationError, RelationshipError
+from ....core.errors.error_map import error_map
+from ...errors.archive_delete_errors import ArchiveDependencyError
+from ....core.errors.database_errors import (
+    EntityNotFoundError, UniqueViolationError, DuplicateEntityError
+)
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
@@ -15,10 +22,24 @@ SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 class StaffDepartmentFactory:
     """Factory class for managing staff department operations."""
 
-    def __init__(self, session: Session):
-        self.repository = SQLAlchemyRepository(StaffDepartment, session)
+    def __init__(self, session: Session, model = StaffDepartment):
+        """Initialize factory with database session.
+        Args:
+            session: SQLAlchemy database session
+            model: Model class, defaults to StaffRole
+        """
+        self.model = model
+        self.repository = SQLAlchemyRepository(self.model, session)
         self.entity_validator = EntityValidator(session)
         self.validator = StaffOrganizationValidator()
+        self.repository = SQLAlchemyRepository(self.model, session)
+        self.delete_service = DeleteService(self.model, session)
+        self.archive_service = ArchiveService(session)
+        self.export_service = ExportService(session)
+        self.validator = StaffOrganizationValidator()
+        self.error_details = error_map.get(self.model)
+        self.entity_model, self.display_name = self.error_details
+
 
     def create_staff_department(self, new_department) -> StaffDepartment:
         """Create a new staff department.
@@ -41,14 +62,13 @@ class StaffDepartmentFactory:
         except UniqueViolationError as e:
             error_message = str(e)
             if 'staff_departments_name_key' in error_message:
-                raise DuplicateDepartmentError(
-                    entry=new_department.name, detail=error_message, field='name'
-                )
-            raise DuplicateDepartmentError(entry='unknown', detail=str(e), field='unknown')
+                raise DuplicateEntityError(
+                    entity_model=self.entity_model, entry=new_department.name, field='name',
+                    display_name=self.display_name, detail=error_message)
 
-
-        except RelationshipError as e:
-            raise RelationshipError(error=str(e), operation='create', entity='unknown_entity')
+            raise DuplicateEntityError(
+                entity_model=self.entity_model, entry="unknown", field='unknown',
+                display_name="unknown", detail=error_message)
 
 
     def get_staff_department(self, department_id: UUID) -> StaffDepartment:
@@ -60,8 +80,12 @@ class StaffDepartmentFactory:
         """
         try:
             return self.repository.get_by_id(department_id)
+
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=department_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
     def get_all_departments(self, filters) -> List[StaffDepartment]:
@@ -85,7 +109,6 @@ class StaffDepartmentFactory:
 
         try:
             existing = self.get_staff_department(department_id)
-
             validations = {
                 "name": (self.validator.validate_name, "name"),
                 "description": (self.validator.validate_description, "description"),
@@ -101,21 +124,25 @@ class StaffDepartmentFactory:
                     setattr(existing, key, value)
 
             existing.last_modified_by = SYSTEM_USER_ID
+
             return self.repository.update(department_id, existing)
 
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=department_id, error=str(e),
+                display_name=self.display_name
+            )
 
         except UniqueViolationError as e:
             error_message = str(e)
             if 'staff_departments_name_key' in error_message:
-                raise DuplicateDepartmentError(
-                    entry=original.get('name', 'unknown'), detail=error_message, field='name'
-                )
-            raise DuplicateDepartmentError(entry='unknown', detail=str(e), field = 'unknown')
+                raise DuplicateEntityError(
+                    entity_model=self.entity_model, entry=data.get('name', 'unknown'), field='name',
+                    display_name=self.display_name, detail=error_message)
 
-        except RelationshipError as e:
-            raise RelationshipError(error=str(e), operation='update', entity='staff')
+            raise DuplicateEntityError(
+                entity_model=self.entity_model, entry="unknown", field='unknown',
+                display_name="unknown", detail=error_message)
 
 
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StaffDepartment:
@@ -127,28 +154,41 @@ class StaffDepartmentFactory:
             StaffDepartment: Archived department record
         """
         try:
+            failed_dependencies = self.archive_service.check_active_dependencies_exists(
+                entity_model=self.entity_model,
+                target_id=department_id
+            )
+
+            if failed_dependencies:
+                raise ArchiveDependencyError(
+                    entity_model=self.entity_model, identifier=department_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
+
             return self.repository.archive(department_id, SYSTEM_USER_ID, reason)
 
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=department_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
-    def delete_department(self, department_id: UUID) -> None:
+    def safe_delete_role(self, department_id: UUID, is_archived = False) -> None:
         """Permanently delete a staff department.
         Args:
             department_id (UUID): ID of department to delete
+            is_archived: Whether to check archived or active entities
         """
         try:
-            self.repository.delete(department_id)
+            self.delete_service.check_safe_delete(self.model, department_id, is_archived)
+            return self.repository.delete(department_id)
 
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
-
-        except RelationshipError as e:
-            error_message = str(e)
-            # Note: Referenced FKs are SET NULL on delete, so RelationshipError may not trigger here,
-            # but it is being kept for unexpected constraint issues.
-            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=department_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
     def get_all_archived_departments(self, filters) -> List[StaffDepartment]:
@@ -169,8 +209,12 @@ class StaffDepartmentFactory:
         """
         try:
             return self.repository.get_archive_by_id(department_id)
+
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=department_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
     def restore_department(self, department_id: UUID) -> StaffDepartment:
@@ -184,22 +228,26 @@ class StaffDepartmentFactory:
             archived = self.get_archived_department(department_id)
             archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(department_id)
+
         except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=department_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
-    def delete_archived_department(self, department_id: UUID) -> None:
+    def safe_delete_archived_department(self, department_id: UUID, is_archived = True) -> None:
         """Permanently delete an archived department.
         Args:
             department_id: ID of department to delete
+            is_archived: Whether to check archived or active entities
         """
         try:
+            self.delete_service.check_safe_delete(self.model, department_id, is_archived)
             self.repository.delete_archive(department_id)
-        except EntityNotFoundError as e:
-            raise DepartmentNotFoundError(identifier=department_id, detail = str(e))
 
-        except RelationshipError as e:
-            error_message = str(e)
-            # Note: Referenced FKs are SET NULL on delete, so RelationshipError may not trigger here,
-            # but it is being kept for unexpected constraint issues.
-            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
+        except EntityNotFoundError as e:
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=department_id, error=str(e),
+                display_name=self.display_name
+            )

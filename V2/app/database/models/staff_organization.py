@@ -18,7 +18,7 @@ class StaffDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     # Relationships
     manager: Mapped['Staff'] = relationship(foreign_keys='[StaffDepartment.manager_id]')
-    staff: Mapped[List["Staff"]] = relationship(back_populates='department',
+    staff_members: Mapped[List["Staff"]] = relationship(back_populates='department',
                     primaryjoin="Staff.department_id == StaffDepartment.id")
 
 
