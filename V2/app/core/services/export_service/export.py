@@ -5,7 +5,7 @@ import openpyxl
 
 from uuid import UUID
 from ...errors.export_errors import ExportFormatError
-from V2.app.core.errors.maps.error_map import error_map
+from ...errors.maps.error_map import error_map
 from ....config import config
 from .gather_data import GatherData
 from ...errors.database_errors import EntityNotFoundError

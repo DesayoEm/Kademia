@@ -14,8 +14,7 @@ class StaffBase(UserBase):
     email_address: str
     address: str
     phone: str
-    department_id: UUID | None
-    role_id: UUID | None
+
 
 
 
@@ -37,8 +36,6 @@ class StaffCreate(StaffBase):
                 "email_address": "aina.folu@example.com",
                 "address": "456 Allen Avenue, Lagos",
                 "phone": "+2348056794345",
-                "department_id": "00000000-0000-0000-0000-000000000001",
-                "role_id": "00000000-0000-0000-0000-000000000002",
                 "date_joined": "2024-01-15",
             }
         })
@@ -60,8 +57,6 @@ class StaffUpdate(StaffBase):
                 "email_address": "aina.kincaid@example.com",
                 "address": "456 Allen Avenue, Lagos",
                 "phone": "+2348056794506",
-                "department_id": "00000000-0000-0000-0000-000000000001",
-                "role_id": "00000000-0000-0000-0000-000000000002"
             }
         })
 

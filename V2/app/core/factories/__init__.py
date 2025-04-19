@@ -7,3 +7,15 @@ from .student_organization.department import StudentDepartmentFactory
 from .staff_organization.qualification import QualificationFactory
 from .staff_organization.department import StaffDepartmentFactory
 from .staff_organization.staff_role import StaffRoleFactory
+
+__all__ = [
+    "GuardianFactory",
+    "StaffFactory",
+    "StudentFactory",
+    "AcademicLevelFactory",
+    "ClassFactory",
+    "StudentDepartmentFactory",
+    "QualificationFactory",
+    "StaffDepartmentFactory",
+    "StaffRoleFactory"
+]

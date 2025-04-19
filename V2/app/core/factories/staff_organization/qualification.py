@@ -8,7 +8,6 @@ from ....core.validators.staff_organization import StaffOrganizationValidator
 
 from ....database.models.staff_organization import EducatorQualification
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....database.models.enums import ArchiveReason
 
 from ...errors.fk_resolver import FKResolver
 from ....core.errors.maps.error_map import error_map

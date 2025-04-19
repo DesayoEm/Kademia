@@ -38,21 +38,6 @@ def safe_delete_archived_role(role_id: UUID, db: Session = Depends(get_db)):
     return roles_crud.safe_delete_archived_role(role_id)
 
 
-@router.delete("/{role_id}/force", response_class=FileResponse, status_code=204)
-def force_delete_archived_role(role_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
-    roles_crud = StaffRoleCrud(db)
-
-    file_path= roles_crud.force_delete_archived_role(role_id, export_format.value)
-    return FileResponse(
-        path=file_path,
-        filename=file_path.split("/")[-1],
-        media_type="application/octet-stream"
-    )
-
-
-
-
-
 
 
 

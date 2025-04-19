@@ -6,7 +6,8 @@ class FKResolver:
 
     @staticmethod
     def resolve_fk_violation(factory_class, error_message, context_obj, operation, fk_map):
-        mappings = fk_map.get(factory_class, {}) | fk_map.get("common", {})
+        factory_key = factory_class.__name__
+        mappings = fk_map.get(factory_key, {}) | fk_map.get("common", {})
 
         for fk_key, (model, attr, label) in mappings.items():
             if fk_key in error_message:
@@ -17,4 +18,3 @@ class FKResolver:
                     operation=operation
                 )
         return None
-

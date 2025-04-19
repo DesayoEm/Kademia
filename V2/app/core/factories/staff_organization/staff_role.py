@@ -8,9 +8,8 @@ from ...services.lifecycle_service.delete_service import DeleteService
 from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....database.models.staff_organization import StaffRole
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....database.models.enums import ArchiveReason
 
-from V2.app.core.errors.maps.error_map import error_map
+from ....core.errors.maps.error_map import error_map
 from ....core.errors.maps.fk_mapper import fk_error_map
 from ...errors import (
     DuplicateEntityError, ArchiveDependencyError, EntityNotFoundError, UniqueViolationError, RelationshipError
@@ -224,30 +223,6 @@ class StaffRoleFactory:
                 error=str(e), operation='delete', entity_model='unknown_entity', domain=self.domain)
 
 
-
-    def force_delete_role(self, role_id: UUID, export_format: str, is_archived = False) -> str:
-        """Export and FORCE delete a staff role.
-        Args:
-            role_id: id of role to delete
-            export_format: Preferred export format
-            is_archived: Whether to check archived or active entities
-        """
-        try:
-            # WARNING - role is SET NULL on delete therefore related entities will be orphaned
-            export_path = self.delete_service.export_and_null_delete(
-                self.model, role_id, export_format, is_archived
-            )
-            self.repository.delete(role_id)
-            return export_path
-
-        except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=role_id, error=str(e),
-                display_name=self.display_name
-            )
-
-
-
     #Archive methods
     def get_all_archived_roles(self, filters) -> list[StaffRole]:
         """Get all archived staff roles with filtering.
@@ -312,24 +287,3 @@ class StaffRoleFactory:
             raise RelationshipError(
                 error=str(e), operation='delete', entity_model='unknown_entity', domain=self.domain)
 
-
-    def force_delete_archived_role(self, role_id: UUID, export_format: str, is_archived = True) -> str:
-        """Export and FORCE delete a staff role.
-        Args:
-            role_id: id of role to delete
-            export_format: Preferred export format
-            is_archived: Whether to check archived or active entities
-        """
-        try:
-            # WARNING - role is SET NULL on delete therefore related entities will be orphaned
-            export_path = self.delete_service.export_and_null_delete(
-                self.model, role_id, export_format, is_archived
-            )
-            self.repository.delete(role_id)
-            return export_path
-
-        except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=role_id, error=str(e),
-                display_name=self.display_name
-            )

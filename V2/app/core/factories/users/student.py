@@ -5,13 +5,11 @@ from ...services.auth.password_service import PasswordService
 from ...services.lifecycle_service.archive_service import ArchiveService
 from ...services.lifecycle_service.delete_service import DeleteService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....core.services.users.student_service import StudentService
 from ....database.models.users import Student
 
 from ...errors.fk_resolver import FKResolver
-
 from ....core.errors.maps.error_map import error_map
 from ....core.errors.maps.fk_mapper import fk_error_map
 from ...errors import (

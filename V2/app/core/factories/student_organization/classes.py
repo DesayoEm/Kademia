@@ -11,7 +11,7 @@ from ...validators.entity_validators import EntityValidator
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 from ...errors.fk_resolver import FKResolver
-from V2.app.core.errors.maps.error_map import error_map
+from ....core.errors.maps.error_map import error_map
 from ....core.errors.maps.fk_mapper import fk_error_map
 from ...errors import (
     DuplicateEntityError, ArchiveDependencyError, EntityNotFoundError, UniqueViolationError, RelationshipError

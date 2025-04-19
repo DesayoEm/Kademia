@@ -14,8 +14,8 @@ Example:
     Student: (Student, "Student")
 """
 
-from V2.app.database.models import *
-from V2.app.core.errors import *
+from ....database.models import *
+from ...errors import *
 
 # Entity: (entity_model, display_name)
 error_map = {

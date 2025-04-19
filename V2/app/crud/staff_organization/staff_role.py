@@ -97,16 +97,8 @@ class StaffRoleCrud:
         Args:
             role_id: Role UUID
         """
-        return self.factory.safe_delete_role(role_id)
+        return self.factory.delete_role(role_id)
 
-
-    def force_delete_role(self, role_id: UUID, export_format: str) -> str:
-        """Export and FORCE delete a staff role.
-        Args:
-            role_id: id of role to delete
-            export_format: Preferred export format
-        """
-        return self.factory.force_delete_role(role_id, export_format)
 
 
     # Archived role operations
@@ -130,6 +122,7 @@ class StaffRoleCrud:
         roles = self.factory.get_all_archived_roles(filters)
         return [StaffRoleResponse.model_validate(role) for role in roles]
 
+
     def restore_role(self, role_id: UUID) -> StaffRoleResponse:
         """Restore an archived staff role.
         Args:
@@ -146,13 +139,6 @@ class StaffRoleCrud:
         Args:
             role_id: Role UUID
         """
-        return self.factory.safe_delete_archived_role(role_id)
+        return self.factory.delete_archived_role(role_id)
 
 
-    def force_delete_archived_role(self, role_id: UUID, export_format: str) -> str:
-        """Export and FORCE delete a staff role.
-        Args:
-            role_id: id of role to delete
-            export_format: Preferred export format
-        """
-        return self.factory.force_delete_archived_role(role_id, export_format)

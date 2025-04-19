@@ -17,9 +17,7 @@ class StudentBase(UserBase):
 class StudentCreate(StudentBase):
     """Used for creating new students"""
     date_of_birth: date
-    class_id: UUID
     level_id: UUID
-    department_id: UUID
     guardian_id: UUID
 
 
@@ -34,9 +32,7 @@ class StudentCreate(StudentBase):
                 "gender": "FEMALE",
                 "guardian_id": "00000000-0000-0000-0000-000000000004",
                 "date_of_birth": "2010-05-15",
-                "class_id": "00000000-0000-0000-0000-000000000001",
                 "level_id": "00000000-0000-0000-0000-000000000002",
-                "department_id": "00000000-0000-0000-0000-000000000003",
                 "session_start_year": "2025",
             }
         })
