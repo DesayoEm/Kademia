@@ -2,7 +2,6 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ...errors.fk_resolver import FKResolver
 from ...services.export_service.export import ExportService
 from ...services.lifecycle_service.archive_service import ArchiveService
 from ...services.lifecycle_service.delete_service import DeleteService
@@ -13,6 +12,7 @@ from ....database.models.enums import ArchiveReason
 from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import AcademicLevel
 
+from ...errors.fk_resolver import FKResolver
 from ....core.errors.maps.error_map import error_map
 from ....core.errors.maps.fk_mapper import fk_error_map
 from ...errors import (
@@ -27,7 +27,7 @@ class AcademicLevelFactory:
     """Factory class for managing academic level operations."""
 
     def __init__(self, session: Session, model = AcademicLevel):
-        """Initialize factory with database session.
+        """Initialize factory with model and database session.
             Args:
             session: SQLAlchemy database session
             model: Model class, defaults to StudentDepartment
@@ -80,7 +80,7 @@ class AcademicLevelFactory:
                         display_name=self.display_name, detail=error_message
                     )
 
-                raise DuplicateEntityError(
+            raise DuplicateEntityError(
                     entity_model=self.entity_model, entry="unknown", field="unknown",
                     display_name=self.display_name, detail=error_message
                 )
@@ -162,8 +162,8 @@ class AcademicLevelFactory:
         except UniqueViolationError as e:
             error_message = str(e).lower()
             unique_violation_map = {
-                "academic_levels_name_key": ("name", data.get('name', 'unknown')),
-                "academic_levels_order_key": ("order", str(data.get('order', 'unknown'))),
+                "academic_levels_name_key": ("name", original.get('name', 'unknown')),
+                "academic_levels_order_key": ("order", str(original.get('order', 'unknown'))),
             }
 
             for constraint_key, (field_name, entry_value) in unique_violation_map.items():
@@ -173,7 +173,7 @@ class AcademicLevelFactory:
                         display_name=self.display_name, detail=error_message
                     )
 
-                raise DuplicateEntityError(
+            raise DuplicateEntityError(
                     entity_model=self.entity_model, entry="unknown", field="unknown",
                     display_name=self.display_name, detail=error_message
                 )
@@ -192,7 +192,7 @@ class AcademicLevelFactory:
 
 
     def archive_academic_level(self, academic_level_id: UUID, reason: ArchiveReason) -> AcademicLevel:
-        """Archive aN academic level.
+        """Archive an academic level no active dependencies exist.
         Args:
             academic_level_id (UUID): ID of academic_level to archive
             reason (ArchiveReason): Reason for archiving

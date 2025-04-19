@@ -3,15 +3,14 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 from ....core.services.student_organization.classes import ClassService
 from ....database.models.student_organization import Classes
-
 from ....core.validators.student_organization import StudentOrganizationValidator
-from ...errors.fk_resolver import FKResolver
 from ...services.export_service.export import ExportService
 from ...services.lifecycle_service.archive_service import ArchiveService
 from ...services.lifecycle_service.delete_service import DeleteService
 from ...validators.entity_validators import EntityValidator
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....database.models.enums import ArchiveReason
+
+from ...errors.fk_resolver import FKResolver
 from V2.app.core.errors.maps.error_map import error_map
 from ....core.errors.maps.fk_mapper import fk_error_map
 from ...errors import (
@@ -25,7 +24,7 @@ class ClassFactory:
     """Factory class for managing class operations."""
 
     def __init__(self, session: Session, model = Classes):
-        """Initialize factory with database session.
+        """Initialize factory with model and database session.
             Args:
                 session: SQLAlchemy database session
                 model: Model class, defaults to Classes
@@ -158,7 +157,7 @@ class ClassFactory:
         except UniqueViolationError as e:
             error_message = str(e).lower()
             unique_violation_map = {
-                "uq_class_level_order": ("order", str(data.get('order', 'unknown')))
+                "uq_class_level_order": ("order", str(original.get('order', 'unknown')))
             }
 
             for constraint_key, (field_name, entry_value) in unique_violation_map.items():
@@ -168,7 +167,7 @@ class ClassFactory:
                         display_name=self.display_name, detail=error_message
                     )
 
-                raise DuplicateEntityError(
+            raise DuplicateEntityError(
                     entity_model=self.entity_model, entry="unknown", field="unknown",
                     display_name=self.display_name, detail=error_message
                 )
@@ -186,11 +185,11 @@ class ClassFactory:
             )
 
 
-    def archive_class(self, class_id: UUID, reason: ArchiveReason) -> Classes:
+    def archive_class(self, class_id: UUID, reason) -> Classes:
         """Archive a class.
         Args:
             class_id (UUID): ID of class to archive
-            reason (ArchiveReason): Reason for archiving
+            reason: Reason for archiving
         Returns:
             Classes: Archived class record
         """

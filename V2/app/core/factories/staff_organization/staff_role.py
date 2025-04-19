@@ -58,13 +58,16 @@ class StaffRoleFactory:
             return self.repository.create(role)
 
         except UniqueViolationError as e:
-            error_message= str(e)
-
-            if 'staff_roles_name_key' in error_message:
-                raise DuplicateEntityError(
-                    entity_model = self.entity_model, entry=new_role.name, field = 'name',
-                    display_name = self.display_name, detail=error_message)
-
+            error_message = str(e).lower()
+            unique_violation_map = {
+                "staff_roles_name_key": ("phone", new_role.name)
+            }
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
             raise DuplicateEntityError(
                 entity_model=self.entity_model, entry="unknown", field='unknown',
                 display_name="unknown", detail=error_message)
@@ -116,6 +119,7 @@ class StaffRoleFactory:
         Returns:
             StaffRole: Updated role record
         """
+        original = data.copy()
         try:
             existing = self.get_role(role_id)
             validations = {
@@ -133,7 +137,6 @@ class StaffRoleFactory:
                     setattr(existing, key, value)
 
             existing.last_modified_by = SYSTEM_USER_ID
-
             return self.repository.update(role_id, existing)
 
         except EntityNotFoundError as e:
@@ -143,12 +146,16 @@ class StaffRoleFactory:
             )
 
         except UniqueViolationError as e:
-            error_message = str(e)
-            if 'staff_roles_name_key' in error_message:
-                raise DuplicateEntityError(
-                    entity_model=self.entity_model, entry=data.get('name', 'unknown'), field='name',
-                    display_name=self.display_name, detail=error_message)
-
+            error_message = str(e).lower()
+            unique_violation_map = {
+                "staff_roles_name_key": ("phone", original.get('name', 'unknown'))
+            }
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
             raise DuplicateEntityError(
                 entity_model=self.entity_model, entry="unknown", field='unknown',
                 display_name="unknown", detail=error_message)
@@ -166,7 +173,7 @@ class StaffRoleFactory:
             )
 
 
-    def archive_role(self, role_id: UUID, reason: ArchiveReason) -> StaffRole:
+    def archive_role(self, role_id: UUID, reason) -> StaffRole:
         """Archive a role if no active staff members are assigned to it.
         Args:
             role_id: id of role to archive

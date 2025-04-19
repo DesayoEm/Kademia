@@ -1,17 +1,16 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-
-from ...errors.fk_resolver import FKResolver
 from ...services.export_service.export import ExportService
 from ...services.lifecycle_service.archive_service import ArchiveService
 from ...services.lifecycle_service.delete_service import DeleteService
 from ....core.validators.staff_organization import StaffOrganizationValidator
-from ....database.models import Educator
+
 from ....database.models.staff_organization import EducatorQualification
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from ....database.models.enums import ArchiveReason
 
+from ...errors.fk_resolver import FKResolver
 from ....core.errors.maps.error_map import error_map
 from ....core.errors.maps.fk_mapper import fk_error_map
 from ...errors import (
@@ -25,7 +24,7 @@ class QualificationFactory:
     """Factory class for managing qualification operations."""
 
     def __init__(self, session: Session, model = EducatorQualification):
-        """Initialize factory with database session.
+        """Initialize factory with model and database session.
         Args:
             session: SQLAlchemy database session
             model: Model class, defaults to EducatorQualification
@@ -66,11 +65,15 @@ class QualificationFactory:
 
         except UniqueViolationError as e:
             error_message = str(e)
-            if 'uq_educator_qualification_name' in error_message:
-                raise DuplicateEntityError(
-                    entity_model=self.entity_model, entry=new_qualification.name, field='name',
-                    display_name=self.display_name, detail=error_message)
-
+            unique_violation_map = {
+                "uq_educator_qualification_name": ("name", new_qualification.name),
+            }
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
             raise DuplicateEntityError(
                 entity_model=self.entity_model, entry="unknown", field='unknown',
                 display_name="unknown", detail=error_message)
@@ -80,7 +83,6 @@ class QualificationFactory:
                 factory_class=self.__class__, error_message=str(e), context_obj=new_qualification,
                 operation="create", fk_map=fk_error_map
             )
-
             if resolved:
                 raise resolved
             raise RelationshipError(
@@ -165,15 +167,18 @@ class QualificationFactory:
 
         except UniqueViolationError as e:
             error_message = str(e)
-            if 'uq_educator_qualification_name' in error_message:
-                raise DuplicateEntityError(
-                    entity_model=self.entity_model, entry=data.get('name', 'unknown'), field='name',
-                    display_name=self.display_name, detail=error_message)
-
+            unique_violation_map = {
+                "uq_educator_qualification_name": ("name",original.get('name', 'unknown')),
+            }
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
             raise DuplicateEntityError(
                 entity_model=self.entity_model, entry="unknown", field='unknown',
-                display_name="unknown", detail=error_message
-            )
+                display_name="unknown", detail=error_message)
 
         except RelationshipError as e:
             resolved = FKResolver.resolve_fk_violation(
@@ -187,7 +192,7 @@ class QualificationFactory:
             )
 
 
-    def archive_qualification(self, qualification_id: UUID, reason: ArchiveReason) -> EducatorQualification:
+    def archive_qualification(self, qualification_id: UUID, reason) -> EducatorQualification:
         """Archive a qualification.
         Args:
             qualification_id: ID of qualification to archive

@@ -14,19 +14,44 @@ Example:
     Student: (Student, "Student")
 """
 
-
 from V2.app.database.models import *
 from V2.app.core.errors import *
 
-# Entity: entity_model, display_name
+# Entity: (entity_model, display_name)
 error_map = {
+    # User models
+    Guardian: (Guardian, "guardian"),
+    Student: (Student, "student"),
+    Staff: (Staff, "staff member"),
+    Educator: (Educator, "educator"),
+    AdminStaff: (AdminStaff, "administrative staff"),
+    SupportStaff: (SupportStaff, "support staff"),
+
+    # Staff organization models
     StaffRole: (StaffRole, "role"),
     StaffDepartment: (StaffDepartment, "department"),
     EducatorQualification: (EducatorQualification, "qualification"),
 
-    AcademicLevel: (AcademicLevel, "level"),
+    # Student organization models
+    AcademicLevel: (AcademicLevel, "academic level"),
     StudentDepartment: (StudentDepartment, "department"),
-    Classes: (Classes, "class")
+    Classes: (Classes, "class"),
+    ClassTransfer: (ClassTransfer, "class transfer"),
+    StudentDepartmentTransfer: (StudentDepartmentTransfer, "department transfer"),
 
+    # Academic models
+    Subject: (Subject, "subject"),
+    AcademicLevelSubject: (AcademicLevelSubject, "curriculum assignment"),
+    StudentSubject: (StudentSubject, "subject enrollment"),
+    SubjectEducator: (SubjectEducator, "subject assignment"),
+    Grade: (Grade, "grade"),
+    TotalGrade: (TotalGrade, "total grade"),
+    Repetition: (Repetition, "class repetition"),
+    StudentAward: (StudentAward, "award"),
 
-        }
+    # Document models
+    StudentDocument: (StudentDocument, "document"),
+
+    # Auth models
+    AccessLevelChange: (AccessLevelChange, "access level change")
+}

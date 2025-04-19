@@ -2,7 +2,6 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from ...errors.fk_resolver import FKResolver
 from ...services.export_service.export import ExportService
 from ...services.lifecycle_service.archive_service import ArchiveService
 from ...services.lifecycle_service.delete_service import DeleteService
@@ -10,21 +9,22 @@ from ....core.validators.staff_organization import StaffOrganizationValidator
 from ....core.validators.entity_validators import EntityValidator
 from ....database.models.staff_organization import StaffDepartment
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....database.models.enums import ArchiveReason
+
+from ...errors.fk_resolver import FKResolver
 from ....core.errors.maps.error_map import error_map
 from ....core.errors.maps.fk_mapper import fk_error_map
-
 from ...errors import (
     DuplicateEntityError, ArchiveDependencyError, EntityNotFoundError, UniqueViolationError, RelationshipError
 )
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
+
 class StaffDepartmentFactory:
     """Factory class for managing staff department operations."""
 
     def __init__(self, session: Session, model = StaffDepartment):
-        """Initialize factory with database session.
+        """Initialize factory with model and database session.
         Args:
             session: SQLAlchemy database session
             model: Model class, defaults to StaffRole
@@ -61,12 +61,18 @@ class StaffDepartmentFactory:
         try:
             return self.repository.create(department)
 
+
         except UniqueViolationError as e:
-            error_message = str(e)
-            if 'staff_departments_name_key' in error_message:
-                raise DuplicateEntityError(
-                    entity_model=self.entity_model, entry=new_department.name, field='name',
-                    display_name=self.display_name, detail=error_message)
+            error_message = str(e).lower()
+            unique_violation_map = {
+                "staff_departments_name_key": ("name", new_department.name)
+            }
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
 
             raise DuplicateEntityError(
                 entity_model=self.entity_model, entry="unknown", field='unknown',
@@ -83,7 +89,6 @@ class StaffDepartmentFactory:
             raise RelationshipError(
                 error=str(e), operation="create", entity_model="unknown",domain=self.domain
             )
-
 
     def get_staff_department(self, department_id: UUID) -> StaffDepartment:
         """Get a specific staff department by ID.
@@ -138,7 +143,6 @@ class StaffDepartmentFactory:
                     setattr(existing, key, value)
 
             existing.last_modified_by = SYSTEM_USER_ID
-
             return self.repository.update(department_id, existing)
 
         except EntityNotFoundError as e:
@@ -146,14 +150,18 @@ class StaffDepartmentFactory:
                 entity_model=self.entity_model, identifier=department_id, error=str(e),
                 display_name=self.display_name
             )
-
         except UniqueViolationError as e:
-            error_message = str(e)
-            if 'staff_departments_name_key' in error_message:
-                raise DuplicateEntityError(
-                    entity_model=self.entity_model, entry=data.get('name', 'unknown'), field='name',
-                    display_name=self.display_name, detail=error_message)
+            error_message = str(e).lower()
+            unique_violation_map = {
+                "staff_departments_name_key": ("name", original.get('name'))
+            }
 
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
             raise DuplicateEntityError(
                 entity_model=self.entity_model, entry="unknown", field='unknown',
                 display_name="unknown", detail=error_message)
@@ -170,12 +178,11 @@ class StaffDepartmentFactory:
                 error=str(e), operation="update", entity_model="unknown",domain=self.domain
             )
 
-
-    def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StaffDepartment:
-        """Archive a staff department.
+    def archive_department(self, department_id: UUID, reason) -> StaffDepartment:
+        """Archive a staff department if no active dependencies exist.
         Args:
             department_id (UUID): ID of department to archive
-            reason (ArchiveReason): Reason for archiving
+            reason: Reason for archiving
         Returns:
             StaffDepartment: Archived department record
         """
@@ -199,7 +206,6 @@ class StaffDepartmentFactory:
                 display_name=self.display_name
             )
 
-
     def delete_department(self, department_id: UUID, is_archived = False) -> None:
         """Permanently delete a staff department if there are no dependent entities.
         Args:
@@ -220,7 +226,6 @@ class StaffDepartmentFactory:
             raise RelationshipError(
                 error=str(e), operation='delete', entity_model='unknown_entity', domain=self.domain)
 
-
     def get_all_archived_departments(self, filters) -> List[StaffDepartment]:
         """Get all archived departments with filtering.
         Returns:
@@ -228,8 +233,6 @@ class StaffDepartmentFactory:
         """
         fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
-
-
 
     def get_archived_department(self, department_id: UUID) -> StaffDepartment:
         """Get an archived department by ID.
@@ -247,7 +250,6 @@ class StaffDepartmentFactory:
                 display_name=self.display_name
             )
 
-
     def restore_department(self, department_id: UUID) -> StaffDepartment:
         """Restore an archived department.
         Args:
@@ -263,7 +265,6 @@ class StaffDepartmentFactory:
                 entity_model=self.entity_model, identifier=department_id, error=str(e),
                 display_name=self.display_name
             )
-
 
     def delete_archived_department(self, department_id: UUID, is_archived = True) -> None:
         """Permanently delete an archived department if there are no dependent entities.
@@ -281,7 +282,7 @@ class StaffDepartmentFactory:
                 display_name=self.display_name
             )
 
-        except RelationshipError as e: #Failsafe
+        except RelationshipError as e:
             raise RelationshipError(
                 error=str(e), operation='delete', entity_model='unknown_entity', domain = self.domain)
 

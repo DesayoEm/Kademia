@@ -17,6 +17,7 @@ __all__ = [
     "AdminStaff",
     "SupportStaff",
     "System",
+    "SubjectEducator",
     "StudentDocument",
     "StaffDepartment",
     "StaffRole",

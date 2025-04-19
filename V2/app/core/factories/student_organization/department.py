@@ -3,12 +3,9 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from ...errors.fk_resolver import FKResolver
-from ...services.export_service.export import ExportService
 from ...services.lifecycle_service.archive_service import ArchiveService
 from ...services.lifecycle_service.delete_service import DeleteService
-from ...validators.entity_validators import EntityValidator
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....database.models.enums import ArchiveReason
 from ....core.validators.student_organization import StudentOrganizationValidator
 from ....database.models.student_organization import StudentDepartment
 
@@ -23,6 +20,7 @@ SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
 class StudentDepartmentFactory:
     """Factory class for managing student department operations."""
+
     def __init__(self, session: Session, model = StudentDepartment):
         """Initialize factory with database session.
         Args:
@@ -31,12 +29,10 @@ class StudentDepartmentFactory:
         """
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
-        self.entity_validator = EntityValidator(session)
         self.validator = StudentOrganizationValidator()
         self.repository = SQLAlchemyRepository(self.model, session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
-        self.export_service = ExportService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.domain = "Student department"
@@ -74,6 +70,10 @@ class StudentDepartmentFactory:
                         entity_model=self.entity_model, entry=entry_value, field=field_name,
                         display_name=self.display_name, detail=error_message
                     )
+            raise DuplicateEntityError(
+                    entity_model=self.entity_model, entry="unknown", field='unknown',
+                    display_name="unknown", detail=error_message)
+
 
         except RelationshipError as e:
             resolved = FKResolver.resolve_fk_violation(
@@ -109,7 +109,7 @@ class StudentDepartmentFactory:
         Returns:
             List[StudentDepartment]: List of active departments
         """
-        fields = ['name', 'description']
+        fields = ['name']
         return self.repository.execute_query(fields, filters)
 
 
@@ -121,7 +121,6 @@ class StudentDepartmentFactory:
         Returns:
             StudentDepartment: Updated department record
         """
-        original = data.copy()
         try:
             existing = self.get_student_department(department_id)
 
@@ -163,24 +162,28 @@ class StudentDepartmentFactory:
                         entity_model=self.entity_model, entry=entry_value, field=field_name,
                         display_name=self.display_name, detail=error_message
                     )
+            raise DuplicateEntityError(
+                entity_model=self.entity_model, entry="unknown", field='unknown',
+                display_name="unknown", detail=error_message)
+
 
         except RelationshipError as e:
             resolved = FKResolver.resolve_fk_violation(
                 factory_class=self.__class__, error_message=str(e), context_obj=existing,
-                operation="create", fk_map=fk_error_map
+                operation="update", fk_map=fk_error_map
             )
             if resolved:
                 raise resolved
             raise RelationshipError(
-                error=str(e), operation="create", entity_model="unknown", domain=self.domain
+                error=str(e), operation="update", entity_model="unknown", domain=self.domain
             )
 
 
-    def archive_department(self, department_id: UUID, reason: ArchiveReason) -> StudentDepartment:
-        """Archive a student department.
+    def archive_department(self, department_id: UUID, reason) -> StudentDepartment:
+        """Archive a student department if no active dependencies exist.
         Args:
             department_id (UUID): ID of department to archive
-            reason (ArchiveReason): Reason for archiving
+            reason: Reason for archiving
         Returns:
             StudentDepartment: Archived department record
         """
@@ -204,7 +207,7 @@ class StudentDepartmentFactory:
             )
 
 
-    def delete_department(self, department_id: UUID, is_archived = True) -> None:
+    def delete_department(self, department_id: UUID, is_archived = False) -> None:
         """Permanently delete a student department if there are no dependent entities.
         Args:
             department_id (UUID): ID of department to delete
@@ -221,8 +224,8 @@ class StudentDepartmentFactory:
             )
         except RelationshipError as e:
             raise RelationshipError(
-                error=str(e), operation='delete', entity_model=self.model.__name__, domain = self.domain)
-
+                error=str(e), operation='delete', entity_model=self.model.__name__, domain = self.domain
+            )
 
 
     def get_all_archived_departments(self, filters) -> List[StudentDepartment]:
@@ -249,6 +252,7 @@ class StudentDepartmentFactory:
                 entity_model=self.entity_model, identifier=department_id, error=str(e),
                 display_name=self.display_name
             )
+
 
     def restore_department(self, department_id: UUID) -> StudentDepartment:
         """Restore an archived department.
@@ -285,7 +289,8 @@ class StudentDepartmentFactory:
 
         except RelationshipError as e:
             raise RelationshipError(
-                error=str(e), operation='delete', entity_model=self.model.__name__, domain = self.domain)
+                error=str(e), operation='delete', entity_model=self.model.__name__, domain = self.domain
+            )
 
 
 

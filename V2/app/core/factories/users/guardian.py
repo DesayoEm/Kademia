@@ -2,13 +2,21 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
+from ...errors.fk_resolver import FKResolver
 from ...services.email.onboarding import OnboardingService
-from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
 from ...services.auth.password_service import PasswordService
+from ...services.lifecycle_service.archive_service import ArchiveService
+from ...services.lifecycle_service.delete_service import DeleteService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....database.models.users import Guardian
+
+from ....core.errors.maps.error_map import error_map
+from ....core.errors.maps.fk_mapper import fk_error_map
+from ...errors import (
+    DuplicateEntityError, ArchiveDependencyError, EntityNotFoundError, UniqueViolationError, RelationshipError
+)
+
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
@@ -16,11 +24,23 @@ SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 class GuardianFactory:
     """Factory class for managing guardian operations."""
 
-    def __init__(self, session: Session):
-        self.repository = SQLAlchemyRepository(Guardian, session)
+    def __init__(self, session: Session, model = Guardian):
+        """Initialize factory with model and database session.
+            Args:
+            session: SQLAlchemy database session
+            model: Model class, defaults to Guardian
+        """
+
+        self.model = model
+        self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = UserValidator()
         self.password_service = PasswordService(session)
+        self.delete_service = DeleteService(self.model, session)
+        self.archive_service = ArchiveService(session)
+        self.error_details = error_map.get(self.model)
+        self.entity_model, self.display_name = self.error_details
         self.onboarding_service= OnboardingService()
+        self.domain = "Guardian"
         
 
     def create_guardian(self, guardian_data) -> Guardian:
@@ -49,28 +69,34 @@ class GuardianFactory:
             self.onboarding_service.send_guardian_onboarding_email(
                 new_guardian.email_address, full_name, password
             )
-
             return self.repository.create(new_guardian)
 
         except UniqueViolationError as e:
             error_message = str(e).lower()
-            if "guardians_phone_key" in error_message:
-                raise DuplicateGuardianError(
-                    input_value=guardian_data.phone, detail=error_message, field = "phone")
-            elif "guardians_email_address_key" in error_message:
-                raise DuplicateGuardianError(
-                    input_value=guardian_data.email_address, detail=error_message,
-                    field="email_address")
-            else:
-                raise DuplicateGuardianError(
-                    input_value="unknown field",detail=error_message,
-                         field = "Unknown")
-
+            unique_violation_map = {
+                "guardians_phone_key": ("phone", new_guardian.phone),
+                "guardians_email_address_key": ("email_address", new_guardian.email_address),
+            }
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
+            raise DuplicateEntityError(
+                entity_model=self.entity_model, entry="unknown", field='unknown',
+                display_name="unknown", detail=error_message)
 
         except RelationshipError as e:
-            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
-            # but it is being kept for unexpected constraint issues.
-            raise RelationshipError(error=str(e), operation='update', entity='unknown')
+            resolved = FKResolver.resolve_fk_violation(
+                factory_class=self.__class__, error_message=str(e), context_obj=new_guardian,
+                operation="create", fk_map=fk_error_map
+            )
+            if resolved:
+                raise resolved
+            raise RelationshipError(
+                error=str(e), operation="create", entity_model="unknown", domain=self.domain
+            )
 
 
     def get_guardian(self, guardian_id: UUID) -> Guardian:
@@ -84,7 +110,10 @@ class GuardianFactory:
             return self.repository.get_by_id(guardian_id)
 
         except EntityNotFoundError as e:
-            raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=guardian_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
     def get_all_guardians(self, filters) -> List[Guardian]:
@@ -130,53 +159,79 @@ class GuardianFactory:
 
         except UniqueViolationError as e:
             error_message = str(e).lower()
-            if "guardians_phone_key" in error_message:
-                raise DuplicateGuardianError(
-                    input_value=original.get('phone', 'unknown'), detail=error_message,
-                    field = "phone")
-            elif "guardians_email_address_key" in error_message:
-                raise DuplicateGuardianError(
-                    input_value=original.get('email_address', 'unknown'), detail=error_message,
-                    field = "email_address")
-            else:
-                raise DuplicateGuardianError(
-                    input_value="unknown field",detail=error_message, field ="unknown")
+            unique_violation_map = {
+                "guardians_phone_key": ("phone", original.get('phone', 'unknown')),
+                "guardians_email_address_key": ("email_address", original.get('email_address', 'unknown')),
+            }
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
+            raise DuplicateEntityError(
+                entity_model=self.entity_model, entry="unknown", field='unknown',
+                display_name="unknown", detail=error_message)
+
 
         except RelationshipError as e:
-            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
-            # but it is being kept for unexpected constraint issues.
-            raise RelationshipError(error=str(e), operation='update', entity='unknown')
+            resolved = FKResolver.resolve_fk_violation(
+                factory_class=self.__class__, error_message=str(e), context_obj=existing,
+                operation="update", fk_map=fk_error_map
+            )
+            if resolved:
+                raise resolved
+            raise RelationshipError(
+                error=str(e), operation="update", entity_model="unknown", domain=self.domain
+            )
 
 
-    def archive_guardian(self, guardian_id: UUID, reason: ArchiveReason) -> Guardian:
-            """Archive guardian.
+    def archive_guardian(self, guardian_id: UUID, reason) -> Guardian:
+            """Archive guardian if no active dependencies exist.
             Args:
                 guardian_id (UUID): ID of guardian to archive
-                reason (ArchiveReason): Reason for archiving
+                reason: Reason for archiving
             Returns:
                 guardian: Archived guardian record
             """
             try:
+                failed_dependencies = self.archive_service.check_active_dependencies_exists(
+                    entity_model=self.model,
+                    target_id=guardian_id
+                )
+                if failed_dependencies:
+                    raise ArchiveDependencyError(
+                        entity_model=self.entity_model, identifier=guardian_id,
+                        display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                    )
                 return self.repository.archive(guardian_id, SYSTEM_USER_ID, reason)
+
             except EntityNotFoundError as e:
-                raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
+                raise EntityNotFoundError(
+                    entity_model=self.entity_model, identifier=guardian_id, error=str(e),
+                    display_name=self.display_name
+                )
 
 
-    def delete_guardian(self, guardian_id: UUID) -> None:
-        """Permanently delete a guardian.
+    def delete_guardian(self, guardian_id: UUID, is_archived = False) -> None:
+        """Permanently delete an active guardian if there are no dependent entities.
         Args:
             guardian_id (UUID): ID of guardian to delete
+            is_archived: Whether to check archived or active entities
         """
         try:
-            self.repository.delete(guardian_id)
+            self.delete_service.check_safe_delete(self.model, guardian_id, is_archived)
+            return self.repository.delete(guardian_id)
+
         except EntityNotFoundError as e:
-            raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
-
-
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=guardian_id, error=str(e),
+                display_name=self.display_name
+            )
         except RelationshipError as e:
-            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
-            # but it is being kept for unexpected constraint issues.
-            raise RelationshipError(error=str(e), operation='update', entity='unknown')
+            raise RelationshipError(
+                error=str(e), operation='delete', entity_model=self.model.__name__, domain=self.domain
+            )
 
 
     def get_all_archived_guardians(self, filters) -> List[Guardian]:
@@ -197,8 +252,12 @@ class GuardianFactory:
         """
         try:
             return self.repository.get_archive_by_id(guardian_id)
+
         except EntityNotFoundError as e:
-            raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=guardian_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
     def restore_guardian(self, guardian_id: UUID) -> Guardian:
@@ -209,28 +268,35 @@ class GuardianFactory:
             guardian: Restored guardian record
         """
         try:
-            archived = self.get_archived_guardian(guardian_id)
-            archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(guardian_id)
+
         except EntityNotFoundError as e:
-            raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=guardian_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
-    def delete_archived_guardian(self, guardian_id: UUID) -> None:
-        """Permanently delete an archived guardian.
+    def delete_archived_guardian(self, guardian_id: UUID, is_archived = True) -> None:
+        """Permanently delete an archived guardian if there are no dependent entities.
         Args:
             guardian_id: ID of guardian to delete
+            is_archived: Whether to check archived or active entities
         """
         try:
+            self.delete_service.check_safe_delete(self.model, guardian_id, is_archived)
             self.repository.delete_archive(guardian_id)
-        except EntityNotFoundError as e:
-            raise GuardianNotFoundError(identifier=guardian_id, detail = str(e))
 
+        except EntityNotFoundError as e:
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=guardian_id, error=str(e),
+                display_name=self.display_name
+            )
 
         except RelationshipError as e:
-            # Note: There are no referenced FKs, so RelationshipError may not trigger here,
-            # but it is being kept for unexpected constraint issues.
-            raise RelationshipError(error=str(e), operation='update', entity='unknown')
+            raise RelationshipError(
+                error=str(e), operation='delete', entity_model=self.model.__name__, domain=self.domain
+            )
 
 
 

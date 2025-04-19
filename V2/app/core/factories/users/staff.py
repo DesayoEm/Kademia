@@ -3,14 +3,20 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from ...services.email.onboarding import OnboardingService
-from ....core.errors.database_errors import RelationshipError, UniqueViolationError,EntityNotFoundError
+from ...services.lifecycle_service.archive_service import ArchiveService
+from ...services.lifecycle_service.delete_service import DeleteService
 from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....database.models.enums import ArchiveReason
 from ....core.validators.users import UserValidator
 from ....core.services.auth.password_service import PasswordService
-from ....core.validators.entity_validators import EntityValidator
 from ....database.models.users import Staff, Educator, SupportStaff, AdminStaff
+from ...errors.fk_resolver import FKResolver
 
+from ....core.errors.maps.error_map import error_map
+from ....core.errors.maps.fk_mapper import fk_error_map
+from ...errors import (
+    DuplicateEntityError, ArchiveDependencyError, EntityNotFoundError, UniqueViolationError,
+    RelationshipError,StaffTypeError
+)
 
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
@@ -19,12 +25,24 @@ SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 class StaffFactory:
     """Factory class for managing staff operations."""
 
-    def __init__(self, session: Session):
-        self.repository = SQLAlchemyRepository(Staff, session)
+    def __init__(self, session: Session, model = Staff):
+        """Initialize factory with model and database session.
+            Args:
+            session: SQLAlchemy database session
+            model: Model class, defaults to Staff
+        """
+
+        self.model = model
+        self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = UserValidator()
-        self.entity_validator = EntityValidator(session)
         self.password_service = PasswordService(session)
         self.onboarding_service = OnboardingService()
+        self.delete_service = DeleteService(self.model, session)
+        self.archive_service = ArchiveService(session)
+        self.error_details = error_map.get(self.model)
+        self.entity_model, self.display_name = self.error_details
+        self.onboarding_service = OnboardingService()
+        self.domain = "Staff"
 
 
     def create_staff(self, staff_data) -> Staff:
@@ -46,10 +64,8 @@ class StaffFactory:
                 "email_address": self.validator.validate_staff_email(data.email_address),
                 "address": self.validator.validate_address(data.address),
                 "phone": self.validator.validate_phone(data.phone),
-                #role and department use error message in entity_validators.py and not the one in the except block.
-                "department_id": self.entity_validator.validate_department_exists(data.department_id),
-                "role_id": self.entity_validator.validate_role_exists(data.role_id),
                 "date_joined": self.validator.validate_date(data.date_joined),
+
                 "created_by": SYSTEM_USER_ID,
                 "last_modified_by": SYSTEM_USER_ID,
             }
@@ -73,32 +89,33 @@ class StaffFactory:
                 staff_data.email_address, full_name, password)
             return self.repository.create(new_staff)
 
-        except UniqueViolationError as e:  #email or phone
+        except UniqueViolationError as e:
             error_message = str(e).lower()
-            if "staff_phone_key" in error_message:
-                raise DuplicateStaffError(
-                    input_value=staff_data.phone, field="phone", detail=error_message)
-            elif "staff_email_address_key" in error_message:
-                raise DuplicateStaffError(
-                    input_value = str(staff_data.email_address), field="email address", detail=error_message)
-            else:
-                raise DuplicateStaffError(
-                    input_value="unknown field", field="unknown", detail=error_message)
+            unique_violation_map = {
+                "staff_phone_key": ("phone", staff_data.phone),
+                "staff_email_address_key": ("email_address", staff_data.email_address),
+            }
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
+            raise DuplicateEntityError(
+                entity_model=self.entity_model, entry="unknown", field='unknown',
+                display_name="unknown", detail=error_message)
 
         except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'Failed to validate role': ('role_id', RelationshipError, 'role'),
-                'Failed to validate department': ('department_id', RelationshipError, 'department'),
-                #Used hardcoded error messages from entity_validators as SQLAlchemy will not validate fks
-                #due to polymorphic association on staff table
-                }
+            resolved = FKResolver.resolve_fk_violation(
+                factory_class=self.__class__, error_message=str(e), context_obj=new_staff,
+                operation="create", fk_map=fk_error_map
+            )
+            if resolved:
+                raise resolved
 
-            for error, (attr_name, error_class, entity) in fk_error_mapping.items():
-                if error in error_message:
-                    raise error_class(error=error_message, operation='create', entity=entity)
-
-            raise RelationshipError(error=error_message, operation='create', entity='unknown_entity')
+            raise RelationshipError(
+                error=str(e), operation="create", entity_model="unknown", domain=self.domain
+            )
 
 
     def get_staff(self, staff_id: UUID) -> Staff:
@@ -112,7 +129,10 @@ class StaffFactory:
             return self.repository.get_by_id(staff_id)
 
         except EntityNotFoundError as e:
-            raise StaffNotFoundError(identifier=staff_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=staff_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
     def get_all_staff(self, filters) -> List[Staff]:
@@ -141,8 +161,6 @@ class StaffFactory:
                 "email_address": (self.validator.validate_staff_email, "email_address"),
                 "phone": (self.validator.validate_phone, "phone"),
                 "address": (self.validator.validate_address, "address"),
-                "department_id": (self.entity_validator.validate_department_exists, "department_id"),
-                "role_id": (self.entity_validator.validate_role_exists, "role_id")
             }
 
             for field, (validator_func, model_attr) in validations.items():
@@ -159,64 +177,78 @@ class StaffFactory:
 
         except UniqueViolationError as e:
             error_message = str(e).lower()
-            if "staff_phone_key" in error_message:
-                raise DuplicateStaffError(input_value=original.get('phone', 'unknown'), field="phone", detail=error_message)
-            if "staff_email_address_key" in error_message:
-                raise DuplicateStaffError(input_value=original.get('email_address', 'unknown'), field="email address",
-                                          detail=error_message)
-            raise DuplicateStaffError(input_value="unknown field", field="unknown", detail=error_message)
-
+            unique_violation_map = {
+                "staff_phone_key": ("phone", original.get('phone', 'unknown')),
+                "staff_email_address_key": ("email_address", original.get('email_address', 'unknown')),
+            }
+            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
+                if constraint_key in error_message:
+                    raise DuplicateEntityError(
+                        entity_model=self.entity_model, entry=entry_value, field=field_name,
+                        display_name=self.display_name, detail=error_message
+                    )
+            raise DuplicateEntityError(
+                entity_model=self.entity_model, entry="unknown", field='unknown',
+                display_name="unknown", detail=error_message)
 
         except RelationshipError as e:
-            error_message = str(e)
-            fk_error_mapping = {
-                'Failed to validate role': ('role_id', RelationshipError, 'role'),
-                'Failed to validate department': ('department_id', RelationshipError, 'department'),
-                # Used hardcoded error messages from entity_validators as SQLAlchemy will not validate fks
-                # due to polymorphic association on staff table
-            }
-            for error, (attr_name, error_class, entity) in fk_error_mapping.items():
-                if error in error_message:
-                    raise error_class(error=error_message, operation='update', entity=entity)
-
-            raise RelationshipError(error=error_message, operation='update', entity='unknown_entity')
+            resolved = FKResolver.resolve_fk_violation(
+                factory_class=self.__class__, error_message=str(e), context_obj=existing,
+                operation="update", fk_map=fk_error_map
+            )
+            if resolved:
+                raise resolved
+            raise RelationshipError(
+                error=str(e), operation="update", entity_model="unknown", domain=self.domain
+            )
 
 
-
-
-    def archive_staff(self, staff_id: UUID, reason: ArchiveReason) -> Staff:
-            """Archive staff.
+    def archive_staff(self, staff_id: UUID, reason) -> Staff:
+            """Archive staff members if no active dependencies exist.
             Args:
                 staff_id (UUID): ID of staff to archive
-                reason (ArchiveReason): Reason for archiving
+                reason: Reason for archiving
             Returns:
                 Staff: Archived staff record
             """
             try:
+                failed_dependencies = self.archive_service.check_active_dependencies_exists(
+                    entity_model=self.model,
+                    target_id=staff_id
+                )
+                if failed_dependencies:
+                    raise ArchiveDependencyError(
+                        entity_model=self.entity_model, identifier=staff_id,
+                        display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                    )
                 return self.repository.archive(staff_id, SYSTEM_USER_ID, reason)
 
             except EntityNotFoundError as e:
-                raise StaffNotFoundError(identifier=staff_id, detail = str(e))
+                raise EntityNotFoundError(
+                    entity_model=self.entity_model, identifier=staff_id, error=str(e),
+                    display_name=self.display_name
+                )
 
 
-    def delete_staff(self, staff_id: UUID) -> None:
-        """Permanently delete a staff.
+    def delete_staff(self, staff_id: UUID, is_archived = False) -> None:
+        """Permanently delete a staff member if there are no dependent entities.
         Args:
             staff_id (UUID): ID of staff to delete
+            is_archived: Whether to check archived or active entities
         """
         try:
-            self.repository.delete(staff_id)
+            self.delete_service.check_safe_delete(self.model, staff_id, is_archived)
+            return self.repository.delete(staff_id)
 
         except EntityNotFoundError as e:
-            raise StaffNotFoundError(identifier=staff_id, detail = str(e))
-
-
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=staff_id, error=str(e),
+                display_name=self.display_name
+            )
         except RelationshipError as e:
-            # Note: Referenced FKs are SET NULL on deletion, so RelationshipError may not trigger here,
-            # but it is being kept for unexpected constraint issues.
-            error_message = str(e)
-            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
-
+            raise RelationshipError(
+                error=str(e), operation='delete', entity_model=self.model.__name__, domain=self.domain
+            )
 
 
     def get_all_archived_staff(self, filters) -> List[Staff]:
@@ -237,8 +269,13 @@ class StaffFactory:
         """
         try:
             return self.repository.get_archive_by_id(staff_id)
+
         except EntityNotFoundError as e:
-            raise StaffNotFoundError(identifier=staff_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=staff_id, error=str(e),
+                display_name=self.display_name
+            )
+
 
     def restore_staff(self, staff_id: UUID) -> Staff:
         """Restore an archived staff.
@@ -248,30 +285,35 @@ class StaffFactory:
             Staff: Restored staff record
         """
         try:
-            archived = self.get_archived_staff(staff_id)
-            archived.last_modified_by = SYSTEM_USER_ID
             return self.repository.restore(staff_id)
+
         except EntityNotFoundError as e:
-            raise StaffNotFoundError(identifier=staff_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=staff_id, error=str(e),
+                display_name=self.display_name
+            )
 
 
-    def delete_archived_staff(self, staff_id: UUID) -> None:
-        """Permanently delete an archived staff.
+    def delete_archived_staff(self, staff_id: UUID, is_archived = True) -> None:
+        """Permanently delete an archived staff member if there are no dependent entities.
         Args:
             staff_id: ID of staff to delete
+            is_archived: Whether to check archived or active entities
         """
         try:
+            self.delete_service.check_safe_delete(self.model, staff_id, is_archived)
             self.repository.delete_archive(staff_id)
+
         except EntityNotFoundError as e:
-            raise StaffNotFoundError(identifier=staff_id, detail = str(e))
+            raise EntityNotFoundError(
+                entity_model=self.entity_model, identifier=staff_id, error=str(e),
+                display_name=self.display_name
+            )
 
         except RelationshipError as e:
-            # Note: Referenced FKs are SET NULL on deletion, so RelationshipError may not trigger here,
-            # but it is being kept for unexpected constraint issues.
-            error_message = str(e)
-            raise RelationshipError(error=error_message, operation='delete', entity='unknown_entity')
-
-
+            raise RelationshipError(
+                error=str(e), operation='delete', entity_model=self.model.__name__, domain=self.domain
+            )
 
 
 
