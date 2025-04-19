@@ -4,7 +4,7 @@ from sqlalchemy import desc, asc, select, Select, func, or_, Enum
 from sqlalchemy.orm import Session
 from ....core.errors.database_errors import  EntityNotFoundError
 from ..base_repo import Repository, T
-from ....core.decorators.db_handlers import handle_write_errors, handle_read_errors
+from ....core.errors.decorators.repo_error_handlers import handle_write_errors, handle_read_errors
 
 NOT_FOUND_ERROR = "Object not found"
 

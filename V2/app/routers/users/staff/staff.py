@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
 
+
+from fastapi.responses import FileResponse
+from ....schemas.enums import ExportFormat
 from ....schemas.users.staff import StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams
 from fastapi import Depends, APIRouter
 from ....database.session import get_db
@@ -46,6 +49,17 @@ def archive_staff(staff_id: UUID, reason:ArchiveRequest,
         staff_crud = StaffCrud(db)
         return staff_crud.archive_staff(staff_id, reason.reason)
 
+
+@router.post("/{staff_id}", response_class=FileResponse,  status_code=204)
+def export_staff(staff_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
+    staff_crud = StaffCrud(db)
+    file_path= staff_crud.export_staff(staff_id, export_format.value)
+
+    return FileResponse(
+        path=file_path,
+        filename=file_path.split("/")[-1],
+        media_type="application/octet-stream"
+    )
 
 @router.delete("/{staff_id}", status_code=204)
 def delete_staff(staff_id: UUID, db: Session = Depends(get_db)):

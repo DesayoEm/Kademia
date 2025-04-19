@@ -1,12 +1,12 @@
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from psycopg2.errors import StringDataRightTruncation
-
-from ..errors import EntityNotFoundError
-from ..errors.database_errors import (
+from psycopg2 import errors as pg_errors
+from ....core.errors import EntityNotFoundError
+from ....core.errors.database_errors import (
     UniqueViolationError, RelationshipError,
     DBConnectionError, DatabaseError as TKDatabaseError
 )
-from ..errors.entry_validation_errors import DBTextTooLongError
+from ....core.errors.entry_validation_errors import DBTextTooLongError
 
 
 def handle_write_errors(operation: str = "unknown"):
@@ -16,16 +16,22 @@ def handle_write_errors(operation: str = "unknown"):
                 return fn(self, *args, **kwargs)
 
             except StringDataRightTruncation as e:
-                raise DBTextTooLongError(error= str(e))
+                raise DBTextTooLongError(error=str(e))
 
             except IntegrityError as e:
                 self.session.rollback()
-                msg = str(e.orig).lower() if e.orig else str(e).lower()
-                if 'unique' in msg:
-                    raise UniqueViolationError(error=msg)
-                if 'foreign key' in msg:
-                    raise RelationshipError(operation=operation, error=msg,
-                                entity_model=self.model.__name__, domain = "None")
+                orig = getattr(e, 'orig', None)
+                msg = str(orig).lower() if orig else str(e).lower()
+
+                if isinstance(orig, pg_errors.UniqueViolation):
+                    constraint = getattr(orig.diag, 'constraint_name', None)
+                    raise UniqueViolationError(error=msg, constraint=constraint)
+
+                if isinstance(orig, pg_errors.ForeignKeyViolation):
+                    raise RelationshipError(
+                        operation=operation, error=msg,
+                        entity_model=self.model.__name__, domain='Unknown'
+                    )
 
                 raise TKDatabaseError(error=f"Database integrity error: {msg}")
 
@@ -39,7 +45,9 @@ def handle_write_errors(operation: str = "unknown"):
 
             except Exception as e:
                 raise TKDatabaseError(error=str(e))
+
         return wrapper
+
     return decorator
 
 
@@ -48,19 +56,17 @@ def handle_read_errors():
         def wrapper(self, *args, **kwargs):
             try:
                 return fn(self, *args, **kwargs)
-
             except EntityNotFoundError:
-                raise EntityNotFoundError
-
+                raise
             except OperationalError as e:
                 self.session.rollback()
                 raise DBConnectionError(error=str(e))
-
             except SQLAlchemyError as e:
                 self.session.rollback()
                 raise TKDatabaseError(error=str(e))
-
             except Exception as e:
                 raise TKDatabaseError(error=str(e))
+
         return wrapper
+
     return decorator

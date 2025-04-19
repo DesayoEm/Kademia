@@ -1,3 +1,6 @@
+from ...core.errors.decorators.fk_resolver_decorators import resolve_fk_on_create
+from ...core.services.export_service.export import ExportService
+from ...database.models import Staff
 from ...database.models.enums import ArchiveReason
 from ...schemas.users.staff import (
     StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams
@@ -18,8 +21,9 @@ class StaffCrud:
         """
         self.session = session
         self.factory = StaffFactory(session)
+        self.export_service = ExportService(session)
 
-
+    @resolve_fk_on_create()
     def create_staff(self, data: StaffCreate) -> StaffResponse:
         """Create a new staff.
         Args:
@@ -73,6 +77,16 @@ class StaffCrud:
         """
         self.factory.archive_staff(staff_id, reason)
 
+    def export_staff(self, staff_id: UUID, export_format: str) -> str:
+        """Export role and its associated data
+        Args:
+            staff_id: staff member UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            Staff, staff_id, export_format
+        )
+
     def delete_staff(self, staff_id: UUID) -> None:
         """Permanently delete a staff.
         Args:
@@ -111,7 +125,6 @@ class StaffCrud:
         """
         staff = self.factory.restore_staff(staff_id)
         return StaffResponse.model_validate(staff)
-
 
     def delete_archived_staff(self, staff_id: UUID) -> None:
         """Permanently delete an archived staff.

@@ -61,8 +61,8 @@ def export_role(role_id: UUID, export_format: ExportFormat, db: Session = Depend
 
 
 @router.delete("/{role_id}", status_code=204)
-def safe_delete_role(role_id: UUID, db: Session = Depends(get_db)):
+def delete_role(role_id: UUID, db: Session = Depends(get_db)):
         roles_crud = StaffRoleCrud(db)
-        return roles_crud.safe_delete_role(role_id)
+        return roles_crud.delete_role(role_id)
 
 

@@ -26,25 +26,33 @@ class RelatedEntityNotFoundError(DBError):
                             f"id:{identifier} during {operation} operation.")
         super().__init__()
 
-
 class UniqueViolationError(DBError):
     """Raised when attempting to violate a unique constraint"""
-    def __init__(self, error: str):
+    def __init__(self, error: str, constraint: str = None):
         self.error = error
+        self.constraint = constraint or "unknown"
         self.user_message = "This record already exists"
-        self.log_message = f"Unique constraint violation - Detail: {error}"
-
+        self.log_message = f"Unique constraint violation: {self.constraint} - {error}"
         super().__init__()
 
 
 class DuplicateEntityError(UniqueViolationError):
     """Raised when creation of a duplicate entity is attempted."""
+    def __init__(self, entity_model, entry: str, field: str, detail: str, display_name: str):
+        super().__init__(error=detail)
+        self.user_message = f"A {display_name} with {field} '{entry}' already exists"
+        self.log_message = f"Duplicate {entity_model} creation: {detail}'"
 
-    def __init__(self, entity_model, entry: str, field: str, display_name: str, detail: str):
-        UniqueViolationError.__init__(self, error=detail)
-        self.user_message = f"A {display_name} with {field} {entry} already exists"
-        self.log_message = f"Duplicate {entity_model} creation attempted: {detail}"
 
+class RelationshipError(DBError):
+    """Raised when a foreign key constraint is violated during data operations"""
+
+    def __init__(self, error: str, operation: str, entity_model, domain: str):
+        self.user_message = f"Cannot {operation} record because related {entity_model} does not exist"
+        self.log_message = (f"Domain: {domain}Foreign key constraint violation during {operation} operation. "
+                            f"Detail: {error}")
+
+        super().__init__()
 
 class EntityInUseError(UniqueViolationError):
     """Raised when attempting to delete an entity that is referenced as a fk by another entity."""
@@ -72,18 +80,6 @@ class CascadeFKConstraintMisconfiguredError (DBError):
         super().__init__()
         self.user_message = f"Error: Cannot delete {entity_name}."
         self.log_message = f"Deletion blocked: Foreign key constraint {fk_name} not set to CASCADE on delete"
-
-
-
-class RelationshipError(DBError):
-    """Raised when a foreign key constraint is violated during data operations"""
-
-    def __init__(self, error: str, operation: str, entity_model, domain: str):
-        self.user_message = f"Cannot {operation} record because related {entity_model} does not exist"
-        self.log_message = (f"Domain: {domain}Foreign key constraint violation during {operation} operation. "
-                            f"Detail: {error}")
-
-        super().__init__()
 
 
 class TransactionError(DBError):

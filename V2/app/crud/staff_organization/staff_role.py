@@ -92,7 +92,7 @@ class StaffRoleCrud:
         )
 
 
-    def safe_delete_role(self, role_id: UUID) -> None:
+    def delete_role(self, role_id: UUID) -> None:
         """Permanently delete a staff role if there are no dependent records.
         Args:
             role_id: Role UUID
@@ -134,7 +134,7 @@ class StaffRoleCrud:
         return StaffRoleResponse.model_validate(role)
 
 
-    def safe_delete_archived_role(self, role_id: UUID) -> None:
+    def delete_archived_role(self, role_id: UUID) -> None:
         """Permanently delete a staff role if there are no dependent records.
         Args:
             role_id: Role UUID
