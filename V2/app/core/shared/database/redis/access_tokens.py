@@ -1,6 +1,6 @@
 from .config import r
-from datetime import datetime, timedelta
-from ...core.errors.auth_errors import TokenInvalidError
+from datetime import datetime
+from .....core.shared.errors.auth_errors import TokenInvalidError
 
 
 class TokenBlocklist:

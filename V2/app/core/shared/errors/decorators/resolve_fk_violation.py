@@ -1,7 +1,7 @@
 from functools import wraps
-from ....core.errors.fk_resolver import FKResolver
-from ....core.errors.maps.fk_mapper import fk_error_map
-from ....core.errors import RelationshipError
+from V2.app.core.shared.errors.fk_resolver import FKResolver
+from V2.app.core.shared.errors.maps.fk_mapper import fk_error_map
+from V2.app.core.shared.errors import RelationshipError
 
 
 def resolve_fk_on_create():

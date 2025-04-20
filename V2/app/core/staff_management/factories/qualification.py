@@ -1,21 +1,20 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-from V2.app.core.shared.services.export_service import ExportService
-from V2.app.core.shared.services.lifecycle_service import ArchiveService
-from V2.app.core.shared.services.lifecycle_service import DeleteService
-from ....core.validators.staff_organization import StaffOrganizationValidator
 
-from V2.app.database.models.staff_organization import EducatorQualification
-from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
+from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
+from V2.app.core.staff_management.validators.staff_management import StaffManagementValidator
+from V2.app.core.shared.database.models import EducatorQualification
+from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 from V2.app.core.shared.errors.fk_resolver import FKResolver
-from ....core.errors.maps.error_map import error_map
-from ....core.errors.maps.fk_mapper import fk_error_map
+from V2.app.core.shared.errors.maps.error_map import error_map
+from V2.app.core.shared.errors.maps.fk_mapper import fk_error_map
 from V2.app.core.shared.errors import (
     DuplicateEntityError, EntityNotFoundError, UniqueViolationError, RelationshipError
 )
-
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
@@ -33,7 +32,7 @@ class QualificationFactory:
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
         self.export_service = ExportService(session)
-        self.validator = StaffOrganizationValidator()
+        self.validator = StaffManagementValidator()
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.domain = "Educator Qualification"

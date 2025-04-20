@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta, timezone
-from ....core.errors.auth_errors import TokenInvalidError, TokenExpiredError
-from V2.app.config import config
 import jwt
 import uuid
+
+from V2.app.core.shared.errors import TokenInvalidError, TokenExpiredError
+from V2.app.config import config
 
 class TokenService:
     def __init__(self):
@@ -14,7 +15,7 @@ class TokenService:
                             refresh: bool=False):
         payload = {}
 
-        payload['user']=user_data
+        payload['identity']=user_data
         payload['exp']=datetime.now() + (
             expiry if expiry is not None else timedelta(seconds=self.ACCESS_TOKEN_EXPIRY))
         payload['jti']=str(uuid.uuid4())
@@ -48,7 +49,7 @@ class TokenService:
         expiry = token_details['exp']
         if datetime.fromtimestamp(expiry, tz=timezone.utc) > datetime.now(tz=timezone.utc):
             new_access_token = self.create_access_token(
-                user_data=token_details['user']
+                user_data=token_details['identity']
             )
             return new_access_token
         raise TokenInvalidError

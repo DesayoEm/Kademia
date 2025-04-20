@@ -1,6 +1,5 @@
 from .config import r
 import secrets
-from uuid import uuid4
 from datetime import datetime, timedelta
 
 

@@ -1,18 +1,18 @@
 from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
-from ...services.email.onboarding import OnboardingService
-from ...services.auth.password_service import PasswordService
-from ...services.lifecycle_service.archive_service import ArchiveService
-from ...services.lifecycle_service.delete_service import DeleteService
-from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....core.validators.users import UserValidator
-from ....database.models.users import Guardian
 
-from ....core.errors.maps.error_map import error_map
-from ...errors import ArchiveDependencyError, EntityNotFoundError
-from ...errors.decorators.resolve_unique_violation import resolve_unique_violation
-from ...errors.decorators.resolve_fk_violation import (
+from V2.app.core.shared.services.email_service.onboarding import OnboardingService
+from V2.app.core.auth.services.password_service import PasswordService
+from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
+from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
+from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.core.identity.validators.identity import IdentityValidator
+from V2.app.core.identity.models.guardian import Guardian
+from V2.app.core.shared.errors.maps.error_map import error_map
+from V2.app.core.shared.errors import ArchiveDependencyError, EntityNotFoundError
+from V2.app.core.shared.errors.decorators.resolve_unique_violation import resolve_unique_violation
+from V2.app.core.shared.errors.decorators.resolve_fk_violation import (
     resolve_fk_on_update, resolve_fk_on_create, resolve_fk_on_delete
 )
 
@@ -25,7 +25,7 @@ class GuardianFactory:
     def __init__(self, session: Session, model = Guardian):
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
-        self.validator = UserValidator()
+        self.validator = IdentityValidator()
         self.password_service = PasswordService(session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)

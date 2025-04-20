@@ -1,5 +1,4 @@
-from ....core.services.email.base import EmailService
-
+from V2.app.core.shared.services.email_service.base import EmailService
 
 class PasswordEmailService:
 

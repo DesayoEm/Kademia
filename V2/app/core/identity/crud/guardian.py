@@ -1,12 +1,12 @@
-from ...database.models.enums import ArchiveReason
-from V2.app.core.identity.schemas.guardian import (
-    GuardianCreate, GuardianUpdate, GuardianResponse, GuardianFilterParams
-)
-from ...core.factories.users.guardian import GuardianFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
 
+from V2.app.core.shared.schemas.enums import ArchiveReason
+from V2.app.core.identity.factories.guardian import GuardianFactory
+from V2.app.core.identity.schemas.guardian import (
+    GuardianCreate, GuardianUpdate, GuardianResponse, GuardianFilterParams
+)
 
 class GuardianCrud:
     """CRUD operations for guardian."""

@@ -1,9 +1,9 @@
 from functools import wraps
-from ....core.errors import UniqueViolationError, DuplicateEntityError
+from V2.app.core.shared.errors import UniqueViolationError, DuplicateEntityError
 
 def resolve_unique_violation(constraint_map: dict):
     """
-    Decorator to translate UniqueViolationError to a user-facing DuplicateEntityError.
+    Decorator to translate UniqueViolationError to a identity-facing DuplicateEntityError.
     `constraint_map` format:
         {
             "db_constraint": ("field_name", lambda self, context_obj: context_obj.some_field)

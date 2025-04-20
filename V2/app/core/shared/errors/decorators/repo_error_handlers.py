@@ -1,12 +1,11 @@
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError
 from psycopg2.errors import StringDataRightTruncation
 from psycopg2 import errors as pg_errors
-from ....core.errors import EntityNotFoundError
-from ....core.errors.database_errors import (
-    UniqueViolationError, RelationshipError,
-    DBConnectionError, DatabaseError as TKDatabaseError
+
+from V2.app.core.shared.errors import (
+    EntityNotFoundError, UniqueViolationError, RelationshipError, DatabaseError, DBConnectionError,
+    DatabaseError as TKDatabaseError, DBTextTooLongError
 )
-from ....core.errors.entry_validation_errors import DBTextTooLongError
 
 
 def handle_write_errors(operation: str = "unknown"):

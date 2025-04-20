@@ -1,8 +1,8 @@
-from ...database.models.enums import ArchiveReason
+from V2.app.core.shared.schemas.enums import ArchiveReason
 from V2.app.core.academic_structure.schemas.classes import (
     ClassCreate, ClassUpdate, ClassResponse, ClassFilterParams
 )
-from ...core.factories.student_organization.classes import ClassFactory
+from V2.app.core.academic_structure.factories.classes import ClassFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List

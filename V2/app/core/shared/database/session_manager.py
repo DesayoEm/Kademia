@@ -1,4 +1,3 @@
-from sqlalchemy.orm import Session
 from typing import Generator
 from .db_config import SessionFactory
 

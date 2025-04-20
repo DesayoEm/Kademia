@@ -11,7 +11,7 @@ from V2.app.core.errors.staff_organisation_errors import RoleNotFoundError, Dupl
 
 @pytest.fixture
 def mock_repository():
-    with patch("V2.app.core.factories.staff_organization.role.SQLAlchemyRepository") as mock:
+    with patch("V2.app.core.factories.staff_management.role.SQLAlchemyRepository") as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
 
@@ -41,7 +41,7 @@ def test_create_staff_role(mock_repository):
     mock_instance, _, _ = mock_repository
     session_mock = MagicMock()
 
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         validator_mock.return_value = validator_instance
 
@@ -66,7 +66,7 @@ def create_role_duplicate_error(mock_repository):
 
     session_mock = MagicMock()
 
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         validator_mock.return_value = validator_instance
         validator_instance.validate_name = lambda x: x
@@ -84,7 +84,7 @@ def test_get_all_roles(mock_repository):
     mock_instance, _, role_model = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         filters = RolesFilterParams()
@@ -103,7 +103,7 @@ def test_get_staff_role(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         result = factory.get_role(test_uuid)
@@ -117,7 +117,7 @@ def test_get_staff_role_not_found(mock_repository):
     mock_instance.get_by_id.side_effect = EntityNotFoundError(entity_type="Staffroles")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
         with pytest.raises(RoleNotFoundError):
             factory.get_role(test_uuid)
@@ -132,7 +132,7 @@ def test_update_staff_role(mock_repository):
     mock_instance.update.return_value = updated_role
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         validator_mock.return_value = validator_instance
         validator_instance.validate_name = lambda x: x
@@ -154,7 +154,7 @@ def test_update_staff_role_not_found(mock_repository):
     mock_instance.get_by_id.side_effect = EntityNotFoundError(entity_type="StaffRoles")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         update_data = {
@@ -173,7 +173,7 @@ def test_update_staff_role_duplicate(mock_repository):
     mock_instance.update.side_effect = unique_error
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         validator_mock.return_value = validator_instance
         validator_instance.validate_name = lambda x: x
@@ -197,7 +197,7 @@ def test_archive_role(mock_repository):
     mock_instance.archive.return_value = archived_role
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         reason = ArchiveReason.ADMINISTRATIVE
@@ -214,7 +214,7 @@ def test_archive_role_not_found(mock_repository):
     mock_instance.archive.side_effect = EntityNotFoundError(entity_type="StaffRoles")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         reason = ArchiveReason.ADMINISTRATIVE
@@ -226,7 +226,7 @@ def test_delete_role(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         factory.delete_role(test_uuid)
@@ -239,7 +239,7 @@ def test_delete_role_not_found(mock_repository):
     mock_instance.delete.side_effect = EntityNotFoundError(entity_type="StaffRoles")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         with pytest.raises(RoleNotFoundError):
@@ -250,7 +250,7 @@ def test_get_all_archived_roles(mock_repository):
     mock_instance, _, role_model = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         filters = RolesFilterParams()
@@ -268,7 +268,7 @@ def test_get_archived_role(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         result = factory.get_archived_role(test_uuid)
@@ -283,7 +283,7 @@ def test_get_archived_role_not_found(mock_repository):
     mock_instance.get_archive_by_id.side_effect = EntityNotFoundError(entity_type="StaffRoles")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         with pytest.raises(RoleNotFoundError):
@@ -294,7 +294,7 @@ def test_restore_role(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         result = factory.restore_role(test_uuid)
@@ -309,7 +309,7 @@ def test_restore_role_not_found(mock_repository):
     mock_instance.get_archive_by_id.side_effect = EntityNotFoundError(entity_type="StaffRoles")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         with pytest.raises(RoleNotFoundError):
@@ -320,7 +320,7 @@ def test_delete_archived_role(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
 
         factory.delete_archived_role(test_uuid)
@@ -333,7 +333,7 @@ def test_delete_archived_role_not_found(mock_repository):
     mock_instance.delete_archive.side_effect = EntityNotFoundError(entity_type="StaffRoles")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.role.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.role.StaffOrganizationValidators"):
         factory = StaffRolesFactory(session_mock)
         with pytest.raises(RoleNotFoundError):
             factory.delete_archived_role(test_uuid)

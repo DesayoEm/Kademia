@@ -1,5 +1,7 @@
 from typing import Dict, Tuple, Any
-from V2.app.database.models import EducatorQualification, StaffDepartment, StaffRole
+from V2.app.core.shared.database.models import (
+     EducatorQualification, StaffDepartment, StaffRole
+ )
 
 class StaffOrganizationGatherer:
     """Gathers data for staff organization entities including departments, roles, and qualifications"""

@@ -1,13 +1,13 @@
 from V2.app.core.shared.errors import LifetimeValidityConflictError, TemporaryValidityConflictError
 from V2.app.core.shared.errors.entry_validation_errors import PastDateError, TextTooLongError
-from ...core.errors.entry_validation_errors import (
+from V2.app.core.shared.errors import (
     EmptyFieldError, InvalidCharacterError, TextTooShortError
 )
 from datetime import datetime, date
 from dateutil.parser import parse
 
 
-class StaffOrganizationValidator:
+class StaffManagementValidator:
     def __init__(self):
         self.domain = "STAFF ORGANIZATION"
 

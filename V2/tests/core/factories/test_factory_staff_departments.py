@@ -11,7 +11,7 @@ from V2.app.core.errors.staff_organisation_errors import DepartmentNotFoundError
 
 @pytest.fixture
 def mock_repository():
-    with patch("V2.app.core.factories.staff_organization.department.SQLAlchemyRepository") as mock:
+    with patch("V2.app.core.factories.staff_management.department.SQLAlchemyRepository") as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
 
@@ -40,7 +40,7 @@ def test_create_staff_department(mock_repository):
     mock_instance, _, _ = mock_repository
     session_mock = MagicMock()
 
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         validator_mock.return_value = validator_instance
 
@@ -68,7 +68,7 @@ def test_create_staff_department_duplicate_error(mock_repository):
 
     session_mock = MagicMock()
 
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         validator_mock.return_value = validator_instance
         validator_instance.validate_name = lambda x: x
@@ -88,7 +88,7 @@ def test_get_all_departments(mock_repository):
     mock_instance, _, department_model = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         filters = DepartmentFilterParams()
@@ -107,7 +107,7 @@ def test_get_staff_department(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         result = factory.get_staff_department(test_uuid)
@@ -121,7 +121,7 @@ def test_get_staff_department_not_found(mock_repository):
     mock_instance.get_by_id.side_effect = EntityNotFoundError(entity_type="StaffDepartments")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         with pytest.raises(DepartmentNotFoundError):
@@ -138,7 +138,7 @@ def test_update_staff_department(mock_repository):
     mock_instance.update.return_value = updated_department
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         validator_mock.return_value = validator_instance
         validator_instance.validate_name = lambda x: x
@@ -167,7 +167,7 @@ def test_update_staff_department_not_found(mock_repository):
     mock_instance.get_by_id.side_effect = EntityNotFoundError(entity_type="StaffDepartments")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         update_data = {
@@ -190,7 +190,7 @@ def test_update_staff_department_duplicate(mock_repository):
     mock_instance.update.side_effect = unique_error
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         validator_mock.return_value = validator_instance
         validator_instance.validate_name = lambda x: x
@@ -211,7 +211,7 @@ def test_archive_department(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         reason = ArchiveReason.ADMINISTRATIVE
@@ -231,7 +231,7 @@ def test_archive_department_not_found(mock_repository):
     mock_instance.archive.side_effect = EntityNotFoundError(entity_type="StaffDepartments")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         reason = ArchiveReason.ADMINISTRATIVE
@@ -245,7 +245,7 @@ def test_delete_department(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         factory.delete_department(test_uuid)
@@ -261,7 +261,7 @@ def test_delete_department_not_found(mock_repository):
     mock_instance.delete.side_effect = EntityNotFoundError(entity_type="StaffDepartments")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         # Test that the correct exception is raised
@@ -273,7 +273,7 @@ def test_get_all_archived_departments(mock_repository):
     mock_instance, _, department_model = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         filters = DepartmentFilterParams()
@@ -294,7 +294,7 @@ def test_get_archived_department(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         result = factory.get_archived_department(test_uuid)
@@ -313,7 +313,7 @@ def test_get_archived_department_not_found(mock_repository):
     mock_instance.get_archive_by_id.side_effect = EntityNotFoundError(entity_type="StaffDepartments")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         # Test that the correct exception is raised
@@ -325,7 +325,7 @@ def test_restore_department(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         result = factory.restore_department(test_uuid)
@@ -344,7 +344,7 @@ def test_restore_department_not_found(mock_repository):
     mock_instance.get_archive_by_id.side_effect = EntityNotFoundError(entity_type="StaffDepartments")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         # Test that the correct exception is raised
@@ -356,7 +356,7 @@ def test_delete_archived_department(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         factory.delete_archived_department(test_uuid)
@@ -372,7 +372,7 @@ def test_delete_archived_department_not_found(mock_repository):
     mock_instance.delete_archive.side_effect = EntityNotFoundError(entity_type="StaffDepartments")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.department.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.department.StaffOrganizationValidators"):
         factory = StaffDepartmentsFactory(session_mock)
 
         # Test that the correct exception is raised

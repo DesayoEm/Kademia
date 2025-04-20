@@ -1,11 +1,13 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
-from V2.app.core.staff_management.schemas.role import RolesFilterParams, StaffRoleResponse
-from fastapi import Depends, APIRouter
-from V2.app.core.shared.database import get_db
-from V2.app.core.staff_management.crud.staff_role import StaffRoleCrud
 from fastapi import Query
 from typing import Annotated
+from fastapi import Depends, APIRouter
+
+from V2.app.core.shared.database.session_manager import get_db
+from V2.app.core.staff_management.crud.staff_role import StaffRoleCrud
+from V2.app.core.staff_management.schemas.role import RolesFilterParams, StaffRoleResponse
+
 
 router = APIRouter()
 

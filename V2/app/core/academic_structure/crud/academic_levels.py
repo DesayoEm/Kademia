@@ -1,8 +1,8 @@
-from ...database.models.enums import ArchiveReason
+from V2.app.core.shared.schemas.enums import ArchiveReason
 from V2.app.core.academic_structure.schemas.academic_level import (
     AcademicLevelCreate, AcademicLevelUpdate, AcademicLevelResponse, AcademicLevelFilterParams
 )
-from ...core.factories.student_organization.academic_level import AcademicLevelFactory
+from V2.app.core.academic_structure.factories.academic_level import AcademicLevelFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List

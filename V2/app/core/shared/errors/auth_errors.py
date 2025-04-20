@@ -32,7 +32,7 @@ class PasswordFormatError(AuthError):
 
 
 class UserNotFoundError(AuthError):
-    """Raised when a user account is not found."""
+    """Raised when a identity account is not found."""
 
     def __init__(self, identifier: str):
         self.user_message = f"User not found!"

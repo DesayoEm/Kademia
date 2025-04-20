@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 
 from V2.app.core.shared.errors import RelatedEntityNotFoundError
-from ...database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 
 class EntityValidator:

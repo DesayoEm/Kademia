@@ -2,17 +2,17 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
-from V2.app.core.shared.services.export_service import ExportService
-from V2.app.core.shared.services.lifecycle_service import ArchiveService
-from V2.app.core.shared.services.lifecycle_service import DeleteService
-from ....core.validators.staff_organization import StaffOrganizationValidator
-from ....core.validators.entity_validators import EntityValidator
-from V2.app.database.models.staff_organization import StaffDepartment
-from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
+from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
+from V2.app.core.staff_management.validators.staff_management import StaffManagementValidator
+from V2.app.core.shared.validators.entity_validators import EntityValidator
+from V2.app.core.shared.database.models import StaffDepartment
+from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 from V2.app.core.shared.errors.fk_resolver import FKResolver
-from ....core.errors.maps.error_map import error_map
-from ....core.errors.maps.fk_mapper import fk_error_map
+from V2.app.core.shared.errors.maps.error_map import error_map
+from V2.app.core.shared.errors.maps.fk_mapper import fk_error_map
 from V2.app.core.shared.errors import (
     DuplicateEntityError, ArchiveDependencyError, EntityNotFoundError, UniqueViolationError, RelationshipError
 )
@@ -32,7 +32,7 @@ class StaffDepartmentFactory:
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
         self.entity_validator = EntityValidator(session)
-        self.validator = StaffOrganizationValidator()
+        self.validator = StaffManagementValidator()
         self.repository = SQLAlchemyRepository(self.model, session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)

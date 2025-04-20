@@ -82,7 +82,7 @@ from .student_organisation_errors import (
 )
 
 from .user_errors import (
-    UserProfileError,
+    IdentityError,
     StaffTypeError,
     DuplicateStudentIDError,
     InvalidSessionYearError

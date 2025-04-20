@@ -1,13 +1,13 @@
 from datetime import datetime
+from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from V2.app.database.models import StaffDepartment, StaffRole
-from V2.app.database.models.users import System
-from V2.app.database.models.enums import (
+from V2.app.core.shared.database.models import System, StaffDepartment, StaffRole
+from V2.app.core.shared.database.models.enums import (
     AccessLevel, EmploymentStatus, StaffAvailability, Gender, UserType, StaffType
 )
 from V2.app.core.shared.database.db_config import engine
-from uuid import UUID
+
 
 KADEMIA_ID = UUID('00000000-0000-0000-0000-000000000000')
 
@@ -75,7 +75,7 @@ try:
 
     session.commit()
 
-    print("✅ System user, department, and role created successfully.")
+    print("✅ System identity, department, and role created successfully.")
 
 except Exception as e:
     print(f"❌ Error: {e}")

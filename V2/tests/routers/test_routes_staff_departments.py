@@ -20,7 +20,7 @@ def mock_crud():
     )
     response_dict = valid_response.model_dump()
 
-    with patch("V2.app.routers.staff_organization.staff_departments.StaffDepartmentCrud") as mock:
+    with patch("V2.app.routers.staff_management.staff_departments.StaffDepartmentCrud") as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
 

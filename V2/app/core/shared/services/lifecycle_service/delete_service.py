@@ -3,11 +3,10 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 from V2.app.core.shared.errors import EntityInUseError
 from V2.app.core.shared.errors.maps import error_map
-from .dependency_config import DEPENDENCY_CONFIG
 from V2.app.config import config
-from V2.app.core.shared.services.export_service import ExportService
+from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-
+from .dependency_config import DEPENDENCY_CONFIG
 
 class DeleteService:
     """

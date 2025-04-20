@@ -1,17 +1,14 @@
 from typing import List
-from uuid import uuid4, UUID
+from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
-
-from ...services.email.onboarding import OnboardingService
-from ...services.lifecycle_service.archive_service import ArchiveService
-from ...services.lifecycle_service.delete_service import DeleteService
-from ...shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ...shared.validators.users import UserValidator
-from ....core.services.auth.password_service import PasswordService
-from ....database.models.users import Staff, Educator, SupportStaff, AdminStaff
-
-
+from V2.app.core.shared.services.email_service.onboarding import OnboardingService
+from V2.app.core.auth.services.password_service import PasswordService
+from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
+from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
+from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.core.identity.validators.identity import IdentityValidator
+from V2.app.core.shared.database.models import Staff, Educator, SupportStaff, AdminStaff
 from ...shared.errors.maps.error_map import error_map
 from ...shared.errors import ArchiveDependencyError, EntityNotFoundError, StaffTypeError
 from ...shared.errors.decorators.resolve_unique_violation import resolve_unique_violation
@@ -35,7 +32,7 @@ class StaffFactory:
 
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
-        self.validator = UserValidator()
+        self.validator = IdentityValidator()
         self.password_service = PasswordService(session)
         self.onboarding_service = OnboardingService()
         self.delete_service = DeleteService(self.model, session)

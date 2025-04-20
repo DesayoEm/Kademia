@@ -1,11 +1,12 @@
-from ...database.models.enums import ArchiveReason
-from V2.app.core.staff_management.schemas.department import (
-    StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
-)
-from ...core.factories.staff_organization.department import StaffDepartmentFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
+
+from V2.app.core.shared.schemas.enums import ArchiveReason
+from V2.app.core.staff_management.schemas.department import (
+    StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
+)
+from V2.app.core.staff_management.factories.department import StaffDepartmentFactory
 
 
 class StaffDepartmentCrud:

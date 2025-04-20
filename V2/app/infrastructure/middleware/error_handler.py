@@ -4,16 +4,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 import time
 import uuid
 
-from ..core.errors import ArchiveDependencyError
-from ..core.errors.archive_delete_errors import CascadeDeletionError
-from ..core.errors.database_errors import *
-from ..core.errors.export_errors import UnimplementedGathererError, ExportFormatError
-from ..core.errors.staff_organisation_errors import *
-from ..core.errors.entry_validation_errors import *
-from ..core.errors.student_organisation_errors import *
-from ..core.errors.user_errors import *
-from ..core.errors.auth_errors import *
-from ..core.errors.email_errors import *
+from V2.app.core.shared.errors import *
 from V2.app.infrastructure.log_service.logger import logger
 
 class ExceptionMiddleware(BaseHTTPMiddleware):

@@ -1,7 +1,7 @@
 """
 
 This file maps each factory class to a dictionary of foreign key constraint names
-and their corresponding (model, attribute, user-facing label) tuples.
+and their corresponding (model, attribute, identity-facing label) tuples.
 Format:
     {
         "FactoryClassName": {

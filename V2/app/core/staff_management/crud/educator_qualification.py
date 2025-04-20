@@ -1,11 +1,12 @@
-from ...database.models.enums import ArchiveReason
-from V2.app.core.staff_management.schemas.educator_qualification import (
-    QualificationCreate, QualificationUpdate, QualificationResponse, QualificationFilterParams
-)
-from ...core.factories.staff_organization.qualification import QualificationFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
+
+from V2.app.core.shared.schemas.enums import ArchiveReason
+from V2.app.core.staff_management.schemas.educator_qualification import (
+    QualificationCreate, QualificationUpdate, QualificationResponse, QualificationFilterParams
+)
+from V2.app.core.staff_management.factories.qualification import QualificationFactory
 
 
 class QualificationCrud:

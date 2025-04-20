@@ -1,16 +1,19 @@
 from fastapi.security import HTTPBearer
 from fastapi import Request
 from sqlalchemy.orm import Session
-from V2.app.core.shared.errors.auth_errors import TokenInvalidError, UserNotFoundError
-from V2.app.database.models.users import Staff, Guardian, Student
-from V2.app.database.models.enums import UserType
-from .token_service import TokenService
 
-from ....core.errors.auth_errors import RefreshTokenRequiredError, TokenRevokedError, AccessTokenRequiredError
-from ....database.redis.access_tokens import token_blocklist
+from V2.app.core.shared.errors.auth_errors import TokenInvalidError, UserNotFoundError
+from V2.app.core.identity.models.guardian import Guardian
+from V2.app.core.identity.models.staff import Staff
+from V2.app.core.identity.models.student import Student
+from V2.app.core.shared.schemas.enums import UserType
+from V2.app.core.shared.errors import RefreshTokenRequiredError, TokenRevokedError, AccessTokenRequiredError
+from V2.app.core.shared.database.redis.access_tokens import token_blocklist
+from .token_service import TokenService
 
 token_service = TokenService()
 session = Session()
+
 
 class TokenBearer(HTTPBearer):
     def __init__(self, auto_error: bool = True):
@@ -50,9 +53,9 @@ refresh_token_bearer = RefreshTokenBearer()
 
 
 def get_current_user(token_data, db_session):
-    """Convert token data to a user object"""
+    """Convert token data to a identity object"""
 
-    user_data = token_data["user"]
+    user_data = token_data["identity"]
     user_id = user_data.get("id")
     user_type = user_data.get("user_type")
 

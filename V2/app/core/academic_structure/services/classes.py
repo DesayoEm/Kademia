@@ -1,14 +1,16 @@
 from sqlalchemy import func, select
 from uuid import UUID
 from sqlalchemy.orm import Session
+
 from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from ....core.validators.student_organization import StudentOrganizationValidator
-from V2.app.database.models.student_organization import Classes
+from V2.app.core.academic_structure.validators.academic_structure import AcademicStructureValidator
+from V2.app.core.academic_structure.models.academic_structure import Classes
+
 
 class ClassService:
     def __init__(self, session: Session):
         self.repository = SQLAlchemyRepository(Classes, session)
-        self.validator = StudentOrganizationValidator()
+        self.validator = AcademicStructureValidator()
 
     def create_order(self, level_id: UUID) -> int:
         """Create a new order value by getting the max order + 1 for the given level"""

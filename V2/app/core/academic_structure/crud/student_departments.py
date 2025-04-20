@@ -1,8 +1,8 @@
-from ...database.models.enums import ArchiveReason
+from V2.app.core.shared.schemas.enums import ArchiveReason
 from V2.app.core.academic_structure.schemas.department import (
     DepartmentCreate, DepartmentUpdate, DepartmentResponse, DepartmentFilterParams
 )
-from ...core.factories.student_organization.department import StudentDepartmentFactory
+from V2.app.core.academic_structure.factories.department import StudentDepartmentFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List

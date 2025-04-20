@@ -1,11 +1,14 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, or_, func
-from .password_service import bcrypt_context
-from V2.app.core.shared.errors.auth_errors import InvalidCredentialsError
-from V2.app.database.models.users import Staff, Guardian, Student
-from V2.app.database.models.enums import UserType
-from .token_service import TokenService
 from datetime import timedelta, datetime
+from .password_service import bcrypt_context
+
+from V2.app.core.shared.errors import InvalidCredentialsError
+from .token_service import TokenService
+from V2.app.core.identity.models.guardian import Guardian
+from V2.app.core.identity.models.staff import Staff
+from V2.app.core.identity.models.student import Student
+from V2.app.core.shared.schemas.enums import UserType
 
 
 class AuthService:
@@ -14,7 +17,7 @@ class AuthService:
         self.token_service = TokenService()
 
     def authenticate_user(self, identifier: str, password: str, user_type: UserType):
-        """Authenticate a user based on their type"""
+        """Authenticate a identity based on their type"""
         user = None
 
         if user_type == UserType.STUDENT:
@@ -45,7 +48,7 @@ class AuthService:
 
 
     def log_in(self, identifier: str, password: str, user_type: UserType):
-        """Login a user and generate access tokens"""
+        """Login a identity and generate access tokens"""
         user = self.authenticate_user(identifier, password, user_type)
         user_data = {
             "user_id": str(user.id),

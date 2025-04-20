@@ -1,3 +1,8 @@
+from .base import UserBase
+
+from ...shared.database.models.common_imports import *
+from ...shared.database.models.enums import AccessLevel, Title, UserType
+
 class Guardian(UserBase):
     """
     Represents a parent or guardian of students, including contact information and relationship with the students they oversee.

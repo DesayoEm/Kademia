@@ -7,7 +7,7 @@ from ...shared.errors.entry_validation_errors import(
     )
 
 
-class UserValidator:
+class IdentityValidator:
     def __init__(self):
         self.domain = "IDENTITY"
 

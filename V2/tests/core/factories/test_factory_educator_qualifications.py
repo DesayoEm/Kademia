@@ -11,7 +11,7 @@ from V2.app.core.errors.staff_organisation_errors import QualificationNotFoundEr
 
 @pytest.fixture
 def mock_repository():
-    with patch("V2.app.core.factories.staff_organization.qualification.SQLAlchemyRepository") as mock:
+    with patch("V2.app.core.factories.staff_management.qualification.SQLAlchemyRepository") as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
 
@@ -43,7 +43,7 @@ def test_create_qualification(mock_repository):
     mock_instance, _, _ = mock_repository
     session_mock = MagicMock()
 
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         educator_id = uuid4()
         validator_mock.return_value = validator_instance
@@ -71,7 +71,7 @@ def create_qualification_duplicate_error(mock_repository):
 
     session_mock = MagicMock()
 
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         educator_id = uuid4()
         validator_mock.return_value = validator_instance
@@ -91,7 +91,7 @@ def test_get_all_qualifications(mock_repository):
     mock_instance, _, qualification_model = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         filters = QualificationFilterParams()
@@ -110,7 +110,7 @@ def test_get_qualification(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         result = factory.get_qualification(test_uuid)
@@ -124,7 +124,7 @@ def test_get_qualification_not_found(mock_repository):
     mock_instance.get_by_id.side_effect = QualificationNotFoundError(id=test_uuid)
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
         with pytest.raises(QualificationNotFoundError):
             factory.get_qualification(test_uuid)
@@ -139,7 +139,7 @@ def test_update_qualification(mock_repository):
     mock_instance.update.return_value = updated_qualification
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         validator_mock.return_value = validator_instance
         validator_instance.validate_name = lambda x: x
@@ -162,7 +162,7 @@ def test_update_qualification_not_found(mock_repository):
         entity_type="EducatorQualifications")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         update_data = {
@@ -182,7 +182,7 @@ def test_update_qualification_duplicate(mock_repository):
     mock_instance.update.side_effect = unique_error
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators") as validator_mock:
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators") as validator_mock:
         validator_instance = MagicMock()
         validator_mock.return_value = validator_instance
         validator_instance.validate_name = lambda x: x
@@ -206,7 +206,7 @@ def test_archive_qualification(mock_repository):
     mock_instance.archive.return_value = archived_qualification
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         reason = ArchiveReason.ADMINISTRATIVE
@@ -223,7 +223,7 @@ def test_archive_qualification_not_found(mock_repository):
     mock_instance.archive.side_effect = EntityNotFoundError(entity_type="EducatorQualifications")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         reason = ArchiveReason.ADMINISTRATIVE
@@ -235,7 +235,7 @@ def test_delete_qualification(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         factory.delete_qualification(test_uuid)
@@ -249,7 +249,7 @@ def test_delete_qualification_not_found(mock_repository):
         entity_type="EducatorQualifications")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         with pytest.raises(QualificationNotFoundError):
@@ -260,7 +260,7 @@ def test_get_all_archived_qualifications(mock_repository):
     mock_instance, _, qualification_model = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         filters = QualificationFilterParams()
@@ -278,7 +278,7 @@ def test_get_archived_qualification(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         result = factory.get_archived_qualification(test_uuid)
@@ -294,7 +294,7 @@ def test_get_archived_qualification_not_found(mock_repository):
         entity_type="EducatorQualifications")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         with pytest.raises(QualificationNotFoundError):
@@ -305,7 +305,7 @@ def test_restore_qualification(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         result = factory.restore_qualification(test_uuid)
@@ -321,7 +321,7 @@ def test_restore_qualification_not_found(mock_repository):
         entity_type="EducatorQualifications")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         with pytest.raises(QualificationNotFoundError):
@@ -332,7 +332,7 @@ def test_delete_archived_qualification(mock_repository):
     mock_instance, test_uuid, _ = mock_repository
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
 
         factory.delete_archived_qualification(test_uuid)
@@ -346,7 +346,7 @@ def test_delete_archived_qualification_not_found(mock_repository):
         entity_type="EducatorQualifications")
 
     session_mock = MagicMock()
-    with patch("V2.app.core.factories.staff_organization.qualification.StaffOrganizationValidators"):
+    with patch("V2.app.core.factories.staff_management.qualification.StaffOrganizationValidators"):
         factory = QualificationsFactory(session_mock)
         with pytest.raises(QualificationNotFoundError):
             factory.delete_archived_qualification(test_uuid)

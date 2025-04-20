@@ -10,7 +10,7 @@ from V2.app.database.models.enums import ArchiveReason
 
 @pytest.fixture
 def mock_factory():
-    with patch("V2.app.crud.staff_organization.staff_roles.StaffRolesFactory") as mock:
+    with patch("V2.app.crud.staff_management.staff_roles.StaffRolesFactory") as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
 

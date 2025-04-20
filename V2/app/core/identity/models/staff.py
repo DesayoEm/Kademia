@@ -37,7 +37,7 @@ class Staff(UserBase):
     role: Mapped["StaffRole"] = relationship(back_populates='staff_members', foreign_keys='[Staff.role_id]')
     access_changes: Mapped[List["AccessLevelChange"]] = relationship(
         "AccessLevelChange",
-        back_populates='user',
+        back_populates='identity',
         primaryjoin="Staff.id == AccessLevelChange.staff_id"
     )
 

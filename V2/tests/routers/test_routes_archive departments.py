@@ -17,7 +17,7 @@ def mock_crud():
         "description": "Test Description",
     }
 
-    with patch("V2.app.routers.staff_organization.archived_staff_departments.StaffDepartmentCrud") as mock:
+    with patch("V2.app.routers.staff_management.archived_staff_departments.StaffDepartmentCrud") as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
 

@@ -1,14 +1,16 @@
-from ...core.errors.decorators.resolve_fk_violation import resolve_fk_on_create
-from ...core.services.export_service.export import ExportService
-from ...database.models import Staff
-from ...database.models.enums import ArchiveReason
-from V2.app.core.identity.schemas.staff import (
-    StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams
-)
-from ...core.factories.users.staff import StaffFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
+
+from V2.app.core.shared.schemas.enums import ArchiveReason
+from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.identity.factories.staff import StaffFactory
+from V2.app.core.identity.models.staff import Staff
+from V2.app.core.shared.schemas.enums import ArchiveReason
+from V2.app.core.identity.schemas.staff import (
+    StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams
+)
+
 
 
 class StaffCrud:
@@ -23,7 +25,7 @@ class StaffCrud:
         self.factory = StaffFactory(session)
         self.export_service = ExportService(session)
 
-    @resolve_fk_on_create()
+
     def create_staff(self, data: StaffCreate) -> StaffResponse:
         """Create a new staff.
         Args:

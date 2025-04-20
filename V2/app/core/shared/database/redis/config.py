@@ -1,6 +1,7 @@
 from V2.app.config import config
 import redis
 
+
 r = redis.Redis(
     host=config.REDIS_HOST,
     port=config.REDIS_PORT,

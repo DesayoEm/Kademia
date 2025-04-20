@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, List, Optional
 from uuid import UUID
-from V2.app.database.models.common_imports import Base
-from V2.app.database.models.enums import ArchiveReason
+from V2.app.core.shared.database.models import Base
+
 
 T = TypeVar('T', bound=Base)
 
@@ -84,7 +84,7 @@ class Repository(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def archive(self, entity_id: UUID, archived_by_id: UUID, reason: ArchiveReason) -> T:
+    def archive(self, entity_id: UUID, archived_by_id: UUID, reason) -> T:
         """
         Archive an active entity (soft delete).
         Args:

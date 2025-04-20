@@ -1,4 +1,4 @@
-from V2.app.database.models import *
+from V2.app.core.shared.database.models import *
 #[(relationship_name, model_class, fk, display name), ...]
 
 

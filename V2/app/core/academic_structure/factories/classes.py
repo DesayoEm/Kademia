@@ -1,18 +1,18 @@
 from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
-from ....core.services.student_organization.classes import ClassService
-from V2.app.database.models.student_organization import Classes
-from ....core.validators.student_organization import StudentOrganizationValidator
-from V2.app.core.shared.services.export_service import ExportService
-from V2.app.core.shared.services.lifecycle_service import ArchiveService
-from V2.app.core.shared.services.lifecycle_service import DeleteService
+from V2.app.core.academic_structure.services.classes import ClassService
+from V2.app.core.academic_structure.models.academic_structure import Classes
+from V2.app.core.academic_structure.validators.academic_structure import AcademicStructureValidator
+from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
+from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.core.shared.validators.entity_validators import EntityValidator
-from ....database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 from V2.app.core.shared.errors.fk_resolver import FKResolver
-from ....core.errors.maps.error_map import error_map
-from ....core.errors.maps.fk_mapper import fk_error_map
+from V2.app.core.shared.errors.maps.error_map import error_map
+from V2.app.core.shared.errors.maps.fk_mapper import fk_error_map
 from V2.app.core.shared.errors import (
     DuplicateEntityError, ArchiveDependencyError, EntityNotFoundError, UniqueViolationError, RelationshipError
 )
@@ -32,7 +32,7 @@ class ClassFactory:
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
         self.entity_validator = EntityValidator(session)
-        self.validator = StudentOrganizationValidator()
+        self.validator = AcademicStructureValidator()
         self.repository = SQLAlchemyRepository(self.model, session)
         self.service = ClassService(session)
         self.delete_service = DeleteService(self.model, session)

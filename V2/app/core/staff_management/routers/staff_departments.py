@@ -1,15 +1,15 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
+from fastapi import Query
+from typing import Annotated
 
+from V2.app.core.shared.schemas.shared_models import ArchiveRequest
+from fastapi import Depends, APIRouter
+from V2.app.core.shared.database.session_manager import get_db
+from V2.app.core.staff_management.crud.staff_department import StaffDepartmentCrud
 from V2.app.core.staff_management.schemas.department import(
     StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
 )
-from V2.app.core.shared.schemas.shared_models import ArchiveRequest
-from fastapi import Depends, APIRouter
-from V2.app.core.shared.database import get_db
-from V2.app.core.staff_management.crud.staff_department import StaffDepartmentCrud
-from fastapi import Query
-from typing import Annotated
 
 
 router = APIRouter()

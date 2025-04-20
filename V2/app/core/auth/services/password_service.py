@@ -2,15 +2,18 @@ import random
 import string
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 
 from V2.app.core.shared.services.email_service.password_reset import PasswordEmailService
 from V2.app.core.shared.errors.auth_errors import WrongPasswordError, InvalidCredentialsError, ResetLinkExpiredError
 from V2.app.core.auth.validators.auth import AuthValidator
-from ....database.redis.access_tokens import token_blocklist
-from ....database.redis.password_tokens import password_token_list
-from V2.app.database.models.users import Guardian, Student, Staff
+from V2.app.core.shared.database.redis.access_tokens import token_blocklist
+from V2.app.core.shared.database.redis.password_tokens import password_token_list
+from V2.app.core.identity.models.guardian import Guardian
+from V2.app.core.identity.models.staff import Staff
+from V2.app.core.identity.models.student import Student
 from V2.app.core.shared.schemas.enums import UserType
-from sqlalchemy import select
+
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -57,7 +60,7 @@ class PasswordService:
 
 
     def authenticate_user_identifier(self, identifier: str):
-        """Authenticate a user's identifier without validating a password (for password resets)"""
+        """Authenticate a identity's identifier without validating a password (for password resets)"""
         user = None
 
         #Only staff are required to reset a password
@@ -78,7 +81,7 @@ class PasswordService:
 
         self.email_service.send_staff_reset_link(
             to_email=user.email_address,
-            full_name=f"{user.title} {user.last_name}",
+            full_name=f"{user.first_name} {user.last_name}",
             reset_url=reset_link
         )
 

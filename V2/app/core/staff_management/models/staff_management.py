@@ -1,6 +1,6 @@
-from ...shared.database.models.common_imports import *
-from ...shared.database.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
-from ...shared.database.models.enums import ValidityType
+from V2.app.core.shared.database.models.common_imports import *
+from V2.app.core.shared.database.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
+from V2.app.core.shared.database.models.enums import ValidityType
 
 class StaffDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """

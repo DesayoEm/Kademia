@@ -1,10 +1,10 @@
 from V2.app.core.shared.errors.export_errors import UnimplementedGathererError
-from V2.app.database.models import *
+from V2.app.core.shared.database.models import *
 
-from .gatherers.user.staff_gatherer import StaffGatherer
-from .gatherers.user.student_gatherer import StudentGatherer
-from .gatherers.user.guardian_gatherer import GuardianGatherer
-from .gatherers.staff_organization.staff_organisation import StaffOrganizationGatherer
+from .gatherers.identity.staff_gatherer import StaffGatherer
+from .gatherers.identity.student_gatherer import StudentGatherer
+from .gatherers.identity.guardian_gatherer import GuardianGatherer
+from .gatherers.staff_management.staff_management import StaffOrganizationGatherer
 from .gatherers.academic_structure.academic_structure import AcademicStructureGatherer
 
 
