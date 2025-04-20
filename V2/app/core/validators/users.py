@@ -1,9 +1,9 @@
 from datetime import date, datetime
 import re
-
 from ..errors.user_errors import InvalidSessionYearError
 from ...core.errors.entry_validation_errors import(
- TextTooShortError,EmptyFieldError, InvalidCharacterError, InvalidPhoneError, FutureDateError
+    TextTooShortError,EmptyFieldError, InvalidCharacterError, InvalidPhoneError, FutureDateError,
+    TextTooLongError
     )
 class UserValidator:
     def __init__(self):
@@ -18,6 +18,8 @@ class UserValidator:
             raise TextTooShortError(entry = value, domain = self.domain, min_length = 2)
         if any(val.isnumeric() for val in value):
             raise InvalidCharacterError(entry=value, domain=self.domain)
+        if len(value.strip()) >= 30:
+            raise TextTooLongError(entry=value, max_length=30, domain=self.domain)
 
         return value.title()
 
@@ -28,6 +30,8 @@ class UserValidator:
             raise EmptyFieldError(entry=value, domain=self.domain)
         if len(value.strip()) < 12:
             raise TextTooShortError(entry=value, domain=self.domain, min_length=12)
+        if len(value.strip()) >= 500:
+            raise TextTooLongError(entry=value, max_length=500, domain=self.domain)
 
         return value.title()
 
@@ -38,6 +42,8 @@ class UserValidator:
             raise EmptyFieldError(entry=value, domain=self.domain)
         if len(value.strip()) < 12:
             raise TextTooShortError(entry=value, domain=self.domain, min_length=12)
+        if len(value.strip()) >= 255:
+            raise TextTooLongError(entry=value, max_length=255, domain=self.domain)
 
         return value.lower()
 
@@ -47,8 +53,10 @@ class UserValidator:
         if not value:
             raise EmptyFieldError(entry=value, domain=self.domain)
             #raise EmailFormatError()
-        return value
+        if len(value.strip()) >= 255:
+            raise TextTooLongError(entry=value, max_length=255, domain=self.domain)
 
+        return value
 
     @staticmethod
     def validate_phone(value: str) -> str:
@@ -56,9 +64,11 @@ class UserValidator:
         e164_pattern = re.compile(r'^\+\d{1,3}\d{11,15}$')
 
         if e164_pattern.match(cleaned_number):
+            if len(cleaned_number) > 14:
+                raise InvalidPhoneError(entry=value)
             return cleaned_number
-        else:
-            raise InvalidPhoneError(entry=value)
+        raise InvalidPhoneError(entry=value)
+
 
 
     def validate_date(self, value: date) -> date:

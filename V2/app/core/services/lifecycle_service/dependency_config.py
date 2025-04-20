@@ -18,7 +18,7 @@ DEPENDENCY_CONFIG = {
         ("class_transfers", ClassTransfer, "student_id", "class transfers")
     ],
     Staff: [
-        ("access_changes", AccessLevelChange, "staff_id", "access level changes")
+        # ("access_changes", AccessLevelChange, "staff_id", "access level changes")
     ],
 
     Educator: [
