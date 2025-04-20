@@ -120,7 +120,7 @@ def test_model_structure_unique_constraints(db_inspector):
     }
 
     assert any(columns == ['email_address'] for columns in constraints_map.values()
-               ), "email address should have a unique constraint"
+               ), "email_service address should have a unique constraint"
     assert any(columns == ['phone'] for columns in constraints_map.values()
                ), "phone should have a unique constraint"
 

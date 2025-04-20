@@ -1,0 +1,22 @@
+from ...shared.database.models.common_imports import *
+from ...shared.database.models.enums import Gender
+from ...shared.database.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
+
+
+class UserBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+    """
+
+    Abstract base class for users, including personal details, activity status, and eligibility for deletion.
+    Inherits from Base, AuditMixins, TimeStampMixins, and SoftDeleteMixins.
+    """
+    __abstract__ = True
+
+    id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    password_hash: Mapped[str] = mapped_column(String(300))
+    first_name: Mapped[str] = mapped_column(String(30))
+    last_name: Mapped[str] = mapped_column(String(30))
+    gender: Mapped[Gender] = mapped_column(Enum(Gender, name="gender"))
+    last_login: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
+    exported: Mapped[bool] = mapped_column(Boolean, default=False)
+    deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
+

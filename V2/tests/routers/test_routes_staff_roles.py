@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
 from uuid import uuid4
 from V2.app.main import app
-from V2.app.schemas.staff_organization.role import(
+from V2.app.core.staff_management.schemas.role import(
     StaffRoleCreate, StaffRoleUpdate, StaffRoleResponse
 )
 from V2.app.database.models.enums import ArchiveReason

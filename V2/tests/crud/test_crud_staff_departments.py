@@ -2,8 +2,8 @@ import pytest
 from unittest.mock import patch, MagicMock
 from uuid import uuid4
 
-from V2.app.crud.staff_organization.staff_department import StaffDepartmentCrud
-from V2.app.schemas.staff_organization.department import (
+from V2.app.core.staff_management.crud.staff_department import StaffDepartmentCrud
+from V2.app.core.staff_management.schemas.department import (
     StaffDepartmentCreate,
     StaffDepartmentUpdate,
     DepartmentFilterParams

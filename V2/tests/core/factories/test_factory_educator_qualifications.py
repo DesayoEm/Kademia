@@ -3,9 +3,9 @@ from unittest.mock import patch, MagicMock
 from uuid import uuid4
 
 from V2.app.core.factories.staff_organization.qualification import QualificationsFactory
-from V2.app.schemas.staff_organization.educator_qualification import QualificationCreate, QualificationUpdate, QualificationFilterParams
+from V2.app.core.staff_management.schemas.educator_qualification import QualificationCreate, QualificationFilterParams
 from V2.app.database.models.enums import ArchiveReason
-from V2.app.core.errors.database_errors import EntityNotFoundError, UniqueViolationError
+from V2.app.core.errors.database_errors import EntityNotFoundError
 from V2.app.core.errors.staff_organisation_errors import QualificationNotFoundError, DuplicateQualificationError
 
 
