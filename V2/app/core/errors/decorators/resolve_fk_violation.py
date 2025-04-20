@@ -58,3 +58,19 @@ def resolve_fk_on_update():
                 )
         return wrapper
     return decorator
+
+def resolve_fk_on_delete():
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            try:
+                return func(self, *args, **kwargs)
+            except RelationshipError as e:
+                raise RelationshipError(
+                    error=str(e),
+                    operation="delete",
+                    entity_model=self.model.__name__,
+                    domain=self.domain
+                )
+        return wrapper
+    return decorator

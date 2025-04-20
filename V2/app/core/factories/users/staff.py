@@ -2,6 +2,7 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
+from ...errors.decorators.resolve_unique_violation import resolve_unique_violation
 from ...services.email.onboarding import OnboardingService
 from ...services.lifecycle_service.archive_service import ArchiveService
 from ...services.lifecycle_service.delete_service import DeleteService
@@ -10,13 +11,13 @@ from ....core.validators.users import UserValidator
 from ....core.services.auth.password_service import PasswordService
 from ....database.models.users import Staff, Educator, SupportStaff, AdminStaff
 
-from ...errors.decorators.fk_resolver_decorators import resolve_fk_on_update, resolve_fk_on_create
 from ....core.errors.maps.error_map import error_map
-from ...errors import (
-    DuplicateEntityError, ArchiveDependencyError, EntityNotFoundError, UniqueViolationError,
-    RelationshipError,StaffTypeError
+from ...errors import ArchiveDependencyError, EntityNotFoundError, StaffTypeError
+from ...errors.decorators.resolve_unique_violation import resolve_unique_violation
+from ...errors.decorators.resolve_fk_violation import (
+    resolve_fk_on_update, resolve_fk_on_create, resolve_fk_on_delete
 )
-import logging
+
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
@@ -42,17 +43,22 @@ class StaffFactory:
         self.entity_model, self.display_name = self.error_details
         self.onboarding_service = OnboardingService()
         self.domain = "Staff"
-        self.logger = logging.getLogger('staff_service')
 
+    def raise_not_found(self, identifier, error):
+        raise EntityNotFoundError(
+            entity_model=self.entity_model,
+            identifier=identifier,
+            error=str(error),
+            display_name=self.display_name
+        )
 
+    @resolve_unique_violation({
+        "staff_phone_key": ("phone", lambda self, staff_data: staff_data.phone),
+        "staff_email_address_key": ("email_address", lambda self, staff_data: staff_data.email_address),
+    })
     @resolve_fk_on_create()
-    def create_staff(self, staff_data) -> Staff:
-        """Create a new staff.
-        Args:
-            staff_data: staff data
-        Returns:
-            Staff: Created staff record
-        """
+    def create_staff_record(self, staff_data) -> [Staff, str]:
+        """Internal method that just builds + persists the record."""
         password = self.password_service.generate_random_password()
 
         def create_staff_instance(data):
@@ -83,30 +89,17 @@ class StaffFactory:
                 )
 
         new_staff = create_staff_instance(staff_data)
-        full_name = f"{staff_data.first_name} {staff_data.last_name}"
+        return self.repository.create(new_staff), password
 
-        try:
-            self.onboarding_service.send_staff_onboarding_email(
-                staff_data.email_address, full_name, password)
-            return self.repository.create(new_staff)
 
-        except UniqueViolationError as e:
-            constraint_to_field = {
-                "staff_phone_key": ("phone", staff_data.phone),
-                "staff_email_address_key": ("email_address", staff_data.email_address),
-            }
+    def create_staff(self, staff_data) -> Staff:
+        staff, password = self.create_staff_record(staff_data)
+        full_name = f"{staff.first_name} {staff.last_name}"
+        self.onboarding_service.send_staff_onboarding_email(
+            staff.email_address, full_name, password
+        )
+        return staff
 
-            if e.constraint in constraint_to_field:
-                field_name, value = constraint_to_field[e.constraint]
-                raise DuplicateEntityError(
-                    entity_model=self.entity_model,entry=value,field=field_name,
-                    display_name=self.display_name,detail=e.error
-                )
-
-            raise DuplicateEntityError(
-                entity_model=self.entity_model,entry="value", field="unknown",
-                display_name=self.display_name, detail=e.error
-            )
 
     def get_staff(self, staff_id: UUID) -> Staff:
         """Get a specific staff by ID.
@@ -134,17 +127,15 @@ class StaffFactory:
 
 
     @resolve_fk_on_update()
+    @resolve_unique_violation({
+        "staff_phone_key": ("phone", lambda self, data: data.get('phone')),
+        "staff_email_address_key": ("email_address", lambda self, data: data.get('email_address')),
+    })
+
     def update_staff(self, staff_id: UUID, data: dict) -> Staff:
-        """Update a staff profile information.
-        Args:
-            staff_id (UUID): ID of staff to update
-            data (dict): Dictionary containing fields to update
-        Returns:
-            Staff: Updated staff record
-        """
-        original = data.copy()
+        existing = self.get_staff(staff_id)
+        original=data.copy()
         try:
-            existing = self.get_staff(staff_id)
             validations = {
                 "first_name": (self.validator.validate_name, "first_name"),
                 "last_name": (self.validator.validate_name, "last_name"),
@@ -154,33 +145,20 @@ class StaffFactory:
             }
 
             for field, (validator_func, model_attr) in validations.items():
-                if field in data:
-                    validated_value = validator_func(data.pop(field))
+                if field in original:
+                    validated_value = validator_func(original.pop(field))
                     setattr(existing, model_attr, validated_value)
 
             for key, value in data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
+            existing.last_modified_by = SYSTEM_USER_ID #placeholder
             return self.repository.update(staff_id, existing)
 
-        except UniqueViolationError as e:
-            constraint_to_field = {
-                "staff_phone_key": ("phone", original.get('phone', 'unknown')),
-                "staff_email_address_key": ("email_address", original.get('email_address', 'unknown')),
-            }
-            if e.constraint in constraint_to_field:
-                field_name, value = constraint_to_field[e.constraint]
+        except EntityNotFoundError as e:
+            self.raise_not_found(staff_id, e)
 
-                raise DuplicateEntityError(
-                    entity_model=self.entity_model, entry=value, field=field_name,
-                    display_name=self.display_name, detail=e.error
-                )
-            raise DuplicateEntityError(
-                entity_model=self.entity_model, entry="value", field="unknown",
-                display_name=self.display_name, detail=e.error
-            )
 
     def archive_staff(self, staff_id: UUID, reason) -> Staff:
             """Archive staff members if no active dependencies exist.
@@ -203,11 +181,9 @@ class StaffFactory:
                 return self.repository.archive(staff_id, SYSTEM_USER_ID, reason)
 
             except EntityNotFoundError as e:
-                raise EntityNotFoundError(
-                    entity_model=self.entity_model, identifier=staff_id, error=str(e),
-                    display_name=self.display_name
-                )
+                self.raise_not_found(staff_id, e)
 
+    @resolve_fk_on_delete()
     def delete_staff(self, staff_id: UUID, is_archived = False) -> None:
         """Permanently delete a staff member if there are no dependent entities.
         Args:
@@ -219,14 +195,8 @@ class StaffFactory:
             return self.repository.delete(staff_id)
 
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=staff_id, error=str(e),
-                display_name=self.display_name
-            )
-        except RelationshipError as e:
-            raise RelationshipError(
-                error=str(e), operation='delete', entity_model=self.model.__name__, domain=self.domain
-            )
+            self.raise_not_found(staff_id, e)
+
 
     def get_all_archived_staff(self, filters) -> List[Staff]:
         """Get all archived staff with filtering.
@@ -247,10 +217,7 @@ class StaffFactory:
             return self.repository.get_archive_by_id(staff_id)
 
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=staff_id, error=str(e),
-                display_name=self.display_name
-            )
+            self.raise_not_found(staff_id, e)
 
     def restore_staff(self, staff_id: UUID) -> Staff:
         """Restore an archived staff.
@@ -263,11 +230,9 @@ class StaffFactory:
             return self.repository.restore(staff_id)
 
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=staff_id, error=str(e),
-                display_name=self.display_name
-            )
+            self.raise_not_found(staff_id, e)
 
+    @resolve_fk_on_delete()
     def delete_archived_staff(self, staff_id: UUID, is_archived = True) -> None:
         """Permanently delete an archived staff member if there are no dependent entities.
         Args:
@@ -279,15 +244,9 @@ class StaffFactory:
             self.repository.delete_archive(staff_id)
 
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=staff_id, error=str(e),
-                display_name=self.display_name
-            )
+            self.raise_not_found(staff_id, e)
 
-        except RelationshipError as e:
-            raise RelationshipError(
-                error=str(e), operation='delete', entity_model=self.model.__name__, domain=self.domain
-            )
+
 
 
 

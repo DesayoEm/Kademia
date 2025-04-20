@@ -1,4 +1,4 @@
-from ...core.errors.decorators.fk_resolver_decorators import resolve_fk_on_create
+from ...core.errors.decorators.resolve_fk_violation import resolve_fk_on_create
 from ...core.services.export_service.export import ExportService
 from ...database.models import Staff
 from ...database.models.enums import ArchiveReason
