@@ -51,7 +51,7 @@ class Student(UserBase):
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
     graduation_date: Mapped[date] = mapped_column(Date, nullable=True)
 
-    # Relationships
+    # Standard relationships
     documents_owned: Mapped[List['StudentDocument']] = relationship(back_populates='owner')
     awards_earned: Mapped[List['StudentAward']] = relationship(back_populates='owner')
     guardian: Mapped['Guardian'] = relationship(back_populates='wards', foreign_keys='[Student.guardian_id]')
@@ -66,6 +66,27 @@ class Student(UserBase):
     department_transfers: Mapped[List['StudentDepartmentTransfer']] = relationship(back_populates='transferred_student')
     class_transfers: Mapped[List['ClassTransfer']] = relationship(back_populates='transferred_student')
 
+    represented_department: Mapped['StudentDepartment'] = relationship(
+        'StudentDepartment', back_populates='student_rep',
+        primaryjoin='Student.id == StudentDepartment.student_rep_id',
+        uselist=False
+    )
+    assistant_represented_department: Mapped['StudentDepartment'] = relationship(
+        'StudentDepartment', back_populates='assistant_rep',
+        primaryjoin='Student.id == StudentDepartment.assistant_rep_id',
+        uselist=False
+    )
+    represented_class: Mapped['Classes'] = relationship(
+        'Classes', back_populates='student_rep',
+        primaryjoin='Student.id == Classes.student_rep_id',
+        uselist=False
+    )
+    assistant_represented_class: Mapped['Classes'] = relationship(
+        'Classes', back_populates='assistant_rep',
+        primaryjoin='Student.id == Classes.assistant_rep_id',
+        uselist=False
+    )
+
     __table_args__ = (
         Index('idx_students_name', 'first_name', 'last_name'),
         Index('idx_students_id', 'student_id'),
@@ -77,7 +98,6 @@ class Student(UserBase):
 
     def __repr__(self) -> str:
         return f"Student(name={self.first_name} {self.last_name}, class={self.class_})"
-
 
 class Guardian(UserBase):
     """

@@ -24,6 +24,7 @@ class AcademicLevel(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
+
 class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     Represents a physical class within the institution, including its level, code, and academic mentor.
@@ -58,8 +59,14 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     supervisor: Mapped['Educator'] = relationship(
         back_populates='supervised_class', foreign_keys='[Classes.supervisor_id]'
     )
-    student_rep: Mapped['Student'] = relationship(foreign_keys='[Classes.student_rep_id]')
-    assistant_rep: Mapped['Student'] = relationship(foreign_keys='[Classes.assistant_rep_id]')
+    student_rep: Mapped['Student'] = relationship(
+        'Student', back_populates='represented_class',
+        foreign_keys='[Classes.student_rep_id]'
+    )
+    assistant_rep: Mapped['Student'] = relationship(
+        'Student', back_populates='assistant_represented_class',
+        foreign_keys='[Classes.assistant_rep_id]'
+    )
 
     __table_args__ = (
         UniqueConstraint('level_id', 'code', name='uq_class_level_code'),
@@ -72,52 +79,6 @@ class Classes(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     def __repr__(self) -> str:
         return f"Class(level={self.level_id}, code={self.code}, mentor={self.supervisor_id})"
 
-
-
-class ClassTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
-    """
-    Represents a student's transfer between classes, including the reason, approval status, and status updates.
-    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
-    """
-    __tablename__ = 'class_transfers'
-
-    id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-                        ondelete='CASCADE',name='fk_student_department_transfers_students_student_id')
-                    )
-    academic_year: Mapped[int] = mapped_column(Integer)
-    previous_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
-                        ondelete='RESTRICT', name='fk_student_department_transfers_classes_previous_class')
-                    )
-    new_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
-                        ondelete='RESTRICT', name='fk_student_department_transfers_classes_new_class')
-                    )
-    reason: Mapped[str] = mapped_column(String(500))
-    status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus, name='approvalstatus'), default=ApprovalStatus.PENDING)
-    status_updated_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-                        ondelete='RESTRICT',name='fk_student_department_transfers_staff_status_updated_by'),nullable=True
-                    )
-    status_updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
-    rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-
-    # Relationships
-    transferred_student: Mapped['Student'] = relationship(back_populates='class_transfers', foreign_keys='[ClassTransfer.student_id]',
-                         passive_deletes=True)
-    previous_class: Mapped['Classes'] = relationship(foreign_keys='[ClassTransfer.previous_class_id]')
-    new_class: Mapped['Classes'] = relationship(foreign_keys='[ClassTransfer.new_class_id]')
-    status_changer: Mapped['Staff'] = relationship(foreign_keys='[ClassTransfer.status_updated_by]')
-
-    __table_args__ = (
-        Index('idx_class_transfer_status', 'status'),
-        Index('idx_student_class_transfer_status', 'student_id', 'status'),
-        Index('idx_student_class_transfer_academic_year', 'student_id', 'academic_year'),
-        Index('idx_previous_class', 'previous_class_id'),
-        Index('idx_new_class', 'new_class_id'),
-    )
-
-    def __repr__(self) -> str:
-        return f"student {self.student_id} transfer from {self.previous_class_id} to {self.new_class_id} in {self.academic_year}\
-        was actioned by {self.status_updated_by}"
 
 
 class StudentDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
@@ -152,12 +113,13 @@ class StudentDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     mentor: Mapped['Educator'] = relationship(
         back_populates='mentored_department', foreign_keys='[StudentDepartment.mentor_id]'
     )
-
-    __table_args__ = (
-        Index('idx_department_mentor', 'mentor_id'),
-        Index('idx_department_name', 'name'),
-        Index('idx_department_code', 'code'),
-        Index('idx_department_reps', 'student_rep_id', 'assistant_rep_id')
+    student_rep: Mapped['Student'] = relationship(
+        'Student', back_populates='represented_department',
+        foreign_keys='[StudentDepartment.student_rep_id]'  # Fixed foreign key reference
+    )
+    assistant_rep: Mapped['Student'] = relationship(  # Changed type from Educator to Student
+        'Student', back_populates='assistant_represented_department',
+        foreign_keys='[StudentDepartment.assistant_rep_id]'  # Fixed foreign key reference
     )
 
 
