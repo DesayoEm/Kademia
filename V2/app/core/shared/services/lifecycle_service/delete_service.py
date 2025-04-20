@@ -2,7 +2,7 @@ from uuid import UUID
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from V2.app.core.shared.errors import EntityInUseError
-from V2.app.core.shared.errors.maps import error_map
+from V2.app.core.shared.errors.maps.error_map import error_map
 from V2.app.config import config
 from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository

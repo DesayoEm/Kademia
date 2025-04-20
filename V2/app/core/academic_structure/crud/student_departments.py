@@ -1,11 +1,14 @@
+from sqlalchemy.orm import Session
+from uuid import UUID
+from typing import List
+
+from V2.app.core.academic_structure.models.academic_structure import StudentDepartment
 from V2.app.core.shared.schemas.enums import ArchiveReason
 from V2.app.core.academic_structure.schemas.department import (
     DepartmentCreate, DepartmentUpdate, DepartmentResponse, DepartmentFilterParams
 )
 from V2.app.core.academic_structure.factories.department import StudentDepartmentFactory
-from sqlalchemy.orm import Session
-from uuid import UUID
-from typing import List
+from V2.app.core.shared.services.export_service.export import ExportService
 
 
 class DepartmentCrud:
@@ -18,6 +21,7 @@ class DepartmentCrud:
         """
         self.session = session
         self.factory = StudentDepartmentFactory(session)
+        self.export_service = ExportService(session)
 
 
     def create_department(self, data: DepartmentCreate) -> DepartmentResponse:
@@ -47,7 +51,7 @@ class DepartmentCrud:
         Returns:
             List[DepartmentResponse]: List of active departments
         """
-        departments = self.factory.get_all_departments(filters)
+        departments = self.factory.get_all_student_departments(filters)
         return [DepartmentResponse.model_validate(department) for department in departments]
 
 
@@ -63,6 +67,7 @@ class DepartmentCrud:
         updated_department = self.factory.update_student_department(department_id, data)
         return DepartmentResponse.model_validate(updated_department)
 
+
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> None:
         """Archive a department.
         Args:
@@ -71,7 +76,18 @@ class DepartmentCrud:
         Returns:
             DepartmentResponse: Archived department
         """
-        self.factory.archive_department(department_id, reason)
+        self.factory.archive_student_department(department_id, reason)
+
+
+    def export_department(self, department_id: UUID, export_format: str) -> str:
+        """Export department and its associated data
+        Args:
+            department_id: Department UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            StudentDepartment, department_id, export_format
+        )
 
 
     def delete_department(self, department_id: UUID) -> None:
@@ -79,7 +95,7 @@ class DepartmentCrud:
         Args:
             department_id: Department UUID
         """
-        self.factory.delete_department(department_id)
+        self.factory.delete_student_department(department_id)
 
 
     # Archived department operations
@@ -90,7 +106,7 @@ class DepartmentCrud:
         Returns:
             DepartmentResponse: Retrieved archived department
         """
-        department = self.factory.get_archived_department(department_id)
+        department = self.factory.get_archived_student_department(department_id)
         return DepartmentResponse.model_validate(department)
 
     def get_all_archived_departments(self, filters: DepartmentFilterParams) -> List[DepartmentResponse]:
@@ -100,7 +116,7 @@ class DepartmentCrud:
         Returns:
             List[DepartmentResponse]: List of archived departments
         """
-        departments = self.factory.get_all_archived_departments(filters)
+        departments = self.factory.get_all_archived_student_departments(filters)
         return [DepartmentResponse.model_validate(department) for department in departments]
 
     def restore_department(self, department_id: UUID) -> DepartmentResponse:
@@ -110,7 +126,7 @@ class DepartmentCrud:
         Returns:
             DepartmentResponse: Restored department
         """
-        department = self.factory.restore_department(department_id)
+        department = self.factory.restore_student_department(department_id)
         return DepartmentResponse.model_validate(department)
 
 
@@ -119,4 +135,4 @@ class DepartmentCrud:
         Args:
             department_id: department UUID
         """
-        self.factory.delete_archived_department(department_id)
+        self.factory.delete_archived_student_department(department_id)

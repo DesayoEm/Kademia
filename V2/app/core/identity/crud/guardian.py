@@ -2,11 +2,14 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
 
+from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.shared.schemas.enums import ArchiveReason
 from V2.app.core.identity.factories.guardian import GuardianFactory
 from V2.app.core.identity.schemas.guardian import (
     GuardianCreate, GuardianUpdate, GuardianResponse, GuardianFilterParams
 )
+from V2.app.core.shared.services.export_service.export import ExportService
+
 
 class GuardianCrud:
     """CRUD operations for guardian."""
@@ -18,6 +21,7 @@ class GuardianCrud:
         """
         self.session = session
         self.factory = GuardianFactory(session)
+        self.export_service = ExportService(session)
 
 
     def create_guardian(self, data: GuardianCreate) -> GuardianResponse:
@@ -72,6 +76,16 @@ class GuardianCrud:
             GuardianResponse: Archived guardian
         """
         self.factory.archive_guardian(guardian_id, reason)
+
+    def export_guardian(self, guardian_id: UUID, export_format: str) -> str:
+        """Export guardian and its associated data
+        Args:
+            guardian_id: Role UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            Guardian, guardian_id, export_format
+        )
 
     def delete_guardian(self, guardian_id: UUID) -> None:
         """Permanently delete a guardian.

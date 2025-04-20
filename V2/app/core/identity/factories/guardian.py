@@ -23,6 +23,11 @@ class GuardianFactory:
     """Factory class for managing guardian operations."""
 
     def __init__(self, session: Session, model = Guardian):
+        """Initialize factory with model and database session.
+            Args:
+            session: SQLAlchemy database session
+            model: Model class, defaults to Guardian
+        """
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = IdentityValidator()
@@ -44,22 +49,29 @@ class GuardianFactory:
         )
 
     @resolve_unique_violation({
-        "guardians_phone_key": ("phone", lambda self, guardian_data: guardian_data.phone),
-        "guardians_email_address_key": ("email_address", lambda self, guardian_data: guardian_data.email_address),
+        "guardians_phone_key": ("phone", lambda self, data: data.phone),
+        "guardians_email_address_key": ("email_address", lambda self, data: data.email_address),
     })
     @resolve_fk_on_create()
-    def create_guardian_record(self, guardian_data) -> [Guardian, str]:
+    def create_guardian_record(self, data) ->  [Guardian, str]:
+        """Create a new guardian.
+        Args:
+            data: guardian data
+        Returns:
+            guardian: Created guardian record
+            password: guardian's password
+        """
         password = self.password_service.generate_random_password()
         new_guardian = Guardian(
             id=uuid4(),
-            title=guardian_data.title,
-            first_name=self.validator.validate_name(guardian_data.first_name),
-            last_name=self.validator.validate_name(guardian_data.last_name),
+            title=data.title,
+            first_name=self.validator.validate_name(data.first_name),
+            last_name=self.validator.validate_name(data.last_name),
             password_hash=self.password_service.hash_password(password),
-            gender=guardian_data.gender,
-            email_address=self.validator.validate_email_address(guardian_data.email_address),
-            address=self.validator.validate_address(guardian_data.address),
-            phone=self.validator.validate_phone(guardian_data.phone),
+            gender=data.gender,
+            email_address=self.validator.validate_email_address(data.email_address),
+            address=self.validator.validate_address(data.address),
+            phone=self.validator.validate_phone(data.phone),
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
         )
@@ -76,6 +88,12 @@ class GuardianFactory:
 
 
     def get_guardian(self, guardian_id: UUID) -> Guardian:
+        """Get a specific guardian by id.
+        Args:
+            guardian_id (UUID): id of guardian to retrieve
+        Returns:
+            guardian: Retrieved guardian record
+        """
         try:
             return self.repository.get_by_id(guardian_id)
 
@@ -84,16 +102,28 @@ class GuardianFactory:
 
 
     def get_all_guardians(self, filters) -> List[Guardian]:
+        """Get all active guardian with filtering.
+        Returns:
+            List[guardian]: List of active guardians
+        """
         fields = ['name']
         return self.repository.execute_query(fields, filters)
 
 
+
     @resolve_fk_on_update()
     @resolve_unique_violation({
-        "guardians_phone_key": ("phone", lambda self, data: data.get('phone')),
-        "guardians_email_address_key": ("email_address", lambda self, data: data.get('email_address')),
+        "guardians_phone_key": ("phone", lambda self, *a: a[-1].get("phone")),
+        "guardians_email_address_key": ("email_address", lambda self, *a: a[-1].get("email_address")),
     })
     def update_guardian(self, guardian_id: UUID, data: dict) -> Guardian:
+        """Update a guardian profile information.
+        Args:
+            guardian_id (UUID): ID of guardian to update
+            data (dict): Dictionary containing fields to update
+        Returns:
+            guardian: Updated guardian record
+        """
         original = data.copy()
         existing = self.get_guardian(guardian_id)
         try:
@@ -122,6 +152,13 @@ class GuardianFactory:
 
 
     def archive_guardian(self, guardian_id: UUID, reason) -> Guardian:
+        """Archive guardian if no active dependencies exist.
+        Args:
+            guardian_id (UUID): ID of guardian to archive
+            reason: Reason for archiving
+        Returns:
+            guardian: Archived guardian record
+        """
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
                 entity_model=self.model,
@@ -140,6 +177,11 @@ class GuardianFactory:
 
     @resolve_fk_on_delete()
     def delete_guardian(self, guardian_id: UUID, is_archived = False) -> None:
+        """Permanently delete an active guardian if there are no dependent entities.
+        Args:
+            guardian_id (UUID): ID of guardian to delete
+            is_archived: Whether to check archived or active entities
+        """
         try:
             self.delete_service.check_safe_delete(self.model, guardian_id, is_archived)
             return self.repository.delete(guardian_id)
@@ -149,11 +191,20 @@ class GuardianFactory:
 
 
     def get_all_archived_guardians(self, filters) -> List[Guardian]:
+        """Get all archived guardian with filtering.
+        Returns:
+            List[guardian]: List of archived guardian records
+        """
         fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
-
     def get_archived_guardian(self, guardian_id: UUID) -> Guardian:
+        """Get an archived guardian by ID.
+        Args:
+            guardian_id: ID of guardian to retrieve
+        Returns:
+            guardian: Retrieved guardian record
+        """
         try:
             return self.repository.get_archive_by_id(guardian_id)
         except EntityNotFoundError as e:
@@ -161,6 +212,12 @@ class GuardianFactory:
 
 
     def restore_guardian(self, guardian_id: UUID) -> Guardian:
+        """Restore an archived guardian.
+        Args:
+            guardian_id: ID of guardian to restore
+        Returns:
+            guardian: Restored guardian record
+        """
         try:
             return self.repository.restore(guardian_id)
         except EntityNotFoundError as e:
@@ -169,6 +226,11 @@ class GuardianFactory:
 
     @resolve_fk_on_delete()
     def delete_archived_guardian(self, guardian_id: UUID, is_archived = True) -> None:
+        """Permanently delete an archived guardian if there are no dependent entities.
+        Args:
+            guardian_id: ID of guardian to delete
+            is_archived: Whether to check archived or active entities
+        """
         try:
             self.delete_service.check_safe_delete(self.model, guardian_id, is_archived)
             self.repository.delete_archive(guardian_id)

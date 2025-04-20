@@ -80,7 +80,7 @@ class StaffCrud:
         self.factory.archive_staff(staff_id, reason)
 
     def export_staff(self, staff_id: UUID, export_format: str) -> str:
-        """Export role and its associated data
+        """Export staff and its associated data
         Args:
             staff_id: staff member UUID
             export_format: Preferred export format

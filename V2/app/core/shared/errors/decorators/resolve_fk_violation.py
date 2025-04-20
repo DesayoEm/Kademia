@@ -25,9 +25,14 @@ def resolve_fk_on_create():
                 )
                 if resolved:
                     raise resolved
+                error = str(e)
+                print("FK Resolver received error:", error)
                 raise RelationshipError(
                     error=str(e), operation="create", entity_model="unknown", domain=self.domain
                 )
+
+
+
         return wrapper
     return decorator
 

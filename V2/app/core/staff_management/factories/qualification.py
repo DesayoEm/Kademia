@@ -87,7 +87,6 @@ class QualificationFactory:
                 error=str(e), operation="create", entity_model="unknown", domain=self.domain
             )
 
-
     def get_all_qualifications(self, filters) -> List[EducatorQualification]:
         """Get all active qualifications with filtering.
         Returns:

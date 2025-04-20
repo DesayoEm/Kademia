@@ -17,13 +17,13 @@ class GatherData:
         self.academic_gatherer = AcademicStructureGatherer()
 
         self.gatherers = {
-            # User domain
+            # Identity
             AdminStaff: self.staff_gatherer.gather_admin_staff_data,
             SupportStaff: self.staff_gatherer.gather_support_staff_data,
             Educator: self.staff_gatherer.gather_educator_data,
 
             Student: self.student_gatherer.gather_student_data,
-            Guardian: self.student_gatherer.gather_student_data,
+            Guardian: self.guardian_gatherer.gather_guardian_data,
 
             # Academic structure domain
             AcademicLevel: self.academic_gatherer.gather_academic_level_data,

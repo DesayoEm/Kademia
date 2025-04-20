@@ -75,7 +75,7 @@ try:
 
     session.commit()
 
-    print("✅ System identity, department, and role created successfully.")
+    print("✅ System user, department, and role created successfully.")
 
 except Exception as e:
     print(f"❌ Error: {e}")

@@ -1,11 +1,14 @@
-from V2.app.core.shared.schemas.enums import ArchiveReason
-from V2.app.core.academic_structure.schemas.classes import (
-    ClassCreate, ClassUpdate, ClassResponse, ClassFilterParams
-)
-from V2.app.core.academic_structure.factories.classes import ClassFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
+
+from V2.app.core.academic_structure.models.academic_structure import Classes
+from V2.app.core.shared.schemas.enums import ArchiveReason
+from V2.app.core.academic_structure.factories.classes import ClassFactory
+from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.academic_structure.schemas.classes import (
+    ClassCreate, ClassUpdate, ClassResponse, ClassFilterParams
+)
 
 
 class ClassCrud:
@@ -18,6 +21,7 @@ class ClassCrud:
         """
         self.session = session
         self.factory = ClassFactory(session)
+        self.export_service = ExportService(session)
 
 
     def create_class(self, data: ClassCreate) -> ClassResponse:
@@ -72,6 +76,16 @@ class ClassCrud:
             ClassResponse: Archived class
         """
         self.factory.archive_class(class_id, reason)
+
+    def export_class(self, class_id: UUID, export_format: str) -> str:
+        """Export class and its associated data
+        Args:
+            class_id: Class UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            Classes, class_id, export_format
+        )
 
 
     def delete_class(self, class_id: UUID) -> None:

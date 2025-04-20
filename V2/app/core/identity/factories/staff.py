@@ -51,8 +51,8 @@ class StaffFactory:
         )
 
     @resolve_unique_violation({
-        "staff_phone_key": ("phone", lambda self, staff_data: staff_data.phone),
-        "staff_email_address_key": ("email_address", lambda self, staff_data: staff_data.email_address),
+        "staff_phone_key": ("phone", lambda self, data: data.phone),
+        "staff_email_address_key": ("email_address", lambda self, data: data.email_address),
     })
     @resolve_fk_on_create()
     def create_staff_record(self, staff_data) -> [Staff, str]:
@@ -115,6 +115,7 @@ class StaffFactory:
                 display_name=self.display_name
             )
 
+
     def get_all_staff(self, filters) -> List[Staff]:
         """Get all active staff with filtering.
         Returns:
@@ -126,14 +127,20 @@ class StaffFactory:
 
     @resolve_fk_on_update()
     @resolve_unique_violation({
-        "staff_phone_key": ("phone", lambda self, data: data.get('phone')),
-        "staff_email_address_key": ("email_address", lambda self, data: data.get('email_address')),
+        "staff_phone_key": ("phone", lambda self, *a: a[-1].get("phone")),
+        "staff_email_address_key": ("email_address", lambda self, *a: a[-1].get("email_address")),
     })
-
     def update_staff(self, staff_id: UUID, data: dict) -> Staff:
-        existing = self.get_staff(staff_id)
-        original=data.copy()
+        """Update a staff profile information.
+        Args:
+            staff_id (UUID): ID of staff to update
+            data (dict): Dictionary containing fields to update
+        Returns:
+            Staff: Updated staff record
+        """
+        original = data.copy()
         try:
+            existing = self.get_staff(staff_id)
             validations = {
                 "first_name": (self.validator.validate_name, "first_name"),
                 "last_name": (self.validator.validate_name, "last_name"),
@@ -181,6 +188,7 @@ class StaffFactory:
             except EntityNotFoundError as e:
                 self.raise_not_found(staff_id, e)
 
+
     @resolve_fk_on_delete()
     def delete_staff(self, staff_id: UUID, is_archived = False) -> None:
         """Permanently delete a staff member if there are no dependent entities.
@@ -204,6 +212,7 @@ class StaffFactory:
         fields = ['name', 'staff_type']
         return self.repository.execute_archive_query(fields, filters)
 
+
     def get_archived_staff(self, staff_id: UUID) -> Staff:
         """Get an archived staff by ID.
         Args:
@@ -217,6 +226,7 @@ class StaffFactory:
         except EntityNotFoundError as e:
             self.raise_not_found(staff_id, e)
 
+
     def restore_staff(self, staff_id: UUID) -> Staff:
         """Restore an archived staff.
         Args:
@@ -229,6 +239,7 @@ class StaffFactory:
 
         except EntityNotFoundError as e:
             self.raise_not_found(staff_id, e)
+
 
     @resolve_fk_on_delete()
     def delete_archived_staff(self, staff_id: UUID, is_archived = True) -> None:

@@ -1,11 +1,14 @@
-from V2.app.core.shared.schemas.enums import ArchiveReason
-from V2.app.core.academic_structure.schemas.academic_level import (
-    AcademicLevelCreate, AcademicLevelUpdate, AcademicLevelResponse, AcademicLevelFilterParams
-)
-from V2.app.core.academic_structure.factories.academic_level import AcademicLevelFactory
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
+
+from V2.app.core.academic_structure.models.academic_structure import AcademicLevel
+from V2.app.core.shared.schemas.enums import ArchiveReason
+from V2.app.core.academic_structure.factories.academic_level import AcademicLevelFactory
+from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.academic_structure.schemas.academic_level import (
+    AcademicLevelCreate, AcademicLevelUpdate, AcademicLevelResponse, AcademicLevelFilterParams
+)
 
 
 class AcademicLevelCrud:
@@ -18,6 +21,7 @@ class AcademicLevelCrud:
         """
         self.session = session
         self.factory = AcademicLevelFactory(session)
+        self.export_service = ExportService(session)
 
 
     def create_level(self, data: AcademicLevelCreate) -> AcademicLevelResponse:
@@ -74,6 +78,15 @@ class AcademicLevelCrud:
         """
         self.factory.archive_academic_level(level_id, reason)
 
+    def export_level(self, level_id: UUID, export_format: str) -> str:
+        """Export level and its associated data
+        Args:
+            level_id: level UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            AcademicLevel, level_id, export_format
+        )
 
     def delete_level(self, level_id: UUID) -> None:
         """Permanently delete a academic level.

@@ -91,7 +91,7 @@ class StaffGatherer:
 
 
     @staticmethod
-    def gather_educator_data(self, educator: Educator) -> Tuple[Dict[str, Any], str]:
+    def gather_educator_data(educator: Educator) -> Tuple[Dict[str, Any], str]:
         """Gather data for Educator entity."""
         access_changes = educator.access_changes
         qualifications = educator.qualifications

@@ -10,7 +10,7 @@ from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo impo
 from V2.app.core.identity.validators.identity import IdentityValidator
 from V2.app.core.shared.database.models import Student
 from ...shared.errors.maps.error_map import error_map
-from ...shared.errors import ArchiveDependencyError, EntityNotFoundError, StaffTypeError
+from ...shared.errors import ArchiveDependencyError, EntityNotFoundError
 from ...shared.errors.decorators.resolve_unique_violation import resolve_unique_violation
 from ...shared.errors.decorators.resolve_fk_violation import (
     resolve_fk_on_update, resolve_fk_on_create, resolve_fk_on_delete
@@ -44,10 +44,16 @@ class StudentFactory:
         )
 
     @resolve_unique_violation({
-        "students_student_id_key": ("student ID", lambda self, student_data: self.student_service.generate_student_id(student_data.session_start_year))
+        "students_student_id_key": ("student ID", lambda self, data: self.student_service.generate_student_id(data.session_start_year))
     })
     @resolve_fk_on_create()
     def create_student(self, student_data) -> Student:
+        """Create a new student.
+        Args:
+            student_data: student data
+        Returns:
+            student: Created student record
+        """
         password = student_data.last_name.title()
 
         new_student = Student(
@@ -68,20 +74,35 @@ class StudentFactory:
 
 
     def get_student(self, student_id: UUID) -> Student:
+        """Get a specific student by ID.
+        Args:
+            student_id (UUID): ID of student to retrieve
+        Returns:
+            student: Retrieved student record
+        """
         try:
             return self.repository.get_by_id(student_id)
         except EntityNotFoundError as e:
             self.raise_not_found(student_id, e)
 
-
     def get_all_students(self, filters) -> List[Student]:
+        """Get all active student with filtering.
+        Returns:
+            List[student]: List of active students
+        """
         fields = ['name', 'student_id']
         return self.repository.execute_query(fields, filters)
 
 
     @resolve_fk_on_update()
     def update_student(self, student_id: UUID, data: dict) -> Student:
-        original = data.copy()
+        """Update a student profile information.
+        Args:
+            student_id (UUID): ID of student to update
+            data (dict): Dictionary containing fields to update
+        Returns:
+            student: Updated student record
+        """
         try:
             existing = self.get_student(student_id)
 
@@ -109,6 +130,13 @@ class StudentFactory:
 
 
     def archive_student(self, student_id: UUID, reason) -> Student:
+        """Archive student if no active dependencies exist.
+        Args:
+            student_id (UUID): ID of student to archive
+            reason (ArchiveReason): Reason for archiving
+        Returns:
+            student: Archived student record
+        """
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
                 entity_model=self.model,
@@ -127,6 +155,11 @@ class StudentFactory:
 
     @resolve_fk_on_delete()
     def delete_student(self, student_id: UUID, is_archived=False) -> None:
+        """Permanently delete a student if there are no dependent entities.
+        Args:
+            student_id (UUID): ID of student to delete
+            is_archived(bool): Whether to check active or archived records
+        """
         try:
             self.delete_service.check_safe_delete(self.model, student_id, is_archived)
             return self.repository.delete(student_id)
@@ -136,11 +169,21 @@ class StudentFactory:
 
 
     def get_all_archived_students(self, filters) -> List[Student]:
+        """Get all archived student with filtering.
+        Returns:
+            List[student]: List of archived student records
+        """
         fields = ['name', 'student_id']
         return self.repository.execute_archive_query(fields, filters)
 
 
     def get_archived_student(self, student_id: UUID) -> Student:
+        """Get an archived student by ID.
+        Args:
+            student_id: ID of student to retrieve
+        Returns:
+            student: Retrieved student record
+        """
         try:
             return self.repository.get_archive_by_id(student_id)
         except EntityNotFoundError as e:
@@ -148,6 +191,12 @@ class StudentFactory:
 
 
     def restore_student(self, student_id: UUID) -> Student:
+        """Restore an archived student.
+        Args:
+            student_id: ID of student to restore
+        Returns:
+            student: Restored student record
+        """
         try:
             return self.repository.restore(student_id)
 
@@ -157,6 +206,11 @@ class StudentFactory:
 
     @resolve_fk_on_delete()
     def delete_archived_student(self, student_id: UUID, is_archived=True) -> None:
+        """Permanently delete an archived student.
+        Args:
+            student_id: ID of student to delete
+            is_archived(bool): Whether to check active or archived records
+        """
         try:
             self.delete_service.check_safe_delete(self.model, student_id, is_archived)
             self.repository.delete_archive(student_id)

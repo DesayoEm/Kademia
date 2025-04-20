@@ -6,7 +6,7 @@ class AcademicStructureGatherer:
     """Gathers data for academic structure entities including academic levels, classes and student departments"""
 
     @staticmethod
-    def gather_academic_level_data(self, level: AcademicLevel) -> Tuple[Dict[str, Any], str]:
+    def gather_academic_level_data(level: AcademicLevel) -> Tuple[Dict[str, Any], str]:
         """Gather data for AcademicLevel entity."""
         file_name = f"AcademicLevel_{level.name}"
 
