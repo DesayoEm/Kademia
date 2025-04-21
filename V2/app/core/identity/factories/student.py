@@ -8,7 +8,7 @@ from V2.app.core.shared.services.lifecycle_service.archive_service import Archiv
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.identity.validators.identity import IdentityValidator
-from V2.app.core.shared.database.models import Student
+from V2.app.core.identity.models.student import Student
 from ...shared.errors.maps.error_map import error_map
 from ...shared.errors import ArchiveDependencyError, EntityNotFoundError
 from ...shared.errors.decorators.resolve_unique_violation import resolve_unique_violation
@@ -103,22 +103,22 @@ class StudentFactory:
         Returns:
             student: Updated student record
         """
+        copied_data = data.copy()
         try:
             existing = self.get_student(student_id)
-
             validations = {
                 "first_name": (self.validator.validate_name, "first_name"),
                 "last_name": (self.validator.validate_name, "last_name"),
                 "date_of_birth": (self.validator.validate_date, "date_of_birth"),
                 "session_start_year": (self.validator.validate_session_start_year, "session_start_year"),
             }
-
+            # leave original data untouched for error message extraction
             for field, (validator_func, model_attr) in validations.items():
-                if field in data:
-                    validated_value = validator_func(data.pop(field))
+                if field in copied_data:
+                    validated_value = validator_func(copied_data.pop(field))
                     setattr(existing, model_attr, validated_value)
 
-            for key, value in data.items():
+            for key, value in copied_data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 

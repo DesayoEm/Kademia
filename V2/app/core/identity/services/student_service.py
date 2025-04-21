@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func, Integer
-from V2.app.core.shared.database.models import Student
+from V2.app.core.identity.models.student import Student
 
 class StudentService:
     def __init__(self, session: Session):

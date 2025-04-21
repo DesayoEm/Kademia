@@ -111,8 +111,8 @@ class ClassFactory:
             }
 
             for field, (validator_func, attr_name) in validations.items():
-                if field in original:
-                    setattr(existing, attr_name, validator_func(original.pop(field)))
+                if field in data:
+                    setattr(existing, attr_name, validator_func(data.pop(field)))
 
             for key, value in data.items():
                 if hasattr(existing, key):

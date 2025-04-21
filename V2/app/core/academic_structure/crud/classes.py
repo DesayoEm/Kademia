@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
 
-from V2.app.core.academic_structure.models.academic_structure import Classes
 from V2.app.core.shared.schemas.enums import ArchiveReason
+from V2.app.core.academic_structure.models.academic_structure import Classes
 from V2.app.core.academic_structure.factories.classes import ClassFactory
 from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.academic_structure.schemas.classes import (

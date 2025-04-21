@@ -1,5 +1,7 @@
 from typing import Dict, Tuple, Any
-from V2.app.core.shared.database.models import AcademicLevel, Classes, StudentDepartment
+from  V2.app.core.academic_structure.models.academic_structure import (
+    AcademicLevel, Classes, StudentDepartment
+)
 
 
 class AcademicStructureGatherer:

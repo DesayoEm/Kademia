@@ -3,10 +3,13 @@ from uuid import UUID
 from typing import List
 
 from V2.app.core.shared.schemas.enums import ArchiveReason
+from V2.app.core.staff_management.models.staff_management import EducatorQualification
+from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.staff_management.factories.qualification import QualificationFactory
 from V2.app.core.staff_management.schemas.educator_qualification import (
     QualificationCreate, QualificationUpdate, QualificationResponse, QualificationFilterParams
 )
-from V2.app.core.staff_management.factories.qualification import QualificationFactory
+
 
 
 class QualificationCrud:
@@ -19,6 +22,8 @@ class QualificationCrud:
         """
         self.session = session
         self.factory = QualificationFactory(session)
+        self.export_service = ExportService(session)
+
 
     # Active qualification operations
     def create_qualification(self, data: QualificationCreate) -> QualificationResponse:
@@ -78,12 +83,24 @@ class QualificationCrud:
         self.factory.archive_qualification(qualification_id, reason)
 
 
+    def export_qualification(self, qualification_id: UUID, export_format: str) -> str:
+        """Export qualification and its associated data
+        Args:
+            qualification_id: Qualification UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            EducatorQualification, qualification_id, export_format
+        )
+
+
     def delete_qualification(self, qualification_id: UUID) -> None:
         """Permanently delete a qualification.
         Args:
             qualification_id: Qualification UUID
         """
         self.factory.delete_qualification(qualification_id)
+
 
     # Archived qualification operations
     def get_archived_qualification(self, qualification_id: UUID) -> QualificationResponse:

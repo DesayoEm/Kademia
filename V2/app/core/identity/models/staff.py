@@ -1,5 +1,4 @@
 from .base import UserBase
-
 from ...shared.database.models.common_imports import *
 from ...shared.database.models.enums import AccessLevel, EmploymentStatus, UserType, StaffType, StaffAvailability
 

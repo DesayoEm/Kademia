@@ -9,6 +9,7 @@ def resolve_unique_violation(constraint_map):
                 return func(self, *args, **kwargs)
             except Exception as e:
                 constraint = getattr(e, 'constraint', None)
+
                 if constraint in constraint_map:
                     field_name, value_provider = constraint_map[constraint]
                     value = value_provider(self, *args, **kwargs) if callable(value_provider) else value_provider

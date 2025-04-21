@@ -8,7 +8,7 @@ from V2.app.core.shared.services.lifecycle_service.archive_service import Archiv
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.identity.validators.identity import IdentityValidator
-from V2.app.core.shared.database.models import Staff, Educator, SupportStaff, AdminStaff
+from V2.app.core.identity.models.staff import Staff, Educator, SupportStaff, AdminStaff
 from ...shared.errors.maps.error_map import error_map
 from ...shared.errors import ArchiveDependencyError, EntityNotFoundError, StaffTypeError
 from ...shared.errors.decorators.resolve_unique_violation import resolve_unique_violation
@@ -138,7 +138,7 @@ class StaffFactory:
         Returns:
             Staff: Updated staff record
         """
-        original = data.copy()
+        copied_data = data.copy()
         try:
             existing = self.get_staff(staff_id)
             validations = {
@@ -148,13 +148,13 @@ class StaffFactory:
                 "phone": (self.validator.validate_phone, "phone"),
                 "address": (self.validator.validate_address, "address"),
             }
-
+            # leave original data untouched for error message extraction
             for field, (validator_func, model_attr) in validations.items():
-                if field in original:
-                    validated_value = validator_func(original.pop(field))
+                if field in copied_data:
+                    validated_value = validator_func(copied_data.pop(field))
                     setattr(existing, model_attr, validated_value)
 
-            for key, value in data.items():
+            for key, value in copied_data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 

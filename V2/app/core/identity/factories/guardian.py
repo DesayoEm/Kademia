@@ -124,7 +124,7 @@ class GuardianFactory:
         Returns:
             guardian: Updated guardian record
         """
-        original = data.copy()
+        copied_data = data.copy()
         existing = self.get_guardian(guardian_id)
         try:
             validations = {
@@ -134,13 +134,13 @@ class GuardianFactory:
                 "phone": (self.validator.validate_phone, "phone"),
                 "address": (self.validator.validate_address, "address"),
             }
-
+            # leave original data untouched for error message extraction
             for field, (validator_func, model_attr) in validations.items():
-                if field in original:
-                    validated_value = validator_func(original.pop(field))
+                if field in copied_data:
+                    validated_value = validator_func(copied_data.pop(field))
                     setattr(existing, model_attr, validated_value)
 
-            for key, value in data.items():
+            for key, value in copied_data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
@@ -197,6 +197,7 @@ class GuardianFactory:
         """
         fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
+
 
     def get_archived_guardian(self, guardian_id: UUID) -> Guardian:
         """Get an archived guardian by ID.

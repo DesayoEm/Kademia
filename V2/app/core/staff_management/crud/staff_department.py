@@ -3,11 +3,12 @@ from uuid import UUID
 from typing import List
 
 from V2.app.core.shared.schemas.enums import ArchiveReason
+from V2.app.core.staff_management.models.staff_management import StaffDepartment
+from V2.app.core.staff_management.factories.department import StaffDepartmentFactory
+from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.staff_management.schemas.department import (
     StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
 )
-from V2.app.core.staff_management.factories.department import StaffDepartmentFactory
-
 
 class StaffDepartmentCrud:
     """CRUD operations for staff departments."""
@@ -19,6 +20,7 @@ class StaffDepartmentCrud:
         """
         self.session = session
         self.factory = StaffDepartmentFactory(session)
+        self.export_service = ExportService(session)
 
 
     def create_department(self, data: StaffDepartmentCreate) -> StaffDepartmentResponse:
@@ -64,6 +66,7 @@ class StaffDepartmentCrud:
         updated_department = self.factory.update_staff_department(department_id, data)
         return StaffDepartmentResponse.model_validate(updated_department)
 
+
     def archive_department(self, department_id: UUID, reason: ArchiveReason) -> None:
         """Archive a department.
         Args:
@@ -74,6 +77,16 @@ class StaffDepartmentCrud:
         """
         self.factory.archive_department(department_id, reason)
 
+
+    def export_department(self, department_id: UUID, export_format: str) -> str:
+        """Export department and its associated data
+        Args:
+            department_id: level UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            StaffDepartment, department_id, export_format
+        )
 
     def delete_department(self, department_id: UUID) -> None:
         """Permanently delete a department.

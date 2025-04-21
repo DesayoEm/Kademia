@@ -1,5 +1,5 @@
 from typing import Dict, Tuple, Any
-from V2.app.core.shared.database.models import Guardian
+from  V2.app.core.identity.models.guardian import Guardian
 
 class GuardianGatherer:
     """Gatherer for student-related entities"""

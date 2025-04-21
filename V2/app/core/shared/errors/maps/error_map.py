@@ -13,8 +13,17 @@ If missing, Kademia will crash while attempting to raise an exception.
 Example:
     Student: (Student, "Student")
 """
-
-from V2.app.core.shared.database.models import *
+from ....curriculum.models.curriculum import SubjectEducator, StudentSubject, Subject, AcademicLevelSubject
+from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
+from ....documents.models.documents import StudentDocument, StudentAward
+from ....auth.models.auth import AccessLevelChange
+from ....staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
+from ....academic_structure.models.academic_structure import StudentDepartment, Classes, AcademicLevel
+from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
+from ....assessment.models.assessment import Grade, TotalGrade,Repetition
+from ....identity.models.staff import Staff, Educator, AdminStaff, SupportStaff, System
+from ....identity.models.student import Student
+from ....identity.models.guardian import Guardian
 from ...errors import *
 
 # Entity: (entity_model, display_name)

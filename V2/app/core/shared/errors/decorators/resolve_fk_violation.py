@@ -31,8 +31,6 @@ def resolve_fk_on_create():
                     error=str(e), operation="create", entity_model="unknown", domain=self.domain
                 )
 
-
-
         return wrapper
     return decorator
 
@@ -63,6 +61,7 @@ def resolve_fk_on_update():
                 )
         return wrapper
     return decorator
+
 
 def resolve_fk_on_delete():
     def decorator(func):

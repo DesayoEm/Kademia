@@ -2,13 +2,14 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
 
+from V2.app.core.staff_management.factories.staff_role import StaffRoleFactory
 from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.staff_management.models.staff_management import StaffRole
 from V2.app.core.shared.schemas.enums import ArchiveReason
 from V2.app.core.staff_management.schemas.role import (
     StaffRoleCreate, StaffRoleUpdate, StaffRoleResponse, RolesFilterParams
 )
-from V2.app.core.staff_management.factories.staff_role import StaffRoleFactory
+
 
 
 class StaffRoleCrud:

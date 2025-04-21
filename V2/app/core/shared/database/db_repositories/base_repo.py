@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, List, Optional
 from uuid import UUID
-from V2.app.core.shared.database.models import Base
+from V2.app.core.shared.database.models.common_imports import Base
 
 
 T = TypeVar('T', bound=Base)

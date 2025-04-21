@@ -3,18 +3,15 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.staff_management.validators.staff_management import StaffManagementValidator
+from V2.app.core.staff_management.models.staff_management import EducatorQualification
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
-from V2.app.core.staff_management.validators.staff_management import StaffManagementValidator
-from V2.app.core.shared.database.models import EducatorQualification
 from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-
-from V2.app.core.shared.errors.fk_resolver import FKResolver
+from V2.app.core.shared.errors.decorators.resolve_unique_violation import resolve_unique_violation
+from V2.app.core.shared.errors.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
+from V2.app.core.shared.errors import EntityNotFoundError
 from V2.app.core.shared.errors.maps.error_map import error_map
-from V2.app.core.shared.errors.maps.fk_mapper import fk_error_map
-from V2.app.core.shared.errors import (
-    DuplicateEntityError, EntityNotFoundError, UniqueViolationError, RelationshipError
-)
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
@@ -37,55 +34,40 @@ class QualificationFactory:
         self.entity_model, self.display_name = self.error_details
         self.domain = "Educator Qualification"
 
+    def raise_not_found(self, identifier, error):
+        raise EntityNotFoundError(
+            entity_model=self.entity_model,
+            identifier=identifier,
+            error=str(error),
+            display_name=self.display_name
+        )
 
-    def create_qualification(self, new_qualification) -> EducatorQualification:
+    @resolve_fk_on_create()
+    @resolve_unique_violation({
+        "uq_educator_qualification_name": ("name", lambda self, data: data.name),
+    })
+    def create_qualification(self, data) -> EducatorQualification:
         """Create a new qualification.
         Args:
-            new_qualification: Qualification data containing name, description and owner
+            data: Qualification data containing name, description and owner
         Returns:
             EducatorQualification: Created qualification record
         """
         qualification = EducatorQualification(
             id=uuid4(),
-            educator_id=new_qualification.educator_id,
-            name=self.validator.validate_name(new_qualification.name),
-            description=self.validator.validate_description(new_qualification.description),
-            validity_type = new_qualification.validity_type,
-
-            valid_until = self.validator.validate_valid_until(new_qualification.validity_type.value,
-                                    new_qualification.valid_until),
-
+            educator_id=data.educator_id,
+            name=self.validator.validate_name(data.name),
+            description=self.validator.validate_description(data.description),
+            validity_type = data.validity_type,
+            valid_until = self.validator.validate_valid_until(
+                data.validity_type.value,
+                data.valid_until
+            ),
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID,
         )
-        try:
-            return self.repository.create(qualification)
+        return self.repository.create(qualification)
 
-        except UniqueViolationError as e:
-            error_message = str(e)
-            unique_violation_map = {
-                "uq_educator_qualification_name": ("name", new_qualification.name),
-            }
-            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
-                if constraint_key in error_message:
-                    raise DuplicateEntityError(
-                        entity_model=self.entity_model, entry=entry_value, field=field_name,
-                        display_name=self.display_name, detail=error_message
-                    )
-            raise DuplicateEntityError(
-                entity_model=self.entity_model, entry="unknown", field='unknown',
-                display_name="unknown", detail=error_message)
-
-        except RelationshipError as e:
-            resolved = FKResolver.resolve_fk_violation(
-                factory_class=self.__class__, error_message=str(e), context_obj=new_qualification,
-                operation="create", fk_map=fk_error_map
-            )
-            if resolved:
-                raise resolved
-            raise RelationshipError(
-                error=str(e), operation="create", entity_model="unknown", domain=self.domain
-            )
 
     def get_all_qualifications(self, filters) -> List[EducatorQualification]:
         """Get all active qualifications with filtering.
@@ -105,15 +87,14 @@ class QualificationFactory:
         """
         try:
             return self.repository.get_by_id(qualification_id)
-
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=qualification_id, error=str(e),
-                display_name=self.display_name
-
-            )
+            self.raise_not_found(qualification_id, e)
 
 
+    @resolve_fk_on_update()
+    @resolve_unique_violation({
+        "uq_educator_qualification_name": ("name", lambda self, *a: a[-1].get("name")),
+    })
     def update_qualification(self, qualification_id: UUID, data: dict) -> EducatorQualification:
         """Update a qualification's information.
         Args:
@@ -122,10 +103,10 @@ class QualificationFactory:
         Returns:
             EducatorQualification: Updated qualification record
         """
-        original = data.copy()
+        copied_data = data.copy()
         try:
             existing = self.get_qualification(qualification_id)
-            educator_id = existing.educator_id  # separately stored for for error handling
+            educator_id = existing.educator_id  # stored for for error handling
 
             if "validity_type" in data and "valid_until" in data:
                 existing.validity_type = data['validity_type']
@@ -146,10 +127,10 @@ class QualificationFactory:
                 "name": (self.validator.validate_name, "name"),
                 "description": (self.validator.validate_description, "description"),
             }
-
+            # leave original data untouched for error message extraction
             for field, (validator_func, model_attr) in validations.items():
-                if field in data:
-                    validated_value = validator_func(data.pop(field))
+                if field in copied_data:
+                    validated_value = validator_func(copied_data.pop(field))
                     setattr(existing, model_attr, validated_value)
 
             existing.last_modified_by = SYSTEM_USER_ID
@@ -157,36 +138,7 @@ class QualificationFactory:
             return self.repository.update(qualification_id, existing)
 
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=qualification_id, error=str(e),
-                display_name=self.display_name
-            )
-
-        except UniqueViolationError as e:
-            error_message = str(e)
-            unique_violation_map = {
-                "uq_educator_qualification_name": ("name",original.get('name', 'unknown')),
-            }
-            for constraint_key, (field_name, entry_value) in unique_violation_map.items():
-                if constraint_key in error_message:
-                    raise DuplicateEntityError(
-                        entity_model=self.entity_model, entry=entry_value, field=field_name,
-                        display_name=self.display_name, detail=error_message
-                    )
-            raise DuplicateEntityError(
-                entity_model=self.entity_model, entry="unknown", field='unknown',
-                display_name="unknown", detail=error_message)
-
-        except RelationshipError as e:
-            resolved = FKResolver.resolve_fk_violation(
-                factory_class=self.__class__, error_message=str(e), context_obj=existing,
-                operation="update", fk_map=fk_error_map
-            )
-            if resolved:
-                raise resolved
-            raise RelationshipError(
-                error=str(e), operation="update", entity_model="unknown", domain=self.domain
-            )
+            self.raise_not_found(qualification_id, e)
 
 
     def archive_qualification(self, qualification_id: UUID, reason) -> EducatorQualification:
@@ -202,12 +154,10 @@ class QualificationFactory:
             return self.repository.archive(qualification_id, SYSTEM_USER_ID, reason)
 
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=qualification_id, error=str(e),
-                display_name=self.display_name
-            )
+            self.raise_not_found(qualification_id, e)
 
 
+    @resolve_fk_on_delete()
     def delete_qualification(self, qualification_id: UUID) -> None:
         """Permanently delete a qualification.
         Args:
@@ -216,17 +166,8 @@ class QualificationFactory:
         try:
             #There's no need to check for dependent entities before deletion as there are none
             self.repository.delete(qualification_id)
-
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=qualification_id, error=str(e),
-                display_name=self.display_name
-
-            )
-        except RelationshipError as e:
-            raise RelationshipError(
-                error=str(e), operation='delete', entity_model='unknown_entity', domain=self.domain)
-
+            self.raise_not_found(qualification_id, e)
 
 
     # Archive factory methods
@@ -248,12 +189,8 @@ class QualificationFactory:
         """
         try:
             return self.repository.get_archive_by_id(qualification_id)
-
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=qualification_id, error=str(e),
-                display_name=self.display_name
-            )
+            self.raise_not_found(qualification_id, e)
 
 
     def restore_qualification(self, qualification_id: UUID) -> EducatorQualification:
@@ -265,14 +202,11 @@ class QualificationFactory:
         """
         try:
             return self.repository.restore(qualification_id)
-
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=qualification_id, error=str(e),
-                display_name=self.display_name
-            )
+            self.raise_not_found(qualification_id, e)
 
 
+    @resolve_fk_on_delete()
     def delete_archived_qualification(self, qualification_id: UUID) -> None:
         """Permanently delete an archived qualification.
         Args:
@@ -281,12 +215,5 @@ class QualificationFactory:
         try:
             # There's no need to check for dependent entities before deletion as there are none
             self.repository.delete_archive(qualification_id)
-
         except EntityNotFoundError as e:
-            raise EntityNotFoundError(
-                entity_model=self.entity_model, identifier=qualification_id, error=str(e),
-                display_name=self.display_name
-            )
-        except RelationshipError as e:
-            raise RelationshipError(
-                error=str(e), operation='delete', entity_model='unknown_entity', domain=self.domain)
+            self.raise_not_found(qualification_id, e)

@@ -1,9 +1,6 @@
 from typing import Dict, Tuple, Any
-from V2.app.core.shared.database.models import (
+from  V2.app.core.identity.models.staff import AdminStaff, Educator, SupportStaff
 
-Staff, AdminStaff, Educator, SupportStaff
-
-)
 
 class StaffGatherer:
     """Gatherer for staff-related entities"""
