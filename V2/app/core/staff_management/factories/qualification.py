@@ -15,6 +15,7 @@ from V2.app.core.shared.errors.maps.error_map import error_map
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
+
 class QualificationFactory:
     """Factory class for managing qualification operations."""
 
@@ -42,10 +43,12 @@ class QualificationFactory:
             display_name=self.display_name
         )
 
-    @resolve_fk_on_create()
+
+
     @resolve_unique_violation({
         "uq_educator_qualification_name": ("name", lambda self, data: data.name),
     })
+    @resolve_fk_on_create()
     def create_qualification(self, data) -> EducatorQualification:
         """Create a new qualification.
         Args:

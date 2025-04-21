@@ -2,13 +2,14 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
 
+from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.shared.schemas.enums import ArchiveReason
 from V2.app.core.identity.factories.guardian import GuardianFactory
 from V2.app.core.identity.schemas.guardian import (
     GuardianCreate, GuardianUpdate, GuardianResponse, GuardianFilterParams
 )
-from V2.app.core.shared.services.export_service.export import ExportService
+
 
 
 class GuardianCrud:
@@ -80,7 +81,7 @@ class GuardianCrud:
     def export_guardian(self, guardian_id: UUID, export_format: str) -> str:
         """Export guardian and its associated data
         Args:
-            guardian_id: Role UUID
+            guardian_id: guardian UUID
             export_format: Preferred export format
         """
         return self.export_service.export_entity(

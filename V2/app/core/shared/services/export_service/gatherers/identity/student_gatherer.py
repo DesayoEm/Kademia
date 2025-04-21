@@ -58,7 +58,7 @@ class StudentGatherer:
                         "id": str(student.guardian_id),
                         "full_name": f"{student.guardian.first_name} {student.guardian.last_name}" if student.guardian else None,
                         "phone": student.guardian.phone if student.guardian else None,
-                        "email_service": student.guardian.email_address if student.guardian else None
+                        "email_address": student.guardian.email_address if student.guardian else None
                     },
                     "subjects_taken": [
                         {

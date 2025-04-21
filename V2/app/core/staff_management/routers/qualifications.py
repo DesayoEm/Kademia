@@ -51,7 +51,7 @@ def archive_qualification(qualification_id: UUID, reason:ArchiveRequest,
 
 
 @router.post("/{qualification_id}", response_class=FileResponse,  status_code=204)
-def export_role(qualification_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
+def export_qualification(qualification_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
     qualifications_crud = QualificationCrud(db)
     file_path= qualifications_crud.export_qualification(qualification_id, export_format.value)
 

@@ -8,7 +8,11 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-from V2.app.core.staff_management.routers import staff_departments, staff_roles, staff_roles_archive, qualifications, qualifications_archive
+from V2.app.core.staff_management.routers import (
+    staff_departments, staff_departments_archive, staff_roles, staff_roles_archive, qualifications,
+    qualifications_archive
+)
+
 from V2.app.core.academic_structure.routers import (
     academic_levels, academic_levels_archive, student_departments, student_departments_archive, classes, classes_archive
 )
@@ -64,7 +68,7 @@ app.include_router(guardian_archive.router, prefix=f"/api/{version}/admin/archiv
 # Staff Departments
 app.include_router(staff_departments.router, prefix=f"/api/{version}/admin/staff/departments",
                    tags=["Staff Departments", "Admin"])
-app.include_router(staff_archive.router, prefix=f"/api/{version}/admin/archive/staff/departments",
+app.include_router(staff_departments_archive.router, prefix=f"/api/{version}/admin/archive/staff/departments",
                    tags=["Archived", "Staff Departments", "Admin"])
 
 # Roles

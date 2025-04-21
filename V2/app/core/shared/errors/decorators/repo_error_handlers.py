@@ -3,7 +3,7 @@ from psycopg2.errors import StringDataRightTruncation
 from psycopg2 import errors as pg_errors
 
 from V2.app.core.shared.errors import (
-    EntityNotFoundError, UniqueViolationError, RelationshipError, DatabaseError, DBConnectionError,
+    EntityNotFoundError, UniqueViolationError, RelationshipError, DBConnectionError,
     DatabaseError as TKDatabaseError, DBTextTooLongError
 )
 
@@ -22,14 +22,20 @@ def handle_write_errors(operation: str = "unknown"):
                 orig = getattr(e, 'orig', None)
                 msg = str(orig).lower() if orig else str(e).lower()
 
-                if isinstance(orig, pg_errors.UniqueViolation):
-                    constraint = getattr(orig.diag, 'constraint_name', None)
-                    raise UniqueViolationError(error=msg, constraint=constraint)
+                # Save the original constraint name
+                constraint_name = None
+                if hasattr(orig, 'diag') and hasattr(orig.diag, 'constraint_name'):
+                    constraint_name = orig.diag.constraint_name
 
-                if isinstance(orig, pg_errors.ForeignKeyViolation):
+                if 'unique' in msg or isinstance(orig, pg_errors.UniqueViolation):
+                    raise UniqueViolationError(error=msg, constraint=constraint_name)
+
+                if 'foreign key' in msg or isinstance(orig, pg_errors.ForeignKeyViolation):
+                    # Pass the operation parameter and constraint name
                     raise RelationshipError(
-                        operation=operation, error=msg,
-                        entity_model=self.model.__name__, domain='Unknown'
+                        error=msg,
+                        operation=operation,
+                        constraint=constraint_name
                     )
 
                 raise TKDatabaseError(error=f"Database integrity error: {msg}")

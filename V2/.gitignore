@@ -6,6 +6,7 @@ venv/
 idea/
 idea
 logs/
+exports/
 *.log
 *.egg-info/
 __pycache__/

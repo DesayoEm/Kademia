@@ -1,5 +1,15 @@
 from V2.app.core.shared.errors.export_errors import UnimplementedGathererError
-from V2.app.core.shared.database.models import *
+from ....staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
+from ....academic_structure.models.academic_structure import StudentDepartment, Classes, AcademicLevel
+from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
+from ....assessment.models.assessment import Grade, TotalGrade,Repetition
+from ....curriculum.models.curriculum import SubjectEducator, StudentSubject, Subject, AcademicLevelSubject
+from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
+from ....documents.models.documents import StudentDocument, StudentAward
+from ....auth.models.auth import AccessLevelChange
+from ....identity.models.staff import Educator, AdminStaff, SupportStaff
+from ....identity.models.student import Student
+from ....identity.models.guardian import Guardian
 
 from .gatherers.identity.staff_gatherer import StaffGatherer
 from .gatherers.identity.student_gatherer import StudentGatherer

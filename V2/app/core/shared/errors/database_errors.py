@@ -16,19 +16,9 @@ class EntityNotFoundError(DBError):
         super().__init__()
 
 
-class RelatedEntityNotFoundError(DBError):
-    """Raised when an entity cannot be found during attempted fk insertion"""
-    def __init__(
-            self, entity_model, identifier: UUID, display_name: str, operation: str):
-
-        self.user_message = f"Related {display_name} not found!"
-        self.log_message = (f"Error during during fk insertion of {entity_model} with "
-                            f"id:{identifier} during {operation} operation.")
-        super().__init__()
-
 class UniqueViolationError(DBError):
     """Raised when attempting to violate a unique constraint"""
-    def __init__(self, error: str, constraint: str = None):
+    def __init__(self, error: str, constraint: str|None = None):
         self.error = error
         self.constraint = constraint or "unknown"
         self.user_message = "This record already exists"
@@ -47,12 +37,29 @@ class DuplicateEntityError(UniqueViolationError):
 class RelationshipError(DBError):
     """Raised when a foreign key constraint is violated during data operations"""
 
-    def __init__(self, error: str, operation: str, entity_model, domain: str):
-        self.user_message = f"Cannot {operation} record because related {entity_model} does not exist"
-        self.log_message = (f"Domain: {domain}Foreign key constraint violation during {operation} operation. "
-                            f"Detail: {error}")
-
+    def __init__(self, error: str, operation: str, constraint: str | None = None):
+        self.error = error
+        self.constraint = constraint or "unknown"
+        self.user_message = f"Related record does not exist"
+        self.log_message = f"ForeignKeyViolation: during {operation} - {error}"
         super().__init__()
+
+    def __str__(self):
+        return self.error
+
+
+class RelatedEntityNotFoundError(RelationshipError):
+    """Raised when an entity cannot be found during attempted fk insertion"""
+    def __init__(
+            self, entity_model, identifier: UUID, display_name: str, operation: str,
+            detail: str):
+        super().__init__(error=detail, operation=operation)
+
+        self.user_message = f"Related {display_name} not found!"
+        self.log_message = (f"Error during during fk insertion of {entity_model} with "
+                            f"id:{identifier} during {operation}.")
+
+
 
 class EntityInUseError(UniqueViolationError):
     """Raised when attempting to delete an entity that is referenced as a fk by another entity."""

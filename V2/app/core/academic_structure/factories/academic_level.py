@@ -103,7 +103,7 @@ class AcademicLevelFactory:
         Returns:
             AcademicLevel: Updated academic_level record
         """
-        original = data.copy()
+        copied_data = data.copy()
         try:
             existing = self.get_academic_level(level_id)
             validations = {
@@ -113,11 +113,11 @@ class AcademicLevelFactory:
             }
 
             for field, (validator_func, model_attr) in validations.items():
-                if field in data:
-                    validated_value = validator_func(original.pop(field))
+                if field in copied_data:
+                    validated_value = validator_func(copied_data.pop(field))
                     setattr(existing, model_attr, validated_value)
 
-            for key, value in data.items():
+            for key, value in copied_data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 

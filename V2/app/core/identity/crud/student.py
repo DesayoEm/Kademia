@@ -2,6 +2,7 @@ from uuid import UUID
 from typing import List
 from sqlalchemy.orm import Session
 
+from V2.app.core.identity.models.student import Student
 from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.shared.schemas.enums import ArchiveReason
@@ -19,6 +20,7 @@ class StudentCrud:
         """
         self.session = session
         self.factory = StudentFactory(session)
+        self.export_service = ExportService(session)
 
 
     def create_student(self, data: StudentCreate) -> StudentResponse:
@@ -73,6 +75,17 @@ class StudentCrud:
             StudentResponse: Archived student
         """
         self.factory.archive_student(student_id, reason)
+
+
+    def export_student(self, student_id: UUID, export_format: str) -> str:
+        """Export guardian and its associated data
+        Args:
+            student_id: student UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            Student, student_id, export_format
+        )
 
     def delete_student(self, student_id: UUID) -> None:
         """Permanently delete a student.

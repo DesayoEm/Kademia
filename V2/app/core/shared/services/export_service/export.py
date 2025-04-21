@@ -3,12 +3,10 @@ from uuid import UUID
 import csv
 import os
 import openpyxl
-
-from V2.app.core.shared.errors.maps import error_map
 from V2.app.config import config
+from V2.app.core.shared.errors.maps.error_map import error_map
 from V2.app.core.shared.errors import EntityNotFoundError, ExportFormatError
 from .gather_data import GatherData
-
 
 class ExportService:
     """

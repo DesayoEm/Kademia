@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from V2.app.core.shared.errors import EntityInUseError
 from V2.app.core.shared.errors.maps.error_map import error_map
 from V2.app.config import config
-from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from .dependency_config import DEPENDENCY_CONFIG
 
@@ -18,7 +17,6 @@ class DeleteService:
     Attributes:
         session (Session): SQLAlchemy database session
         model: SQLAlchemy model class for the entity
-        export_service (ExportService): Service for exporting entities before deletion
         repository (SQLAlchemyRepository): Repository for database operations
     """
 
@@ -33,7 +31,6 @@ class DeleteService:
         """
         self.session = session
         self.model = model
-        self.export_service = ExportService(session)
         self.repository = SQLAlchemyRepository(model, session)
         self.anonymous_user = UUID(config.ANONYMIZED_ID)
 

@@ -54,7 +54,7 @@ def archive_department(department_id: UUID, reason:ArchiveRequest,
 
 
 @router.post("/{department_id}", response_class=FileResponse,  status_code=204)
-def export_role(department_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
+def export_department(department_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
     staff_departments_crud = StaffDepartmentCrud(db)
     file_path= staff_departments_crud.export_department(department_id, export_format.value)
 

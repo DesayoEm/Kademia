@@ -9,7 +9,7 @@ from dateutil.parser import parse
 
 class StaffManagementValidator:
     def __init__(self):
-        self.domain = "STAFF ORGANIZATION"
+        self.domain = "STAFF MANAGEMENT"
 
 
     def validate_name(self, value:str) -> str:
