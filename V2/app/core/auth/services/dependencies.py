@@ -2,13 +2,13 @@ from fastapi.security import HTTPBearer
 from fastapi import Request
 from sqlalchemy.orm import Session
 
-from V2.app.core.shared.errors.auth_errors import TokenInvalidError, UserNotFoundError
+from V2.app.core.shared.exceptions.auth_errors import TokenInvalidError, UserNotFoundError
 from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.identity.models.staff import Staff
 from V2.app.core.identity.models.student import Student
 from V2.app.core.shared.schemas.enums import UserType
-from V2.app.core.shared.errors import RefreshTokenRequiredError, TokenRevokedError, AccessTokenRequiredError
-from V2.app.core.shared.database.redis.access_tokens import token_blocklist
+from V2.app.core.shared.exceptions import RefreshTokenRequiredError, TokenRevokedError, AccessTokenRequiredError
+from V2.app.infra.db.redis.access_tokens import token_blocklist
 from .token_service import TokenService
 
 token_service = TokenService()

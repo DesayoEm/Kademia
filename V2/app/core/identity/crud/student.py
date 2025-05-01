@@ -16,7 +16,7 @@ class StudentCrud:
     def __init__(self, session: Session):
         """Initialize CRUD service.
         Args:
-            session: SQLAlchemy database session
+            session: SQLAlchemy db session
         """
         self.session = session
         self.factory = StudentFactory(session)

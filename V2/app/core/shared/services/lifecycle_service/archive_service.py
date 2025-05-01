@@ -13,15 +13,15 @@ class ArchiveService:
     verifying that no active entities are referencing it.
 
     Attributes:
-        session (Session): SQLAlchemy database session
+        session (Session): SQLAlchemy db session
     """
 
     def __init__(self, session: Session):
         """
-        Initialize the archive service with a database session.
+        Initialize the archive service with a db session.
 
         Args:
-            session (Session): SQLAlchemy database session
+            session (Session): SQLAlchemy db session
         """
         self.session = session
 

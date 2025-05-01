@@ -3,7 +3,7 @@ from sqlalchemy import select, or_, func
 from datetime import timedelta, datetime
 from .password_service import bcrypt_context
 
-from V2.app.core.shared.errors import InvalidCredentialsError
+from V2.app.core.shared.exceptions import InvalidCredentialsError
 from .token_service import TokenService
 from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.identity.models.staff import Staff

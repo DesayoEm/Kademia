@@ -3,30 +3,30 @@ from uuid import UUID
 import csv
 import os
 import openpyxl
-from V2.app.config import config
-from V2.app.core.shared.errors.maps.error_map import error_map
-from V2.app.core.shared.errors import EntityNotFoundError, ExportFormatError
+from V2.app.infra.settings import config
+from V2.app.core.shared.exceptions.maps.error_map import error_map
+from V2.app.core.shared.exceptions import EntityNotFoundError, ExportFormatError
 from .gather_data import GatherData
 
 class ExportService:
     """
     Service for exporting entities and their related data to various file formats.
 
-    Provides methods to export database entities to PDF, CSV, or Excel formats,
+    Provides methods to export db entities to PDF, CSV, or Excel formats,
     handling entity retrieval, data gathering, and file generation.
 
     Attributes:
-        session: SQLAlchemy database session
+        session: SQLAlchemy db session
         gatherer (GatherData): Service for gathering entity data for export
         export_dir (str): Directory path where exported files will be saved
     """
 
     def __init__(self, session):
         """
-        Initialize the export service with a database session.
+        Initialize the export service with a db session.
 
         Args:
-            session: SQLAlchemy database session
+            session: SQLAlchemy db session
         """
         self.session = session
         self.gatherer = GatherData()
@@ -37,7 +37,7 @@ class ExportService:
         """
         Export an entity and its related data to the specified format.
 
-        Retrieves the entity from the database, gathers its data using the
+        Retrieves the entity from the db, gathers its data using the
         GatherData service, and exports it to the requested format.
 
         Args:

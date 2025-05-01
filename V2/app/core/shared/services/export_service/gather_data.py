@@ -1,4 +1,4 @@
-from V2.app.core.shared.errors.export_errors import UnimplementedGathererError
+from V2.app.core.shared.exceptions.export_errors import UnimplementedGathererError
 from ....staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
 from ....academic_structure.models.academic_structure import StudentDepartment, Classes, AcademicLevel
 from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer

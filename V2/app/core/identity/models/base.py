@@ -1,6 +1,6 @@
-from ...shared.database.models.common_imports import *
-from ...shared.database.models.enums import Gender
-from ...shared.database.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
+from V2.app.core.shared.models.common_imports import *
+from V2.app.core.shared.models.enums import Gender
+from V2.app.core.shared.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
 
 
 class UserBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):

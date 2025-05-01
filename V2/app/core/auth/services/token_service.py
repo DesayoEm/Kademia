@@ -2,8 +2,8 @@ from datetime import datetime, timedelta, timezone
 import jwt
 import uuid
 
-from V2.app.core.shared.errors import TokenInvalidError, TokenExpiredError
-from V2.app.config import config
+from V2.app.core.shared.exceptions import TokenInvalidError, TokenExpiredError
+from V2.app.infra.settings import config
 
 class TokenService:
     def __init__(self):

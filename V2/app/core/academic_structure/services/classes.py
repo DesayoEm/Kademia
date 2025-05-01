@@ -2,7 +2,7 @@ from sqlalchemy import func, select
 from uuid import UUID
 from sqlalchemy.orm import Session
 
-from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.academic_structure.validators.academic_structure import AcademicStructureValidator
 from V2.app.core.academic_structure.models.academic_structure import Classes
 

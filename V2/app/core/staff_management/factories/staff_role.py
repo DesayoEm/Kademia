@@ -7,11 +7,11 @@ from V2.app.core.staff_management.validators.staff_management import StaffManage
 from V2.app.core.staff_management.models.staff_management import StaffRole
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
-from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from V2.app.core.shared.errors.decorators.resolve_unique_violation import resolve_unique_violation
-from V2.app.core.shared.errors.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
-from V2.app.core.shared.errors import EntityNotFoundError, ArchiveDependencyError
-from V2.app.core.shared.errors.maps.error_map import error_map
+from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
+from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
+from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
+from V2.app.core.shared.exceptions.maps.error_map import error_map
 
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
@@ -20,9 +20,9 @@ class StaffRoleFactory:
     """Factory class for managing staff role operations."""
 
     def __init__(self, session: Session, model=StaffRole):
-        """Initialize factory with database session.
+        """Initialize factory with db session.
         Args:
-            session: SQLAlchemy database session
+            session: SQLAlchemy db session
             model: Model class, defaults to StaffRole
         """
         self.model = model

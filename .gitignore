@@ -1,4 +1,4 @@
-# Ignore Python cache and build artifacts
+# Python cache and build artifacts
 __pycache__/
 *.py[cod]
 *.egg-info/

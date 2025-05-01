@@ -23,7 +23,7 @@ def mock_crud():
     )
     response_dict = valid_response.model_dump()
 
-    with patch("V2.app.routers.staff_management.qualifications.QualificationsCrud") as mock:
+    with patch("V2.app.academic_structure.staff_management.qualifications.QualificationsCrud") as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
 

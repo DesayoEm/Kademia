@@ -13,14 +13,14 @@ from uuid import UUID
 
 @pytest.fixture(scope='session')
 def test_engine():
-    """Create test database engine"""
+    """Create test db engine"""
     engine = create_engine(os.getenv('TEST_DB_URL'))
     return engine
 
 
 @pytest.fixture(scope='session', autouse=True)
 def db_session(test_engine):
-    """Create a test database session with fresh tables"""
+    """Create a test db session with fresh tables"""
     SessionLocal = sessionmaker(autoflush=True, autocommit=False, bind=test_engine)
     session = SessionLocal()
     create_test_tables(test_engine)
@@ -39,5 +39,5 @@ def cleanup_database(db_session):
 
 @pytest.fixture(scope='function')
 def db_inspector(db_session):
-    """Get database inspector"""
+    """Get db inspector"""
     return inspect(db_session.bind)

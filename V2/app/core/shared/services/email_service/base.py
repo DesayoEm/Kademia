@@ -2,8 +2,8 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from V2.app.core.shared.errors.email_errors import EmailFailedToSendError
-from V2.app.config import email_settings
+from V2.app.core.shared.exceptions.email_errors import EmailFailedToSendError
+from V2.app.infra.settings import email_settings
 
 class EmailService:
     def __init__(self):

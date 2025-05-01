@@ -1,5 +1,5 @@
-from V2.app.core.shared.errors.student_organisation_errors import InvalidCodeError
-from V2.app.core.shared.errors.entry_validation_errors import (
+from V2.app.core.shared.exceptions.student_organisation_errors import InvalidCodeError
+from V2.app.core.shared.exceptions.entry_validation_errors import (
     EmptyFieldError, TextTooShortError, InvalidCharacterError, InvalidOrderNumberError,
     TextTooLongError
 )

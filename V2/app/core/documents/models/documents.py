@@ -1,6 +1,6 @@
-from ...shared.database.models.common_imports import *
-from ...shared.database.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
-from ...shared.database.models.enums import DocumentType
+from V2.app.core.shared.models.common_imports import *
+from V2.app.core.shared.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
+from V2.app.core.shared.models.enums import DocumentType
 
 
 class StudentDocument(Base, AuditMixins, TimeStampMixins, ArchiveMixins):

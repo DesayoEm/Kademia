@@ -6,13 +6,13 @@ from V2.app.core.identity.services.student_service import StudentService
 from V2.app.core.auth.services.password_service import PasswordService
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
-from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.identity.validators.identity import IdentityValidator
 from V2.app.core.identity.models.student import Student
-from ...shared.errors.maps.error_map import error_map
-from ...shared.errors import ArchiveDependencyError, EntityNotFoundError
-from ...shared.errors.decorators.resolve_unique_violation import resolve_unique_violation
-from ...shared.errors.decorators.resolve_fk_violation import (
+from ...shared.exceptions.maps.error_map import error_map
+from ...shared.exceptions import ArchiveDependencyError, EntityNotFoundError
+from ...shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
+from ...shared.exceptions.decorators.resolve_fk_violation import (
     resolve_fk_on_update, resolve_fk_on_create, resolve_fk_on_delete
 )
 

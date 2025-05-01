@@ -1,10 +1,10 @@
 from uuid import UUID
 from sqlalchemy import text
 from sqlalchemy.orm import Session
-from V2.app.core.shared.errors import EntityInUseError
-from V2.app.core.shared.errors.maps.error_map import error_map
-from V2.app.config import config
-from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.core.shared.exceptions import EntityInUseError
+from V2.app.core.shared.exceptions.maps.error_map import error_map
+from V2.app.infra.settings import config
+from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from .dependency_config import DEPENDENCY_CONFIG
 
 class DeleteService:
@@ -15,19 +15,19 @@ class DeleteService:
     for parent-child relationships, and nullify-references deletion for shared entities.
 
     Attributes:
-        session (Session): SQLAlchemy database session
+        session (Session): SQLAlchemy db session
         model: SQLAlchemy model class for the entity
-        repository (SQLAlchemyRepository): Repository for database operations
+        repository (SQLAlchemyRepository): Repository for db operations
     """
 
 
     def __init__(self, model, session: Session):
         """
-        Initialize the deletion service with a model and database session.
+        Initialize the deletion service with a model and db session.
 
         Args:
             model: SQLAlchemy model class for the entity
-            session (Session): SQLAlchemy database session
+            session (Session): SQLAlchemy db session
         """
         self.session = session
         self.model = model

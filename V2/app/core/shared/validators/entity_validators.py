@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
-
-from V2.app.core.shared.errors import RelatedEntityNotFoundError
-from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.core.shared.exceptions import RelatedEntityNotFoundError
+from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 
 class EntityValidator:
@@ -12,31 +11,31 @@ class EntityValidator:
         self.session = session
         self.repository = SQLAlchemyRepository
 
-    def validate_department_exists(self, department_id: UUID) -> UUID:#Cache later
+    def validate_department_exists(self, department_id: UUID) -> UUID:
         """Validate that a staff department exists."""
-        from ...database.models import StaffDepartment
+        from V2.app.core.staff_management.models.staff_management import StaffDepartment
 
         repo = self.repository(StaffDepartment, self.session)
         if not repo.exists(department_id):
 
             raise RelatedEntityNotFoundError(
                     entity_model=StaffDepartment, display_name="department",
-                    identifier=department_id, operation="create"
-                # Operation field will be overriden in the creation layer but 'create' is a fail-safe
+                    identifier=department_id, operation="create",
+                        detail="Department not found by EntityValidator "
             )
         return department_id
 
 
     def validate_role_exists(self, role_id: UUID) -> UUID:#Cache later
         """Validate that a role exists."""
-        from ...database.models import StaffRole
+        from V2.app.core.staff_management.models.staff_management import StaffRole
 
         repo = self.repository(StaffRole, self.session)
         if not repo.exists(role_id):
             raise RelatedEntityNotFoundError(
                 entity_model=StaffRole, display_name="role",
-                identifier=role_id, operation="create"
-                # Operation field will be overriden in the creation layer but 'create' is a fail-safe
+                identifier=role_id, operation="create",
+                detail="Role not found by EntityValidator "
             )
 
         return role_id
@@ -44,14 +43,14 @@ class EntityValidator:
 
     def validate_staff_exists(self, staff_id: UUID) -> UUID:#Cache later
         """Validate that a staff member id exists."""
-        from ...database.models import Staff
+        from V2.app.core.identity.models.staff import Staff
 
         repo = self.repository(Staff, self.session)
         if not repo.exists(staff_id):
             raise RelatedEntityNotFoundError(
                 entity_model=Staff, display_name="staff",
-                identifier=staff_id, operation="create"
-                # Operation field will be overriden in the creation layer but 'create' is a fail-safe
+                identifier=staff_id, operation="create",
+                detail = "Staff not found by EntityValidator "
             )
 
         return staff_id

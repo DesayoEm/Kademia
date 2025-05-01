@@ -5,10 +5,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 
 from V2.app.core.shared.services.email_service.password_reset import PasswordEmailService
-from V2.app.core.shared.errors.auth_errors import WrongPasswordError, InvalidCredentialsError, ResetLinkExpiredError
+from V2.app.core.shared.exceptions.auth_errors import WrongPasswordError, InvalidCredentialsError, ResetLinkExpiredError
 from V2.app.core.auth.validators.auth import AuthValidator
-from V2.app.core.shared.database.redis.access_tokens import token_blocklist
-from V2.app.core.shared.database.redis.password_tokens import password_token_list
+from V2.app.infra.db.redis.access_tokens import token_blocklist
+from V2.app.infra.db.redis.password_tokens import password_token_list
 from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.identity.models.staff import Staff
 from V2.app.core.identity.models.student import Student

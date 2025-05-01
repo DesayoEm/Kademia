@@ -1,7 +1,7 @@
 from .base import UserBase
 
-from ...shared.database.models.common_imports import *
-from ...shared.database.models.enums import AccessLevel, Title, UserType
+from V2.app.core.shared.models.common_imports import *
+from V2.app.core.shared.models.enums import AccessLevel, Title, UserType
 
 class Guardian(UserBase):
     """

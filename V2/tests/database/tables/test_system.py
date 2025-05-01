@@ -25,7 +25,7 @@ def test_model_structure_nullable_constraints(db_inspector):
             f"column {column['name']} is not nullable as expected"
 
 def test_model_structure_default_values(db_inspector):
-    """Ensure no default values are set at database level since they're handled
+    """Ensure no default values are set at db level since they're handled
     at the application level"""
     table = 'system'
     columns = {col['name']: col for col in db_inspector.get_columns(table)}

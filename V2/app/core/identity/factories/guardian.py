@@ -6,13 +6,13 @@ from V2.app.core.shared.services.email_service.onboarding import OnboardingServi
 from V2.app.core.auth.services.password_service import PasswordService
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
-from V2.app.core.shared.database.db_repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.identity.validators.identity import IdentityValidator
 from V2.app.core.identity.models.guardian import Guardian
-from V2.app.core.shared.errors.maps.error_map import error_map
-from V2.app.core.shared.errors import ArchiveDependencyError, EntityNotFoundError
-from V2.app.core.shared.errors.decorators.resolve_unique_violation import resolve_unique_violation
-from V2.app.core.shared.errors.decorators.resolve_fk_violation import (
+from V2.app.core.shared.exceptions.maps.error_map import error_map
+from V2.app.core.shared.exceptions import ArchiveDependencyError, EntityNotFoundError
+from V2.app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
+from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import (
     resolve_fk_on_update, resolve_fk_on_create, resolve_fk_on_delete
 )
 
@@ -23,9 +23,9 @@ class GuardianFactory:
     """Factory class for managing guardian operations."""
 
     def __init__(self, session: Session, model = Guardian):
-        """Initialize factory with model and database session.
+        """Initialize factory with model and db session.
             Args:
-            session: SQLAlchemy database session
+            session: SQLAlchemy db session
             model: Model class, defaults to Guardian
         """
         self.model = model

@@ -16,7 +16,7 @@ def mock_crud():
         "description": "Test Description",
     }
 
-    with patch("V2.app.routers.staff_management.archived_staff_roles.StaffRoleCrud") as mock:
+    with patch("V2.app.academic_structure.staff_management.archived_staff_roles.StaffRoleCrud") as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
         mock_instance.get_archived_role.return_value = valid_response

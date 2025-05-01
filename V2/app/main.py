@@ -8,21 +8,23 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-from V2.app.core.staff_management.routers import (
-    staff_departments, staff_departments_archive, staff_roles, staff_roles_archive, qualifications,
-    qualifications_archive
+from V2.app.routers.staff_management import (
+    staff_departments_archive, staff_roles_archive
 )
+from .routers.staff_management import qualifications, staff_departments, staff_roles, qualifications_archive
 
-from V2.app.core.academic_structure.routers import (
+from V2.app.routers.academic_structure import (
     academic_levels, academic_levels_archive, student_departments, student_departments_archive, classes, classes_archive
 )
-from .core.identity.routers import (
-    guardian, guardian_archive, student, student_archive, staff, staff_archive
+from V2.app.routers.identity import (
+    guardian, guardian_archive, student, student_archive, staff_archive
 )
-from V2.app.core.auth.routers import auth, password
+from .routers.identity import staff
+from V2.app.routers.auth import password
+from .routers.auth import auth
 
-from V2.app.infrastructure.middleware.error_handler import ExceptionMiddleware
-from V2.app.infrastructure.log_service.logger import logger
+from V2.app.infra.middleware.exception_handler import ExceptionMiddleware
+from V2.app.infra.log_service.logger import logger
 
 version = "v1"
 app = FastAPI(

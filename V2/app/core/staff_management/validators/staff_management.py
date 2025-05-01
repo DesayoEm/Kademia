@@ -1,6 +1,6 @@
-from V2.app.core.shared.errors import LifetimeValidityConflictError, TemporaryValidityConflictError
-from V2.app.core.shared.errors.entry_validation_errors import PastDateError, TextTooLongError
-from V2.app.core.shared.errors import (
+from V2.app.core.shared.exceptions import LifetimeValidityConflictError, TemporaryValidityConflictError
+from V2.app.core.shared.exceptions.entry_validation_errors import PastDateError, TextTooLongError
+from V2.app.core.shared.exceptions import (
     EmptyFieldError, InvalidCharacterError, TextTooShortError
 )
 from datetime import datetime, date

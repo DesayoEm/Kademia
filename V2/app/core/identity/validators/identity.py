@@ -1,7 +1,7 @@
 from datetime import date, datetime
 import re
-from ...shared.errors import InvalidSessionYearError
-from ...shared.errors.entry_validation_errors import(
+from ...shared.exceptions import InvalidSessionYearError
+from ...shared.exceptions.entry_validation_errors import(
     TextTooShortError,EmptyFieldError, InvalidCharacterError, InvalidPhoneError, FutureDateError,
     TextTooLongError
     )

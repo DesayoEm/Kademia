@@ -1,5 +1,5 @@
-from ...shared.database.models.common_imports import *
-from ...shared.database.models.enums import AccessLevel
+from V2.app.core.shared.models.common_imports import *
+from V2.app.core.shared.models.enums import AccessLevel
 
 
 
