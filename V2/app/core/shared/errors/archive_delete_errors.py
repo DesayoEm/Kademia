@@ -9,10 +9,12 @@ class CascadeDeletionError(ArchiveAndDeleteError):
     """Raised when an error occurs during a cascade deletion operation."""
 
     def __init__(self, error: str):
+        super().__init__(f"")
+
         self.user_message = f"Deletion failed!"
         self.log_message = f"Cascade deletion failed. DETAIL: {error} "
 
-        super().__init__(f"")
+
 
 
 class ArchiveDependencyError(ArchiveAndDeleteError):

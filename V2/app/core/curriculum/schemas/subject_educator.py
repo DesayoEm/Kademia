@@ -7,25 +7,27 @@ class SubjectEducatorBase(BaseModel):
     subject_id: UUID
     educator_id: UUID
     level_id: UUID
-    academic_year: str  # Format: YYYY-YYYY
+    academic_year: str
     term: Term
-    is_active: bool = True
+    is_active: bool = False
     date_assigned: date
 
-    class Config:
-        from_attributes = True
-
-    json_schema_extra = {
-        "example": {
-            "subject_id": "00000000-0000-0000-0000-000000000001",
-            "educator_id": "00000000-0000-0000-0000-000000000002",
-            "level_id": "00000000-0000-0000-0000-000000000003",
-            "academic_year": "2023-2024",
-            "term": "FIRST",
-            "is_active": True,
-            "date_assigned": "2024-02-17"
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
+                "subject_id": "00000000-0000-0000-0000-000000000001",
+                "educator_id": "00000000-0000-0000-0000-000000000002",
+                "level_id": "00000000-0000-0000-0000-000000000003",
+                "academic_year": "2023-2024",
+                "term": "FIRST",
+                "is_active": True,
+                "date_assigned": "2024-02-17"
+            }
         }
-    }
+    )
+
 
 
 class SubjectEducatorCreate(SubjectEducatorBase):

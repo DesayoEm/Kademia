@@ -47,7 +47,6 @@ class AcademicLevelUpdate(AcademicLevelBase):
     )
 
 
-
 class AcademicLevelResponse(AcademicLevelBase):
     """Response model for class levels"""
     order: int

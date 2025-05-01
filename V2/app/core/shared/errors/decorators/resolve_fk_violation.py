@@ -17,13 +17,12 @@ class FKResolver:
         Args:
             factory_class (Type): The factory class from which the error originated. Used to look up the mapping.
             error_message (str): The raw error message from the database (usually from a ForeignKeyViolation).
-            context_obj (Any): An object (usually a Pydantic schema or SQLAlchemy model) that holds the foreign key values.
+            context_obj (Any): SQLAlchemy model that holds the foreign key values.
             operation (str): The type of operation being performed (e.g., "create", "update", "delete").
             fk_map (dict): The mapping of foreign key constraint names to their associated model, attribute, and display name.
 
         Returns:
             RelatedEntityNotFoundError: A more specific, user-friendly exception describing the FK failure.
-
             None: If no matching constraint is found in the error message.
         """
         factory_key = factory_class.__name__

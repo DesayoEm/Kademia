@@ -62,7 +62,6 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         # Student organization errors
         InvalidCodeError: status.HTTP_400_BAD_REQUEST,
 
-
         # User profile errors (Staff/Student/Guardian)
         StaffTypeError: status.HTTP_400_BAD_REQUEST,
         InvalidSessionYearError: status.HTTP_400_BAD_REQUEST,
@@ -97,11 +96,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
             logger.error(f"Unhandled exception | {request_id} | {str(e)}", exc_info=True)
             return self.handle_exception(e, request_id)
 
-    def create_json_response(self, e, status_code):
-        return JSONResponse(
-            status_code=status_code,
-            content={"detail": e.user_message}
-        )
+
 
     def handle_exception(self, e, request_id):
         if isinstance(e, HTTPException):
@@ -127,4 +122,11 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
             content={
                 "detail": "An unexpected error occurred.",
             }
+        )
+
+    @staticmethod
+    def create_json_response(e, status_code):
+        return JSONResponse(
+            status_code=status_code,
+            content={"detail": e.user_message}
         )

@@ -22,7 +22,6 @@ def handle_write_errors(operation: str = "unknown"):
                 orig = getattr(e, 'orig', None)
                 msg = str(orig).lower() if orig else str(e).lower()
 
-                # Save the original constraint name
                 constraint_name = None
                 if hasattr(orig, 'diag') and hasattr(orig.diag, 'constraint_name'):
                     constraint_name = orig.diag.constraint_name
@@ -31,7 +30,6 @@ def handle_write_errors(operation: str = "unknown"):
                     raise UniqueViolationError(error=msg, constraint=constraint_name)
 
                 if 'foreign key' in msg or isinstance(orig, pg_errors.ForeignKeyViolation):
-                    # Pass the operation parameter and constraint name
                     raise RelationshipError(
                         error=msg,
                         operation=operation,

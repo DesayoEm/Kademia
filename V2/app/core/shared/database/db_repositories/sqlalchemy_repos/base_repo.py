@@ -9,6 +9,7 @@ from V2.app.core.shared.errors.decorators.repo_error_handlers import handle_writ
 
 NOT_FOUND_ERROR = "Object not found"
 
+
 class BaseRepository(Repository[T]):
     """Base repository class"""
 

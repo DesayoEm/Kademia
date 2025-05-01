@@ -18,3 +18,5 @@ env.py
 /workspace.xml
 /docker-compose.yml
 alembic.ini
+/_docs
+/_docs/

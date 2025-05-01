@@ -3,7 +3,7 @@ from V2.app.core.shared.schemas.shared_models import *
 
 class SubjectFilterParams(BaseFilterParams):
     name: Optional[str] = None
-    order_by: Literal["order", "created_at"] = "order"
+    order_by: Literal["name", "created_at"] = "name"
 
 class SubjectBase(BaseModel):
     """Base model for subjects"""
@@ -12,17 +12,18 @@ class SubjectBase(BaseModel):
     is_elective: bool = False
     syllabus_url: str | None = None
 
-    class Config:
-        from_attributes = True
-
-    json_schema_extra = {
-        "example": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
             "name": "Mathematics",
             "department_id": "00000000-0000-0000-0000-000000000001",
             "is_elective": False,
             "syllabus_url": "https://example.com/syllabus/math"
         }
-    }
+        }
+    )
 
 
 class SubjectCreate(SubjectBase):
@@ -30,11 +31,20 @@ class SubjectCreate(SubjectBase):
     pass
 
 
-class SubjectUpdate(BaseModel):
+class SubjectUpdate(SubjectBase):
     """Used for updating subjects"""
-    name: str
-    is_elective: bool
-    syllabus_url: str | None
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
+                "name": "Advanced Biology",
+                "department_id": "00000000-0000-0000-0000-000000000001",
+                "is_elective": False,
+                "syllabus_url": "https://example.com/syllabus/bio"
+            }
+        }
+    )
 
 
 class SubjectResponse(SubjectBase):
@@ -53,21 +63,3 @@ class SubjectInDB(SubjectBase):
     archived_at: datetime | None = None
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
-
-    json_schema_extra = {
-        "example": {
-            "id": "00000000-0000-0000-0000-000000000000",
-            "name": "Mathematics",
-            "department_id": "00000000-0000-0000-0000-000000000001",
-            "is_elective": False,
-            "syllabus_url": "https://example.com/syllabus/math",
-            "created_at": "2024-02-17T12:00:00Z",
-            "created_by": "00000000-0000-0000-0000-000000000000",
-            "last_modified_at": "2024-02-17T12:00:00Z",
-            "last_modified_by": "00000000-0000-0000-0000-000000000000",
-            "is_archived": False,
-            "archived_at": None,
-            "archived_by": None,
-            "archive_reason": None
-        }
-    }
