@@ -6,9 +6,12 @@ __pycache__/
 *.log
 
 # Virtual environment
-.env
+V2/app/.env
 .venv/
 env.py
+venv/
+V2/venv/
+
 
 # IDE and editor config
 .idea/
