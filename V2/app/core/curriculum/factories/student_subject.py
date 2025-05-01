@@ -7,7 +7,7 @@ from V2.app.core.shared.services.lifecycle_service.archive_service import Archiv
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
-from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
+from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
 from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
@@ -42,7 +42,8 @@ class StudentSubjectFactory:
 
 
     @resolve_unique_violation({
-        "trig to find out": ("name", lambda self, data: data.name)
+        "student_subjects_student_id_subject_id_session_year_term_key": (
+                "student_id", lambda self, data: data.student_id)
     })
     @resolve_fk_on_create()
     def create_student_subject(self, data) -> StudentSubject:
@@ -57,7 +58,7 @@ class StudentSubjectFactory:
             student_id=data.student_id,
             subject_id=data.subject_id,
             term=data.term,
-            session_year=self.validator.validate_session_start_year(data.session_year),
+            session_year=self.validator.validate_session_year(data.session_year),
 
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID
@@ -86,6 +87,7 @@ class StudentSubjectFactory:
         fields = ['subject_id', 'session_year', 'level_id', 'student_id']
         return self.repository.execute_query(fields, filters)
 
+
     def archive_student_subject(self, student_subject_id: UUID, reason) -> StudentSubject:
         """Archive a StudentSubject if no active dependencies exist.
         Args:
@@ -95,15 +97,7 @@ class StudentSubjectFactory:
             StudentSubject: Archived StudentSubject record
         """
         try:
-            failed_dependencies = self.archive_service.check_active_dependencies_exists(
-                entity_model=self.model,
-                target_id=student_subject_id
-            )
-            if failed_dependencies:
-                raise ArchiveDependencyError(
-                    entity_model=self.entity_model, identifier=student_subject_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
-                )
+            # There's no need to check for dependent entities before archiving as there are none
             return self.repository.archive(student_subject_id, SYSTEM_USER_ID, reason)
 
         except EntityNotFoundError as e:
@@ -112,15 +106,14 @@ class StudentSubjectFactory:
 
     @resolve_fk_on_delete()
     def delete_student_subject(self, student_subject_id: UUID, is_archived=False) -> None:
-        """Permanently delete an StudentSubject if there are no dependent entities
+        """Permanently delete an StudentSubject
         Args:
             student_subject_id (UUID): ID of StudentSubject to delete
             is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, student_subject_id, is_archived)
-            return self.repository.delete(student_subject_id)
-
+            # There's no need to check for dependent entities before deletion as there are none
+            self.repository.delete(student_subject_id)
         except EntityNotFoundError as e:
             self.raise_not_found(student_subject_id, e)
 
@@ -168,7 +161,6 @@ class StudentSubjectFactory:
             is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, student_subject_id, is_archived)
             self.repository.delete_archive(student_subject_id)
 
         except EntityNotFoundError as e:

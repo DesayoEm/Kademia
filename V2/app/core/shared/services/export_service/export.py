@@ -102,9 +102,10 @@ class ExportService:
 
         self.write_dict_to_pdf(pdf, data)
 
-        os.makedirs(self.export_dir, exist_ok=True)
+        safe_suffix = suffix.replace("/", "-").replace("\\", "-")
+        filename = os.path.join(self.export_dir, f"{safe_suffix}.pdf")
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
 
-        filename = f"{self.export_dir}/{suffix}.pdf"
         pdf.output(filename)
 
         return filename
@@ -151,9 +152,9 @@ class ExportService:
         Returns:
             str: Path to the created CSV file
         """
-        os.makedirs(self.export_dir, exist_ok=True)
-
-        filename = f"{self.export_dir}/{suffix}.csv"
+        safe_suffix = suffix.replace("/", "-").replace("\\", "-")
+        filename = os.path.join(self.export_dir, f"{safe_suffix}.csv")
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
 
         with open(filename, mode='w', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
@@ -203,9 +204,9 @@ class ExportService:
         Returns:
             str: Path to the created Excel file
         """
-        os.makedirs(self.export_dir, exist_ok=True)
-
-        filename = f"{self.export_dir}/{suffix}.xlsx"
+        safe_suffix = suffix.replace("/", "-").replace("\\", "-")
+        filename = os.path.join(self.export_dir, f"{safe_suffix}.xlsx")
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
 
         wb = openpyxl.Workbook()
         ws = wb.active

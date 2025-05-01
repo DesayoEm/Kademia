@@ -1,7 +1,12 @@
 from V2.app.core.shared.exceptions import (
-    EmptyFieldError, TextTooShortError, InvalidCharacterError, InvalidSessionYearError,TextTooLongError
+    EmptyFieldError, TextTooShortError, InvalidCharacterError, InvalidSessionYearError, TextTooLongError, PastDateError
 )
 from datetime import datetime
+import re
+
+from V2.app.core.shared.exceptions.entry_validation_errors import PastYearError, SessionYearFormatError, \
+    FutureYearError, InvalidSessionRangeError
+
 
 class CurriculumValidator:
     def __init__(self):
@@ -20,13 +25,25 @@ class CurriculumValidator:
 
         return value.strip().title()
 
-    @staticmethod
-    def validate_session_start_year(value):
+    def validate_session_year(self, value):
+        match = re.fullmatch(r"(\d{4})/(\d{4})", value)
+        if not match:
+            raise SessionYearFormatError(entry=value, domain=self.domain)
+
+        first_year, second_year = map(int, match.groups())
         current_year = datetime.now().year
-        if value < current_year or value > current_year + 1:
-            raise InvalidSessionYearError(entry=value, current_year=current_year)
+
+        if first_year < current_year:
+            raise PastYearError(entry=value, domain=self.domain)
+
+        if first_year > current_year:
+            raise FutureYearError(entry=value, domain=self.domain)
+
+        if second_year != first_year + 1:
+            raise InvalidSessionRangeError(entry=value, domain=self.domain)
 
         return value
+
 
 
 

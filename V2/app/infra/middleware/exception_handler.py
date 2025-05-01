@@ -29,7 +29,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         TokenRevokedError: status.HTTP_401_UNAUTHORIZED,
 
         # Generic db exceptions
-        DatabaseError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+        KDDatabaseError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         EntityNotFoundError: status.HTTP_404_NOT_FOUND,
         RelatedEntityNotFoundError: status.HTTP_404_NOT_FOUND,
         UniqueViolationError: status.HTTP_409_CONFLICT,
@@ -41,6 +41,10 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
         # Generic input validation exceptions
         EmptyFieldError: status.HTTP_400_BAD_REQUEST,
+        SessionYearFormatError: status.HTTP_400_BAD_REQUEST,
+        PastYearError: status.HTTP_400_BAD_REQUEST,
+        FutureYearError: status.HTTP_400_BAD_REQUEST,
+        InvalidSessionRangeError: status.HTTP_400_BAD_REQUEST,
         TextTooShortError: status.HTTP_400_BAD_REQUEST,
         TextTooLongError: status.HTTP_400_BAD_REQUEST,
         DBTextTooLongError: status.HTTP_400_BAD_REQUEST,

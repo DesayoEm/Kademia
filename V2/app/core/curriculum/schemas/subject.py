@@ -34,7 +34,8 @@ class SubjectUpdate(SubjectBase):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "name": "Advanced Biology"
+                "name": "Advanced Biology",
+                "department_id": "00000000-0000-0000-0000-000000000001"
             }
         }
     )

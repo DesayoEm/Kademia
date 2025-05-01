@@ -16,8 +16,6 @@ class CurriculumGatherer:
             "subject": {
                 "id": str(subject.id),
                 "name": subject.name,
-                "is_elective": subject.is_elective,
-                "syllabus_url": subject.syllabus_url,
                 "department_id": str(subject.department_id),
                 "created_at": subject.created_at,
                 "created_by": str(subject.created_by) if subject.created_by else None,
@@ -32,7 +30,7 @@ class CurriculumGatherer:
                     "id": str(educator.id),
                     "level_id": str(educator.level_id),
                     "educator_id": str(educator.educator_id),
-                    "academic_year": educator.academic_year,
+                    "session_year": educator.session_year,
                     "term": educator.term,
                     "is_active": educator.is_active,
                     "date_assigned": educator.date_assigned
@@ -43,7 +41,7 @@ class CurriculumGatherer:
                     "id": str(al.id),
                     "level_id": str(al.level_id),
                     "educator_id": str(al.educator_id),
-                    "academic_year": al.academic_year,
+                    "session_year": al.session_year,
                     "is_elective": al.is_elective,
                     "curriculum_url": al.curriculum_url
                 } for al in subject.academic_levels
@@ -52,7 +50,7 @@ class CurriculumGatherer:
                 {
                     "id": str(ss.id),
                     "student_id": str(ss.student_id),
-                    "academic_year": ss.academic_year,
+                    "session_year": ss.session_year,
                     "term": ss.term,
                     "is_active": ss.is_active
                 } for ss in subject.students
@@ -85,7 +83,7 @@ class CurriculumGatherer:
     @staticmethod
     def gather_academic_level_subject_data(entry: AcademicLevelSubject) -> Tuple[Dict[str, Any], str]:
         """Gather data for AcademicLevelSubject entity."""
-        file_name = f"AcademicLevelSubject_{entry.subject_id}_{entry.level_id}_{entry.academic_year}"
+        file_name = f"AcademicLevelSubject_{entry.subject_id}_{entry.level_id}_{entry.session_year}"
 
         return ({
                     "academic_level_subject": {
@@ -93,7 +91,7 @@ class CurriculumGatherer:
                         "level_id": str(entry.level_id),
                         "subject_id": str(entry.subject_id),
                         "educator_id": str(entry.educator_id),
-                        "academic_year": entry.academic_year,
+                        "academic_year": entry.session_year,
                         "is_elective": entry.is_elective,
                         "curriculum_url": entry.curriculum_url,
                         "created_at": entry.created_at,
@@ -114,8 +112,7 @@ class CurriculumGatherer:
                         "id": str(entry.subject.id),
                         "name": entry.subject.name,
                         "department_id": str(entry.subject.department_id),
-                        "is_elective": entry.subject.is_elective,
-                        "syllabus_url": entry.subject.syllabus_url
+
                     } if entry.subject else None
                 }, file_name)
 
@@ -123,14 +120,14 @@ class CurriculumGatherer:
     @staticmethod
     def gather_student_subject_data(enrollment: StudentSubject) -> Tuple[Dict[str, Any], str]:
         """Gather data for StudentSubject entity."""
-        file_name = f"StudentSubject_{enrollment.student_id}_{enrollment.subject_id}_{enrollment.academic_year}_{enrollment.term}"
+        file_name = f"StudentSubject_{enrollment.student_id}_{enrollment.subject_id}_{enrollment.session_year}_{enrollment.term}"
 
         return ({
                     "student_subject": {
                         "id": str(enrollment.id),
                         "student_id": str(enrollment.student_id),
                         "subject_id": str(enrollment.subject_id),
-                        "academic_year": enrollment.academic_year,
+                        "academic_year": enrollment.session_year,
                         "term": enrollment.term,
                         "is_active": enrollment.is_active,
                         "created_at": enrollment.created_at,
@@ -154,7 +151,7 @@ class CurriculumGatherer:
     @staticmethod
     def gather_subject_educator_data(entry: SubjectEducator) -> Tuple[Dict[str, Any], str]:
         """Gather data for SubjectEducator entity."""
-        file_name = f"SubjectEducator_{entry.educator_id}_{entry.subject_id}_{entry.academic_year}_{entry.term}"
+        file_name = f"SubjectEducator_{entry.educator_id}_{entry.subject_id}_{entry.session_year}_{entry.term}"
 
         return ({
             "subject_educator": {
@@ -162,7 +159,7 @@ class CurriculumGatherer:
                 "subject_id": str(entry.subject_id),
                 "educator_id": str(entry.educator_id),
                 "level_id": str(entry.level_id),
-                "academic_year": entry.academic_year,
+                "academic_year": entry.session_year,
                 "term": entry.term,
                 "is_active": entry.is_active,
                 "date_assigned": entry.date_assigned,

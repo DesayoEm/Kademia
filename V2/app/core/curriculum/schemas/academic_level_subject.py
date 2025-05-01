@@ -17,7 +17,7 @@ class AcademicLevelSubjectBase(BaseModel):
     is_elective: bool = True
     educator_id: UUID | None = None
     session_year: str | None = None
-    curriculum_url: str | None = None
+
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -27,7 +27,7 @@ class AcademicLevelSubjectBase(BaseModel):
                 "level_id": "00000000-0000-0000-0000-000000000001",
                 "subject_id": "00000000-0000-0000-0000-000000000002",
                 "is_elective": True,
-                "session_year": "2023-2024",
+                "session_year": "2025/2026",
             }
         }
     )

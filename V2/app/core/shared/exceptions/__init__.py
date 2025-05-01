@@ -37,7 +37,7 @@ from .database_errors import (
     RelationshipError,
     TransactionError,
     DBConnectionError,
-    DatabaseError,
+    KDDatabaseError,
     NullFKConstraintMisconfiguredError,
     CascadeFKConstraintMisconfiguredError,
 )
@@ -54,12 +54,19 @@ from .export_errors import (
 )
 
 from .entry_validation_errors import (
-    InputValidationError,
+    EntryValidationError,
     EmptyFieldError,
     TextTooShortError,
     DBTextTooLongError,
     TextTooLongError,
+    SessionYearFormatError,
+    InvalidSessionRangeError,
+    SessionYearFormatError,
+    InvalidYearError,
+    InvalidYearLengthError,
     FutureDateError,
+    FutureYearError,
+    PastYearError,
     DateFormatError,
     PastDateError,
     InvalidYearError,

@@ -64,4 +64,63 @@ fk_error_map = {
     "SubjectFactory": {
         "fk_subjects_student_departments_department_id": ("StudentDepartment", "department_id", "department"),
     },
+"AcademicLevelSubjectFactory": {
+        "fk_academic_level_subjects_academic_levels_level_id": ("AcademicLevel", "level_id", "Academic Level"),
+        "fk_academic_level_subjects_subjects_subject_id": ("Subject", "subject_id", "Subject"),
+        "fk_academic_level_subjects_educators_educator_id": ("Educator", "educator_id", "Educator"),
+    },
+    "StudentSubjectFactory": {
+        "fk_student_subjects_students_student_id": ("Student", "student_id", "Student"),
+        "fk_student_subjects_subjects_subject_id": ("Subject", "subject_id", "Subject"),
+    },
+    "SubjectEducatorFactory": {
+        "fk_subject_educators_subjects_subject_id": ("Subject", "subject_id", "Subject"),
+        "fk_subject_educators_educators_educator_id": ("Educator", "educator_id", "Educator"),
+        "fk_subject_educators_academic_levels_level_id": ("AcademicLevel", "level_id", "Academic Level"),
+    },
+"GradeFactory": {
+        "fk_grades_students_student_id": ("Student", "student_id", "Student"),
+        "fk_grades_subjects_subject_id": ("Subject", "subject_id", "Subject"),
+        "fk_grades_staff_graded_by": ("Staff", "graded_by", "Grader"),
+    },
+    "TotalGradeFactory": {
+        "fk_total_grades_students_student_id": ("Student", "student_id", "Student"),
+        "fk_total_grades_subjects_subject_id": ("Subject", "subject_id", "Subject"),
+    },
+    "RepetitionFactory": {
+        "fk_student_repetitions_students_student_id": ("Student", "student_id", "Student"),
+        "fk_student_repetitions_academic_levels_previous_level": ("AcademicLevel", "previous_level_id", "Previous Level"),
+        "fk_student_repetitions_academic_levels_new_level": ("AcademicLevel", "new_level_id", "New Level"),
+        "fk_student_repetitions_classes_previous_class": ("Classes", "previous_class_id", "Previous Class"),
+        "fk_student_repetitions_classes_new_class": ("Classes", "new_class_id", "New Class"),
+        "fk_student_repetitions_staff_status_updated_by": ("Staff", "status_updated_by", "Status Updated By"),
+    },
+    "ClassTransferFactory": {
+        "fk_student_department_transfers_students_student_id": ("Student", "student_id", "Student"),
+        "fk_student_department_transfers_classes_previous_class": ("Classes", "previous_class_id", "Previous Class"),
+        "fk_student_department_transfers_classes_new_class": ("Classes", "new_class_id", "New Class"),
+        "fk_student_department_transfers_staff_status_updated_by": ("Staff", "status_updated_by", "Status Updated By"),
+    },
+    "StudentDepartmentTransferFactory": {
+        "fk_student_department_transfers_students_student_id": ("Student", "student_id", "Student"),
+        "fk_student_department_transfers_academic_levels_previous_level": ("AcademicLevel", "previous_level_id", "Previous Level"),
+        "fk_student_department_transfers_academic_levels_new_level": ("AcademicLevel", "new_level_id", "New Level"),
+        "fk_student_department_transfers_classes_previous_class": ("Classes", "previous_class_id", "Previous Class"),
+        "fk_student_department_transfers_classes_new_class": ("Classes", "new_class_id", "New Class"),
+        "fk_student_transfers_previous_department": ("StudentDepartment", "previous_department_id", "Previous Department"),
+        "fk_student_transfers_new_department": ("StudentDepartment", "new_department_id", "New Department"),
+        "fk_student_department_transfers_staff_status_updated_by": ("Staff", "status_updated_by", "Status Updated By"),
+    },
+    "StudentDocumentFactory": {
+        "fk_student_documents_students_owner_id": ("Student", "owner_id", "Student"),
+    },
+    "StudentAwardFactory": {
+        "fk_student_documents_students_owner_id": ("Student", "owner_id", "Student"),
+    },
+    "AccessLevelChangeFactory": {
+        "fk_access_level_changes_staff_staff_id": ("Staff", "staff_id", "Target Staff"),
+        "fk_access_level_changes_staff_changed_by": ("Staff", "changed_by_id", "Changed By"),
+    },
 }
+
+

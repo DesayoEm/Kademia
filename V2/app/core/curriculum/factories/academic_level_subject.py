@@ -7,7 +7,7 @@ from V2.app.core.shared.services.lifecycle_service.archive_service import Archiv
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
-from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
+from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
 from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
@@ -42,7 +42,7 @@ class AcademicLevelSubjectFactory:
 
 
     @resolve_unique_violation({
-        "trig to find out": ("name", lambda self, data: data.name)
+        "academic_level_subjects_level_id_subject_id_session_year_key": ("name", lambda self, data: data.subject_id)
     })
     @resolve_fk_on_create()
     def create_academic_level_subject(self, data) -> AcademicLevelSubject:
@@ -54,11 +54,10 @@ class AcademicLevelSubjectFactory:
         """
         new_academic_level_subject = AcademicLevelSubject(
             id=uuid4(),
-            student_id=data.student_id,
             subject_id=data.subject_id,
+            level_id=data.level_id,
             is_elective=data.is_elective,
-            department_id=data.department_id,
-            session_year=self.validator.validate_session_start_year(data.session_year),
+            session_year=self.validator.validate_session_year(data.session_year),
 
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID

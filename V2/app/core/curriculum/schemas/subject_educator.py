@@ -22,7 +22,7 @@ class SubjectEducatorBase(BaseModel):
     session_year: str
     term: Term
     is_active: bool = False
-    date_assigned: date
+
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -32,7 +32,7 @@ class SubjectEducatorBase(BaseModel):
                 "subject_id": "00000000-0000-0000-0000-000000000001",
                 "educator_id": "00000000-0000-0000-0000-000000000002",
                 "level_id": "00000000-0000-0000-0000-000000000003",
-                "session_year": "2023-2024",
+                "session_year": "2025/2026",
                 "term": "FIRST",
                 "is_active": True,
 
@@ -48,6 +48,6 @@ class SubjectEducatorCreate(SubjectEducatorBase):
 
 class SubjectEducatorResponse(SubjectEducatorBase):
     """Response model for subject educator assignments"""
-    pass
+    date_assigned: date
 
 

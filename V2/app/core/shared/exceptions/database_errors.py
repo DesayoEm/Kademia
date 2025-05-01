@@ -113,7 +113,7 @@ class DBConnectionError(DBError):
 
 
 
-class DatabaseError(DBError):
+class KDDatabaseError(DBError):
     """For parent class db exceptions. """
     def __init__(self, error: str):
         self.user_message = "An unexpected error occurred"

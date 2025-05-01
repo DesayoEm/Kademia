@@ -4,7 +4,7 @@ from psycopg2 import errors as pg_errors
 
 from V2.app.core.shared.exceptions import (
     EntityNotFoundError, UniqueViolationError, RelationshipError, DBConnectionError,
-    DatabaseError as TKDatabaseError, DBTextTooLongError
+    KDDatabaseError, DBTextTooLongError
 )
 
 
@@ -13,6 +13,8 @@ def handle_write_errors(operation: str = "unknown"):
         def wrapper(self, *args, **kwargs):
             try:
                 return fn(self, *args, **kwargs)
+            except EntityNotFoundError:
+                raise
 
             except StringDataRightTruncation as e:
                 raise DBTextTooLongError(error=str(e))
@@ -36,7 +38,7 @@ def handle_write_errors(operation: str = "unknown"):
                         constraint=constraint_name
                     )
 
-                raise TKDatabaseError(error=f"Database integrity error: {msg}")
+                raise KDDatabaseError(error=f"Database integrity error: {msg}")
 
             except OperationalError as e:
                 self.session.rollback()
@@ -44,10 +46,10 @@ def handle_write_errors(operation: str = "unknown"):
 
             except SQLAlchemyError as e:
                 self.session.rollback()
-                raise TKDatabaseError(error=str(e))
+                raise KDDatabaseError(error=str(e))
 
-            except Exception as e:
-                raise TKDatabaseError(error=str(e))
+            except Exception:
+                raise
 
         return wrapper
 
@@ -66,9 +68,9 @@ def handle_read_errors():
                 raise DBConnectionError(error=str(e))
             except SQLAlchemyError as e:
                 self.session.rollback()
-                raise TKDatabaseError(error=str(e))
-            except Exception as e:
-                raise TKDatabaseError(error=str(e))
+                raise KDDatabaseError(error=str(e))
+            except Exception:
+                raise
 
         return wrapper
 

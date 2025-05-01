@@ -1,5 +1,6 @@
 from typing import List
 from uuid import UUID, uuid4
+from datetime import date
 from sqlalchemy.orm import Session
 from V2.app.core.curriculum.models.curriculum import SubjectEducator
 from V2.app.core.curriculum.validators import CurriculumValidator
@@ -42,7 +43,7 @@ class SubjectEducatorFactory:
 
 
     @resolve_unique_violation({
-        "trig to find out": ("name", lambda self, data: data.name)
+        "subject_educators_educator_id_subject_id_session_year_term__key": ("name", lambda self, data: data.educator_id)
     })
     @resolve_fk_on_create()
     def create_subject_educator(self, data) -> SubjectEducator:
@@ -54,12 +55,13 @@ class SubjectEducatorFactory:
         """
         new_subject_educator = SubjectEducator(
             id=uuid4(),
-            student_id=data.student_id,
-            educator_id=data.subject_id,
+            subject_id=data.subject_id,
+            educator_id=data.educator_id,
             level_id=data.level_id,
             is_active=data.is_active,
             term=data.term,
-            session_year=self.validator.validate_session_start_year(data.session_year),
+            date_assigned=date.today(),
+            session_year=self.validator.validate_session_year(data.session_year),
 
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID

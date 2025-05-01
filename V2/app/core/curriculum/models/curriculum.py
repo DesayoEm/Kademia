@@ -9,7 +9,7 @@ class Subject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     __tablename__ = 'subjects'
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    name: Mapped[str] = mapped_column(String(30))
+    name: Mapped[str] = mapped_column(String(30), unique = True)
     department_id: Mapped[UUID] = mapped_column(ForeignKey('student_departments.id',
             ondelete='RESTRICT',name='fk_subjects_student_departments_department_id'),
             nullable = True
@@ -40,7 +40,8 @@ class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             ondelete='RESTRICT',name='fk_academic_level_subjects_subjects_subject_id')
         )
     educator_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
-            ondelete='RESTRICT',name='fk_academic_level_subjects_educators_educator_id')
+            ondelete='RESTRICT',name='fk_academic_level_subjects_educators_educator_id'),
+            nullable=True
         )
     is_elective: Mapped[bool] = mapped_column(Boolean, default=False)
     session_year: Mapped[str] = mapped_column(String(9))
@@ -51,7 +52,7 @@ class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     level: Mapped['AcademicLevel'] = relationship(back_populates='subjects', foreign_keys='[AcademicLevelSubject.level_id]')
 
     __table_args__ = (
-        UniqueConstraint('level_id', 'subject_id', 'session_year', 'educator_id'),
+        UniqueConstraint('level_id', 'subject_id', 'session_year'),
         Index('idx_level_subject', 'level_id', 'subject_id'),
         Index('idx_level_subject_educator', 'level_id', 'subject_id', 'educator_id'),
     )
@@ -67,7 +68,7 @@ class StudentSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             name='fk_student_subjects_students_student_id')
         )
     subject_id: Mapped[UUID] = mapped_column(ForeignKey('subjects.id',
-            ondelete='RESTRICT',name='fk_student_subjects_subjects_subject_id')
+            ondelete='CASCADE',name='fk_student_subjects_subjects_subject_id')
         )
     session_year: Mapped[str] = mapped_column(String(9))
     term: Mapped[Term] = mapped_column(Enum(Term, name='term'))
