@@ -1,12 +1,19 @@
 venv/
 .idea/
+.idea
+/.idea
 /.idea/
 *.idea/
 .idea/workspace.xml
 idea/
 idea
 logs/
+/logs/
+logs
 exports/
+exports
+/exports/
+/exports
 *.log
 *.egg-info/
 __pycache__/
@@ -20,3 +27,5 @@ env.py
 alembic.ini
 /_docs
 /_docs/
+pytest.ini
+
