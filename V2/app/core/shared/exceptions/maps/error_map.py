@@ -48,7 +48,7 @@ error_map = {
     ClassTransfer: (ClassTransfer, "class transfer"),
     StudentDepartmentTransfer: (StudentDepartmentTransfer, "department transfer"),
 
-    # Academic models
+    # Curriculum models
     Subject: (Subject, "subject"),
     AcademicLevelSubject: (AcademicLevelSubject, "curriculum assignment"),
     StudentSubject: (StudentSubject, "subject enrollment"),

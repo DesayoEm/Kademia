@@ -32,9 +32,9 @@ def restore_level(level_id: UUID,db: Session = Depends(get_db)):
 
 
 @router.delete("/{level_id}", status_code=204)
-def delete_archived_level(department_id: UUID, db: Session = Depends(get_db)):
+def delete_archived_level(level_id: UUID, db: Session = Depends(get_db)):
     academic_levels_crud = AcademicLevelCrud(db)
-    return academic_levels_crud.delete_archived_level(department_id)
+    return academic_levels_crud.delete_archived_level(level_id)
 
 
 

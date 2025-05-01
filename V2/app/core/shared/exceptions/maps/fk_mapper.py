@@ -13,8 +13,7 @@ Usage:
     - With helper (`resolve_fk_violation(...)`) for factories with 3+ FK constraints
 """
 
-# NO factory class imports here to avoid circular dependencies
-# Model names are used as strings to keep the mapping clean and safe
+#model names are repped as strings to avoid circular imports
 
 fk_error_map = {
     "common": {
@@ -60,5 +59,9 @@ fk_error_map = {
         "fk_educator_qualifications_educators_educator_id": ("Educator", "educator_id", "Educator"),
     },
 
-    "StaffRoleFactory": {}
+    "StaffRoleFactory": {},
+
+    "SubjectFactory": {
+        "fk_subjects_student_departments_department_id": ("StudentDepartment", "department_id", "department"),
+    },
 }

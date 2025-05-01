@@ -49,7 +49,7 @@ class AcademicLevelCrud:
     def get_all_levels(self, filters: AcademicLevelFilterParams) -> List[AcademicLevelResponse]:
         """Get all active academic level.
         Returns:
-            List[QualificationResponse]: List of active academic levels
+            List[AcademicLevelResponse]: List of active academic levels
         """
         levels = self.factory.get_all_academic_levels(filters)
         return [AcademicLevelResponse.model_validate(level) for level in levels]

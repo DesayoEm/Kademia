@@ -2,7 +2,8 @@ from V2.app.core.shared.schemas.common_imports import *
 from V2.app.core.shared.schemas.shared_models import *
 
 class SubjectFilterParams(BaseFilterParams):
-    name: Optional[str] = None
+    name: str|None = None
+    is_elective: bool = None
     order_by: Literal["name", "created_at"] = "name"
 
 class SubjectBase(BaseModel):

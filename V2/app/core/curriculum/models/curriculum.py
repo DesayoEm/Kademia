@@ -114,3 +114,5 @@ class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         Index('idx_subject_level_educator', 'educator_id', 'level_id', 'subject_id')
     )
 
+
+

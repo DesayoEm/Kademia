@@ -23,7 +23,7 @@ class AcademicLevelFactory:
         """Initialize factory with model and db session.
             Args:
             session: SQLAlchemy db session
-            model: Model class, defaults to StudentDepartment
+            model: Model class, defaults to AcademicLevel
         """
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
