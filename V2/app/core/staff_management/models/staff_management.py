@@ -76,3 +76,6 @@ class EducatorQualification(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         Index('idx_educator', 'educator_id'),
         Index('idx_qualification_name', 'name'),
     )
+
+
+from V2.app.core.identity.models.staff import Staff, Educator

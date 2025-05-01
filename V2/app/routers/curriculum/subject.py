@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
+from typing import List
 from fastapi.responses import FileResponse
 
 from V2.app.core.shared.schemas.enums import ExportFormat
@@ -20,7 +21,7 @@ def create_subject(data:SubjectCreate,db: Session = Depends(get_db)):
     return subject_crud.create_subject(data)
 
 
-@router.get("/", response_model=list[SubjectResponse])
+@router.get("/", response_model=List[SubjectResponse])
 def get_subjects(filters: SubjectFilterParams = Depends(),db: Session = Depends(get_db)):
     subject_crud = SubjectCrud(db)
     return subject_crud.get_all_subjects(filters)

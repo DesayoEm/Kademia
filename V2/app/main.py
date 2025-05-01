@@ -13,6 +13,9 @@ from V2.app.routers.staff_management import qualifications, staff_departments, s
 from V2.app.routers.academic_structure import (
     academic_levels, academic_levels_archive, student_departments, student_departments_archive, classes, classes_archive
 )
+from V2.app.routers.curriculum import (
+    level_subject, level_subject_archive
+)
 from V2.app.routers.identity import guardian, guardian_archive, student, student_archive, staff_archive, staff
 from V2.app.routers.auth import password, auth
 from V2.app.infra.middleware.exception_handler import ExceptionMiddleware
@@ -38,6 +41,13 @@ app.include_router(subject.router, prefix=f"/api/{version}/admin/subjects",
                    tags=["Subjects", "Admin"])
 app.include_router(subject_archive.router, prefix=f"/api/{version}/admin/archive/subjects",
                    tags=["Archived","Subjects", "Admin"])
+
+# Level Subject
+app.include_router(level_subject.router, prefix=f"/api/{version}/admin/curriculum/levelsubjects",
+                   tags=["Level Subjects", "Admin"])
+app.include_router(level_subject_archive.router, prefix=f"/api/{version}/admin/archive/curriculum/levelsubjects",
+                   tags=["Archived","Level Subjects", "Admin"])
+
 # Staff
 app.include_router(staff.router, prefix=f"/api/{version}/admin/staff",
                    tags=["Staff", "Admin"])

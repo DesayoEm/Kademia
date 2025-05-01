@@ -31,3 +31,4 @@ class Guardian(UserBase):
     def __repr__(self) -> str:
         return f"Parent(name={self.first_name} {self.last_name}, phone={self.phone})"
 
+from V2.app.core.identity.models.student import Student

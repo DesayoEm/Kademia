@@ -111,3 +111,6 @@ class StudentDepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixin
         was actioned by {self.status_updated_by}"
 
 
+from V2.app.core.identity.models.student import Student
+from V2.app.core.identity.models.staff import Staff
+from V2.app.core.academic_structure.models.academic_structure import AcademicLevel, Classes, StudentDepartment

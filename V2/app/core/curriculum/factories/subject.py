@@ -56,7 +56,6 @@ class SubjectFactory:
             id=uuid4(),
             name=self.validator.validate_name(data.name),
             department_id=data.department_id,
-            is_elective=data.is_elective,
 
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID
@@ -82,7 +81,7 @@ class SubjectFactory:
         Returns:
             List[Subject]: List of active subjects
         """
-        fields = ['name', 'is_elective']
+        fields = ['name']
         return self.repository.execute_query(fields, filters)
 
 
@@ -164,7 +163,7 @@ class SubjectFactory:
         Returns:
             List[Subject]: List of archived subject records
         """
-        fields = ['name', 'is_elective']
+        fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
 

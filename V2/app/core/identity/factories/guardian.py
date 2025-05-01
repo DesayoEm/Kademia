@@ -7,7 +7,7 @@ from V2.app.core.auth.services.password_service import PasswordService
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from V2.app.core.identity.validators.identity import IdentityValidator
+from V2.app.core.identity.validators import IdentityValidator
 from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 from V2.app.core.shared.exceptions import ArchiveDependencyError, EntityNotFoundError

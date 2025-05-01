@@ -1,8 +1,7 @@
-from V2.app.core.shared.exceptions.student_organisation_errors import InvalidCodeError
-from V2.app.core.shared.exceptions.entry_validation_errors import (
-    EmptyFieldError, TextTooShortError, InvalidCharacterError, InvalidOrderNumberError,
-    TextTooLongError
+from V2.app.core.shared.exceptions import (
+    EmptyFieldError, TextTooShortError, InvalidCharacterError, InvalidSessionYearError,TextTooLongError
 )
+from datetime import datetime
 
 class CurriculumValidator:
     def __init__(self):
@@ -20,5 +19,14 @@ class CurriculumValidator:
             raise InvalidCharacterError(entry=value, domain=self.domain)
 
         return value.strip().title()
+
+    @staticmethod
+    def validate_session_start_year(value):
+        current_year = datetime.now().year
+        if value < current_year or value > current_year + 1:
+            raise InvalidSessionYearError(entry=value, current_year=current_year)
+
+        return value
+
 
 

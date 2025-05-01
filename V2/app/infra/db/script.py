@@ -2,9 +2,10 @@ from datetime import datetime
 from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from V2.app.core.shared.models import System, StaffDepartment, StaffRole
-from V2.app.core.shared.models import (
-    AccessLevel, EmploymentStatus, StaffAvailability, Gender, UserType, StaffType
+from V2.app.core.identity.models.staff import System
+from V2.app.core.staff_management.models.staff_management import StaffDepartment, StaffRole
+from V2.app.core.shared.models.enums import (
+    EmploymentStatus, StaffAvailability, StaffType, AccessLevel, Gender, UserType
 )
 from V2.app.infra.db.db_config import engine
 

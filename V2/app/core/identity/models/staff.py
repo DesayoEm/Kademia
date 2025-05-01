@@ -36,8 +36,8 @@ class Staff(UserBase):
     role: Mapped["StaffRole"] = relationship(back_populates='staff_members', foreign_keys='[Staff.role_id]')
     access_changes: Mapped[List["AccessLevelChange"]] = relationship(
         "AccessLevelChange",
-        back_populates='user',
-        primaryjoin="Staff.id == AccessLevelChange.staff_id"
+        back_populates="user",
+        primaryjoin="foreign(AccessLevelChange.staff_id) == Staff.id"
     )
 
     __table_args__ = (
@@ -145,3 +145,8 @@ class System(Staff):
 
     def __repr__(self) -> str:
         return f"System(name={self.first_name} {self.last_name}, role_id={self.role_id})"
+
+from V2.app.core.auth.models.auth import AccessLevelChange
+from V2.app.core.staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
+from V2.app.core.curriculum.models.curriculum import SubjectEducator
+from V2.app.core.academic_structure.models.academic_structure import StudentDepartment, Classes

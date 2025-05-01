@@ -1,8 +1,6 @@
 from V2.app.core.shared.models.common_imports import *
 from V2.app.core.shared.models.enums import AccessLevel
 
-
-
 class AccessLevelChange(Base):
     """Tracks changes to users access levels for audit purposes"""
     __tablename__ = 'access_level_changes'

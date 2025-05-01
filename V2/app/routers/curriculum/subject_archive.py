@@ -11,7 +11,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=list[SubjectResponse])
-def get_archived_subject(filters: SubjectFilterParams = Depends(),db: Session = Depends(get_db)):
+def get_archived_subjects(filters: SubjectFilterParams = Depends(),db: Session = Depends(get_db)):
     subject_crud = SubjectCrud(db)
     return subject_crud.get_all_archived_subjects(filters)
 

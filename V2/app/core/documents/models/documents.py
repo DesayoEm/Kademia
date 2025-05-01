@@ -55,3 +55,6 @@ class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     def __repr__(self) -> str:
         return f"Document(name={self.title}, owner={self.owner_id})"
+
+
+from V2.app.core.identity.models.student import Student

@@ -81,3 +81,10 @@ class Student(UserBase):
 
     def __repr__(self) -> str:
         return f"Student(name={self.first_name} {self.last_name}, class={self.class_})"
+
+from V2.app.core.documents.models.documents import StudentDocument, StudentAward
+from V2.app.core.identity.models.guardian import Guardian
+from V2.app.core.academic_structure.models.academic_structure import AcademicLevel, Classes, StudentDepartment
+from V2.app.core.curriculum.models.curriculum import StudentSubject
+from V2.app.core.assessment.models.assessment import Grade, TotalGrade, Repetition
+from V2.app.core.transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer

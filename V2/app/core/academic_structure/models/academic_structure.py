@@ -113,10 +113,12 @@ class StudentDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
     student_rep: Mapped['Student'] = relationship(
         'Student', back_populates='represented_department',
-        foreign_keys='[StudentDepartment.student_rep_id]'  # Fixed foreign key reference
+        foreign_keys='[StudentDepartment.student_rep_id]'
     )
-    assistant_rep: Mapped['Student'] = relationship(  # Changed type from Educator to Student
+    assistant_rep: Mapped['Student'] = relationship(
         'Student', back_populates='assistant_represented_department',
-        foreign_keys='[StudentDepartment.assistant_rep_id]'  # Fixed foreign key reference
+        foreign_keys='[StudentDepartment.assistant_rep_id]'
     )
 
+from V2.app.core.identity.models.student import Student
+from V2.app.core.identity.models.staff import Educator

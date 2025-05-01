@@ -129,3 +129,7 @@ class Repetition(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     def __repr__(self) -> str:
         return f"student {self.student_id} repetition in {self.academic_year} was actioned by {self.status_updated_staff}"
 
+from V2.app.core.identity.models.student import Student
+from V2.app.core.identity.models.staff import Educator, Staff
+from V2.app.core.curriculum.models.curriculum import Subject
+from V2.app.core.academic_structure.models.academic_structure import AcademicLevel, Classes
