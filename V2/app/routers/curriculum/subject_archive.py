@@ -11,25 +11,25 @@ router = APIRouter()
 
 
 @router.get("/", response_model=list[SubjectResponse])
-def get_archived_levels(filters: SubjectFilterParams = Depends(),db: Session = Depends(get_db)):
+def get_archived_subject(filters: SubjectFilterParams = Depends(),db: Session = Depends(get_db)):
     subject_crud = SubjectCrud(db)
     return subject_crud.get_all_archived_subjects(filters)
 
 
 @router.get("/{subject_id}", response_model=SubjectResponse)
-def get_archived_level(subject_id: UUID, db: Session = Depends(get_db)):
+def get_archived_subject(subject_id: UUID, db: Session = Depends(get_db)):
     subject_crud = SubjectCrud(db)
     return subject_crud.get_archived_subject(subject_id)
 
 
 @router.patch("/{subject_id}", response_model=SubjectResponse)
-def restore_level(subject_id: UUID,db: Session = Depends(get_db)):
+def restore_subject(subject_id: UUID,db: Session = Depends(get_db)):
     subject_crud = SubjectCrud(db)
     return subject_crud.restore_subject(subject_id)
 
 
 @router.delete("/{subject_id}", status_code=204)
-def delete_archived_level(subject_id: UUID, db: Session = Depends(get_db)):
+def delete_archived_subject(subject_id: UUID, db: Session = Depends(get_db)):
     subject_crud = SubjectCrud(db)
     return subject_crud.delete_archived_subject(subject_id)
 
