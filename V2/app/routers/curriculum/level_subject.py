@@ -9,15 +9,14 @@ from fastapi import Depends, APIRouter
 from V2.app.infra.db.session_manager import get_db
 from V2.app.core.curriculum.crud.academic_level_subject import AcademicLevelSubjectCrud
 from V2.app.core.curriculum.schemas.academic_level_subject import(
-    AcademicLevelSubjectCreate, AcademicLevelSubjectUpdate, AcademicLevelSubjectFilterParams, 
-    AcademicLevelSubjectResponse
+    AcademicLevelSubjectCreate, AcademicLevelSubjectFilterParams, AcademicLevelSubjectResponse
 )
 
 
 router = APIRouter()
 
 @router.post("/", response_model= AcademicLevelSubjectResponse, status_code=201)
-def create_level_subject(data:AcademicLevelSubjectCreate,db: Session = Depends(get_db)):
+def assign_level_subject(data:AcademicLevelSubjectCreate,db: Session = Depends(get_db)):
     level_subject_crud = AcademicLevelSubjectCrud(db)
     return level_subject_crud.create_level_subject(data)
 
@@ -33,11 +32,6 @@ def get_level_subject(level_subject_id: UUID, db: Session = Depends(get_db)):
     level_subject_crud = AcademicLevelSubjectCrud(db)
     return level_subject_crud.get_level_subject(level_subject_id)
 
-
-@router.put("/{level_subject_id}", response_model=AcademicLevelSubjectResponse)
-def update_level_subject(data: AcademicLevelSubjectUpdate, level_subject_id: UUID,db: Session = Depends(get_db)):
-    level_subject_crud = AcademicLevelSubjectCrud(db)
-    return level_subject_crud.update_level_subject(level_subject_id, data)
 
 
 @router.patch("/{level_subject_id}",  status_code=204)

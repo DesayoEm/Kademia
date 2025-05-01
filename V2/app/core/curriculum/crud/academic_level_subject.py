@@ -1,14 +1,12 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
-
 from typing import List
 from V2.app.core.curriculum.factories.academic_level_subject import AcademicLevelSubjectFactory
 from V2.app.core.curriculum.models.curriculum import AcademicLevelSubject
 from V2.app.core.shared.schemas.enums import ArchiveReason
 from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.curriculum.schemas.academic_level_subject import (
-    AcademicLevelSubjectFilterParams, AcademicLevelSubjectCreate, AcademicLevelSubjectUpdate, 
-    AcademicLevelSubjectResponse
+    AcademicLevelSubjectFilterParams, AcademicLevelSubjectCreate, AcademicLevelSubjectResponse
 )
 
 
@@ -54,19 +52,6 @@ class AcademicLevelSubjectCrud:
         """
         level_subjects = self.factory.get_all_academic_level_subjects(filters)
         return [AcademicLevelSubjectResponse.model_validate(subject) for subject in level_subjects]
-
-
-    def update_level_subject(self, level_subject_id: UUID, data: AcademicLevelSubjectUpdate) -> AcademicLevelSubjectResponse:
-        """Update subject information.
-        Args:
-            level_subject_id: level subject UUID
-            data: Validated update data
-        Returns:
-            AcademicLevelSubjectResponse: Updated subject
-        """
-        data = data.model_dump(exclude_unset=True)
-        updated_subject = self.factory.update_academic_level_subject(level_subject_id, data)
-        return AcademicLevelSubjectResponse.model_validate(updated_subject)
 
 
     def archive_level_subject(self, level_subject_id: UUID, reason: ArchiveReason) -> None:

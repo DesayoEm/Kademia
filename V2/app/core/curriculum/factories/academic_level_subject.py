@@ -54,7 +54,7 @@ class AcademicLevelSubjectFactory:
         """
         new_academic_level_subject = AcademicLevelSubject(
             id=uuid4(),
-            level_id=data.level_id,
+            student_id=data.student_id,
             subject_id=data.subject_id,
             is_elective=data.is_elective,
             department_id=data.department_id,
@@ -84,44 +84,8 @@ class AcademicLevelSubjectFactory:
         Returns:
             List[AcademicLevelSubject]: List of active AcademicLevelSubjects
         """
-        fields = ['name', 'session_year', 'level_id', 'subject_id', 'educator_id']
+        fields = ['session_year', 'level_id', 'subject_id', 'educator_id']
         return self.repository.execute_query(fields, filters)
-
-
-    @resolve_unique_violation({
-        "cerr": ("name", lambda self, *a: a[-1].get("name"))
-    })
-    @resolve_fk_on_update()
-    def update_academic_level_subject(self, academic_level_subject_id: UUID, data: dict) -> AcademicLevelSubject:
-        """Update a AcademicLevelSubject's information.
-        Args:
-            academic_level_subject_id (UUID): ID of AcademicLevelSubject to update
-            data (dict): Dictionary containing fields to update
-        Returns:
-            AcademicLevelSubject: Updated AcademicLevelSubject record
-        """
-        copied_data = data.copy()
-        try:
-            existing = self.get_academic_level_subject(academic_level_subject_id)
-            validations = {
-                "session_year": (self.validator.validate_session_start_year, "session_year"),
-            }
-
-            for field, (validator_func, model_attr) in validations.items():
-                if field in copied_data:
-                    validated_value = validator_func(copied_data.pop(field))
-                    setattr(existing, model_attr, validated_value)
-
-            for key, value in copied_data.items():
-                if hasattr(existing, key):
-                    setattr(existing, key, value)
-
-            existing.last_modified_by = SYSTEM_USER_ID
-            return self.repository.update(academic_level_subject_id, existing)
-
-        except EntityNotFoundError as e:
-                self.raise_not_found(academic_level_subject_id, e)
-
 
     def archive_academic_level_subject(self, academic_level_subject_id: UUID, reason) -> AcademicLevelSubject:
         """Archive a AcademicLevelSubject if no active dependencies exist.
@@ -167,7 +131,7 @@ class AcademicLevelSubjectFactory:
         Returns:
             List[AcademicLevelSubject]: List of archived AcademicLevelSubject records
         """
-        fields = ['name', 'session_year', 'level_id', 'subject_id', 'educator_id']
+        fields = ['session_year', 'level_id', 'subject_id', 'educator_id']
         return self.repository.execute_archive_query(fields, filters)
 
 

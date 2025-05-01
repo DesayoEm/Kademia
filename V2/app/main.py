@@ -14,7 +14,8 @@ from V2.app.routers.academic_structure import (
     academic_levels, academic_levels_archive, student_departments, student_departments_archive, classes, classes_archive
 )
 from V2.app.routers.curriculum import (
-    level_subject, level_subject_archive
+    level_subject, level_subject_archive, student_subject, student_subject_archive, subject, subject_archive,
+    subject_educator, subject_educator_archive
 )
 from V2.app.routers.identity import guardian, guardian_archive, student, student_archive, staff_archive, staff
 from V2.app.routers.auth import password, auth
@@ -41,13 +42,21 @@ app.include_router(subject.router, prefix=f"/api/{version}/admin/subjects",
                    tags=["Subjects", "Admin"])
 app.include_router(subject_archive.router, prefix=f"/api/{version}/admin/archive/subjects",
                    tags=["Archived","Subjects", "Admin"])
-
 # Level Subject
 app.include_router(level_subject.router, prefix=f"/api/{version}/admin/curriculum/levelsubjects",
                    tags=["Level Subjects", "Admin"])
 app.include_router(level_subject_archive.router, prefix=f"/api/{version}/admin/archive/curriculum/levelsubjects",
                    tags=["Archived","Level Subjects", "Admin"])
-
+# Student Subject
+app.include_router(student_subject.router, prefix=f"/api/{version}/admin/curriculum/studentsubject",
+                   tags=["Student Subjects", "Admin"])
+app.include_router(student_subject_archive.router, prefix=f"/api/{version}/admin/archive/curriculum/studentsubject",
+                   tags=["Archived","Student Subjects", "Admin"])
+# Subject Educator
+app.include_router(subject_educator.router, prefix=f"/api/{version}/admin/curriculum/subjecteducator",
+                   tags=["Subject Educators", "Admin"])
+app.include_router(subject_educator.router, prefix=f"/api/{version}/admin/archive/curriculum/subjecteducator",
+                   tags=["Archived","Subject Educators", "Admin"])
 # Staff
 app.include_router(staff.router, prefix=f"/api/{version}/admin/staff",
                    tags=["Staff", "Admin"])

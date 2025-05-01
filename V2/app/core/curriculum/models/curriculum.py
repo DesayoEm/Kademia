@@ -69,7 +69,7 @@ class StudentSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     subject_id: Mapped[UUID] = mapped_column(ForeignKey('subjects.id',
             ondelete='RESTRICT',name='fk_student_subjects_subjects_subject_id')
         )
-    academic_year: Mapped[str] = mapped_column(String(9))
+    session_year: Mapped[str] = mapped_column(String(9))
     term: Mapped[Term] = mapped_column(Enum(Term, name='term'))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
@@ -80,8 +80,8 @@ class StudentSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             foreign_keys='[StudentSubject.student_id]', passive_deletes=True)
 
     __table_args__ = (
-        UniqueConstraint('student_id', 'subject_id', 'academic_year', 'term'),
-        Index('idx_student_subject_term', 'student_id', 'subject_id', 'term', 'academic_year')
+        UniqueConstraint('student_id', 'subject_id', 'session_year', 'term'),
+        Index('idx_student_subject_term', 'student_id', 'subject_id', 'term', 'session_year')
     )
 
 
@@ -99,7 +99,7 @@ class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
             ondelete='RESTRICT',name='fk_subject_educators_academic_levels_level_id')
         )
-    academic_year: Mapped[str] = mapped_column(String(9))
+    session_year: Mapped[str] = mapped_column(String(9))
     term: Mapped[Term] = mapped_column(Enum(Term, name='term'))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     date_assigned: Mapped[Date] = mapped_column(Date)
@@ -109,7 +109,7 @@ class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     teacher: Mapped['Educator'] = relationship(back_populates='subject_assignments', foreign_keys='[SubjectEducator.educator_id]')
 
     __table_args__ = (
-        UniqueConstraint('educator_id', 'subject_id', 'academic_year', 'term', 'level_id'),
+        UniqueConstraint('educator_id', 'subject_id', 'session_year', 'term', 'level_id'),
         Index('idx_subject_level_educator', 'educator_id', 'level_id', 'subject_id')
     )
 
