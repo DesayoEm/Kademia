@@ -86,5 +86,6 @@ from V2.app.core.documents.models.documents import StudentDocument, StudentAward
 from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.academic_structure.models.academic_structure import AcademicLevel, Classes, StudentDepartment
 from V2.app.core.curriculum.models.curriculum import StudentSubject
-from V2.app.core.assessment.models.assessment import Grade, TotalGrade, Repetition
+from V2.app.core.assessment.models.assessment import Grade, TotalGrade
+from V2.app.core.progression.models.progression import Repetition
 from V2.app.core.transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer

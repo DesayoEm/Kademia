@@ -13,7 +13,7 @@ Usage:
     - With helper (`resolve_fk_violation(...)`) for factories with 3+ FK constraints
 """
 
-#model names are repped as strings to avoid circular imports
+#model names are represented as strings to avoid circular imports
 
 fk_error_map = {
     "common": {
@@ -64,7 +64,8 @@ fk_error_map = {
     "SubjectFactory": {
         "fk_subjects_student_departments_department_id": ("StudentDepartment", "department_id", "department"),
     },
-"AcademicLevelSubjectFactory": {
+
+    "AcademicLevelSubjectFactory": {
         "fk_academic_level_subjects_academic_levels_level_id": ("AcademicLevel", "level_id", "Academic Level"),
         "fk_academic_level_subjects_subjects_subject_id": ("Subject", "subject_id", "Subject"),
         "fk_academic_level_subjects_educators_educator_id": ("Educator", "educator_id", "Educator"),
@@ -78,7 +79,8 @@ fk_error_map = {
         "fk_subject_educators_educators_educator_id": ("Educator", "educator_id", "Educator"),
         "fk_subject_educators_academic_levels_level_id": ("AcademicLevel", "level_id", "Academic Level"),
     },
-"GradeFactory": {
+
+    "GradeFactory": {
         "fk_grades_students_student_id": ("Student", "student_id", "Student"),
         "fk_grades_subjects_subject_id": ("Subject", "subject_id", "Subject"),
         "fk_grades_staff_graded_by": ("Staff", "graded_by", "Grader"),
@@ -87,6 +89,7 @@ fk_error_map = {
         "fk_total_grades_students_student_id": ("Student", "student_id", "Student"),
         "fk_total_grades_subjects_subject_id": ("Subject", "subject_id", "Subject"),
     },
+
     "RepetitionFactory": {
         "fk_student_repetitions_students_student_id": ("Student", "student_id", "Student"),
         "fk_student_repetitions_academic_levels_previous_level": ("AcademicLevel", "previous_level_id", "Previous Level"),
@@ -95,6 +98,7 @@ fk_error_map = {
         "fk_student_repetitions_classes_new_class": ("Classes", "new_class_id", "New Class"),
         "fk_student_repetitions_staff_status_updated_by": ("Staff", "status_updated_by", "Status Updated By"),
     },
+
     "ClassTransferFactory": {
         "fk_student_department_transfers_students_student_id": ("Student", "student_id", "Student"),
         "fk_student_department_transfers_classes_previous_class": ("Classes", "previous_class_id", "Previous Class"),

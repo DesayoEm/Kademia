@@ -6,7 +6,7 @@ import logging
 
 from .base_error import KademiaError
 
-from .archive_delete_errors import (
+from .lifecycle_errors import (
     ArchiveAndDeleteError,
     CascadeDeletionError,
     ArchiveDependencyError,
@@ -77,22 +77,27 @@ from .entry_validation_errors import (
     EmailFormatError,
 )
 
-from .staff_organisation_errors import (
+from .staff_management_errors import (
     StaffOrganizationError,
     LifetimeValidityConflictError,
     TemporaryValidityConflictError,
 )
 
-from .student_organisation_errors import (
+from .academic_structure_errors import (
     StudentOrganizationError,
     InvalidCodeError,
 )
 
-from .user_errors import (
+from .identity_errors import (
     IdentityError,
     StaffTypeError,
     DuplicateStudentIDError,
     InvalidSessionYearError
+)
+from .assessment_errors import (
+    ScoreExceedsMaxError,
+    MaxScoreTooHighError,
+    InvalidWeightError
 )
 
 logging.basicConfig(level=logging.INFO)

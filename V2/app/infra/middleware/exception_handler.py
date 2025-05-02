@@ -59,12 +59,16 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         InvalidOrderNumberError: status.HTTP_400_BAD_REQUEST,
 
 
-        # Staff organization exceptions
+        # Staff management exceptions
         LifetimeValidityConflictError: status.HTTP_400_BAD_REQUEST,
         TemporaryValidityConflictError: status.HTTP_400_BAD_REQUEST,
 
-        # Student organization exceptions
+        # Academic structure exceptions
         InvalidCodeError: status.HTTP_400_BAD_REQUEST,
+
+        # Archive/delete exceptions
+        ScoreExceedsMaxError: status.HTTP_400_BAD_REQUEST,
+        MaxScoreTooHighError: status.HTTP_400_BAD_REQUEST,
 
         # User profile exceptions (Staff/Student/Guardian)
         StaffTypeError: status.HTTP_400_BAD_REQUEST,

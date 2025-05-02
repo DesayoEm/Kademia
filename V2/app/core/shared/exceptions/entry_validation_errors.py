@@ -137,9 +137,7 @@ class InvalidPhoneError(EntryValidationError):
 
 class EmailFormatError(EntryValidationError):
     def __init__(self, entry: str):
+        super().__init__()
         self.user_message = "Email must be in a valid format"
         self.log_message = f"Email setting attempted with invalid format: {entry}"
-        super().__init__()
-
-
 
