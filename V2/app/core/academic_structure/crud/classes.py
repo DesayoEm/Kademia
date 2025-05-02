@@ -12,7 +12,7 @@ from V2.app.core.academic_structure.schemas.classes import (
 
 
 class ClassCrud:
-    """CRUD operations for student_organization."""
+    """CRUD operations for classes."""
 
     def __init__(self, session: Session):
         """Initialize CRUD service.
@@ -49,7 +49,7 @@ class ClassCrud:
     def get_all_classes(self, filters: ClassFilterParams) -> List[ClassResponse]:
         """Get all active class.
         Returns:
-            List[QualificationResponse]: List of active student_organization
+            List[ClassResponse]: List of active classes
         """
         classes = self.factory.get_all_classes(filters)
         return [ClassResponse.model_validate(a_class) for a_class in classes]
@@ -108,11 +108,11 @@ class ClassCrud:
         return ClassResponse.model_validate(class_response)
 
     def get_all_archived_classes(self, filters: ClassFilterParams) -> List[ClassResponse]:
-        """Get all archived student_organization.
+        """Get all archived classes.
         Args:
             filters: Filter parameters
         Returns:
-            List[ClassResponse]: List of archived student_organization
+            List[ClassResponse]: List of archived classes
         """
         classes = self.factory.get_all_archived_classes(filters)
         return [ClassResponse.model_validate(a_class) for a_class in classes]

@@ -14,16 +14,17 @@ class StudentDocument(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             ondelete='RESTRICT',name='fk_student_documents_students_owner_id'),default=uuid4
         )
     title: Mapped[str] = mapped_column(String(50))
-    academic_year: Mapped[int] = mapped_column(Integer)
+    session_year: Mapped[str] = mapped_column(String(9))
     document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType, name='documenttype'))
-    file_url: Mapped[str] = mapped_column(String(225))
+    file_url: Mapped[str] = mapped_column(String(225), nullable = True)
 
     # Relationships
     owner: Mapped['Student'] = relationship(back_populates='documents_owned', foreign_keys='[StudentDocument.owner_id]')
 
     __table_args__ = (
+        UniqueConstraint('owner_id', 'title', name = "uq_student_document_title_owner_id"),
         Index('idx_owner_document_type', 'owner_id', 'document_type'),
-        Index('idx_academic_year', 'academic_year'),
+        Index('idx_session_year', 'session_year'),
     )
 
     def __repr__(self) -> str:
@@ -42,14 +43,15 @@ class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
     title: Mapped[str] = mapped_column(String(50))
     description: Mapped[str] = mapped_column(String(225), nullable = True)
-    academic_year: Mapped[int] = mapped_column(Integer)
-    file_url: Mapped[str] = mapped_column(String(225))
+    session_year: Mapped[str] = mapped_column(String(9))
+    file_url: Mapped[str] = mapped_column(String(225), nullable = True)
 
     # Relationships
     owner: Mapped['Student'] = relationship(back_populates='awards_earned',
             foreign_keys='[StudentAward.owner_id]', passive_deletes=True)
 
     __table_args__ = (
+        UniqueConstraint('owner_id', 'title', name="uq_student_award_title_owner_id"),
         Index('idx_owner_title', 'owner_id', 'title'),
     )
 

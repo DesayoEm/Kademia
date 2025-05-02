@@ -50,7 +50,7 @@ class SubjectFactory:
         Args:
             data: Subject data
         Returns:
-            Subject: Created subject record
+            Subject: Created subject recorda
         """
         new_subject = Subject(
             id=uuid4(),

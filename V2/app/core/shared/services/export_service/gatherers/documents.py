@@ -7,14 +7,14 @@ class DocumentsGatherer:
     @staticmethod
     def gather_student_document_data(doc: StudentDocument) -> Tuple[Dict[str, Any], str]:
         """Gather data for StudentDocument entity."""
-        file_name = f"StudentDocument_{doc.owner_id}_{doc.document_type}_{doc.academic_year}"
+        file_name = f"StudentDocument_{doc.owner_id}_{doc.document_type}_{doc.session_year}"
 
         return ({
                     "document": {
                         "id": str(doc.id),
                         "owner_id": str(doc.owner_id),
                         "title": doc.title,
-                        "academic_year": doc.academic_year,
+                        "session_year": doc.session_year,
                         "document_type": doc.document_type,
                         "file_url": doc.file_url,
                         "created_at": doc.created_at,
@@ -34,7 +34,7 @@ class DocumentsGatherer:
     @staticmethod
     def gather_student_award_data(award: StudentAward) -> Tuple[Dict[str, Any], str]:
         """Gather data for StudentAward entity."""
-        file_name = f"StudentAward_{award.owner_id}_{award.academic_year}_{award.title}"
+        file_name = f"StudentAward_{award.owner_id}_{award.session_year}_{award.title}"
 
         return ({
                     "award": {
@@ -42,7 +42,7 @@ class DocumentsGatherer:
                         "owner_id": str(award.owner_id),
                         "title": award.title,
                         "description": award.description,
-                        "academic_year": award.academic_year,
+                        "session_year": award.session_year,
                         "file_url": award.file_url,
                         "created_at": award.created_at,
                         "created_by": str(award.created_by) if award.created_by else None,
