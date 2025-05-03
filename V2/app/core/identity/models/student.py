@@ -34,7 +34,7 @@ class Student(UserBase):
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
     graduation_date: Mapped[date] = mapped_column(Date, nullable=True)
 
-    # Standard relationships
+    # Relationships
     documents_owned: Mapped[List['StudentDocument']] = relationship(back_populates='owner')
     awards_earned: Mapped[List['StudentAward']] = relationship(back_populates='owner')
     guardian: Mapped['Guardian'] = relationship(back_populates='wards', foreign_keys='[Student.guardian_id]')
@@ -46,6 +46,8 @@ class Student(UserBase):
     grades: Mapped[List['Grade']] = relationship(back_populates='student')
     total_grades: Mapped[List['TotalGrade']] = relationship(back_populates='student')
     classes_repeated: Mapped[List['Repetition']] = relationship(back_populates='repeating_student')
+    promotions: Mapped[List['Promotion']] = relationship(back_populates='promoted_student')
+    graduation: Mapped['Promotion'] = relationship(back_populates='graduated_student')
     department_transfers: Mapped[List['StudentDepartmentTransfer']] = relationship(back_populates='transferred_student')
     class_transfers: Mapped[List['ClassTransfer']] = relationship(back_populates='transferred_student')
 
@@ -87,5 +89,5 @@ from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.academic_structure.models.academic_structure import AcademicLevel, Classes, StudentDepartment
 from V2.app.core.curriculum.models.curriculum import StudentSubject
 from V2.app.core.assessment.models.assessment import Grade, TotalGrade
-from V2.app.core.progression.models.progression import Repetition
+from V2.app.core.progression.models.progression import Repetition, Promotion
 from V2.app.core.transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer

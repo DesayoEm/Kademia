@@ -42,7 +42,7 @@ class StudentSubjectFactory:
 
 
     @resolve_unique_violation({
-        "student_subjects_student_id_subject_id_session_year_term_key": (
+        "student_subjects_student_id_subject_id_academic_session_term_key": (
                 "student_id", lambda self, data: data.student_id)
     })
     @resolve_fk_on_create()
@@ -58,7 +58,7 @@ class StudentSubjectFactory:
             student_id=data.student_id,
             subject_id=data.subject_id,
             term=data.term,
-            session_year=self.validator.validate_session_year(data.session_year),
+            academic_session=self.validator.validate_academic_session(data.academic_session),
 
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID
@@ -84,7 +84,7 @@ class StudentSubjectFactory:
         Returns:
             List[StudentSubject]: List of active StudentSubjects
         """
-        fields = ['subject_id', 'session_year', 'level_id', 'student_id']
+        fields = ['subject_id', 'academic_session', 'level_id', 'student_id']
         return self.repository.execute_query(fields, filters)
 
 
@@ -123,7 +123,7 @@ class StudentSubjectFactory:
         Returns:
             List[StudentSubject]: List of archived StudentSubject records
         """
-        fields = ['subject_id', 'session_year', 'level_id', 'student_id']
+        fields = ['subject_id', 'academic_session', 'level_id', 'student_id']
         return self.repository.execute_archive_query(fields, filters)
 
 

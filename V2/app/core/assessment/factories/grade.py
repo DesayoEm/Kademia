@@ -24,7 +24,7 @@ class GradeFactory:
         """
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
-        self.validator = AssessmentValidator()
+        self.validator = AssessmentValidator(session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
@@ -49,11 +49,15 @@ class GradeFactory:
         """
         new_grade = Grade(
             id=uuid4(),
-            session_year=self.validator.validate_session_year(data.session_year),
+            student_id=data.student_id,
+            subject_id=data.subject_id,
+            academic_session=self.validator.validate_academic_session(data.academic_session),
             term=data.term,
-            max_score=self.validator.validate_max_score(data.score),
+            max_score=self.validator.validate_max_score(data.max_score),
             score=self.validator.validate_score(data.max_score, data.score),
-            weight=self.validator.vvvv(data.weight),
+            weight=self.validator.validate_weight(
+                data.weight, data.student_id, data.subject_id, data.academic_session, data.term
+            ),
             type=data.type,
             graded_by =  data.graded_by,
             graded_on=self.validator.validate_graded_date(data.graded_on),
@@ -82,7 +86,7 @@ class GradeFactory:
         Returns:
             List[Grade]: List of active Grades
         """
-        fields = ['name', 'session_year', 'term', 'graded_on']
+        fields = ['type', 'academic_session', 'term', 'graded_on']
         return self.repository.execute_query(fields, filters)
 
 
@@ -96,20 +100,37 @@ class GradeFactory:
             Grade: Updated Grade record
         """
         copied_data = data.copy()
+        to_be_validated = ["score", "max_score", "academic_session", "weight", "graded_on"]
         try:
             existing = self.get_grade(grade_id)
-            validations = {
-                "name": (self.validator.validate_name, "name"),
-            }
-
-            for field, (validator_func, model_attr) in validations.items():
-                if field in copied_data:
-                    validated_value = validator_func(copied_data.pop(field))
-                    setattr(existing, model_attr, validated_value)
-
             for key, value in copied_data.items():
-                if hasattr(existing, key):
+                if hasattr(existing, key) and key not in to_be_validated:
                     setattr(existing, key, value)
+
+            if "academic_session" in data:
+                updated_academic_session = self.validator.validate_academic_session(data.academic_session)
+                setattr(existing, "academic_session", updated_academic_session)
+
+            if "graded_on" in data:
+                updated_graded_on = self.validator.validate_graded_date(data.graded_on)
+                setattr(existing, "graded_on", updated_graded_on)
+
+            if "weight" in data:
+                academic_session = data.academic_session if "academic_session" else existing.academic_session
+                term = data.term if "term" in data else existing.term
+
+                existing.weight = self.validator.validate_weight(
+                    data.weight, existing.student_id, existing.subject_id, academic_session, term
+                )
+
+            if "score" in data:
+                max_score = (
+                    self.validator.validate_max_score(data.max_score)
+                    if "max_score" in data
+                    else existing.max_score
+                )
+                validated_score = self.validator.validate_score(max_score, data.score)
+                setattr(existing, "score", validated_score)
 
             existing.last_modified_by = SYSTEM_USER_ID
             return self.repository.update(grade_id, existing)
@@ -119,7 +140,7 @@ class GradeFactory:
 
 
     def archive_grade(self, grade_id: UUID, reason) -> Grade:
-        """Archive a Grade if no active dependencies exist.
+        """Archive a Grade record.
         Args:
             grade_id (UUID): ID of Grade to archive
             reason: Reason for archiving
@@ -135,24 +156,24 @@ class GradeFactory:
 
     @resolve_fk_on_delete()
     def delete_grade(self, grade_id: UUID, is_archived=False) -> None:
-        """Permanently delete a Grade if there are no dependent entities
+        """Permanently delete a Grade
         Args:
             grade_id (UUID): ID of Grade to delete
             is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, grade_id, is_archived)
             return self.repository.delete(grade_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(grade_id, e)
+
 
     def get_all_archived_grades(self, filters) -> List[Grade]:
         """Get all archived Grades with filtering.
         Returns:
             List[Grade]: List of archived Grade records
         """
-        fields = ['name']
+        fields = ['type', 'academic_session', 'term', 'graded_on']
         return self.repository.execute_archive_query(fields, filters)
 
 
@@ -184,13 +205,12 @@ class GradeFactory:
 
     @resolve_fk_on_delete()
     def delete_archived_grade(self, grade_id: UUID, is_archived = True) -> None:
-        """Permanently delete an archived Grade if there are no dependent entities.
+        """Permanently delete an archived Grade.
         Args:
             grade_id: ID of Grade to delete
             is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, grade_id, is_archived)
             self.repository.delete_archive(grade_id)
 
         except EntityNotFoundError as e:

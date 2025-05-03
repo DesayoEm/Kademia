@@ -6,7 +6,7 @@ from V2.app.core.shared.schemas.shared_models import *
 class DocumentFilterParams(BaseFilterParams):
     title: str|None = None
     owner_id: UUID|None = None
-    session_year: str|None = None
+    academic_session: str|None = None
     document_type: DocumentType|None = None
 
     order_by: Literal["title", "created_at"] = "title"
@@ -15,7 +15,7 @@ class DocumentBase(BaseModel):
     """Base model for student documents"""
     owner_id: UUID
     title: str
-    session_year: str
+    academic_session: str
     document_type: DocumentType
 
     model_config = ConfigDict(
@@ -25,7 +25,7 @@ class DocumentBase(BaseModel):
             "example": {
                 "owner_id": "00000000-0000-0000-0000-000000000001",
                 "title": "First Term Report Card",
-                "session_year": "2025/2026",
+                "academic_session": "2025/2026",
                 "document_type": "RESULT",
 
             }

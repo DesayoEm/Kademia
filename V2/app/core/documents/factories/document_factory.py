@@ -56,7 +56,7 @@ class DocumentFactory:
             id=uuid4(),
             title=self.validator.validate_name(data.title),
             owner_id=data.owner_id,
-            session_year=self.validator.validate_session_year(data.session_year),
+            academic_session=self.validator.validate_academic_session(data.academic_session),
             document_type = data.document_type,
 
             created_by=SYSTEM_USER_ID,
@@ -83,7 +83,7 @@ class DocumentFactory:
         Returns:
             List[Document]: List of active Documents
         """
-        fields = ['title', 'session_year','document_type']
+        fields = ['title', 'academic_session','document_type']
         return self.repository.execute_query(fields, filters)
 
 
@@ -155,7 +155,7 @@ class DocumentFactory:
         Returns:
             List[Document]: List of archived Document records
         """
-        fields = ['title', 'session_year','document_type']
+        fields = ['title', 'academic_session','document_type']
         return self.repository.execute_archive_query(fields, filters)
 
 

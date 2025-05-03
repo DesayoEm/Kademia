@@ -7,7 +7,7 @@ class AcademicLevelSubjectFilterParams(BaseFilterParams):
     subject_id: str | None = None
     educator_id: str | None = None
     is_elective: str | None = None
-    session_year: str | None = None
+    academic_session: str | None = None
 
 
 class AcademicLevelSubjectBase(BaseModel):
@@ -16,7 +16,7 @@ class AcademicLevelSubjectBase(BaseModel):
     subject_id: UUID
     is_elective: bool = True
     educator_id: UUID | None = None
-    session_year: str | None = None
+    academic_session: str | None = None
 
 
     model_config = ConfigDict(
@@ -27,7 +27,7 @@ class AcademicLevelSubjectBase(BaseModel):
                 "level_id": "00000000-0000-0000-0000-000000000001",
                 "subject_id": "00000000-0000-0000-0000-000000000002",
                 "is_elective": True,
-                "session_year": "2025/2026",
+                "academic_session": "2025/2026",
             }
         }
     )
@@ -44,7 +44,7 @@ class AcademicLevelSubjectCreate(AcademicLevelSubjectBase):
 class AcademicLevelSubjectUpdate(AcademicLevelSubjectBase):
     """For updating academic level subject assignments"""
     is_elective: bool = True
-    session_year: str | None = None
+    academic_session: str | None = None
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -52,7 +52,7 @@ class AcademicLevelSubjectUpdate(AcademicLevelSubjectBase):
         json_schema_extra={
             "example": {
                 "is_elective": True,
-                "session_year": "2023-2024",
+                "academic_session": "2023-2024",
             }
         }
     )

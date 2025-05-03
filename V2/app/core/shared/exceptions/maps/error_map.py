@@ -14,14 +14,14 @@ Example:
     Student: (Student, "Student")
 """
 from ....curriculum.models.curriculum import SubjectEducator, StudentSubject, Subject, AcademicLevelSubject
-from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
 from ....documents.models.documents import StudentDocument, StudentAward
 from ....auth.models.auth import AccessLevelChange
 from ....staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
 from ....academic_structure.models.academic_structure import StudentDepartment, Classes, AcademicLevel
 from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
-from ....assessment.models.assessment import Grade, TotalGrade,Repetition
-from ....identity.models.staff import Staff, Educator, AdminStaff, SupportStaff, System
+from ....assessment.models.assessment import Grade, TotalGrade
+from V2.app.core.progression.models.progression import Repetition
+from ....identity.models.staff import Staff, Educator, AdminStaff, SupportStaff
 from ....identity.models.student import Student
 from ....identity.models.guardian import Guardian
 from ...exceptions import *
@@ -55,12 +55,14 @@ error_map = {
     SubjectEducator: (SubjectEducator, "subject assignment"),
     Grade: (Grade, "grade"),
     TotalGrade: (TotalGrade, "total grade"),
-    Repetition: (Repetition, "class repetition"),
     StudentAward: (StudentAward, "award"),
 
     # Document models
     StudentDocument: (StudentDocument, "document"),
 
     # Auth models
-    AccessLevelChange: (AccessLevelChange, "access level change")
+    AccessLevelChange: (AccessLevelChange, "access level change"),
+
+    # Progression
+    Repetition: (Repetition, "class repetition"),
 }

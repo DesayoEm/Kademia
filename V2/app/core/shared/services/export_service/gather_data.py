@@ -1,14 +1,15 @@
 from V2.app.core.shared.exceptions.export_errors import UnimplementedGathererError
-from ....staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
-from ....academic_structure.models.academic_structure import StudentDepartment, Classes, AcademicLevel
-from ....identity.models.staff import Educator, AdminStaff, SupportStaff
-from ....identity.models.student import Student
-from ....identity.models.guardian import Guardian
-from ....assessment.models.assessment import Grade, TotalGrade, Repetition
-from ....curriculum.models.curriculum import Subject, AcademicLevelSubject, StudentSubject, SubjectEducator
-from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
-from ....documents.models.documents import StudentDocument, StudentAward
-from ....auth.models.auth import AccessLevelChange
+from V2.app.core.staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
+from V2.app.core.academic_structure.models.academic_structure import StudentDepartment, Classes, AcademicLevel
+from V2.app.core.identity.models.staff import Educator, AdminStaff, SupportStaff
+from V2.app.core.identity.models.student import Student
+from V2.app.core.identity.models.guardian import Guardian
+from V2.app.core.assessment.models.assessment import Grade, TotalGrade
+from V2.app.core.progression.models.progression import Repetition
+from V2.app.core.curriculum.models.curriculum import Subject, AcademicLevelSubject, StudentSubject, SubjectEducator
+from V2.app.core.transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
+from V2.app.core.documents.models.documents import StudentDocument, StudentAward
+from V2.app.core.auth.models.auth import AccessLevelChange
 
 from .gatherers.identity.staff_gatherer import StaffGatherer
 from .gatherers.identity.student_gatherer import StudentGatherer
@@ -20,6 +21,7 @@ from V2.app.core.shared.services.export_service.gatherers.assessment import Asse
 from V2.app.core.shared.services.export_service.gatherers.transfer import TransferGatherer
 from V2.app.core.shared.services.export_service.gatherers.documents import DocumentsGatherer
 from V2.app.core.shared.services.export_service.gatherers.auth import AuthGatherer
+from .gatherers.progression import ProgressionGatherer
 
 
 class GatherData:
@@ -31,6 +33,7 @@ class GatherData:
         self.academic_gatherer = AcademicStructureGatherer()
         self.curriculum_gatherer = CurriculumGatherer()
         self.assessment_gatherer = AssessmentGatherer()
+        self.progression_gatherer = ProgressionGatherer()
         self.transfer_gatherer = TransferGatherer()
         self.document_gatherer = DocumentsGatherer()
         self.auth_gatherer = AuthGatherer()
@@ -59,18 +62,20 @@ class GatherData:
             StudentSubject: self.curriculum_gatherer.gather_student_subject_data,
             SubjectEducator: self.curriculum_gatherer.gather_subject_educator_data,
 
+            # Documents
+            StudentDocument: self.document_gatherer.gather_student_document_data,
+            StudentAward: self.document_gatherer.gather_student_award_data,
+
             # Assessment
             Grade: self.assessment_gatherer.gather_grade_data,
             TotalGrade: self.assessment_gatherer.gather_total_grade_data,
-            Repetition: self.assessment_gatherer.gather_repetition_data,
+
+            # Assessment
+            Repetition: self.progression_gatherer.gather_repetition_data,
 
             # Transfers
             StudentDepartmentTransfer: self.transfer_gatherer.gather_student_department_transfer_data,
             ClassTransfer: self.transfer_gatherer.gather_class_transfer_data,
-
-            # Documents
-            StudentDocument: self.document_gatherer.gather_student_document_data,
-            StudentAward: self.document_gatherer.gather_student_award_data,
 
             # Auth Logs
             AccessLevelChange: self.auth_gatherer.gather_access_level_change_data,

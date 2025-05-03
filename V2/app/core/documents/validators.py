@@ -25,7 +25,7 @@ class DocumentValidator:
 
         return value.strip().title()
 
-    def validate_session_year(self, value):
+    def validate_academic_session(self, value):
         match = re.fullmatch(r"(\d{4})/(\d{4})", value)
         if not match:
             raise SessionYearFormatError(entry=value, domain=self.domain)

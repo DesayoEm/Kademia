@@ -5,7 +5,7 @@ from V2.app.core.shared.schemas.enums import ApprovalStatus, ArchiveReason
 class StudentRepetitionBase(BaseModel):
     """Base model for student repetitions"""
     student_id: UUID
-    session_year: str
+    academic_session: str
     previous_level_id: UUID
     new_level_id: UUID
     previous_class_id: UUID
@@ -22,7 +22,7 @@ class StudentRepetitionBase(BaseModel):
     json_schema_extra = {
         "example": {
             "student_id": "00000000-0000-0000-0000-000000000001",
-            "session_year": "2025/2026",
+            "academic_session": "2025/2026",
             "previous_level_id": "00000000-0000-0000-0000-000000000002",
             "new_level_id": "00000000-0000-0000-0000-000000000002",
             "previous_class_id": "00000000-0000-0000-0000-000000000003",

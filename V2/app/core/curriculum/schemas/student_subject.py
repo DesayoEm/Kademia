@@ -6,7 +6,7 @@ from V2.app.core.shared.schemas.enums import Term
 class StudentSubjectFilterParams(BaseFilterParams):
     student_id: UUID|None = None
     subject_id: UUID | None = None
-    session_year: str | None = None
+    academic_session: str | None = None
     term: str | None = None
     is_active: bool | None = None
 
@@ -16,7 +16,7 @@ class StudentSubjectBase(BaseModel):
     """Base model for student subject enrollments"""
     student_id: UUID
     subject_id: UUID
-    session_year: str
+    academic_session: str
     term: Term
     is_active: bool = True
 
@@ -27,7 +27,7 @@ class StudentSubjectBase(BaseModel):
             "example": {
                 "student_id": "00000000-0000-0000-0000-000000000001",
                 "subject_id": "00000000-0000-0000-0000-000000000002",
-                "session_year": "2023-2024",
+                "academic_session": "2023-2024",
                 "term": "FIRST",
                 "is_active": True
             }

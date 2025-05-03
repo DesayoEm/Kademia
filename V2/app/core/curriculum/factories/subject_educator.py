@@ -43,7 +43,7 @@ class SubjectEducatorFactory:
 
 
     @resolve_unique_violation({
-        "subject_educators_educator_id_subject_id_session_year_term__key": ("name", lambda self, data: data.educator_id)
+        "subject_educators_educator_id_subject_id_academic_session_term__key": ("name", lambda self, data: data.educator_id)
     })
     @resolve_fk_on_create()
     def create_subject_educator(self, data) -> SubjectEducator:
@@ -61,7 +61,7 @@ class SubjectEducatorFactory:
             is_active=data.is_active,
             term=data.term,
             date_assigned=date.today(),
-            session_year=self.validator.validate_session_year(data.session_year),
+            academic_session=self.validator.validate_academic_session(data.academic_session),
 
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID
@@ -87,7 +87,7 @@ class SubjectEducatorFactory:
         Returns:
             List[SubjectEducator]: List of active SubjectEducators
         """
-        fields = ['subject_id', 'session_year', 'level_id', 'educator_id', 'is_active', 'date_assigned']
+        fields = ['subject_id', 'academic_session', 'level_id', 'educator_id', 'is_active', 'date_assigned']
         return self.repository.execute_query(fields, filters)
 
 
@@ -135,7 +135,7 @@ class SubjectEducatorFactory:
         Returns:
             List[SubjectEducator]: List of archived SubjectEducator records
         """
-        fields = ['subject_id', 'session_year', 'level_id', 'educator_id', 'is_active', 'date_assigned']
+        fields = ['subject_id', 'academic_session', 'level_id', 'educator_id', 'is_active', 'date_assigned']
         return self.repository.execute_archive_query(fields, filters)
 
 

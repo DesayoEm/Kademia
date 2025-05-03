@@ -3,7 +3,7 @@ from V2.app.core.shared.schemas.shared_models import *
 
 
 class AcademicLevelFilterParams(BaseFilterParams):
-    name: Optional[str] = None
+    name: str | None = None
     order_by: Literal["order", "created_at"] = "order"
 
 class AcademicLevelBase(BaseModel):

@@ -6,7 +6,7 @@ class SubjectEducatorFilterParams(BaseFilterParams):
     educator_id: UUID|None = None
     subject_id: UUID | None = None
     level_id: UUID | None = None
-    session_year: str | None = None
+    academic_session: str | None = None
     term: Term | None = None
     is_active: bool | None = None
     date_assigned: date| None = None
@@ -19,7 +19,7 @@ class SubjectEducatorBase(BaseModel):
     subject_id: UUID
     educator_id: UUID
     level_id: UUID
-    session_year: str
+    academic_session: str
     term: Term
     is_active: bool = False
 
@@ -32,7 +32,7 @@ class SubjectEducatorBase(BaseModel):
                 "subject_id": "00000000-0000-0000-0000-000000000001",
                 "educator_id": "00000000-0000-0000-0000-000000000002",
                 "level_id": "00000000-0000-0000-0000-000000000003",
-                "session_year": "2025/2026",
+                "academic_session": "2025/2026",
                 "term": "FIRST",
                 "is_active": True,
 

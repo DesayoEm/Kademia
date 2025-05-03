@@ -17,6 +17,7 @@ from V2.app.routers.curriculum import (
     level_subject, level_subject_archive, student_subject, student_subject_archive, subject,subject_archive,
     subject_educator, subject_educator_archive
 )
+from V2.app.routers.assessment import grade, total_grade, grade_archive, total_grade_archive
 from V2.app.routers.documents import award, award_archive, document_archive, document
 from V2.app.routers.identity import guardian, guardian_archive, student, student_archive, staff_archive, staff
 from V2.app.routers.auth import password, auth
@@ -102,6 +103,17 @@ app.include_router(classes.router, prefix=f"/api/{version}/students/classes",
                    tags=["Classes", "Admin"])
 app.include_router(classes_archive.router, prefix=f"/api/{version}/students/classes/archived",
                    tags=["Classes", "Admin"])
+
+# Assessment
+app.include_router(grade.router, prefix=f"/api/{version}/students/assessment/grades",
+                   tags=["Assessment", "Admin"])
+app.include_router(grade_archive.router, prefix=f"/api/{version}/students/assessment/archived/grade",
+                   tags=["Assessment", "Admin"])
+
+app.include_router(total_grade.router, prefix=f"/api/{version}/students/assessment/total-grades",
+                   tags=["Assessment", "Admin"])
+app.include_router(total_grade_archive.router, prefix=f"/api/{version}/students/assessment/archived/total-grade",
+                   tags=["Assessment", "Admin"])
 
 
 # Guardians

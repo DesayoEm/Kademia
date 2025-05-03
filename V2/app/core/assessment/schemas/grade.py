@@ -1,10 +1,19 @@
+
+from V2.app.core.shared.schemas.enums import Term, GradeType
 from V2.app.core.shared.schemas.common_imports import *
-from V2.app.core.shared.schemas.enums import Term, GradeType, ArchiveReason
+from V2.app.core.shared.schemas.shared_models import *
+
+class GradeFilterParams(BaseFilterParams):
+    type: GradeType | None = None
+    term: Term | None = None
+    order_by: Literal["order", "created_at"] = "order"
+    academic_session: str | None = None
+    graded_on: date
 
 
 class GradeBase(BaseModel):
     """Base model for student grades"""
-    session_year: str
+    academic_session: str
     term: Term
     weight: float
     type: GradeType
@@ -25,7 +34,7 @@ class GradeCreate(GradeBase):
             "example": {
                 "student_id": "00000000-0000-0000-0000-000000000001",
                 "subject_id": "00000000-0000-0000-0000-000000000002",
-                "academic_year": "2025/2026",
+                "academic_session": "2025/2026",
                 "weight": 5.0,
                 "term": "FIRST",
                 "type": "EXAM",
@@ -46,7 +55,7 @@ class GradeUpdate(GradeBase):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "academic_year": "2025/2026",
+                "academic_session": "2025/2026",
                 "term": "FIRST",
                 "type": "EXAM",
                 "score": 25,

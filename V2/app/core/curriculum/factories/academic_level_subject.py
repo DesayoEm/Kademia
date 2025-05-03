@@ -42,7 +42,7 @@ class AcademicLevelSubjectFactory:
 
 
     @resolve_unique_violation({
-        "academic_level_subjects_level_id_subject_id_session_year_key": ("name", lambda self, data: data.subject_id)
+        "academic_level_subjects_level_id_subject_id_academic_session_key": ("name", lambda self, data: data.subject_id)
     })
     @resolve_fk_on_create()
     def create_academic_level_subject(self, data) -> AcademicLevelSubject:
@@ -57,7 +57,7 @@ class AcademicLevelSubjectFactory:
             subject_id=data.subject_id,
             level_id=data.level_id,
             is_elective=data.is_elective,
-            session_year=self.validator.validate_session_year(data.session_year),
+            academic_session=self.validator.validate_academic_session(data.academic_session),
 
             created_by=SYSTEM_USER_ID,
             last_modified_by=SYSTEM_USER_ID
@@ -83,7 +83,7 @@ class AcademicLevelSubjectFactory:
         Returns:
             List[AcademicLevelSubject]: List of active AcademicLevelSubjects
         """
-        fields = ['session_year', 'level_id', 'subject_id', 'educator_id']
+        fields = ['academic_session', 'level_id', 'subject_id', 'educator_id']
         return self.repository.execute_query(fields, filters)
 
     def archive_academic_level_subject(self, academic_level_subject_id: UUID, reason) -> AcademicLevelSubject:
@@ -130,7 +130,7 @@ class AcademicLevelSubjectFactory:
         Returns:
             List[AcademicLevelSubject]: List of archived AcademicLevelSubject records
         """
-        fields = ['session_year', 'level_id', 'subject_id', 'educator_id']
+        fields = ['academic_session', 'level_id', 'subject_id', 'educator_id']
         return self.repository.execute_archive_query(fields, filters)
 
 

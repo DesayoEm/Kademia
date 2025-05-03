@@ -14,7 +14,7 @@ class StudentDocument(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             ondelete='RESTRICT',name='fk_student_documents_students_owner_id'),default=uuid4
         )
     title: Mapped[str] = mapped_column(String(50))
-    session_year: Mapped[str] = mapped_column(String(9))
+    academic_session: Mapped[str] = mapped_column(String(9))
     document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType, name='documenttype'))
     file_url: Mapped[str] = mapped_column(String(225), nullable = True)
 
@@ -24,7 +24,7 @@ class StudentDocument(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __table_args__ = (
         UniqueConstraint('owner_id', 'title', name = "uq_student_document_title_owner_id"),
         Index('idx_owner_document_type', 'owner_id', 'document_type'),
-        Index('idx_session_year', 'session_year'),
+        Index('idx_academic_session', 'academic_session'),
     )
 
     def __repr__(self) -> str:
@@ -43,7 +43,7 @@ class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
     title: Mapped[str] = mapped_column(String(50))
     description: Mapped[str] = mapped_column(String(225), nullable = True)
-    session_year: Mapped[str] = mapped_column(String(9))
+    academic_session: Mapped[str] = mapped_column(String(9))
     file_url: Mapped[str] = mapped_column(String(225), nullable = True)
 
     # Relationships
