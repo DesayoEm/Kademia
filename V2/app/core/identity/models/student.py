@@ -47,7 +47,7 @@ class Student(UserBase):
     total_grades: Mapped[List['TotalGrade']] = relationship(back_populates='student')
     classes_repeated: Mapped[List['Repetition']] = relationship(back_populates='repeating_student')
     promotions: Mapped[List['Promotion']] = relationship(back_populates='promoted_student')
-    graduation: Mapped['Promotion'] = relationship(back_populates='graduated_student')
+    graduation: Mapped['Graduation'] = relationship(back_populates='graduated_student')
     department_transfers: Mapped[List['StudentDepartmentTransfer']] = relationship(back_populates='transferred_student')
     class_transfers: Mapped[List['ClassTransfer']] = relationship(back_populates='transferred_student')
 

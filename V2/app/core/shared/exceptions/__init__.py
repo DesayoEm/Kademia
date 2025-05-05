@@ -25,6 +25,7 @@ from .auth_errors import (
     AccessTokenRequiredError,
     RefreshTokenRequiredError,
     TokenRevokedError,
+    SameLevelError
 )
 
 from .database_errors import (

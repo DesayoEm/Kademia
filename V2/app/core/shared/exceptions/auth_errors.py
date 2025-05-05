@@ -91,3 +91,12 @@ class TokenRevokedError(TokenError):
         self.user_message = "Token has been revoked"
         self.log_message = f"Token id {jti} has been revoked"
         super().__init__()
+
+
+class SameLevelError(AuthError):
+    """Raised when """
+    def __init__(self, new, previous):
+        super().__init__()
+        self.user_message = "Previous level and new level cannot be the same"
+        self.log_message = (f"Access level with previous and new levels attempted.\
+            Previous: {previous} New: {new}")

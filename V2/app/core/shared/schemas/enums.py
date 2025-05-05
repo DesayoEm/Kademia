@@ -36,6 +36,13 @@ class StaffType(str, Enum):
     SUPPORT = 'Support'
     SYSTEM = 'System'
 
+class AccessLevel(str, Enum):
+    INACTIVE = 'INACTIVE'
+    READ = 'READ'
+    EDUCATOR = 'EDUCATOR'
+    ADMIN = 'ADMIN'
+    SUPERUSER = 'SUPERUSER'
+    SYSTEM = 'SYSTEM'
 
 class StaffAvailability(str, Enum):
     AVAILABLE = 'AVAILABLE'
@@ -88,15 +95,6 @@ class ApprovalStatus(str, Enum):
     PENDING = 'PENDING'
     APPROVED = 'APPROVED'
     REJECTED = 'REJECTED'
-
-
-class AccessLevel(str, Enum):
-    INACTIVE = 'INACTIVE'
-    USER = 'USER'
-    ADMIN = 'ADMIN'
-    SUPERUSER = 'SUPERUSER'
-    SYSTEM = 'SYSTEM'
-
 
 class ArchiveReason(str, Enum):
     ERROR = 'ERROR'

@@ -14,13 +14,11 @@ class ValidityType(str, Enum):
     Temporary = 'Temporary'
     Lifetime = 'Lifetime'
 
-
 class UserType(str, Enum):
     STUDENT = 'STUDENT'
     GUARDIAN = 'GUARDIAN'
     STAFF = 'STAFF'
     SYSTEM = 'SYSTEM'
-
 
 class StaffType(str, Enum):
     Educator = 'Educator'
@@ -28,6 +26,13 @@ class StaffType(str, Enum):
     Support = 'Support'
     System = 'System'
 
+class AccessLevel(str, Enum):
+    INACTIVE = 'INACTIVE'
+    READ = 'READ'
+    EDUCATOR = 'EDUCATOR'
+    ADMIN = 'ADMIN'
+    SUPERUSER = 'SUPERUSER'
+    SYSTEM = 'SYSTEM'
 
 class DocumentType(str, Enum):
     RESULT = 'RESULT'
@@ -36,7 +41,6 @@ class DocumentType(str, Enum):
     CERTIFICATE = 'CERTIFICATE'
     ARTICLE = 'ARTICLE'
     OTHER = 'OTHER'
-
 
 class AcademicLevel(str, Enum):
     JSS1 = 'JSS1'
@@ -100,14 +104,6 @@ class ApprovalStatus(str, Enum):
     APPROVED = 'APPROVED'
     REJECTED = 'REJECTED'
 
-
-class AccessLevel(str, Enum):
-    INACTIVE = 'INACTIVE'
-    READ = 'READ'
-    EDUCATOR = 'EDUCATOR'
-    ADMIN = 'ADMIN'
-    SUPERUSER = 'SUPERUSER'
-    SYSTEM = 'SYSTEM'
 
 class ArchiveReason(str, Enum):
     ERROR = 'ERROR'

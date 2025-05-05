@@ -8,7 +8,7 @@ from V2.app.core.staff_management.models.staff_management import StaffDepartment
 from V2.app.core.academic_structure.models.academic_structure import StudentDepartment, Classes, AcademicLevel
 from V2.app.core.transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
 from V2.app.core.assessment.models.assessment import Grade, TotalGrade
-from V2.app.core.progression.models.progression import Repetition
+from V2.app.core.progression.models.progression import Repetition, Promotion, Graduation
 from V2.app.core.identity.models.staff import Staff, Educator, AdminStaff, SupportStaff, System
 from V2.app.core.identity.models.student import Student
 from V2.app.core.identity.models.guardian import Guardian

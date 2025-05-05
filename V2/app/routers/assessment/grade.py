@@ -26,30 +26,30 @@ def get_grades(filters: GradeFilterParams = Depends(),db: Session = Depends(get_
     return grade_crud.get_all_grades(filters)
 
 
-@router.get("/{level_id}", response_model=GradeResponse)
-def get_grade(level_id: UUID, db: Session = Depends(get_db)):
+@router.get("/{grade_id}", response_model=GradeResponse)
+def get_grade(grade_id: UUID, db: Session = Depends(get_db)):
     grade_crud = GradeCrud(db)
-    return grade_crud.get_grade(level_id)
+    return grade_crud.get_grade(grade_id)
 
 
-@router.put("/{level_id}", response_model=GradeResponse)
-def update_grade(data: GradeUpdate, level_id: UUID,
+@router.put("/{grade_id}", response_model=GradeResponse)
+def update_grade(data: GradeUpdate, grade_id: UUID,
                             db: Session = Depends(get_db)):
     grade_crud = GradeCrud(db)
-    return grade_crud.update_grade(level_id, data)
+    return grade_crud.update_grade(grade_id, data)
 
 
-@router.patch("/{level_id}",  status_code=204)
-def archive_grade(level_id: UUID, reason:ArchiveRequest,
+@router.patch("/{grade_id}",  status_code=204)
+def archive_grade(grade_id: UUID, reason:ArchiveRequest,
                        db: Session = Depends(get_db)):
     grade_crud = GradeCrud(db)
-    return grade_crud.archive_grade(level_id, reason.reason)
+    return grade_crud.archive_grade(grade_id, reason.reason)
 
 
-@router.post("/{level_id}", response_class=FileResponse,  status_code=204)
-def export_grade(level_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
+@router.post("/{grade_id}", response_class=FileResponse,  status_code=204)
+def export_grade(grade_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
     grade_crud = GradeCrud(db)
-    file_path= grade_crud.export_grade(level_id, export_format.value)
+    file_path= grade_crud.export_grade(grade_id, export_format.value)
 
     return FileResponse(
         path=file_path,
@@ -57,10 +57,10 @@ def export_grade(level_id: UUID, export_format: ExportFormat, db: Session = Depe
         media_type="application/octet-stream"
     )
 
-@router.delete("/{level_id}", status_code=204)
-def delete_grade(level_id: UUID, db: Session = Depends(get_db)):
+@router.delete("/{grade_id}", status_code=204)
+def delete_grade(grade_id: UUID, db: Session = Depends(get_db)):
     grade_crud = GradeCrud(db)
-    return grade_crud.delete_grade(level_id)
+    return grade_crud.delete_grade(grade_id)
 
 
 

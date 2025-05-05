@@ -1,7 +1,9 @@
 from V2.app.core.shared.models.common_imports import *
 from V2.app.core.shared.models.enums import AccessLevel
+from V2.app.core.shared.models.mixins import ArchiveMixins
 
-class AccessLevelChange(Base):
+
+class AccessLevelChange(Base, ArchiveMixins):
     """Tracks changes to users access levels for audit purposes"""
     __tablename__ = 'access_level_changes'
 
@@ -14,6 +16,9 @@ class AccessLevelChange(Base):
     reason: Mapped[str] = mapped_column(String(500))
 
     # Audit
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=func.now()
+    ) #for filtering queries
     changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
     changed_by_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
             ondelete='RESTRICT',name='fk_access_level_changes_staff_changed_by')

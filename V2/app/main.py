@@ -20,7 +20,7 @@ from V2.app.routers.curriculum import (
 from V2.app.routers.assessment import grade, total_grade, grade_archive, total_grade_archive
 from V2.app.routers.documents import award, award_archive, document_archive, document
 from V2.app.routers.identity import guardian, guardian_archive, student, student_archive, staff_archive, staff
-from V2.app.routers.auth import password, auth
+from V2.app.routers.auth import password, auth, access_level_change, access_level_change_archive
 from V2.app.infra.middleware.exception_handler import ExceptionMiddleware
 from V2.app.infra.log_service.logger import logger
 
@@ -38,6 +38,12 @@ app.include_router(auth.router, prefix=f"/api/{version}/auth",
                    tags=["Auth"])
 app.include_router(password.router, prefix=f"/api/{version}/auth/password",
                    tags=["Auth"])
+
+# Access changes
+app.include_router(access_level_change.router, prefix=f"/api/{version}/access-levels",
+                   tags=["Auth", "Access Level"])
+app.include_router(access_level_change_archive.router, prefix=f"/api/{version}/access-levels/archive",
+                   tags=["Auth", "Access Level"])
 
 
 # Curriculum

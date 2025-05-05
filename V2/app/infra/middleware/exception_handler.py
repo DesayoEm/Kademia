@@ -19,6 +19,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         WrongPasswordError: status.HTTP_401_UNAUTHORIZED,
         PasswordFormatError: status.HTTP_400_BAD_REQUEST,
         UserNotFoundError: status.HTTP_404_NOT_FOUND,
+        SameLevelError: status.HTTP_400_BAD_REQUEST,
 
         TokenError: status.HTTP_401_UNAUTHORIZED,
         TokenExpiredError: status.HTTP_401_UNAUTHORIZED,

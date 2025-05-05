@@ -1,6 +1,6 @@
 from V2.app.core.shared.models.common_imports import *
 from V2.app.core.shared.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
-from V2.app.core.shared.models.enums import Term, GradeType, ApprovalStatus
+from V2.app.core.shared.models.enums import ApprovalStatus
 
 class Repetition(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """Represents a student's repetition of a class"""
@@ -42,9 +42,9 @@ class Repetition(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     __table_args__ = (
         Index('idx_repetition_status', 'student_id', 'status'),
-        Index('idx_student_academic_session', 'student_id', 'academic_session'),
-        Index('idx_previous_level', 'previous_level_id'),
-        Index('idx_new_level', 'new_level_id'),
+        Index('idx_repetition_academic_session', 'student_id', 'academic_session'),
+        Index('idx_previous_repetition_level', 'previous_level_id'),
+        Index('idx_new_repetition_level', 'new_level_id'),
     )
 
     def __repr__(self) -> str:
@@ -62,10 +62,10 @@ class Promotion(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
     academic_session: Mapped[str] = mapped_column(String(9))
     previous_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
-            ondelete='RESTRICT',name='fk_repetitions_academic_levels_previous_level')
+            ondelete='RESTRICT',name='fk_promotions_academic_levels_previous_level')
         )
     new_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
-            ondelete='RESTRICT',name='fk_repetitions_academic_levels_new_level')
+            ondelete='RESTRICT',name='fk_promotions_academic_levels_new_level')
         )
     previous_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
             ondelete='RESTRICT',name='fk_repetitions_classes_previous_class')
@@ -91,9 +91,9 @@ class Promotion(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     __table_args__ = (
         Index('idx_promotion_status', 'student_id', 'status'),
-        Index('idx_student_academic_session', 'student_id', 'academic_session'),
-        Index('idx_previous_level', 'previous_level_id'),
-        Index('idx_new_level', 'new_level_id'),
+        Index('idx_promotion_academic_session', 'student_id', 'academic_session'),
+        Index('idx_previous_promotion_level', 'previous_level_id'),
+        Index('idx_new_promotion_level', 'new_level_id'),
     )
 
 
@@ -116,7 +116,7 @@ class Graduation(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     # Relationships
     graduated_student: Mapped['Student'] = relationship(back_populates='graduation',
-                foreign_keys='[Graduated.student_id]', passive_deletes=True)
+                foreign_keys='[Graduation.student_id]', passive_deletes=True)
     status_updated_staff: Mapped['Staff'] = relationship(foreign_keys='[Graduation.status_updated_by]')
 
     __table_args__ = (
