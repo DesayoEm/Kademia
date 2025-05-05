@@ -6,8 +6,6 @@ from V2.app.core.shared.schemas.shared_models import *
 class AwardFilterParams(BaseFilterParams):
     title: str|None = None
     academic_session: str|None = None
-
-
     order_by: Literal["title", "created_at"] = "title"
 
 

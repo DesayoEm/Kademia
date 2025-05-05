@@ -13,7 +13,7 @@ class ClassTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
                         ondelete='CASCADE',name='fk_student_department_transfers_students_student_id')
                     )
-    academic_year: Mapped[int] = mapped_column(Integer)
+    academic_session: Mapped[str] = mapped_column(String(9))
     previous_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
                         ondelete='RESTRICT', name='fk_student_department_transfers_classes_previous_class')
                     )
@@ -38,13 +38,13 @@ class ClassTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __table_args__ = (
         Index('idx_class_transfer_status', 'status'),
         Index('idx_student_class_transfer_status', 'student_id', 'status'),
-        Index('idx_student_class_transfer_academic_year', 'student_id', 'academic_year'),
+        Index('idx_student_class_transfer_academic_session', 'student_id', 'academic_session'),
         Index('idx_previous_class', 'previous_class_id'),
         Index('idx_new_class', 'new_class_id'),
     )
 
     def __repr__(self) -> str:
-        return f"student {self.student_id} transfer from {self.previous_class_id} to {self.new_class_id} in {self.academic_year}\
+        return f"student {self.student_id} transfer from {self.previous_class_id} to {self.new_class_id} in {self.academic_session}\
         was actioned by {self.status_updated_by}"
 
 
@@ -59,7 +59,7 @@ class StudentDepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixin
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
                     ondelete='CASCADE',name='fk_student_department_transfers_students_student_id'))
 
-    academic_year: Mapped[int] = mapped_column(Integer)
+    academic_session: Mapped[str] = mapped_column(String(9))
     previous_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
                     ondelete='RESTRICT', name='fk_student_department_transfers_academic_levels_previous_level')
                                                     )
@@ -101,13 +101,13 @@ class StudentDepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixin
     __table_args__ = (
         Index('idx_dept_transfer_status', 'status'),
         Index('idx_student_dept_transfer_status', 'student_id', 'status'),
-        Index('idx_student_dept_transfer_academic_year', 'student_id', 'academic_year'),
+        Index('idx_student_dept_transfer_academic_session', 'student_id', 'academic_session'),
         Index('idx_previous_department_id', 'previous_department_id'),
         Index('idx_new_department_id', 'new_department_id'),
     )
 
     def __repr__(self) -> str:
-        return f"student {self.student_id} transfer from {self.previous_department_id} to {self.new_department_id} in {self.academic_year}\
+        return f"student {self.student_id} transfer from {self.previous_department_id} to {self.new_department_id} in {self.academic_session}\
         was actioned by {self.status_updated_by}"
 
 
