@@ -55,7 +55,7 @@ class SubjectEducatorFactory:
         """
         new_subject_educator = SubjectEducator(
             id=uuid4(),
-            subject_id=data.subject_id,
+            academic_level_subject_id=data.academic_level_subject_id,
             educator_id=data.educator_id,
             level_id=data.level_id,
             is_active=data.is_active,
@@ -87,7 +87,7 @@ class SubjectEducatorFactory:
         Returns:
             List[SubjectEducator]: List of active SubjectEducators
         """
-        fields = ['subject_id', 'academic_session', 'level_id', 'educator_id', 'is_active', 'date_assigned']
+        fields = ['academic_session','is_active', 'date_assigned','term']
         return self.repository.execute_query(fields, filters)
 
 
@@ -135,7 +135,7 @@ class SubjectEducatorFactory:
         Returns:
             List[SubjectEducator]: List of archived SubjectEducator records
         """
-        fields = ['subject_id', 'academic_session', 'level_id', 'educator_id', 'is_active', 'date_assigned']
+        fields = ['academic_session','is_active', 'date_assigned','term']
         return self.repository.execute_archive_query(fields, filters)
 
 

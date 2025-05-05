@@ -42,7 +42,7 @@ class StudentSubjectFactory:
 
 
     @resolve_unique_violation({
-        "student_subjects_student_id_subject_id_academic_session_term_key": (
+        "student_subjects_student_id_academic_level_subject_id_academic_session_term_key": (
                 "student_id", lambda self, data: data.student_id)
     })
     @resolve_fk_on_create()
@@ -56,7 +56,7 @@ class StudentSubjectFactory:
         new_student_subject = StudentSubject(
             id=uuid4(),
             student_id=data.student_id,
-            subject_id=data.subject_id,
+            academic_level_subject_id=data.academic_level_subject_id,
             term=data.term,
             academic_session=self.validator.validate_academic_session(data.academic_session),
 
@@ -84,7 +84,7 @@ class StudentSubjectFactory:
         Returns:
             List[StudentSubject]: List of active StudentSubjects
         """
-        fields = ['subject_id', 'academic_session', 'level_id', 'student_id']
+        fields = ['academic_session', 'term', 'is_active']
         return self.repository.execute_query(fields, filters)
 
 
@@ -97,7 +97,6 @@ class StudentSubjectFactory:
             StudentSubject: Archived StudentSubject record
         """
         try:
-            # There's no need to check for dependent entities before archiving as there are none
             return self.repository.archive(student_subject_id, SYSTEM_USER_ID, reason)
 
         except EntityNotFoundError as e:
@@ -112,7 +111,7 @@ class StudentSubjectFactory:
             is_archived: Whether to check archived or active entities
         """
         try:
-            # There's no need to check for dependent entities before deletion as there are none
+
             self.repository.delete(student_subject_id)
         except EntityNotFoundError as e:
             self.raise_not_found(student_subject_id, e)
@@ -123,7 +122,7 @@ class StudentSubjectFactory:
         Returns:
             List[StudentSubject]: List of archived StudentSubject records
         """
-        fields = ['subject_id', 'academic_session', 'level_id', 'student_id']
+        fields = ['academic_session', 'term', 'is_active']
         return self.repository.execute_archive_query(fields, filters)
 
 

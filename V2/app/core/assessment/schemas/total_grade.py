@@ -13,7 +13,7 @@ class TotalGradeFilterParams(BaseFilterParams):
 class TotalGradeBase(BaseModel):
     """Base model for total grades"""
     student_id: UUID
-    subject_id: UUID
+    academic_level_subject_id: UUID
     academic_session: str
     term: Term
     total_score: int
@@ -24,7 +24,7 @@ class TotalGradeBase(BaseModel):
         json_schema_extra={
             "example": {
                 "student_id": "00000000-0000-0000-0000-000000000001",
-                "subject_id": "00000000-0000-0000-0000-000000000002",
+                "academic_level_subject_id": "00000000-0000-0000-0000-000000000002",
                 "academic_session": "2025/2026",
                 "term": "FIRST",
                 "total_score": 85,

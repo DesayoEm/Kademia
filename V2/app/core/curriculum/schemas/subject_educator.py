@@ -3,9 +3,6 @@ from V2.app.core.shared.schemas.shared_models import *
 from V2.app.core.shared.schemas.enums import Term
 
 class SubjectEducatorFilterParams(BaseFilterParams):
-    educator_id: UUID|None = None
-    subject_id: UUID | None = None
-    level_id: UUID | None = None
     academic_session: str | None = None
     term: Term | None = None
     is_active: bool | None = None
@@ -16,9 +13,8 @@ class SubjectEducatorFilterParams(BaseFilterParams):
 
 class SubjectEducatorBase(BaseModel):
     """Base model for subject educator assignments"""
-    subject_id: UUID
+    academic_level_subject_id: UUID
     educator_id: UUID
-    level_id: UUID
     academic_session: str
     term: Term
     is_active: bool = False
@@ -29,9 +25,8 @@ class SubjectEducatorBase(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "subject_id": "00000000-0000-0000-0000-000000000001",
+                "academic_level_subject_id": "00000000-0000-0000-0000-000000000001",
                 "educator_id": "00000000-0000-0000-0000-000000000002",
-                "level_id": "00000000-0000-0000-0000-000000000003",
                 "academic_session": "2025/2026",
                 "term": "FIRST",
                 "is_active": True,

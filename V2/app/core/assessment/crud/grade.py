@@ -24,14 +24,15 @@ class GradeCrud:
         self.export_service = ExportService(session)
 
 
-    def create_grade(self, data: GradeCreate) -> GradeResponse:
+    def create_grade(self, student_id: UUID, data: GradeCreate) -> GradeResponse:
         """Create a new grade.
         Args:
             data: Validated grade creation data
+            student_id: id of student to grade
         Returns:
             GradeResponse: Created grade
         """
-        grade = self.factory.create_grade(data)
+        grade = self.factory.create_grade(student_id, data)
         return GradeResponse.model_validate(grade)
 
 

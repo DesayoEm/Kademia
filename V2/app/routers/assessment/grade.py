@@ -13,11 +13,10 @@ from V2.app.core.assessment.schemas.grade import (
 
 router = APIRouter()
 
-@router.post("/", response_model= GradeResponse, status_code=201)
-def create_grade(data:GradeCreate,
-                            db: Session = Depends(get_db)):
+@router.post("/{student_id}", response_model= GradeResponse, status_code=201)
+def grade_student(student_id: UUID, data:GradeCreate, db: Session = Depends(get_db)):
     grade_crud = GradeCrud(db)
-    return grade_crud.create_grade(data)
+    return grade_crud.create_grade(student_id, data)
 
 
 @router.get("/", response_model=list[GradeResponse])
@@ -26,7 +25,7 @@ def get_grades(filters: GradeFilterParams = Depends(),db: Session = Depends(get_
     return grade_crud.get_all_grades(filters)
 
 
-@router.get("/{grade_id}", response_model=GradeResponse)
+@router.get("/student/{grade_id}", response_model=GradeResponse)
 def get_grade(grade_id: UUID, db: Session = Depends(get_db)):
     grade_crud = GradeCrud(db)
     return grade_crud.get_grade(grade_id)
@@ -46,7 +45,7 @@ def archive_grade(grade_id: UUID, reason:ArchiveRequest,
     return grade_crud.archive_grade(grade_id, reason.reason)
 
 
-@router.post("/{grade_id}", response_class=FileResponse,  status_code=204)
+@router.get("/{grade_id}/export", response_class=FileResponse,  status_code=200)
 def export_grade(grade_id: UUID, export_format: ExportFormat, db: Session = Depends(get_db)):
     grade_crud = GradeCrud(db)
     file_path= grade_crud.export_grade(grade_id, export_format.value)

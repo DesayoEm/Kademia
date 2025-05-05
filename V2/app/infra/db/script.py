@@ -3,7 +3,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from V2.app.core.identity.models.staff import System
-from V2.app.core.staff_management.models.staff_management import StaffDepartment, StaffRole
+from V2.app.core.staff_management.models.staff_management import StaffRole
 from V2.app.core.shared.models.enums import (
     EmploymentStatus, StaffAvailability, StaffType, AccessLevel, Gender, UserType
 )
@@ -17,7 +17,6 @@ session = Session(engine)
 
 try:
     session.execute(text('ALTER TABLE staff_roles DISABLE TRIGGER ALL'))
-    session.execute(text('ALTER TABLE staff_departments DISABLE TRIGGER ALL'))
     session.execute(text('ALTER TABLE staff DISABLE TRIGGER ALL'))
     session.execute(text('ALTER TABLE system DISABLE TRIGGER ALL'))
 
@@ -33,21 +32,6 @@ try:
     )
     session.add(system_role)
 
-    system_department = StaffDepartment(
-        id=KADEMIA_ID,
-        name='System Department',
-        description='System administrative department',
-        created_at=now,
-        last_modified_at=now,
-        created_by=KADEMIA_ID,
-        last_modified_by=KADEMIA_ID,
-        is_archived=False,
-        manager_id=None
-    )
-    session.add(system_department)
-    session.flush()
-
-
     system_user = System(
         id=KADEMIA_ID,
         password_hash='Kademia_system_hash',
@@ -55,7 +39,6 @@ try:
         last_name='System',
         gender=Gender.SYSTEM,
         access_level=AccessLevel.SYSTEM,
-        department_id=system_department.id,
         role_id=system_role.id,
         user_type=UserType.SYSTEM,
         staff_type=StaffType.System,
@@ -76,7 +59,7 @@ try:
 
     session.commit()
 
-    print("✅ System user, department, and role created successfully.")
+    print("✅ System user, and role created successfully.")
 
 except Exception as e:
     print(f"❌ Error: {e}")
@@ -84,7 +67,6 @@ except Exception as e:
 
 finally:
     session.execute(text('ALTER TABLE staff_roles ENABLE TRIGGER ALL'))
-    session.execute(text('ALTER TABLE staff_departments ENABLE TRIGGER ALL'))
     session.execute(text('ALTER TABLE staff ENABLE TRIGGER ALL'))
     session.execute(text('ALTER TABLE system ENABLE TRIGGER ALL'))
     session.close()

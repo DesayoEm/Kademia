@@ -83,7 +83,7 @@ class AcademicLevelSubjectFactory:
         Returns:
             List[AcademicLevelSubject]: List of active AcademicLevelSubjects
         """
-        fields = ['academic_session', 'level_id', 'subject_id', 'educator_id']
+        fields = ['academic_session', 'is_elective']
         return self.repository.execute_query(fields, filters)
 
     def archive_academic_level_subject(self, academic_level_subject_id: UUID, reason) -> AcademicLevelSubject:
@@ -130,7 +130,7 @@ class AcademicLevelSubjectFactory:
         Returns:
             List[AcademicLevelSubject]: List of archived AcademicLevelSubject records
         """
-        fields = ['academic_session', 'level_id', 'subject_id', 'educator_id']
+        fields = ['academic_session', 'is_elective']
         return self.repository.execute_archive_query(fields, filters)
 
 

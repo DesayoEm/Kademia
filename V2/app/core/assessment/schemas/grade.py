@@ -24,16 +24,13 @@ class GradeBase(BaseModel):
 
 class GradeCreate(GradeBase):
     """Used for creating new student grades"""
-    student_id: UUID
-    subject_id: UUID
+
 
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
         json_schema_extra={
             "example": {
-                "student_id": "00000000-0000-0000-0000-000000000001",
-                "subject_id": "00000000-0000-0000-0000-000000000002",
                 "academic_session": "2025/2026",
                 "weight": 5.0,
                 "term": "FIRST",
@@ -70,4 +67,5 @@ class GradeResponse(GradeCreate):
     """Response model for student grades"""
     file_url: str | None = None
     feedback: str | None = None
+    student_id: UUID
 

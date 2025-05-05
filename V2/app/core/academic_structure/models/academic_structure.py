@@ -122,3 +122,4 @@ class StudentDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
 from V2.app.core.identity.models.student import Student
 from V2.app.core.identity.models.staff import Educator
+from V2.app.core.curriculum.models.curriculum import AcademicLevelSubject

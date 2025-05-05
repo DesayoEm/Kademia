@@ -3,8 +3,11 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.assessment.models.assessment import Grade
 from V2.app.core.assessment.validators import AssessmentValidator
+from V2.app.core.identity.factories.student import StudentFactory
+from V2.app.core.identity.models.student import Student
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
+from V2.app.core.shared.validators.entity_validators import EntityValidator
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
 from V2.app.core.shared.exceptions import EntityNotFoundError
@@ -23,7 +26,9 @@ class GradeFactory:
             model: Model class, defaults to Grade
         """
         self.model = model
+        self.session = session
         self.repository = SQLAlchemyRepository(self.model, session)
+        self.entity_validator = EntityValidator(session)
         self.validator = AssessmentValidator(session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
@@ -40,17 +45,20 @@ class GradeFactory:
         )
 
     @resolve_fk_on_create()
-    def create_grade(self, data) -> Grade:
+    def create_grade(self, student_id: UUID, student_subject_id:UUID, data) -> Grade:
         """Create a new Grade.
         Args:
+            student_id: id of the student to grade
+            student_subject_id: id of the subject to grade
             data: Grade data
         Returns:
             Grade: Created Grade record
         """
+
         new_grade = Grade(
             id=uuid4(),
-            student_id=data.student_id,
-            subject_id=data.subject_id,
+            student_id=student_id,
+            student_subject_id=student_subject_id,
             academic_session=self.validator.validate_academic_session(data.academic_session),
             term=data.term,
             max_score=self.validator.validate_max_score(data.max_score),
@@ -59,7 +67,7 @@ class GradeFactory:
                 data.weight, data.student_id, data.subject_id, data.academic_session, data.term
             ),
             type=data.type,
-            graded_by =  data.graded_by,
+            graded_by =  self.entity_validator.validate_staff_exists(data.graded_by),
             graded_on=self.validator.validate_graded_date(data.graded_on),
       
             created_by=SYSTEM_USER_ID,

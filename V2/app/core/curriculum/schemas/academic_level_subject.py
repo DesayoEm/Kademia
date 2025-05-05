@@ -3,9 +3,6 @@ from V2.app.core.shared.schemas.shared_models import *
 
 
 class AcademicLevelSubjectFilterParams(BaseFilterParams):
-    level_id: str|None = None
-    subject_id: str | None = None
-    educator_id: str | None = None
     is_elective: str | None = None
     academic_session: str | None = None
 

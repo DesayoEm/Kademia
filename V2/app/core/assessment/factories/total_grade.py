@@ -42,17 +42,19 @@ class TotalGradeFactory:
         )
 
     @resolve_fk_on_create()
-    def create_total_grade(self, data) -> TotalGrade:
+    def create_total_grade(self, student_id: UUID, student_subject_id:UUID, data) -> TotalGrade:
         """Create a new TotalGrade.
         Args:
             data: TotalGrade data
+            student_id: id of the student to grade
+            student_subject_id: id of the subject to grade
         Returns:
             TotalGrade: Created TotalGrade record
         """
         new_total_grade = TotalGrade(
             id=uuid4(),
-            student_id=data.student_id,
-            subject_id=data.subject_id,
+            student_id=student_id,
+            student_subject_id=student_subject_id,
             academic_session=self.validator.validate_academic_session(data.academic_session),
             term=data.term,
             total_score=self.service.calculate_total_grade(
