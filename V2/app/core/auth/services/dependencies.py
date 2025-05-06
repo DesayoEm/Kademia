@@ -9,6 +9,7 @@ from V2.app.core.identity.models.student import Student
 from V2.app.core.shared.schemas.enums import UserType
 from V2.app.core.shared.exceptions import RefreshTokenRequiredError, TokenRevokedError, AccessTokenRequiredError
 from V2.app.infra.db.redis.access_tokens import token_blocklist
+from V2.app.infra.log_service.logger import logger
 from .token_service import TokenService
 
 token_service = TokenService()
@@ -54,9 +55,9 @@ refresh_token_bearer = RefreshTokenBearer()
 
 def get_current_user(token_data, db_session):
     """Convert token data to a identity object"""
-
     user_data = token_data["identity"]
-    user_id = user_data.get("id")
+
+    user_id = user_data.get("user_id")
     user_type = user_data.get("user_type")
 
     if not user_id or not user_type:

@@ -10,7 +10,6 @@ from V2.app.core.auth.schemas.log_in import StaffLoginRequest, StudentLoginReque
 from V2.app.core.shared.schemas.enums import UserType
 
 
-
 token_service=TokenService()
 refresh = RefreshTokenBearer()
 access = AccessTokenBearer()
@@ -21,21 +20,27 @@ router = APIRouter()
 async def staff_login(login_data: StaffLoginRequest, db: Session = Depends(get_db)):
     auth_service = AuthService(db)
     return auth_service.log_in(
-        identifier=login_data.email,password=login_data.password,user_type=UserType.STAFF
+        identifier=login_data.email,
+        password=login_data.password,
+        user_type=UserType.STAFF
     )
 
 @router.post("/student/login")
 async def student_login(login_data: StudentLoginRequest, db: Session = Depends(get_db)):
     auth_service = AuthService(db)
     return auth_service.log_in(
-        identifier=login_data.student_id, password=login_data.password, user_type=UserType.STUDENT
+        identifier=login_data.student_id,
+        password=login_data.password,
+        user_type=UserType.STUDENT
     )
 
 @router.post("/guardian/login")
 async def guardian_login(login_data: GuardianLoginRequest, db: Session = Depends(get_db)):
     auth_service = AuthService(db)
     return auth_service.log_in(
-        identifier=login_data.identifier, password=login_data.password, user_type=UserType.GUARDIAN
+        identifier=login_data.identifier,
+        password=login_data.password,
+        user_type=UserType.GUARDIAN
     )
 
 

@@ -22,6 +22,11 @@ from V2.app.routers.progression import (
     promotion, promotion_archive,
     graduation, graduation_archive
 )
+from V2.app.routers.transfer import (
+    class_transfer, class_transfer_archive,
+    department_transfer, department_transfer_archive
+)
+
 from V2.app.routers.assessment import grade, total_grade, grade_archive, total_grade_archive
 from V2.app.routers.documents import award, award_archive, document_archive, document
 from V2.app.routers.identity import guardian, guardian_archive, student, student_archive, staff_archive, staff
@@ -122,6 +127,10 @@ app.include_router(grade.router, prefix=f"/api/{version}/students/assessment/gra
 app.include_router(grade_archive.router, prefix=f"/api/{version}/students/assessment/archived/grade",
                    tags=["Assessment", "Admin"])
 
+app.include_router(total_grade.router, prefix=f"/api/{version}/students/assessment/total-grades",
+                   tags=["Assessment", "Admin"])
+app.include_router(total_grade_archive.router, prefix=f"/api/{version}/students/assessment/archived/total-grade",
+                   tags=["Assessment", "Admin"])
 
 # Progression
 app.include_router(repetition.router, prefix=f"/api/{version}/students/repetitions",
@@ -140,10 +149,19 @@ app.include_router(graduation_archive.router, prefix=f"/api/{version}/students/g
                    tags=["Progression", "Admin"])
 
 
-app.include_router(total_grade.router, prefix=f"/api/{version}/students/assessment/total-grades",
-                   tags=["Assessment", "Admin"])
-app.include_router(total_grade_archive.router, prefix=f"/api/{version}/students/assessment/archived/total-grade",
-                   tags=["Assessment", "Admin"])
+# Transfers (flat/global structure)
+app.include_router(class_transfer.router, prefix=f"/api/{version}/class-transfers",
+                   tags=["Class Transfers", "Admin"])
+app.include_router(class_transfer_archive.router, prefix=f"/api/{version}/class-transfers/archived",
+                   tags=["Class Transfers", "Admin"])
+
+app.include_router(department_transfer.router, prefix=f"/api/{version}/department-transfers",
+                   tags=["Department Transfers", "Admin"])
+app.include_router(department_transfer_archive.router, prefix=f"/api/{version}/department-transfers/archived",
+                   tags=["Department Transfers", "Admin"])
+
+
+
 
 
 # Guardians

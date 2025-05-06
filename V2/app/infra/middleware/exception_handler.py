@@ -5,7 +5,8 @@ import time
 import uuid
 
 from V2.app.core.shared.exceptions import *
-from V2.app.infra.log_service.logger import logger
+from V2.app.infra.log_service.logger import logger, auth_logger
+
 
 class ExceptionMiddleware(BaseHTTPMiddleware):
 
@@ -15,6 +16,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         EmailFailedToSendError: status.HTTP_500_INTERNAL_SERVER_ERROR,
 
         # Auth exceptions
+        AuthError: status.HTTP_401_UNAUTHORIZED,
         InvalidCredentialsError: status.HTTP_401_UNAUTHORIZED,
         WrongPasswordError: status.HTTP_401_UNAUTHORIZED,
         PasswordFormatError: status.HTTP_400_BAD_REQUEST,
@@ -120,6 +122,10 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
                 log_level = logger.warning if status_code < 500 else logger.error
                 log_level(f"{error.__name__} | {request_id} | {e.log_message}")
                 return self.create_json_response(e, status_code)
+
+            if isinstance(e, AuthError) and hasattr(e, "user_message") and hasattr(e, "log_message"):
+                auth_logger.warning(f"AuthError | {request_id} | {e.log_message}")
+                return self.create_json_response(e, status.HTTP_403_FORBIDDEN)
 
         log_message = f"Unhandled exception | {request_id} | {str(e)}"
 

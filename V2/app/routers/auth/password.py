@@ -6,6 +6,7 @@ from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.password_service import PasswordService
 from V2.app.core.auth.services.dependencies import RefreshTokenBearer, AccessTokenBearer, get_current_user
 from V2.app.core.auth.schemas.password import PasswordChange, PasswordResetRequest, ForgotPassword
+from V2.app.infra.log_service.logger import logger
 
 token_service=TokenService()
 refresh = RefreshTokenBearer()
@@ -20,13 +21,12 @@ def change_password(
 
     user = get_current_user(token_data, db)
     password_service = PasswordService(db)
-    token_jti = token_data.get('jti')
 
     password_service.change_password(
         user,
         password_data.current_password,
         password_data.new_password,
-        token_jti
+        token_data
     )
     return {"message": "Password changed successfully"}
 

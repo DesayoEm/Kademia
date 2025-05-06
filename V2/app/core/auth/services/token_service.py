@@ -9,7 +9,7 @@ class TokenService:
     def __init__(self):
         pass
 
-    ACCESS_TOKEN_EXPIRY = 3600
+    ACCESS_TOKEN_EXPIRY = config.ACCESS_TOKEN_EXPIRE_SECONDS
 
     def create_access_token(self, user_data: dict, expiry:timedelta = None,
                             refresh: bool=False):

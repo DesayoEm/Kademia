@@ -17,7 +17,7 @@ class AuthService:
         self.token_service = TokenService()
 
     def authenticate_user(self, identifier: str, password: str, user_type: UserType):
-        """Authenticate a identity based on their type"""
+        """Authenticate identity based on user type"""
         user = None
 
         if user_type == UserType.STUDENT:

@@ -30,6 +30,7 @@ class TokenBlocklist:
 
         return True
 
+
     def is_token_revoked(self, token_data: dict) -> bool:
         jti = token_data.get('jti')
         if not jti:

@@ -1,4 +1,5 @@
 from .base_error import KademiaError
+from uuid import UUID
 
 class AuthError(KademiaError):
     """Base exception for all authorization and authentication-related exceptions"""
@@ -12,17 +13,17 @@ class InvalidCredentialsError(AuthError):
 
 
 class WrongPasswordError(AuthError):
-    def __init__(self):
-        self.user_message = "Wrong password!"
-        self.log_message = f"Password change attempted with wrong password "
+    def __init__(self, user_id: UUID):
+        self.user_message = "Password does not match our records"
+        self.log_message = f"User: {user_id} attempted password change with wrong password"
         super().__init__()
 
 
 class PasswordFormatError(AuthError):
     def __init__(self):
         self.user_message = ("Password must meet all the following criteria:\n"
-                "- Must be between 8 and 12 characters\n"
-                "- Must contain at least one uppercase letter\n"
+                "- Must be between 8 and 12 characters \n"
+                "- Must contain at least one uppercase letter  \n"
                 "- Must contain at least one lowercase letter\n"
                 "- Must contain at least one number\n"
                 "- Must contain at least one special character"
@@ -92,7 +93,7 @@ class TokenRevokedError(TokenError):
         self.log_message = f"Token id {jti} has been revoked"
         super().__init__()
 
-
+#Access Level Errors
 class SameLevelError(AuthError):
     """Raised when """
     def __init__(self, new, previous):

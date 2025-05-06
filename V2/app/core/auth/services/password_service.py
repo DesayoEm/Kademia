@@ -1,5 +1,7 @@
 import random
 import string
+
+import jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -7,13 +9,14 @@ from sqlalchemy import select
 from V2.app.core.shared.services.email_service.password_reset import PasswordEmailService
 from V2.app.core.shared.exceptions.auth_errors import WrongPasswordError, InvalidCredentialsError, ResetLinkExpiredError
 from V2.app.core.auth.validators.auth import AuthValidator
+from V2.app.core.auth.services.token_service import TokenService
 from V2.app.infra.db.redis.access_tokens import token_blocklist
 from V2.app.infra.db.redis.password_tokens import password_token_list
 from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.identity.models.staff import Staff
 from V2.app.core.identity.models.student import Student
 from V2.app.core.shared.schemas.enums import UserType
-
+from V2.app.infra.log_service.logger import logger, auth_logger
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -25,7 +28,7 @@ class PasswordService:
         self.token_list = password_token_list
         self.validator = AuthValidator()
         self.email_service = PasswordEmailService()
-
+        self.token_service = TokenService()
 
 
     @staticmethod
@@ -47,20 +50,22 @@ class PasswordService:
         return hashed_password
 
 
-    def change_password(self, user, current_password, new_password, token_data):
+    def change_password(self, user, current_password: str, new_password: str, token_data: dict):
         if not bcrypt_context.verify(current_password, user.password_hash):
-            raise WrongPasswordError
+            auth_logger.info(token_data)
+            raise WrongPasswordError(user_id=token_data['identity'].get('user_id'))
 
         new_password = self.validator.validate_password(new_password)
         user.password_hash = self.hash_password(new_password)
         self.session.commit()
+
         self.blocklist.revoke_token(token_data)
 
         return True
 
 
     def authenticate_user_identifier(self, identifier: str):
-        """Authenticate a identity's identifier without validating a password (for password resets)"""
+        """Authenticate a user's identifier without validating a password (for password resets)"""
         user = None
 
         #Only staff are required to reset a password
@@ -89,7 +94,6 @@ class PasswordService:
     def reset_password(
             self, password_token: str, user_identifier: str, new_password: str
                     ):
-
         user = self.authenticate_user_identifier(user_identifier)
 
         if not self.token_list.is_token_active(password_token):
@@ -97,10 +101,16 @@ class PasswordService:
 
         new_password = self.validator.validate_password(new_password)
         user.password_hash = self.hash_password(new_password)
-
         self.session.commit()
-        self.token_list.redis.delete(f"{self.token_list.key_pref}{password_token}")
-        return True
+
+        try:
+            self.token_list.redis.delete(f"{self.token_list.key_pref}{password_token}")
+            return True
+        except Exception as redis_error:
+            auth_logger.error(
+                f"Password was reset but token revocation failed for user {user_identifier}: {redis_error}"
+            )
+
 
 
 
