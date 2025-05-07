@@ -1,10 +1,10 @@
 
-## Version History
 Kademia is a modular, scalable backend system for managing academic institutions. 
 
-It supports user roles, academic structures, progression workflows, and lifecycle operations with full audit tracking and export capabilities.
+It supports user roles, academic structures, progression workflows, and lifecycle operations with full audit tracking and export functionality.
 
 ## System Architecture
+---
 
 ## Tech Stack
 - **Python 3.12**
@@ -12,8 +12,6 @@ It supports user roles, academic structures, progression workflows, and lifecycl
 - **SQLAlchemy ORM**
 - **PostgreSQL**
 - **Redis** 
-
----
 
 ### Database Design
 - UUID-based identification system
@@ -25,10 +23,11 @@ It supports user roles, academic structures, progression workflows, and lifecycl
 - Repository + Factory + Service layering
 - Decorator-based error and FK/unique violation handling
 - SQLAlchemy + PostgreSQL with Redis for token tracking
-- Archival system and soft-deletion
+- Archival system and with soft-deletion and restoring of entities
 
 
 ## Core Modules
+---
 
 ### User & Identity Management
 - Students, Guardians, Staff (Educator, Admin, Support, System)
@@ -40,7 +39,7 @@ It supports user roles, academic structures, progression workflows, and lifecycl
 - Academic levels, classes, departments
 - Curriculum mappings 
 - Educator-subject assignments 
-- Full CRUD with filtering, archiving, restoring, and deletion
+
 
 ### Progression Workflows
 - Repetition, Promotion, Graduation workflows
