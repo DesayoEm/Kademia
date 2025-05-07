@@ -7,16 +7,24 @@ class AuthError(KademiaError):
 
 class InvalidCredentialsError(AuthError):
     def __init__(self, credential: str):
+        super().__init__()
         self.user_message = "Invalid credentials"
         self.log_message = f"Login attempted with Invalid email or password: User {credential} "
-        super().__init__()
 
 
 class WrongPasswordError(AuthError):
     def __init__(self, user_id: UUID):
+        super().__init__()
         self.user_message = "Password does not match our records"
         self.log_message = f"User: {user_id} attempted password change with wrong password"
+
+
+class CurrentPasswordError(AuthError):
+    def __init__(self, user_id: UUID):
         super().__init__()
+        self.user_message = "You can't change to current password"
+        self.log_message = f"User: {user_id} attempted password change to current password"
+
 
 
 class PasswordFormatError(AuthError):

@@ -1,12 +1,12 @@
 import random
 import string
-
-import jwt
+from sqlalchemy import or_, func
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 
-from V2.app.core.shared.services.email_service.password_reset import PasswordEmailService
+from V2.app.core.shared.exceptions import CurrentPasswordError
+from V2.app.core.shared.services.email_service.password import PasswordEmailService
 from V2.app.core.shared.exceptions.auth_errors import WrongPasswordError, InvalidCredentialsError, ResetLinkExpiredError
 from V2.app.core.auth.validators.auth import AuthValidator
 from V2.app.core.auth.services.token_service import TokenService
@@ -16,7 +16,7 @@ from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.identity.models.staff import Staff
 from V2.app.core.identity.models.student import Student
 from V2.app.core.shared.schemas.enums import UserType
-from V2.app.infra.log_service.logger import logger, auth_logger
+from V2.app.infra.log_service.logger import  auth_logger
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -50,25 +50,63 @@ class PasswordService:
         return hashed_password
 
 
-    def change_password(self, user, current_password: str, new_password: str, token_data: dict):
+    def change_password(self, user, current_password: str, new_password: str, token_data:dict):
+        identity = token_data['identity']
+        user_id = identity.get('user_id', user.id)
+        
+        user_type = identity["user_type", user.user_type]
+
         if not bcrypt_context.verify(current_password, user.password_hash):
-            auth_logger.info(token_data)
-            raise WrongPasswordError(user_id=token_data['identity'].get('user_id'))
+            raise WrongPasswordError(user_id=user_id)
+        if bcrypt_context.verify(new_password, user.password_hash):
+            raise CurrentPasswordError(user_id=user_id)
 
         new_password = self.validator.validate_password(new_password)
         user.password_hash = self.hash_password(new_password)
         self.session.commit()
 
-        self.blocklist.revoke_token(token_data)
 
-        return True
+        #send notification based on user type
+
+        if user_type == UserType.STUDENT:
+            #find the student's guardian to notify them via email
+            student_guardian = self.session.execute(
+                select(Guardian)
+                .where(Guardian.id == user.guardian_id)
+            ).scalars().one_or_none()
+
+            guardian_name = f"{student_guardian.title.value} {student_guardian.last_name}"
+            guardian_email = student_guardian.email_address
+            student_name = f"{user.first_name} {user.last_name}"
+            self.email_service.send_ward_password_change_alert(guardian_email, guardian_name, student_name)
+
+
+        elif user_type == UserType.GUARDIAN:
+            email = user.email_address
+            name = f"{user.title.value} {user.last_name}"
+
+            self.email_service.send_password_change_notification(email, name)
+
+        elif user_type == UserType.STAFF:
+            email = user.email_address
+            name = f"{user.first_name}"
+
+            self.email_service.send_password_change_notification(email, name)
+
+        try:
+            self.blocklist.revoke_token(token_data)
+            return True
+        except Exception as redis_error:
+            auth_logger.error(
+                f"Password was reset but token revocation failed for user {user_id}: {redis_error}"
+            )
 
 
     def authenticate_user_identifier(self, identifier: str):
         """Authenticate a user's identifier without validating a password (for password resets)"""
         user = None
 
-        #Only staff are required to reset a password
+        #Only staff are required to request a reset link after forgetting
         stmt = select(Staff).where(Staff.email_address == identifier.lower())
         user = self.session.execute(stmt).scalars().first()
 
@@ -103,6 +141,7 @@ class PasswordService:
         user.password_hash = self.hash_password(new_password)
         self.session.commit()
 
+
         try:
             self.token_list.redis.delete(f"{self.token_list.key_pref}{password_token}")
             return True
@@ -110,8 +149,6 @@ class PasswordService:
             auth_logger.error(
                 f"Password was reset but token revocation failed for user {user_identifier}: {redis_error}"
             )
-
-
 
 
     def forgot_password(self, identifier: str, user_type: UserType):

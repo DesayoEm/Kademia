@@ -6,6 +6,142 @@ class PasswordEmailService:
         self.service = EmailService()
 
 
+    def send_password_change_notification(
+            self, to_email: str, name: str
+    ) -> bool:
+        """Notify user (guardian and staff) their password has been changed successfully."""
+
+        subject = "Your Kademia Password Has Been Changed"
+
+        html_body = f"""
+            <html>
+            <head>
+                <style>
+                    body {{ font-family: Arial, sans-serif; line-height: 1.6; }}
+                    .container {{ padding: 20px; }}
+                    .header {{ background-color: #003366; color: white; padding: 10px; text-align: center; }}
+                    .content {{ padding: 20px; }}
+                    .button {{
+                        background-color: #222;
+                        color: #fff;
+                        padding: 12px 24px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        font-weight: bold;
+                        border-radius: 4px;
+                        margin-top: 20px;
+                    }}
+                    .footer {{ font-size: 12px; color: #666; text-align: center; margin-top: 20px; }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Password Change Confirmation</h1>
+                    </div>
+                    <div class="content">
+                        <p>Dear {name},</p>
+
+                        <p>This is a confirmation that your Kademia password has been successfully changed.</p>
+
+                        <p>If you made this change, no further action is required.</p>
+
+                        <p><strong>Didn't make this change?</strong> Please contact the IT support team immediately:</p>
+
+                        <a href="https://support.kademia.com" class="button">Contact Support</a>
+
+                        <p>Best regards,<br>Kademia Support Team</p>
+                    </div>
+                    <div class="footer">
+                        <p>This is an automated message. Please do not reply to this email.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        """
+
+        text_body = f"""
+            Password Change Confirmation
+
+            Dear {name},
+
+            This is a confirmation that your Kademia password has been successfully changed.
+
+            If you made this change, no further action is required.
+
+            Didn't make this change? Contact IT support immediately:
+            https://support.kademia.com
+
+            Best regards,
+            Kademia Support Team
+
+            This is an automated message. Please do not reply to this email.
+        """
+
+        return self.service.send_email(to_email, subject, html_body, text_body)
+
+
+
+    def send_ward_password_change_alert(
+            self, to_email: str, guardian_name: str, ward_name: str) -> bool:
+        """
+        Sends a notification to the guardian that their ward changed their password.
+        """
+
+        subject = f"Password Change Alert for {ward_name}"
+
+        html_body = f"""
+            <html>
+            <head>
+                <style>
+                    body {{ font-family: Arial, sans-serif; line-height: 1.6; }}
+                    .container {{ padding: 20px; }}
+                    .header {{ background-color: #003366; color: white; padding: 10px; text-align: center; }}
+                    .content {{ padding: 20px; }}
+                    .footer {{ font-size: 12px; color: #666; text-align: center; margin-top: 20px; }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Password Change Alert</h1>
+                    </div>
+                    <div class="content">
+                        <p>Dear {guardian_name},</p>
+
+                        <p>This is to inform you that your ward, <strong>{ward_name}</strong>, has successfully changed their Kademia password.</p>
+
+                        <p>If you did not expect this change or have any concerns, please contact our support team as soon as possible.</p>
+
+                        <p>Best regards,<br>Kademia Support Team</p>
+                    </div>
+                    <div class="footer">
+                        <p>This is an automated message. Please do not reply to this email.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        """
+
+        text_body = f"""
+            Password Change Alert
+
+            Dear {guardian_name},
+
+            This is to inform you that your ward, {ward_name}, has successfully changed their Kademia password.
+
+            If you did not expect this change or have any concerns, please contact our support team.
+
+            Best regards,
+            Kademia Support Team
+
+            This is an automated message. Please do not reply to this email.
+        """
+
+        return self.service.send_email(to_email, subject, html_body, text_body)
+
+
     def send_guardian_new_password(
             self, to_email: str, full_name: str, password: str
     ) -> bool:
@@ -87,12 +223,12 @@ class PasswordEmailService:
 
 
 
-    def send_ward_password_change_notification(
+    def send_ward_new_password(
             self, to_email: str, full_name: str, password: str,
             ward_first_name: str, ward_last_name: str
     ) -> bool:
 
-        """Send email_service to guardian notifying that their ward's password has been changed."""
+        """Send email student's new email to their guardian ."""
 
         subject = f"Password Reset for {ward_first_name} {ward_last_name}"
 
