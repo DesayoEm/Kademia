@@ -26,7 +26,7 @@ class PasswordTokenList:
     def get_email_from_token(self, token):
         key = f"{self.key_pref}{token}"
         return  self.redis.get(key)
-    
+
 
     def is_token_active(self, token) -> bool:
             key = f"{self.key_pref}{token}"

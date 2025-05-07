@@ -145,7 +145,7 @@ class PasswordEmailService:
     def send_guardian_new_password(
             self, to_email: str, full_name: str, password: str
     ) -> bool:
-        """Send email_service with guardian's new password after a reset."""
+        """Send email with guardian's new password after a reset."""
 
         subject = "Your new Kademia Password"
 
@@ -192,7 +192,7 @@ class PasswordEmailService:
                         <p>Best regards,<br>Kademia Support Team</p>
                     </div>
                     <div class="footer">
-                        <p>This is an automated message. Please do not reply to this email_service.</p>
+                        <p>This is an automated message. Please do not reply to this email.</p>
                     </div>
                 </div>
             </body>
@@ -216,7 +216,7 @@ class PasswordEmailService:
             Best regards,
             Kademia Administration Team
 
-            This is an automated message. Please do not reply to this email_service.
+            This is an automated message. Please do not reply to this email.
         """
 
         return self.service.send_email(to_email, subject, html_body, text_body)
@@ -275,7 +275,7 @@ class PasswordEmailService:
                         <p>Best regards,<br>Kademia Support Team</p>
                     </div>
                     <div class="footer">
-                        <p>This is an automated message. Please do not reply to this email_service.</p>
+                        <p>This is an automated message. Please do not reply to this email.</p>
                     </div>
                 </div>
             </body>
@@ -298,7 +298,7 @@ class PasswordEmailService:
             Best regards,
             Kademia Support Team
 
-            This is an automated message. Please do not reply to this email_service.
+            This is an automated message. Please do not reply to this email.
         """
 
         return self.service.send_email(to_email, subject, html_body, text_body)
@@ -345,12 +345,12 @@ class PasswordEmailService:
 
                         <a href="{reset_url}" class="button">Reset Password</a>
 
-                        <p>If you did not request a password reset, you can ignore this email_service. No changes have been made to your account.</p>
+                        <p>If you did not request a password reset, you can ignore this email. No changes have been made to your account.</p>
 
                         <p>Best regards,<br>Kademia Support Team</p>
                     </div>
                     <div class="footer">
-                        <p>This is an automated message. Please do not reply to this email_service.</p>
+                        <p>This is an automated message. Please do not reply to this email.</p>
                     </div>
                 </div>
             </body>
@@ -373,7 +373,7 @@ class PasswordEmailService:
             Best regards,
             Kademia Support Team
 
-            This is an automated message. Please do not reply to this email_service.
+            This is an automated message. Please do not reply to this email.
         """
 
         return self.service.send_email(to_email, subject, html_body, text_body)
