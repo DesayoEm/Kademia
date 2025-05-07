@@ -33,8 +33,20 @@ class ForgotPassword(BaseModel):
     )
 
 class PasswordResetRequest(BaseModel):
+    email_address: str
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
+                "email_address": "xxxxxxxxxx",
+            }
+        }
+    )
+
+class PasswordResetData(BaseModel):
     token: str
-    identifier: str
     new_password: str
 
     model_config = ConfigDict(
@@ -43,7 +55,6 @@ class PasswordResetRequest(BaseModel):
         json_schema_extra={
             "example": {
                 "token": "xxxxxxxxxx",
-                "identifier": "xxxxxxxxxx",
                 "new_password": "xxxxxxxxxx"
             }
         }

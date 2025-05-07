@@ -17,6 +17,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
         # Auth exceptions
         AuthError: status.HTTP_401_UNAUTHORIZED,
+        InvalidPasswordTokenError: status.HTTP_401_UNAUTHORIZED,
         InvalidCredentialsError: status.HTTP_401_UNAUTHORIZED,
         WrongPasswordError: status.HTTP_401_UNAUTHORIZED,
         PasswordFormatError: status.HTTP_400_BAD_REQUEST,

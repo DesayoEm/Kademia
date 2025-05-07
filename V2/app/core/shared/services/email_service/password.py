@@ -304,10 +304,8 @@ class PasswordEmailService:
         return self.service.send_email(to_email, subject, html_body, text_body)
 
 
-    def send_staff_reset_link(
-            self, to_email: str, full_name: str, reset_url: str
-    ) -> bool:
-        """Send email_service to staff with a secure password reset link."""
+    def send_staff_reset_link(self, to_email: str, name: str, reset_url: str) -> bool:
+        """Send email to staff with a password reset link."""
 
         subject = "Reset Your Kademia Password"
 
@@ -339,7 +337,7 @@ class PasswordEmailService:
                         <h1>Password Reset Request</h1>
                     </div>
                     <div class="content">
-                        <p>Dear {full_name},</p>
+                        <p>Dear {name},</p>
 
                         <p>We received a request to reset your Kademia account password.</p>
 
@@ -362,7 +360,7 @@ class PasswordEmailService:
         text_body = f"""
             Password Reset Request
 
-            Dear {full_name},
+            Dear {name},
 
             We received a request to reset your Kademia account password.
 

@@ -15,6 +15,7 @@ from .lifecycle_errors import (
 from .auth_errors import (
     AuthError,
     CurrentPasswordError,
+    InvalidPasswordTokenError,
     InvalidCredentialsError,
     WrongPasswordError,
     PasswordFormatError,

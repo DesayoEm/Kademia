@@ -7,7 +7,8 @@ from sqlalchemy import select
 
 from V2.app.core.shared.exceptions import CurrentPasswordError
 from V2.app.core.shared.services.email_service.password import PasswordEmailService
-from V2.app.core.shared.exceptions.auth_errors import WrongPasswordError, InvalidCredentialsError, ResetLinkExpiredError
+from V2.app.core.shared.exceptions.auth_errors import WrongPasswordError, InvalidCredentialsError, \
+    ResetLinkExpiredError, InvalidPasswordTokenError
 from V2.app.core.auth.validators.auth import AuthValidator
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.infra.db.redis.access_tokens import token_blocklist
@@ -53,7 +54,7 @@ class PasswordService:
     def change_password(self, user, current_password: str, new_password: str, token_data:dict):
         identity = token_data['identity']
         user_id = identity.get('user_id', user.id)
-        
+
         user_type = identity["user_type", user.user_type]
 
         if not bcrypt_context.verify(current_password, user.password_hash):
@@ -102,55 +103,6 @@ class PasswordService:
             )
 
 
-    def authenticate_user_identifier(self, identifier: str):
-        """Authenticate a user's identifier without validating a password (for password resets)"""
-        user = None
-
-        #Only staff are required to request a reset link after forgetting
-        stmt = select(Staff).where(Staff.email_address == identifier.lower())
-        user = self.session.execute(stmt).scalars().first()
-
-        if not user:
-            raise InvalidCredentialsError(credential=identifier)
-
-        return user
-
-
-    def request_password_reset(self, user_identifier: str):
-        user = self.authenticate_user_identifier(user_identifier)
-        token = self.token_list.save_password_token(user_identifier)
-
-        reset_link = f"https://kademia.com/staff/reset-password?token={token}"
-
-        self.email_service.send_staff_reset_link(
-            to_email=user.email_address,
-            full_name=f"{user.first_name} {user.last_name}",
-            reset_url=reset_link
-        )
-
-
-    def reset_password(
-            self, password_token: str, user_identifier: str, new_password: str
-                    ):
-        user = self.authenticate_user_identifier(user_identifier)
-
-        if not self.token_list.is_token_active(password_token):
-            raise ResetLinkExpiredError(token = password_token)
-
-        new_password = self.validator.validate_password(new_password)
-        user.password_hash = self.hash_password(new_password)
-        self.session.commit()
-
-
-        try:
-            self.token_list.redis.delete(f"{self.token_list.key_pref}{password_token}")
-            return True
-        except Exception as redis_error:
-            auth_logger.error(
-                f"Password was reset but token revocation failed for user {user_identifier}: {redis_error}"
-            )
-
-
     def forgot_password(self, identifier: str, user_type: UserType):
         password = self.generate_random_password()
 
@@ -189,14 +141,57 @@ class PasswordService:
 
             student.password_hash = self.hash_password(password)
 
-            full_name = f"{guardian.title}. {guardian.last_name}"
+            full_name = f"{guardian.title.value}. {guardian.last_name}"
 
-            self.email_service.send_ward_password_change_notification(
+            self.email_service.send_ward_new_password(
                 guardian.email_address, full_name, password,
                 student.first_name, student.last_name)
 
             self.session.commit()
 
 
+    def request_password_reset(self, email_address: str):
+        #only staff are required to request a reset link after forgetting
+
+        #authenticate a staff email without validating a password
+        stmt = select(Staff).where(Staff.email_address == email_address.lower())
+        user = self.session.execute(stmt).scalars().first()
+
+        if not user:
+            raise InvalidCredentialsError(credential=email_address)
+
+        token = self.token_list.save_password_token(email_address)
+
+        reset_url = f"https://kademia.com/staff/reset-password?token={token}"
+
+        self.email_service.send_staff_reset_link(user.email_address, user.first_name, reset_url)
+
+
+
+    def reset_password(self, password_token: str, new_password: str):
+
+        if not self.token_list.is_token_active(password_token):
+            raise ResetLinkExpiredError(token=password_token)
+
+        email_address = self.token_list.get_email_from_token(password_token)
+        if not email_address:
+            raise InvalidPasswordTokenError(token=password_token)
+
+        stmt = select(Staff).where(Staff.email_address == email_address.lower())
+        user = self.session.execute(stmt).scalars().first()
+
+        if not user:
+            raise InvalidCredentialsError(credential=email_address)
+
+        new_password = self.validator.validate_password(new_password)
+        user.password_hash = self.hash_password(new_password)
+        self.session.commit()
+
+        try:
+            self.token_list.redis.delete(f"{self.token_list.key_pref}{password_token}")
+        except Exception as redis_error:
+            auth_logger.error(
+                f"Password was reset but password token revocation failed for user {user.id}: {redis_error}"
+            )
 
 
