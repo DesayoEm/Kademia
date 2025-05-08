@@ -8,7 +8,7 @@ from fastapi import Depends, APIRouter
 from V2.app.infra.db.session_manager import get_db
 from V2.app.core.identity.crud.staff import StaffCrud
 from V2.app.core.shared.schemas.shared_models import ArchiveRequest
-from V2.app.core.auth.services.dependencies import AccessTokenBearer
+from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
 
 
 router = APIRouter()

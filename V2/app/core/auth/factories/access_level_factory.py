@@ -2,11 +2,13 @@ from datetime import datetime
 from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.functions import current_user
 
 from V2.app.core.auth.models.auth import AccessLevelChange
 from V2.app.core.auth.validators.access_level import AccessLevelValidator
 from V2.app.core.identity.factories.staff import StaffFactory
 from V2.app.core.identity.models.staff import Staff
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.validators.entity_validators import EntityValidator
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
@@ -16,11 +18,12 @@ from V2.app.core.shared.exceptions.maps.error_map import error_map
 SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
 
-class AccessLevelChangeFactory:
+class AccessLevelChangeFactory(BaseFactory):
     """Factory class for managing access level operations."""
 
-    def __init__(self, session: Session, model=AccessLevelChange):
-        """Initialize factory with db session.
+    def __init__(self, session: Session, model=AccessLevelChange, current_user = None):
+        super().__init__(current_user)
+        """Initialize factory with db session and current actor.
             Args:
                 session: SQLAlchemy db session
                 model: Model class, defaults to AccessLevelChange
@@ -62,7 +65,7 @@ class AccessLevelChangeFactory:
             new_level=self.validator.prevent_redundant_changes(data.new_level, staff.access_level),
             reason=data.reason,
             changed_at=datetime.now(),
-            changed_by_id=SYSTEM_USER_ID
+            changed_by_id=self.get_actor_id()
 
         )
         staff.access_level = level_change.new_level

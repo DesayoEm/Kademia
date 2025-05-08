@@ -4,9 +4,9 @@ from fastapi import Depends, APIRouter
 from V2.app.infra.db.session_manager import get_db
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.password_service import PasswordService
-from V2.app.core.auth.services.dependencies import (
-    RefreshTokenBearer, AccessTokenBearer, get_current_user
-)
+from V2.app.core.auth.services.dependencies.token_deps import RefreshTokenBearer, AccessTokenBearer
+from V2.app.core.auth.services.dependencies.current_user_deps import get_current_user
+
 from V2.app.core.auth.schemas.password import (
     PasswordChange, PasswordResetRequest, ForgotPassword, PasswordResetData
 )

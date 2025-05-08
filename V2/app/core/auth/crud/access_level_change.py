@@ -13,13 +13,14 @@ from V2.app.core.shared.services.export_service.export import ExportService
 class AccessLevelChangeCrud:
     """CRUD operations for access level changes."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user):
         """Initialize CRUD service.
         Args:
             session: SQLAlchemy db session
         """
         self.session = session
-        self.factory = AccessLevelChangeFactory(session)
+        self.current_user = current_user
+        self.factory = AccessLevelChangeFactory(session, current_user=current_user)
         self.export_service = ExportService(session)
 
 

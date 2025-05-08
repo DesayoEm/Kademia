@@ -10,14 +10,21 @@ from V2.app.core.auth.crud.access_level_change import AccessLevelChangeCrud
 from V2.app.core.auth.schemas.access_level_change import (
     AccessLevelChangeCreate, AccessLevelFilterParams, AccessLevelChangeResponse
 )
+from V2.app.core.auth.services.token_service import TokenService
+from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
+from V2.app.core.auth.services.dependencies.current_user_deps import get_current_user, get_authenticated_crud
 
+token_service=TokenService()
+access = AccessTokenBearer()
 router = APIRouter()
 
-@router.post("/{staff_id}", response_model= AccessLevelChangeResponse, status_code=201)
-def change_access_level(staff_id: UUID, data:AccessLevelChangeCreate,
-                            db: Session = Depends(get_db)):
-    level_change_crud = AccessLevelChangeCrud(db)
-    return level_change_crud.create_access_level_change(staff_id, data)
+@router.post("/{staff_id}", response_model=AccessLevelChangeResponse, status_code=201)
+def change_access_level(
+    staff_id: UUID,
+    data: AccessLevelChangeCreate,
+    crud: AccessLevelChangeCrud = Depends(get_authenticated_crud(AccessLevelChangeCrud))
+):
+    return crud.create_access_level_change(staff_id, data)
 
 
 @router.get("/", response_model=list[AccessLevelChangeResponse])

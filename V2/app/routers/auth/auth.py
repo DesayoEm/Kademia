@@ -5,7 +5,7 @@ from V2.app.infra.db.session_manager import get_db
 from V2.app.infra.db.redis.access_tokens import token_blocklist
 from V2.app.core.auth.services.auth_service import AuthService
 from V2.app.core.auth.services.token_service import TokenService
-from V2.app.core.auth.services.dependencies import RefreshTokenBearer, AccessTokenBearer
+from V2.app.core.auth.services.dependencies.token_deps import RefreshTokenBearer, AccessTokenBearer
 from V2.app.core.auth.schemas.log_in import StaffLoginRequest, StudentLoginRequest, GuardianLoginRequest
 from V2.app.core.shared.schemas.enums import UserType
 
