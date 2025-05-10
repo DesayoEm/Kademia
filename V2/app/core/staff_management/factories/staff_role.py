@@ -2,6 +2,7 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.staff_management.validators.staff_management import StaffManagementValidator
 from V2.app.core.staff_management.models.staff_management import StaffRole
@@ -13,13 +14,13 @@ from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolv
 from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
 
-class StaffRoleFactory:
+class StaffRoleFactory(BaseFactory):
     """Factory class for managing staff role operations."""
 
-    def __init__(self, session: Session, model=StaffRole):
+    def __init__(self, session: Session, model=StaffRole, current_user = None):
+        super().__init__(current_user)
         """Initialize factory with db session.
         Args:
             session: SQLAlchemy db session
@@ -33,7 +34,8 @@ class StaffRoleFactory:
         self.validator = StaffManagementValidator()
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
-        self.domain = "Staff role"
+        self.actor_id: UUID = self.get_actor_id()
+        self.domain = "Staff Role"
 
     def raise_not_found(self, identifier, error):
         raise EntityNotFoundError(
@@ -58,8 +60,8 @@ class StaffRoleFactory:
             id=uuid4(),
             name=self.validator.validate_name(data.name),
             description=self.validator.validate_description(data.description),
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID,
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id,
         )
 
         return self.repository.create(role)
@@ -116,21 +118,14 @@ class StaffRoleFactory:
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
-            return self.repository.update(role_id, existing)
+            return self.repository.update(role_id, existing,modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(role_id, e)
 
 
     def archive_role(self, role_id: UUID, reason) -> StaffRole:
-        """Archive a role if no active staff members are assigned to it.
-        Args:
-            role_id: id of role to archive
-            reason: Reason for archiving
-        Returns:
-            StaffRole: Archived role record
-        """
+        """Archive a role if no active staff members are assigned to it."""
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
                 entity_model=self.model,
@@ -142,10 +137,11 @@ class StaffRoleFactory:
                     entity_model=self.entity_model, identifier=role_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            return self.repository.archive(role_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(role_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(role_id, e)
+
 
     @resolve_fk_on_delete()
     def delete_role(self, role_id: UUID, is_archived = False) -> None:
@@ -196,6 +192,7 @@ class StaffRoleFactory:
             return self.repository.restore(role_id)
         except EntityNotFoundError as e:
             self.raise_not_found(role_id, e)
+
 
     @resolve_fk_on_delete()
     def delete_archived_role(self, role_id: UUID, is_archived = True) -> None:

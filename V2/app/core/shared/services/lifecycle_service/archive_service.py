@@ -8,12 +8,7 @@ from .dependency_config import DEPENDENCY_CONFIG
 class ArchiveService:
     """
     Service for managing entity archival and checking dependencies before archival.
-
-    Provides methods to check if an entity can be safely archived by
-    verifying that no active entities are referencing it.
-
-    Attributes:
-        session (Session): SQLAlchemy db session
+    Methods check if an entity can be safely archived by verifying that no active entities are referencing it.
     """
 
     def __init__(self, session: Session):
@@ -25,15 +20,14 @@ class ArchiveService:
         """
         self.session = session
 
+
     def check_active_dependencies_exists(
             self, entity_model, target_id: UUID,
             is_archived_field: str = "is_archived") -> List[str]:
         """
         Check if any active entities are referencing the target entity.
 
-        Examines all configured dependency relationships to see if any active
-        (non-archived) entities reference the target entity, which would prevent
-        safe archival.
+        Examines configured dependency relationships to see if any  non-archived entities reference the target entity.
 
         Args:
             entity_model: SQLAlchemy model class for the entity type being checked

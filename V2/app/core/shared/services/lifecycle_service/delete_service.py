@@ -11,7 +11,7 @@ class DeleteService:
     """
     Service for managing entity deletion with various strategies based on entity relationships.
 
-    Provides methods for safely deleting entities with dependency checking, cascading deletion
+    Methods are for safely deleting entities with dependency checking, cascading deletion
     for parent-child relationships, and nullify-references deletion for shared entities.
 
     Attributes:
@@ -20,11 +20,9 @@ class DeleteService:
         repository (SQLAlchemyRepository): Repository for db operations
     """
 
-
     def __init__(self, model, session: Session):
         """
         Initialize the deletion service with a model and db session.
-
         Args:
             model: SQLAlchemy model class for the entity
             session (Session): SQLAlchemy db session
@@ -40,7 +38,7 @@ class DeleteService:
         """
         Check if the entity has active related entities that depend on it.
 
-        Examines all configured dependency relationships to see if any references
+        Examines configured dependency relationships to see if any references
         to this entity exist, which would prevent safe deletion.
 
         Args:
@@ -96,6 +94,7 @@ class DeleteService:
                     display_name=display_name,
                     detail="Could not safely delete"
             )
+
 
     def get_fk_delete_rules_from_info_schema(self, table_name: str) -> dict:
         """

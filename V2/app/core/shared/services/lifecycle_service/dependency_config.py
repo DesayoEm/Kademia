@@ -67,7 +67,7 @@ DEPENDENCY_CONFIG = {
 
     EducatorQualification: [],
 
-#     #Academic
+    #Academic
     Subject: [
         ("students", StudentSubject, "subject_id", "enrolled students"),
         ("educators", SubjectEducator, "subject_id", "assigned educators"),

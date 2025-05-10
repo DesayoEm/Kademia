@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+
 from uuid import UUID
 from typing import List
 from fastapi.responses import FileResponse
@@ -6,7 +6,6 @@ from fastapi.responses import FileResponse
 from fastapi import Depends, APIRouter
 from V2.app.core.shared.schemas.enums import ExportFormat
 from V2.app.core.shared.schemas.shared_models import ArchiveRequest
-from V2.app.infra.db.session_manager import get_db
 from V2.app.core.staff_management.crud.department import StaffDepartmentCrud
 from V2.app.core.staff_management.schemas.department import(
     StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
@@ -22,10 +21,10 @@ router = APIRouter()
 
 @router.post("/", response_model= StaffDepartmentResponse, status_code=201)
 def create_staff_department(
-        data:StaffDepartmentCreate,
+        payload:StaffDepartmentCreate,
         crud: StaffDepartmentCrud = Depends(get_authenticated_crud(StaffDepartmentCrud))
 ):
-        return crud.create_department(data)
+        return crud.create_department(payload)
 
 
 @router.get("/", response_model=List[StaffDepartmentResponse])
@@ -46,11 +45,11 @@ def get_staff_department(
 
 @router.put("/{department_id}", response_model=StaffDepartmentResponse)
 def update_staff_department(
-        data: StaffDepartmentUpdate,
+        payload: StaffDepartmentUpdate,
         department_id: UUID,
         crud: StaffDepartmentCrud = Depends(get_authenticated_crud(StaffDepartmentCrud))
     ):
-        return crud.update_department(department_id, data)
+        return crud.update_department(department_id, payload)
 
 
 @router.patch("/{department_id}",  status_code=204)

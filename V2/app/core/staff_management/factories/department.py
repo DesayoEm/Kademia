@@ -129,13 +129,7 @@ class StaffDepartmentFactory(BaseFactory):
 
 
     def archive_department(self, department_id: UUID, reason) -> StaffDepartment:
-        """Archive a staff department if no active dependencies exist.
-        Args:
-            department_id (UUID): ID of department to archive
-            reason: Reason for archiving
-        Returns:
-            StaffDepartment: Archived department record
-        """
+        """Archive a staff department if no active staff members are assigned to it."""
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
                 entity_model=self.model,
