@@ -12,5 +12,6 @@ class AccessLevelValidator:
             previous_level: AccessLevel, new_level: AccessLevel) -> AccessLevel:
 
         if previous_level == new_level:
-            raise SameLevelError(new = new_level, previous = previous_level)
+            raise SameLevelError(previous = previous_level, new = new_level)
+
         return new_level

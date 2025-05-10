@@ -2,8 +2,6 @@ from datetime import datetime
 from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.functions import current_user
-
 from V2.app.core.auth.models.auth import AccessLevelChange
 from V2.app.core.auth.validators.access_level import AccessLevelValidator
 from V2.app.core.identity.factories.staff import StaffFactory
@@ -15,7 +13,6 @@ from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolv
 from V2.app.core.shared.exceptions import EntityNotFoundError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
 
 class AccessLevelChangeFactory(BaseFactory):
@@ -35,6 +32,7 @@ class AccessLevelChangeFactory(BaseFactory):
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.validator = AccessLevelValidator()
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "Level Change"
 
     def raise_not_found(self, identifier, error):
@@ -45,7 +43,6 @@ class AccessLevelChangeFactory(BaseFactory):
             display_name=self.display_name
         )
 
-    
     @resolve_fk_on_create()
     def create_level_change(self, staff_id: UUID, data) -> AccessLevelChange:
         """Create a new access level.
@@ -62,11 +59,10 @@ class AccessLevelChangeFactory(BaseFactory):
             id=uuid4(),
             staff_id = staff.id,
             previous_level=staff.access_level,
-            new_level=self.validator.prevent_redundant_changes(data.new_level, staff.access_level),
+            new_level=self.validator.prevent_redundant_changes(staff.access_level, data.new_level),
             reason=data.reason,
             changed_at=datetime.now(),
-            changed_by_id=self.get_actor_id()
-
+            changed_by_id=self.actor_id
         )
         staff.access_level = level_change.new_level
         return self.repository.create(level_change)
@@ -103,7 +99,7 @@ class AccessLevelChangeFactory(BaseFactory):
             AccessLevelChange: Archived level change record
         """
         try:
-            return self.repository.archive(level_change_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(level_change_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(level_change_id, e)

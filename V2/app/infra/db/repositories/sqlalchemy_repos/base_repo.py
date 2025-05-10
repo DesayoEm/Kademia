@@ -148,17 +148,20 @@ class SQLAlchemyRepository(BaseRepository[T]):
 
 
     @handle_write_errors("update")
-    def update(self, entity_id: UUID, entity: T) -> T:
+    def update(self, entity_id: UUID, entity: T, modified_by: UUID = None) -> T:
         """Update an existing active entity."""
         stmt = self.active_query().where(self.model.id == entity_id)
         existing = self.session.execute(stmt).scalar_one_or_none()
 
         if not existing:
-            if not entity:
-                raise EntityNotFoundError(
-                    entity_model=self.model.__name__,
-                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
-                )
+            raise EntityNotFoundError(
+                entity_model=self.model.__name__,
+                identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+            )
+            #apply audit metadata just before committing
+        if modified_by and hasattr(entity, "last_modified_by"):
+            entity.last_modified_by = modified_by
+
         self.session.commit()
         self.session.refresh(entity)
         return entity

@@ -7,8 +7,8 @@ load_dotenv(dotenv_path=env_path)
 from fastapi import FastAPI
 app = FastAPI()
 
-from V2.app.routers.staff_management import staff_departments_archive, staff_roles_archive
-from V2.app.routers.staff_management import qualifications, staff_departments, staff_roles, qualifications_archive
+from V2.app.routers.staff_management import departments_archive, staff_roles_archive
+from V2.app.routers.staff_management import qualifications, departments, staff_roles, qualifications_archive
 from V2.app.routers.academic_structure import (
     academic_levels, academic_levels_archive, student_departments, student_departments_archive,
     classes, classes_archive
@@ -80,9 +80,9 @@ app.include_router(staff.router, prefix=f"/api/{version}/staff",
                    tags=["Staff", "Admin"])
 app.include_router(staff_archive.router, prefix=f"/api/{version}/staff/archived",
                    tags=["Staff", "Admin"])
-app.include_router(staff_departments.router, prefix=f"/api/{version}/staff/departments",
+app.include_router(departments.router, prefix=f"/api/{version}/staff/departments",
                    tags=["Staff", "Admin"])
-app.include_router(staff_departments_archive.router, prefix=f"/api/{version}/staff/departments/archived",
+app.include_router(departments_archive.router, prefix=f"/api/{version}/staff/departments/archived",
                    tags=["Staff", "Admin"])
 app.include_router(staff_roles.router, prefix=f"/api/{version}/staff/roles",
                    tags=["Staff", "Admin"])

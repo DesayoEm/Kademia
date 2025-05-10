@@ -13,7 +13,7 @@ from V2.app.core.shared.services.export_service.export import ExportService
 class AccessLevelChangeCrud:
     """CRUD operations for access level changes."""
 
-    def __init__(self, session: Session, current_user):
+    def __init__(self, session: Session, current_user = None):
         """Initialize CRUD service.
         Args:
             session: SQLAlchemy db session
@@ -25,33 +25,19 @@ class AccessLevelChangeCrud:
 
 
     def create_access_level_change(self, staff_id: UUID, data: AccessLevelChangeCreate) -> AccessLevelChangeResponse:
-        """Create a new level change .
-        Args:
-            staff_id: ID of staff to change access level for
-            data: Validated level change  creation data
-        Returns:
-            AccessLevelChangeResponse: Created level change 
-        """
+        """Create a new level change ."""
         level_change = self.factory.create_level_change(staff_id, data)
         return AccessLevelChangeResponse.model_validate(level_change)
 
 
     def get_access_level_change(self, level_change_id: UUID) -> AccessLevelChangeResponse:
-        """Get level change by ID.
-        Args:
-            level_change_id: level change  UUID
-        Returns:
-            AccessLevelChangeResponse: Retrieved level change 
-        """
+        """Get level change by ID."""
         level_change = self.factory.get_level_change(level_change_id)
         return AccessLevelChangeResponse.model_validate(level_change)
 
 
     def get_all_access_level_changes(self, filters: AccessLevelFilterParams) -> List[AccessLevelChangeResponse]:
-        """Get all active level changes.
-        Returns:
-            List[AccessLevelChangeResponse]: List of active level changes
-        """
+        """Get all active level changes."""
         level_changes = self.factory.get_all_level_changes(filters)
         return [AccessLevelChangeResponse.model_validate(level_change) for level_change  in level_changes]
 
@@ -62,7 +48,7 @@ class AccessLevelChangeCrud:
             level_change_id: level change  UUID
             reason: Reason for archiving
         Returns:
-            AccessLevelChangeResponse: Archived level change 
+            AccessLevelChangeResponse: Archived level change
         """
         self.factory.archive_level_change(level_change_id, reason)
 
@@ -79,49 +65,29 @@ class AccessLevelChangeCrud:
 
 
     def delete_access_level_change(self, level_change_id: UUID) -> None:
-        """Permanently delete a level change .
-        Args:
-            level_change_id: level change  UUID
-        """
+        """Permanently delete a level change record"""
         self.factory.delete_level_change(level_change_id)
 
 
     # Archived level change  operations
     def get_archived_access_level_change(self, level_change_id: UUID) -> AccessLevelChangeResponse:
-        """Get an archived level change  by ID.
-        Args:
-            level_change_id: level change  UUID
-        Returns:
-            AccessLevelChangeResponse: Retrieved archived level change 
-        """
+        """Get an archived level change  by ID."""
         level_change = self.factory.get_archived_level_change(level_change_id)
         return AccessLevelChangeResponse.model_validate(level_change)
 
+
     def get_all_archived_access_level_changes(self, filters: AccessLevelFilterParams) -> List[AccessLevelChangeResponse]:
-        """Get all archived level change s.
-        Args:
-            filters: Filter parameters
-        Returns:
-            List[AccessLevelChangeResponse]: List of archived level change s
-        """
+        """Get all archived level changes"""
         level_changes = self.factory.get_all_archived_level_changes(filters)
         return [AccessLevelChangeResponse.model_validate(level_change) for level_change  in level_changes]
 
 
     def restore_access_level_change(self, level_change_id: UUID) -> AccessLevelChangeResponse:
-        """Restore an archived level change .
-        Args:
-            level_change_id: level change  UUID
-        Returns:
-            AccessLevelChangeResponse: Restored level change 
-        """
+        """Restore an archived level change"""
         level_change = self.factory.restore_level_change(level_change_id)
         return AccessLevelChangeResponse.model_validate(level_change)
 
 
     def delete_archived_access_level_change(self, level_change_id: UUID) -> None:
-        """Permanently delete an archived level change .
-        Args:
-            level_change_id: level change  UUID
-        """
+        """Permanently delete an archived level change"""
         self.factory.delete_archived_level_change(level_change_id)

@@ -2,6 +2,7 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.staff_management.validators.staff_management import StaffManagementValidator
 from V2.app.core.staff_management.models.staff_management import StaffDepartment
@@ -14,17 +15,16 @@ from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependency
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
-
-class StaffDepartmentFactory:
+class StaffDepartmentFactory(BaseFactory):
     """Factory class for managing staff department operations."""
 
-    def __init__(self, session: Session, model = StaffDepartment):
+    def __init__(self, session: Session, model = StaffDepartment, current_user = None):
+        super().__init__(current_user)
         """Initialize factory with model and db session.
         Args:
             session: SQLAlchemy db session
-            model: Model class, defaults to StaffRole
+            model: Model class, defaults to StaffDepartment
         """
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
@@ -36,6 +36,7 @@ class StaffDepartmentFactory:
         self.validator = StaffManagementValidator()
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "Staff department"
 
 
@@ -63,8 +64,8 @@ class StaffDepartmentFactory:
             name=self.validator.validate_name(new_department.name),
             description=self.validator.validate_description(new_department.description),
 
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID,
+            created_by=self.get_actor_id(),
+            last_modified_by=self.get_actor_id(),
         )
         return self.repository.create(department)
 
@@ -113,7 +114,6 @@ class StaffDepartmentFactory:
             #leave original data untouched for error message extraction
             for field, (validator_func, model_attr) in validations.items():
                 if field in copied_data:
-                    #pop
                     validated_value = validator_func(copied_data.pop(field))
                     setattr(existing, model_attr, validated_value)
 
@@ -121,8 +121,8 @@ class StaffDepartmentFactory:
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
-            return self.repository.update(department_id, existing)
+            existing.last_modified_by = self.get_actor_id()
+            return self.repository.update(department_id, existing, modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(department_id, e)
@@ -147,7 +147,7 @@ class StaffDepartmentFactory:
                     entity_model=self.model, identifier=department_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            return self.repository.archive(department_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(department_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(department_id, e)
