@@ -1,8 +1,0 @@
-2025-05-07 09:30:49,576 - kademia.security - WARNING - AuthError | 90f422df-5e1d-4157-9bbd-d9e9157abdca | Login attempted with Invalid email or password: User labaekaadesayo@gmail.com 
-2025-05-07 10:49:46,374 - kademia.security - WARNING - AuthError | c92a86da-f0e5-4434-bcd2-ec2ea9212c1b | User: 2dd4b832-2f5a-4936-ab92-88f4f91af9f5 attempted password change to current password
-2025-05-07 10:56:31,487 - kademia.security - WARNING - AuthError | 7ae57770-f13f-47fa-aeb2-6e852ef26412 | User: be6f4bd0-7ffa-4912-b5ec-7f71c4cd2446 attempted password change with wrong password
-2025-05-07 10:57:57,194 - kademia.security - WARNING - AuthError | a17e7fba-3aa0-4786-881d-0977df468a4c | User: be6f4bd0-7ffa-4912-b5ec-7f71c4cd2446 attempted password change with wrong password
-2025-05-07 10:59:46,692 - kademia.security - WARNING - AuthError | 21422ce2-a794-4ac9-8a45-417ed10841af | User: be6f4bd0-7ffa-4912-b5ec-7f71c4cd2446 attempted password change to current password
-2025-05-07 11:00:42,493 - kademia.security - WARNING - AuthError | 39e157d5-507b-43da-b13f-9aba53cd98ec | Token id 341d608c-9d4d-4491-b033-daf064d20760 has been revoked
-2025-05-07 11:01:04,041 - kademia.security - WARNING - AuthError | 40418a13-41af-4bcd-b808-2174c0d8204a | Login attempted with Invalid email or password: User SCH-25-00001 
-2025-05-07 11:01:30,488 - kademia.security - WARNING - AuthError | 4ec4022a-e741-47ea-971b-065855c3e7ad | Invalid authentication token. Detail:Signature verification failed 

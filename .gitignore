@@ -30,4 +30,5 @@ _docs
 
 # Application-specific
 logs/
+auth_logs/
 exports/
