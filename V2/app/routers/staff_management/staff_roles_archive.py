@@ -14,7 +14,6 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
-
 @router.get("/", response_model=List[StaffRoleResponse])
 def get_archived_roles(
         filters: RolesFilterParams = Depends(),

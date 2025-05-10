@@ -12,7 +12,7 @@ from V2.app.core.staff_management.schemas.department import(
 )
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
-from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_crud, get_crud
+from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_crud
 
 token_service=TokenService()
 access = AccessTokenBearer()
@@ -38,7 +38,7 @@ def get_staff_departments(
 @router.get("/{department_id}", response_model=StaffDepartmentResponse)
 def get_staff_department(
         department_id: UUID,
-        crud: StaffDepartmentCrud = Depends(get_crud(StaffDepartmentCrud))
+        crud: StaffDepartmentCrud = Depends(get_authenticated_crud(StaffDepartmentCrud))
 ):
         return crud.get_department(department_id)
 

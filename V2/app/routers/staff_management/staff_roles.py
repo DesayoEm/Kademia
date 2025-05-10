@@ -11,7 +11,7 @@ from V2.app.core.staff_management.schemas.role import (
 )
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
-from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_crud, get_crud
+from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_crud
 
 token_service=TokenService()
 access = AccessTokenBearer()

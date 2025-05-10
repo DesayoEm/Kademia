@@ -2,6 +2,7 @@ from typing import List
 from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.export_service.export import ExportService
 from V2.app.core.staff_management.validators.staff_management import StaffManagementValidator
 from V2.app.core.staff_management.models.staff_management import EducatorQualification
@@ -13,13 +14,12 @@ from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolv
 from V2.app.core.shared.exceptions import EntityNotFoundError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
-
-class QualificationFactory:
+class QualificationFactory(BaseFactory):
     """Factory class for managing qualification operations."""
 
-    def __init__(self, session: Session, model = EducatorQualification):
+    def __init__(self, session: Session, model = EducatorQualification, current_user = None):
+        super().__init__(current_user)
         """Initialize factory with model and db session.
         Args:
             session: SQLAlchemy db session
@@ -33,6 +33,7 @@ class QualificationFactory:
         self.validator = StaffManagementValidator()
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "Educator Qualification"
 
     def raise_not_found(self, identifier, error):
@@ -49,16 +50,17 @@ class QualificationFactory:
         "uq_educator_qualification_name": ("name", lambda self, data: data.name),
     })
     @resolve_fk_on_create()
-    def create_qualification(self, data) -> EducatorQualification:
+    def create_qualification(self, educator_id: UUID, data) -> EducatorQualification:
         """Create a new qualification.
         Args:
+            educator_id: id of educator to create qualification for
             data: Qualification data containing name, description and owner
         Returns:
             EducatorQualification: Created qualification record
         """
         qualification = EducatorQualification(
             id=uuid4(),
-            educator_id=data.educator_id,
+            educator_id=educator_id,
             name=self.validator.validate_name(data.name),
             description=self.validator.validate_description(data.description),
             validity_type = data.validity_type,
@@ -66,8 +68,8 @@ class QualificationFactory:
                 data.validity_type.value,
                 data.valid_until
             ),
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID,
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id,
         )
         return self.repository.create(qualification)
 
@@ -136,9 +138,7 @@ class QualificationFactory:
                     validated_value = validator_func(copied_data.pop(field))
                     setattr(existing, model_attr, validated_value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
-
-            return self.repository.update(qualification_id, existing)
+            return self.repository.update(qualification_id, existing, modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)
@@ -154,7 +154,7 @@ class QualificationFactory:
         """
         try:
             #There's no need to check for dependent entities before archiving as there are none
-            return self.repository.archive(qualification_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(qualification_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)
@@ -216,7 +216,7 @@ class QualificationFactory:
             qualification_id: ID of qualification to delete
         """
         try:
-            # There's no need to check for dependent entities before deletion as there are none
+            #There's no need to check for dependent entities before deletion as there are none
             self.repository.delete_archive(qualification_id)
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)

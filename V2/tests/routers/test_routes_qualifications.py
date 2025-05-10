@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 import uuid
 from uuid import uuid4
 from V2.app.main import app
-from V2.app.core.staff_management.schemas.educator_qualification import(
+from V2.app.core.staff_management.schemas.qualification import(
     QualificationCreate, QualificationUpdate, QualificationResponse
 )
 from V2.app.database.models.enums import ArchiveReason
