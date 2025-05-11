@@ -50,7 +50,8 @@ class AcademicLevelFactory(BaseFactory):
 
     @resolve_unique_violation({
         "academic_levels_name_key": ("name", lambda self, data: data.name),
-        "academic_levels_order_key": ("order", lambda self, data: data.order),
+        "academic_levels_display_order_key": ("order", lambda self, data: data.display_order),
+        "academic_levels_promotion_rank_key": ("order", lambda self, data: data.promotion_rank)
     })
     @resolve_fk_on_create()
     def create_academic_level(self, data) -> AcademicLevel:
@@ -64,7 +65,8 @@ class AcademicLevelFactory(BaseFactory):
             id=uuid4(),
             name=self.validator.validate_level_name(data.name),
             description=self.validator.validate_description(data.description),
-            order=self.service.return_default_order(),
+            display_order=self.service.return_default_order(),
+            promotion_rank =self.validator.validate_promotion_rank(data.promotion_rank),
 
             created_by=self.actor_id,
             last_modified_by=self.actor_id

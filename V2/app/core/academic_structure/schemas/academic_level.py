@@ -4,12 +4,13 @@ from V2.app.core.shared.schemas.shared_models import *
 
 class AcademicLevelFilterParams(BaseFilterParams):
     name: str | None = None
-    order_by: Literal["order", "created_at"] = "order"
+    order_by: Literal["display_order", "created_at"] = "order"
 
 class AcademicLevelBase(BaseModel):
     """Base model for academic levels"""
     name: str
     description: str
+    promotion_rank: int
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -31,7 +32,8 @@ class AcademicLevelUpdate(AcademicLevelBase):
     """For updating academic levels"""
     name: str | None = None
     description: str | None = None
-    order: int | None = None
+    display_order: int | None = None
+    promotion_rank: int | None = None
 
     model_config = ConfigDict(
         from_attributes=True,

@@ -1,3 +1,4 @@
+from V2.app.core.shared.exceptions import InvalidRankNumberError
 from V2.app.core.shared.exceptions.academic_structure_errors import InvalidCodeError
 from V2.app.core.shared.exceptions.entry_validation_errors import (
     EmptyFieldError, TextTooShortError, InvalidCharacterError, InvalidOrderNumberError,
@@ -50,6 +51,13 @@ class AcademicStructureValidator:
             raise InvalidOrderNumberError(entry=order)
 
         return order
+
+    @staticmethod
+    def validate_promotion_rank(promotion_rank: int) -> int:
+        if promotion_rank <= 0:
+            raise InvalidRankNumberError(entry=promotion_rank)
+
+        return promotion_rank
 
 
     def validate_code(self, value: str) -> str:

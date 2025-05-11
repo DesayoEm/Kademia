@@ -67,12 +67,6 @@ class Promotion(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     new_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
             ondelete='RESTRICT',name='fk_promotions_academic_levels_new_level')
         )
-    previous_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
-            ondelete='RESTRICT',name='fk_repetitions_classes_previous_class')
-        )
-    new_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
-            ondelete='RESTRICT', name='fk_repetitions_classes_new_class')
-        )
     status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus, name='approvalstatus'), default=ApprovalStatus.PENDING)
     status_updated_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
             ondelete='RESTRICT',name='fk_repetitions_staff_status_updated_by'),nullable=True
@@ -85,8 +79,6 @@ class Promotion(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
                         foreign_keys='[Promotion.student_id]', passive_deletes=True)
     previous_level: Mapped['AcademicLevel'] = relationship(foreign_keys='[Promotion.previous_level_id]')
     new_level:Mapped['AcademicLevel'] =  relationship( foreign_keys='[Promotion.new_level_id]')
-    previous_class: Mapped['Classes'] = relationship(foreign_keys='[Promotion.previous_class_id]')
-    new_class:Mapped['Classes'] =  relationship( foreign_keys='[Promotion.new_class_id]')
     status_updated_staff:Mapped['Staff'] =  relationship(foreign_keys='[Promotion.status_updated_by]')
 
     __table_args__ = (

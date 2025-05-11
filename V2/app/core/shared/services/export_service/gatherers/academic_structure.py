@@ -17,7 +17,8 @@ class AcademicStructureGatherer:
                         "id": str(level.id),
                         "name": level.name,
                         "description": level.description,
-                        "order": level.order,
+                        "order": level.display_order,
+                        "rank": level.promotion_rank,
                         "created_at": level.created_at,
                         "created_by": str(level.created_by) if level.created_by else None,
                         "last_modified_at": level.last_modified_at,
@@ -37,7 +38,7 @@ class AcademicStructureGatherer:
                             "id": str(level_subject.subject.id),
                             "name": level_subject.subject.name,
                             "is_elective": level_subject.is_elective,
-                            "academic_year": level_subject.academic_year,
+                            "academic_session": level_subject.academic_session,
                             "educator": f"{level_subject.educator_id}" if level_subject.educator_id else None,
                         }
                         for level_subject in level.subjects

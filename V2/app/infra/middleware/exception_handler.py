@@ -70,6 +70,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
         # Academic structure exceptions
         InvalidCodeError: status.HTTP_400_BAD_REQUEST,
+        InvalidRankNumberError: status.HTTP_400_BAD_REQUEST,
 
         # Archive/delete exceptions
         ScoreExceedsMaxError: status.HTTP_400_BAD_REQUEST,

@@ -89,6 +89,8 @@ from .staff_management_errors import (
 from .academic_structure_errors import (
     StudentOrganizationError,
     InvalidCodeError,
+    InvalidRankNumberError,
+    InvalidOrderNumberError
 )
 
 from .identity_errors import (
