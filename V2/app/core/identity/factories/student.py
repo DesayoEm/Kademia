@@ -24,6 +24,13 @@ class StudentFactory(BaseFactory):
 
     def __init__(self, session: Session, model=Student, current_user = None):
         super().__init__(current_user)
+        """Initialize factory with db session, model and current actor.
+            Args:
+            session: SQLAlchemy db session
+            model: Model class, defaults to Student
+            current_user: The authenticated user performing the operation, if any.
+        """
+
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = IdentityValidator()

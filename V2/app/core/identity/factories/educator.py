@@ -15,10 +15,11 @@ class EducatorFactory(BaseFactory):
 
     def __init__(self, session: Session, model = Educator, current_user = None):
         super().__init__(current_user)
-        """Initialize factory with model and db session.
+        """Initialize factory with db session, model and current actor.
             Args:
             session: SQLAlchemy db session
             model: Model class, defaults to Educator
+            current_user: The authenticated user performing the operation, if any.
         """
 
         self.model = model

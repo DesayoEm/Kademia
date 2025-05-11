@@ -18,10 +18,11 @@ class AwardFactory(BaseFactory):
 
     def __init__(self, session: Session, model = StudentAward, current_user = None):
         super().__init__(current_user)
-        """Initialize factory with model and db session.
+        """Initialize factory.
             Args:
             session: SQLAlchemy db session
             model: Model class, defaults to Award
+            current_user: The authenticated user performing the operation, if any.
         """
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)

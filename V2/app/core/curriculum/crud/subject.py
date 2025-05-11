@@ -10,59 +10,41 @@ from V2.app.core.curriculum.schemas.subject import (
     SubjectCreate, SubjectUpdate, SubjectResponse, SubjectFilterParams
 )
 
-
 class SubjectCrud:
     """CRUD operations for subjects."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user = None):
         """Initialize CRUD service.
         Args:
             session: SQLAlchemy db session
+            current_user: The authenticated user performing the operation, if any.
         """
         self.session = session
-        self.factory = SubjectFactory(session)
+        self.current_user = current_user
+        self.factory = SubjectFactory(session, current_user=current_user)
         self.export_service = ExportService(session)
 
 
     def create_subject(self, data: SubjectCreate) -> SubjectResponse:
-        """Create a new subject.
-        Args:
-            data: Validated subject creation data
-        Returns:
-            SubjectResponse: Created subject
-        """
+        """Create a new subject."""
         new_subject = self.factory.create_subject(data)
         return SubjectResponse.model_validate(new_subject)
 
 
     def get_subject(self, subject_id: UUID) -> SubjectResponse:
-        """Get subject by ID.
-        Args:
-            subject_id: subject UUID
-        Returns:
-            SubjectResponse: Retrieved subject
-        """
+        """Get subject by ID."""
         subject_response = self.factory.get_subject(subject_id)
         return SubjectResponse.model_validate(subject_response)
 
 
     def get_all_subjects(self, filters: SubjectFilterParams) -> List[SubjectResponse]:
-        """Get all active subjects.
-        Returns:
-            List[SubjectResponse]: List of active student_organization
-        """
+        """Get all active subjects."""
         subjects = self.factory.get_all_subjects(filters)
         return [SubjectResponse.model_validate(subject) for subject in subjects]
 
 
     def update_subject(self, subject_id: UUID, data: SubjectUpdate) -> SubjectResponse:
-        """Update subject information.
-        Args:
-            subject_id: subject UUID
-            data: Validated update data
-        Returns:
-            SubjectResponse: Updated subject
-        """
+        """Update subject information."""
         data = data.model_dump(exclude_unset=True)
         updated_subject = self.factory.update_subject(subject_id, data)
         return SubjectResponse.model_validate(updated_subject)
@@ -90,49 +72,28 @@ class SubjectCrud:
 
 
     def delete_subject(self, subject_id: UUID) -> None:
-        """Permanently delete a subject.
-        Args:
-            subject_id: subject UUID
-        """
+        """Permanently delete a subject."""
         self.factory.delete_subject(subject_id)
 
 
     # Archived subject operations
     def get_archived_subject(self, subject_id: UUID) -> SubjectResponse:
-        """Get an archived subject by ID.
-        Args:
-            subject_id: subject UUID
-        Returns:
-            SubjectResponse: Retrieved archived subject
-        """
+        """Get an archived subject by ID."""
         subject_response = self.factory.get_archived_subject(subject_id)
         return SubjectResponse.model_validate(subject_response)
 
     def get_all_archived_subjects(self, filters: SubjectFilterParams) -> List[SubjectResponse]:
-        """Get all archived student_organization.
-        Args:
-            filters: Filter parameters
-        Returns:
-            List[SubjectResponse]: List of archived student_organization
-        """
+        """Get all archived student_organization."""
         subjects = self.factory.get_all_archived_subjects(filters)
         return [SubjectResponse.model_validate(subject) for subject in subjects]
 
 
     def restore_subject(self, subject_id: UUID) -> SubjectResponse:
-        """Restore an archived subject.
-        Args:
-            subject_id: subject UUID
-        Returns:
-            SubjectResponse: Restored subject
-        """
+        """Restore an archived subject."""
         restored_subject = self.factory.restore_subject(subject_id)
         return SubjectResponse.model_validate(restored_subject)
 
 
     def delete_archived_subject(self, subject_id: UUID) -> None:
-        """Permanently delete an archived subject.
-        Args:
-            subject_id: subject UUID
-        """
+        """Permanently delete an archived subject"""
         self.factory.delete_archived_subject(subject_id)

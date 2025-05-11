@@ -20,10 +20,11 @@ class AccessLevelChangeFactory(BaseFactory):
 
     def __init__(self, session: Session, model=AccessLevelChange, current_user = None):
         super().__init__(current_user)
-        """Initialize factory with db session and current actor.
+        """Initialize factory with db session, model, and current actor.
             Args:
                 session: SQLAlchemy db session
                 model: Model class, defaults to AccessLevelChange
+                current_user: The authenticated user performing the operation, if any.
         """
         self.session = session
         self.model = model

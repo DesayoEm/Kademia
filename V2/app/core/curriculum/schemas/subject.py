@@ -44,16 +44,3 @@ class SubjectResponse(SubjectBase):
     """Response model for subjects"""
     pass
 
-class SubjectInDB(SubjectBase):
-    """Represents stored subjects"""
-    id: UUID
-    name: str
-    department_id: UUID
-    created_at: datetime
-    created_by: UUID
-    last_modified_at: datetime
-    last_modified_by: UUID
-    is_archived: bool
-    archived_at: datetime | None = None
-    archived_by: UUID | None = None
-    archive_reason: ArchiveReason | None = None

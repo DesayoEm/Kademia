@@ -12,7 +12,6 @@ class StudentSubjectFilterParams(BaseFilterParams):
 
 class StudentSubjectBase(BaseModel):
     """Base model for student subject enrollments"""
-    student_id: UUID
     academic_level_subject_id: UUID
     academic_session: str
     term: Term
@@ -23,7 +22,6 @@ class StudentSubjectBase(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "student_id": "00000000-0000-0000-0000-000000000001",
                 "academic_level_subject_id": "00000000-0000-0000-0000-000000000002",
                 "academic_session": "2023-2024",
                 "term": "FIRST",

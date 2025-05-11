@@ -48,29 +48,21 @@ class TotalGrade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __tablename__ = 'total_grades'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-    ondelete='CASCADE', name='fk_total_grades_students_student_id'))
 
     student_subject_id: Mapped[UUID] = mapped_column(
         ForeignKey('student_subjects.id', ondelete='RESTRICT',
-                   name='fk_total_grades_student_subjects_id'))
-    academic_session: Mapped[str] = mapped_column(String(9))
-    term: Mapped[Term] = mapped_column(Enum(Term, name='term'))
+                   name='fk_total_grades_student_subjects_id'), unique = True)
     total_score: Mapped[int] = mapped_column(Integer)
     rank: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     # Relationships
-    student: Mapped['Student'] = relationship(back_populates='total_grades',
-        foreign_keys='[TotalGrade.student_id]',passive_deletes=True)
-    student_subject: Mapped['StudentSubject'] = relationship(back_populates='total_grades',
+    student_subject: Mapped['StudentSubject'] = relationship(back_populates='total_grade',
         foreign_keys='[TotalGrade.student_subject_id]')
 
     __table_args__ = (
-        UniqueConstraint('student_id', 'student_subject_id', 'academic_session', 'term'),
-        Index('idx_total_grade_student_subject', 'student_id', 'student_subject_id'),
-        Index('idx_total_grade_term', 'term'),
-        Index('idx_total_grade_score', 'total_score')
+        Index('idx_total_grade_score', 'total_score'),
     )
+
 
 from V2.app.core.identity.models.student import Student
 from V2.app.core.identity.models.staff import Educator

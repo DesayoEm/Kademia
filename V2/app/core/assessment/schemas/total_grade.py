@@ -12,24 +12,13 @@ class TotalGradeFilterParams(BaseFilterParams):
 
 class TotalGradeBase(BaseModel):
     """Base model for total grades"""
-    student_id: UUID
-    academic_level_subject_id: UUID
-    academic_session: str
-    term: Term
     total_score: int
+    created_by = UUID,
+
 
     model_config = ConfigDict(
         from_attributes=True,
-        extra="ignore",
-        json_schema_extra={
-            "example": {
-                "student_id": "00000000-0000-0000-0000-000000000001",
-                "academic_level_subject_id": "00000000-0000-0000-0000-000000000002",
-                "academic_session": "2025/2026",
-                "term": "FIRST",
-                "total_score": 85,
-            }
-        }
+        extra="ignore"
     )
 
 class TotalGradeCreate(TotalGradeBase):

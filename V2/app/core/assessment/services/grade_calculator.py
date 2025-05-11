@@ -7,10 +7,9 @@ class GradeCalculator:
         self.session = session
 
 
-    def calculate_total_grade(self, student_id, subject_id, academic_session, term):
+    def calculate_total_grade(self, student_subject_id, academic_session, term):
         total_weight_stmt  = select(func.sum(Grade.weight).where(
-            Grade.student_id == student_id,
-            Grade.subject_id == subject_id,
+            Grade.student_subject_id == student_subject_id,
             Grade.academic_session == academic_session,
             Grade.term == term,
         ))
@@ -19,8 +18,7 @@ class GradeCalculator:
         weighted_score_stmt = select(func.sum(
             (Grade.score/Grade.max_score)*Grade.weight
             )).where(
-                Grade.student_id == student_id,
-                Grade.subject_id == subject_id,
+                Grade.student_subject_id == student_subject_id,
                 Grade.academic_session == academic_session,
                 Grade.term == term,
     )

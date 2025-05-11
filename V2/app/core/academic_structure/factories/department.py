@@ -20,10 +20,11 @@ class StudentDepartmentFactory(BaseFactory):
 
     def __init__(self, session: Session, model=StudentDepartment, current_user = None):
         super().__init__(current_user)
-        """Initialize factory with db session.
+        """Initialize factory with db session, model and current actor..
             Args:
                 session: SQLAlchemy db session
                 model: Model class, defaults to StudentDepartment
+                current_user: The authenticated user performing the operation,
         """
 
         self.model = model

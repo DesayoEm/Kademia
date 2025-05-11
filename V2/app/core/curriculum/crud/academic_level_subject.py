@@ -13,55 +13,38 @@ from V2.app.core.curriculum.schemas.academic_level_subject import (
 class AcademicLevelSubjectCrud:
     """CRUD operations for academic level subjects."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user = None):
         """Initialize CRUD service.
         Args:
             session: SQLAlchemy db session
+            current_user: The authenticated user performing the operation, if any.
         """
         self.session = session
-        self.factory = AcademicLevelSubjectFactory(session)
+        self.current_user = current_user
+        self.factory = AcademicLevelSubjectFactory(session, current_user=current_user)
         self.export_service = ExportService(session)
 
 
-    def create_level_subject(self, data: AcademicLevelSubjectCreate) -> AcademicLevelSubjectResponse:
-        """Assign a new subject to an academic level.
-        Args:
-            data: Validated subject creation data
-        Returns:
-            AcademicLevelSubjectResponse: Created subject
-        """
-        new_subject = self.factory.create_academic_level_subject(data)
+    def create_level_subject(self, level_id: UUID, data: AcademicLevelSubjectCreate) -> AcademicLevelSubjectResponse:
+        """Assign a new subject to an academic level."""
+        new_subject = self.factory.create_academic_level_subject(level_id, data)
         return AcademicLevelSubjectResponse.model_validate(new_subject)
 
 
     def get_level_subject(self, level_subject_id: UUID) -> AcademicLevelSubjectResponse:
-        """Get academic level subject by ID.
-        Args:
-            level_subject_id: level subject UUID
-        Returns:
-            AcademicLevelSubjectResponse: Retrieved subject
-        """
+        """Get academic level subject by ID."""
         subject_response = self.factory.get_academic_level_subject(level_subject_id)
         return AcademicLevelSubjectResponse.model_validate(subject_response)
 
 
     def get_all_level_subjects(self, filters: AcademicLevelSubjectFilterParams) -> List[AcademicLevelSubjectResponse]:
-        """Get all active subjects for all academic levels.
-        Returns:
-            List[AcademicLevelSubjectResponse]: List of active student_organization
-        """
+        """Get all active subjects for all academic levels."""
         level_subjects = self.factory.get_all_academic_level_subjects(filters)
         return [AcademicLevelSubjectResponse.model_validate(subject) for subject in level_subjects]
 
 
     def archive_level_subject(self, level_subject_id: UUID, reason: ArchiveReason) -> None:
-        """Archive a subject.
-        Args:
-            level_subject_id: level subject UUID
-            reason: Reason for archiving
-        Returns:
-            AcademicLevelSubjectResponse: Archived subject
-        """
+        """Archive a subject."""
         self.factory.archive_academic_level_subject(level_subject_id, reason)
 
     def export_level_subject(self, level_subject_id: UUID, export_format: str) -> str:
@@ -85,40 +68,23 @@ class AcademicLevelSubjectCrud:
 
     # Archived subject operations
     def get_archived_level_subject(self, level_subject_id: UUID) -> AcademicLevelSubjectResponse:
-        """Get an archived subject by ID.
-        Args:
-            level_subject_id: level subject UUID
-        Returns:
-            AcademicLevelSubjectResponse: Retrieved archived subject
-        """
+        """Get an archived subject by ID."""
         subject_response = self.factory.get_archived_academic_level_subject(level_subject_id)
         return AcademicLevelSubjectResponse.model_validate(subject_response)
 
+
     def get_all_archived_level_subjects(self, filters: AcademicLevelSubjectFilterParams) -> List[AcademicLevelSubjectResponse]:
-        """Get all archived student_organization.
-        Args:
-            filters: Filter parameters
-        Returns:
-            List[AcademicLevelSubjectResponse]: List of archived level subjects
-        """
+        """Get all archived student_organization."""
         subjects = self.factory.get_all_archived_academic_level_subjects(filters)
         return [AcademicLevelSubjectResponse.model_validate(subject) for subject in subjects]
 
 
     def restore_level_subject(self, level_subject_id: UUID) -> AcademicLevelSubjectResponse:
-        """Restore an archived subject.
-        Args:
-            level_subject_id: level subject UUID
-        Returns:
-            AcademicLevelSubjectResponse: Restored subject
-        """
+        """Restore an archived subject."""
         restored_subject = self.factory.restore_academic_level_subject(level_subject_id)
         return AcademicLevelSubjectResponse.model_validate(restored_subject)
 
 
     def delete_archived_level_subject(self, level_subject_id: UUID) -> None:
-        """Permanently delete an archived subject.
-        Args:
-            level_subject_id: level subject UUID
-        """
+        """Permanently delete an archived subject."""
         self.factory.delete_archived_academic_level_subject(level_subject_id)

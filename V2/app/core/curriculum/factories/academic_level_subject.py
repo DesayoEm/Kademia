@@ -3,6 +3,7 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.curriculum.models.curriculum import AcademicLevelSubject
 from V2.app.core.curriculum.validators import CurriculumValidator
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -11,17 +12,19 @@ from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolv
 from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
 
-class AcademicLevelSubjectFactory:
+
+class AcademicLevelSubjectFactory(BaseFactory):
     """Factory class for managing AcademicLevelSubject operations."""
 
-    def __init__(self, session: Session, model = AcademicLevelSubject):
-        """Initialize factory with model and db session.
+    def __init__(self, session: Session, model = AcademicLevelSubject, current_user = None):
+        super().__init__(current_user)
+        """Initialize factory.
             Args:
             session: SQLAlchemy db session
             model: Model class, defaults to AcademicLevelSubject
+            current_user: The authenticated user performing the operation, if any.
         """
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
@@ -30,6 +33,7 @@ class AcademicLevelSubjectFactory:
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "AcademicLevelSubject"
 
     def raise_not_found(self, identifier, error):
@@ -45,9 +49,10 @@ class AcademicLevelSubjectFactory:
         "academic_level_subjects_level_id_subject_id_academic_session_key": ("name", lambda self, data: data.subject_id)
     })
     @resolve_fk_on_create()
-    def create_academic_level_subject(self, data) -> AcademicLevelSubject:
+    def create_academic_level_subject(self, level_id: UUID, data) -> AcademicLevelSubject:
         """Create a new AcademicLevelSubject.
         Args:
+            level_id: id of the level to be assigned a subject
             data: AcademicLevelSubject data
         Returns:
             AcademicLevelSubject: Created AcademicLevelSubject record
@@ -55,12 +60,12 @@ class AcademicLevelSubjectFactory:
         new_academic_level_subject = AcademicLevelSubject(
             id=uuid4(),
             subject_id=data.subject_id,
-            level_id=data.level_id,
+            level_id=level_id,
             is_elective=data.is_elective,
             academic_session=self.validator.validate_academic_session(data.academic_session),
 
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id
         )
         return self.repository.create(new_academic_level_subject)
 
@@ -104,7 +109,7 @@ class AcademicLevelSubjectFactory:
                     entity_model=self.entity_model, identifier=academic_level_subject_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            return self.repository.archive(academic_level_subject_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(academic_level_subject_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(academic_level_subject_id, e)

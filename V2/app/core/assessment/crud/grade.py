@@ -14,56 +14,38 @@ from V2.app.core.shared.services.export_service.export import ExportService
 class GradeCrud:
     """CRUD operations for grades."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user = None):
         """Initialize CRUD service.
         Args:
             session: SQLAlchemy db session
+            current_user: The authenticated user performing the operation, if any.
         """
         self.session = session
-        self.factory = GradeFactory(session)
+        self.current_user = current_user
+        self.factory = GradeFactory(session, current_user=current_user)
         self.export_service = ExportService(session)
 
 
-    def create_grade(self, student_id: UUID, data: GradeCreate) -> GradeResponse:
-        """Create a new grade.
-        Args:
-            data: Validated grade creation data
-            student_id: id of student to grade
-        Returns:
-            GradeResponse: Created grade
-        """
-        grade = self.factory.create_grade(student_id, data)
+    def create_grade(self, student_subject_id: UUID, data: GradeCreate) -> GradeResponse:
+        """Create a new grade."""
+        grade = self.factory.create_grade(student_subject_id, data)
         return GradeResponse.model_validate(grade)
 
 
     def get_grade(self, grade_id: UUID) -> GradeResponse:
-        """Get grade by ID.
-        Args:
-            grade_id: grade UUID
-        Returns:
-            GradeResponse: Retrieved grade
-        """
+        """Get grade by ID."""
         grade = self.factory.get_grade(grade_id)
         return GradeResponse.model_validate(grade)
 
 
     def get_all_grades(self, filters: GradeFilterParams) -> List[GradeResponse]:
-        """Get all active grades.
-        Returns:
-            List[GradeResponse]: List of active grades
-        """
+        """Get all active grades."""
         grades = self.factory.get_all_grades(filters)
         return [GradeResponse.model_validate(grade) for grade in grades]
 
 
     def update_grade(self, grade_id: UUID, data: GradeUpdate) -> GradeResponse:
-        """Update grade information.
-        Args:
-            grade_id: grade UUID
-            data: Validated update data
-        Returns:
-            GradeResponse: Updated grade
-        """
+        """Update grade information."""
         data = data.model_dump(exclude_unset=True)
         updated_grade = self.factory.update_grade(grade_id, data)
         return GradeResponse.model_validate(updated_grade)
@@ -101,40 +83,22 @@ class GradeCrud:
 
     # Archived grade operations
     def get_archived_grade(self, grade_id: UUID) -> GradeResponse:
-        """Get an archived grade by ID.
-        Args:
-            grade_id: grade UUID
-        Returns:
-            GradeResponse: Retrieved archived grade
-        """
+        """Get an archived grade by ID."""
         grade = self.factory.get_archived_grade(grade_id)
         return GradeResponse.model_validate(grade)
 
     def get_all_archived_grades(self, filters: GradeFilterParams) -> List[GradeResponse]:
-        """Get all archived grades.
-        Args:
-            filters: Filter parameters
-        Returns:
-            List[GradeResponse]: List of archived grades
-        """
+        """Get all archived grades."""
         grades = self.factory.get_all_archived_grades(filters)
         return [GradeResponse.model_validate(grade) for grade in grades]
 
 
     def restore_grade(self, grade_id: UUID) -> GradeResponse:
-        """Restore an archived grade.
-        Args:
-            grade_id: grade UUID
-        Returns:
-            GradeResponse: Restored grade
-        """
+        """Restore an archived grade."""
         grade = self.factory.restore_grade(grade_id)
         return GradeResponse.model_validate(grade)
 
 
     def delete_archived_grade(self, grade_id: UUID) -> None:
-        """Permanently delete an archived grade.
-        Args:
-            grade_id: grade UUID
-        """
+        """Permanently delete an archived grade."""
         self.factory.delete_archived_grade(grade_id)

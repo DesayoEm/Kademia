@@ -3,6 +3,7 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.curriculum.models.curriculum import Subject
 from V2.app.core.curriculum.validators import CurriculumValidator
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -11,17 +12,17 @@ from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolv
 from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
-
-class SubjectFactory:
+class SubjectFactory(BaseFactory):
     """Factory class for managing subject operations."""
 
-    def __init__(self, session: Session, model = Subject):
-        """Initialize factory with model and db session.
+    def __init__(self, session: Session, model = Subject, current_user = None):
+        super().__init__(current_user)
+        """Initialize factory.
             Args:
             session: SQLAlchemy db session
             model: Model class, defaults to Subject
+            current_user: The authenticated user performing the operation, if any.
         """
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
@@ -30,6 +31,7 @@ class SubjectFactory:
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "Subject"
 
     def raise_not_found(self, identifier, error):
@@ -57,8 +59,8 @@ class SubjectFactory:
             name=self.validator.validate_name(data.name),
             department_id=data.department_id,
 
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id
         )
         return self.repository.create(new_subject)
 
@@ -113,8 +115,7 @@ class SubjectFactory:
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
-            return self.repository.update(subject_id, existing)
+            return self.repository.update(subject_id, existing, modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
                 self.raise_not_found(subject_id, e)
@@ -138,7 +139,7 @@ class SubjectFactory:
                     entity_model=self.entity_model, identifier=subject_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            return self.repository.archive(subject_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(subject_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(subject_id, e)

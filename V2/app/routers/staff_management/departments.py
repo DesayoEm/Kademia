@@ -23,7 +23,7 @@ router = APIRouter()
 def create_staff_department(
         payload:StaffDepartmentCreate,
         crud: StaffDepartmentCrud = Depends(get_authenticated_crud(StaffDepartmentCrud))
-):
+    ):
         return crud.create_department(payload)
 
 
@@ -31,7 +31,7 @@ def create_staff_department(
 def get_staff_departments(
         filters: DepartmentFilterParams = Depends(),
         crud: StaffDepartmentCrud = Depends(get_authenticated_crud(StaffDepartmentCrud))
-):
+    ):
         return crud.get_all_departments(filters)
 
 
@@ -39,7 +39,7 @@ def get_staff_departments(
 def get_staff_department(
         department_id: UUID,
         crud: StaffDepartmentCrud = Depends(get_authenticated_crud(StaffDepartmentCrud))
-):
+    ):
         return crud.get_department(department_id)
 
 

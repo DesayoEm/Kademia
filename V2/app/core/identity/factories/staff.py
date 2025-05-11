@@ -18,17 +18,16 @@ from ...shared.exceptions.decorators.resolve_fk_violation import (
 )
 
 
-
-
 class StaffFactory(BaseFactory):
     """Factory class for managing staff operations."""
 
     def __init__(self, session: Session, model = Staff, current_user = None):
         super().__init__(current_user)
-        """Initialize factory with model and db session.
+        """Initialize factory with db session, model and current actor.
             Args:
             session: SQLAlchemy db session
             model: Model class, defaults to Staff
+            current_user: The authenticated user performing the operation, if any.
         """
 
         self.model = model

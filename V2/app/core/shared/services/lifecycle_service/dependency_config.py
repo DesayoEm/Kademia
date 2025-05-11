@@ -75,10 +75,11 @@ DEPENDENCY_CONFIG = {
         ("grades", Grade, "subject_id", "grades"),
         ("total_grades", TotalGrade, "subject_id", "total grades")
     ],
+    Grade: [],
     AcademicLevelSubject: [],
     StudentSubject: [],
     SubjectEducator: [],
-    Grade: [],
+
     TotalGrade: [],
     Repetition: [],
     Promotion: [],
