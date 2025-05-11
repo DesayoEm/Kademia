@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from V2.app.core.academic_structure.models.academic_structure import AcademicLevel
 from V2.app.core.academic_structure.services.academic_level import AcademicLevelService
 from V2.app.core.academic_structure.validators.academic_structure import AcademicStructureValidator
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -13,13 +14,14 @@ from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolv
 from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
 
-class AcademicLevelFactory:
+
+class AcademicLevelFactory(BaseFactory):
     """Factory class for managing academic level operations."""
 
-    def __init__(self, session: Session, model = AcademicLevel):
+    def __init__(self, session: Session, model = AcademicLevel, current_user = None):
+        super().__init__(current_user)
         """Initialize factory with model and db session.
             Args:
             session: SQLAlchemy db session
@@ -33,6 +35,7 @@ class AcademicLevelFactory:
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "Academic Level"
 
     def raise_not_found(self, identifier, error):
@@ -62,8 +65,8 @@ class AcademicLevelFactory:
             description=self.validator.validate_description(data.description),
             order=self.service.return_default_order(),
 
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id
         )
         return self.repository.create(new_level)
 
@@ -121,8 +124,7 @@ class AcademicLevelFactory:
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
-            return self.repository.update(level_id, existing)
+            return self.repository.update(level_id, existing, modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
                 self.raise_not_found(level_id, e)
@@ -146,7 +148,7 @@ class AcademicLevelFactory:
                     entity_model=self.entity_model, identifier=level_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            return self.repository.archive(level_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(level_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(level_id, e)

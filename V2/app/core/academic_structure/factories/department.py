@@ -3,6 +3,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.academic_structure.models.academic_structure import StudentDepartment
 from V2.app.core.academic_structure.validators.academic_structure import AcademicStructureValidator
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -13,13 +14,12 @@ from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolv
 from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
-
-class StudentDepartmentFactory:
+class StudentDepartmentFactory(BaseFactory):
     """Factory class for managing student department operations."""
 
-    def __init__(self, session: Session, model=StudentDepartment):
+    def __init__(self, session: Session, model=StudentDepartment, current_user = None):
+        super().__init__(current_user)
         """Initialize factory with db session.
             Args:
                 session: SQLAlchemy db session
@@ -33,7 +33,8 @@ class StudentDepartmentFactory:
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
-        self.domain = "Department"
+        self.actor_id: UUID = self.get_actor_id()
+        self.domain = "Student Department"
 
     def raise_not_found(self, identifier, error):
         raise EntityNotFoundError(
@@ -61,8 +62,8 @@ class StudentDepartmentFactory:
             description=self.validator.validate_description(data.description),
             code=self.validator.validate_code(data.code),
 
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID,
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id,
         )
         return self.repository.create(department)
 
@@ -120,8 +121,7 @@ class StudentDepartmentFactory:
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
-            return self.repository.update(department_id, existing)
+            return self.repository.update(department_id, existing, modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(department_id, e)
@@ -144,7 +144,7 @@ class StudentDepartmentFactory:
                     entity_model=self.entity_model, identifier=department_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            return self.repository.archive(department_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(department_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(department_id, e)
@@ -186,6 +186,7 @@ class StudentDepartmentFactory:
             return self.repository.get_archive_by_id(department_id)
         except EntityNotFoundError as e:
             self.raise_not_found(department_id, e)
+
 
     def restore_department(self, department_id: UUID) -> StudentDepartment:
         """Restore an archived department.

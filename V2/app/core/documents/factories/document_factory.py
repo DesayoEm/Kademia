@@ -3,6 +3,7 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.documents.models.documents import StudentDocument
 from V2.app.core.documents.validators import DocumentValidator
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -11,13 +12,12 @@ from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolv
 from V2.app.core.shared.exceptions import EntityNotFoundError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
-
-class DocumentFactory:
+class DocumentFactory(BaseFactory):
     """Factory class for managing Document operations."""
 
-    def __init__(self, session: Session, model = StudentDocument):
+    def __init__(self, session: Session, model = StudentDocument, current_user = None):
+        super().__init__(current_user)
         """Initialize factory with model and db session.
             Args:
             session: SQLAlchemy db session
@@ -30,6 +30,7 @@ class DocumentFactory:
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "Document"
 
     def raise_not_found(self, identifier, error):
@@ -45,9 +46,10 @@ class DocumentFactory:
         "uq_student_document_title_owner_id": ("title", lambda self, data: data.title)
     })
     @resolve_fk_on_create()
-    def create_document(self, data) -> StudentDocument:
+    def create_document(self, owner_id: UUID, data) -> StudentDocument:
         """Create a new Document.
         Args:
+            owner_id: id of document owner
             data: Document data
         Returns:
             Document: Created Document record
@@ -55,12 +57,12 @@ class DocumentFactory:
         new_document = StudentDocument(
             id=uuid4(),
             title=self.validator.validate_name(data.title),
-            owner_id=data.owner_id,
+            owner_id=owner_id,
             academic_session=self.validator.validate_academic_session(data.academic_session),
             document_type = data.document_type,
 
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id
         )
         return self.repository.create(new_document)
 
@@ -115,8 +117,7 @@ class DocumentFactory:
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
-            return self.repository.update(document_id, existing)
+            return self.repository.update(document_id, existing, modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
                 self.raise_not_found(document_id, e)
@@ -131,7 +132,7 @@ class DocumentFactory:
             Document: Archived Document record
         """
         try:
-            self.repository.archive(document_id, SYSTEM_USER_ID, reason)
+            self.repository.archive(document_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(document_id, e)

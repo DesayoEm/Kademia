@@ -2,6 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.identity.services.student_service import StudentService
 from V2.app.core.auth.services.password_service import PasswordService
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -17,13 +18,12 @@ from ...shared.exceptions.decorators.resolve_fk_violation import (
 )
 
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
-
-class StudentFactory:
+class StudentFactory(BaseFactory):
     """Factory class for managing student operations."""
 
-    def __init__(self, session: Session, model=Student):
+    def __init__(self, session: Session, model=Student, current_user = None):
+        super().__init__(current_user)
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = IdentityValidator()
@@ -33,6 +33,7 @@ class StudentFactory:
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "Student"
 
     def raise_not_found(self, identifier, error):
@@ -67,8 +68,8 @@ class StudentFactory:
             gender=student_data.gender,
             date_of_birth=self.validator.validate_date(student_data.date_of_birth),
             level_id=student_data.level_id,
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID,
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id,
         )
         return self.repository.create(new_student)
 
@@ -122,7 +123,7 @@ class StudentFactory:
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
+            existing.last_modified_by = self.actor_id
             return self.repository.update(student_id, existing)
 
         except EntityNotFoundError as e:
@@ -147,7 +148,7 @@ class StudentFactory:
                     entity_model=self.entity_model, identifier=student_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            return self.repository.archive(student_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(student_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(student_id, e)

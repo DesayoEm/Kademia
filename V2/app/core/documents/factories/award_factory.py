@@ -3,6 +3,7 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.documents.models.documents import StudentAward
 from V2.app.core.documents.validators import DocumentValidator
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -11,13 +12,12 @@ from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolv
 from V2.app.core.shared.exceptions import EntityNotFoundError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
-
-class AwardFactory:
+class AwardFactory(BaseFactory):
     """Factory class for managing Award operations."""
 
-    def __init__(self, session: Session, model = StudentAward):
+    def __init__(self, session: Session, model = StudentAward, current_user = None):
+        super().__init__(current_user)
         """Initialize factory with model and db session.
             Args:
             session: SQLAlchemy db session
@@ -30,6 +30,7 @@ class AwardFactory:
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "Award"
 
     def raise_not_found(self, identifier, error):
@@ -45,21 +46,22 @@ class AwardFactory:
         "uq_student_award_title_owner_id": ("title", lambda self, data: data.title)
     })
     @resolve_fk_on_create()
-    def create_award(self, data) -> StudentAward:
+    def create_award(self, owner_id: UUID, data) -> StudentAward:
         """Create a new Award.
         Args:
             data: Award data
+            owner_id: id of award owner
         Returns:
             Award: Created Award record
         """
         new_award = StudentAward(
             id=uuid4(),
             title=self.validator.validate_name(data.title),
-            owner_id=data.owner_id,
+            owner_id=owner_id,
             academic_session=self.validator.validate_academic_session(data.academic_session),
 
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id
         )
         return self.repository.create(new_award)
 
@@ -114,8 +116,7 @@ class AwardFactory:
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
-            return self.repository.update(award_id, existing)
+            return self.repository.update(award_id, existing, modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
                 self.raise_not_found(award_id, e)
@@ -130,7 +131,7 @@ class AwardFactory:
             Award: Archived Award record
         """
         try:
-            self.repository.archive(award_id, SYSTEM_USER_ID, reason)
+            self.repository.archive(award_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(award_id, e)

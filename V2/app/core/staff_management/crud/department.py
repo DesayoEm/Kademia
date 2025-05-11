@@ -17,6 +17,7 @@ class StaffDepartmentCrud:
         """Initialize CRUD service.
         Args:
             session: SQLAlchemy db session
+            current_user: The authenticated user performing the operation, if any.
         """
         self.session = session
         self.current_user = current_user

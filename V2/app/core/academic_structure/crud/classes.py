@@ -14,13 +14,15 @@ from V2.app.core.academic_structure.schemas.classes import (
 class ClassCrud:
     """CRUD operations for classes."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user = None):
         """Initialize CRUD service.
         Args:
             session: SQLAlchemy db session
+            current_user: The authenticated user performing the operation, if any.
         """
         self.session = session
-        self.factory = ClassFactory(session)
+        self.current_user = current_user
+        self.factory = ClassFactory(session, current_user=current_user)
         self.export_service = ExportService(session)
 
 

@@ -14,55 +14,38 @@ from V2.app.core.documents.schemas.student_document import (
 class DocumentCrud:
     """CRUD operations for documents."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user = None):
         """Initialize CRUD service.
         Args:
             session: SQLAlchemy db session
+            current_user: The authenticated user performing the operation, if any.
         """
         self.session = session
-        self.factory = DocumentFactory(session)
+        self.current_user = current_user
+        self.factory = DocumentFactory(session, current_user=current_user)
         self.export_service = ExportService(session)
 
 
-    def create_document(self, data: DocumentCreate) -> DocumentResponse:
-        """Create a new document.
-        Args:
-            data: Validated document creation data
-        Returns:
-            DocumentResponse: Created document
-        """
-        new_document = self.factory.create_document(data)
+    def create_document(self, owner_id: UUID, data: DocumentCreate) -> DocumentResponse:
+        """Create a new document"""
+        new_document = self.factory.create_document(owner_id, data)
         return DocumentResponse.model_validate(new_document)
 
 
     def get_document(self, document_id: UUID) -> DocumentResponse:
-        """Get document by ID.
-        Args:
-            document_id: document UUID
-        Returns:
-            DocumentResponse: Retrieved document
-        """
+        """Get document by ID."""
         document_response = self.factory.get_document(document_id)
         return DocumentResponse.model_validate(document_response)
 
 
     def get_all_documents(self, filters: DocumentFilterParams) -> List[DocumentResponse]:
-        """Get all active documents.
-        Returns:
-            List[QualificationResponse]: List of active documents
-        """
+        """Get all active documents."""
         documents = self.factory.get_all_documents(filters)
         return [DocumentResponse.model_validate(a_document) for a_document in documents]
 
 
     def update_document(self, document_id: UUID, data: DocumentUpdate) -> DocumentResponse:
-        """Update document information.
-        Args:
-            document_id: document UUID
-            data: Validated update data
-        Returns:
-            DocumentResponse: Updated document
-        """
+        """Update document information."""
         data = data.model_dump(exclude_unset=True)
         updated_document = self.factory.update_document(document_id, data)
         return DocumentResponse.model_validate(updated_document)
@@ -89,49 +72,29 @@ class DocumentCrud:
 
 
     def delete_document(self, document_id: UUID) -> None:
-        """Permanently delete a document.
-        Args:
-            document_id: document UUID
-        """
+        """Permanently delete a document."""
         self.factory.delete_document(document_id)
 
 
     # Archived document operations
     def get_archived_document(self, document_id: UUID) -> DocumentResponse:
-        """Get an archived document by ID.
-        Args:
-            document_id: document UUID
-        Returns:
-            DocumentResponse: Retrieved archived document
-        """
+        """Get an archived document by ID."""
         document_response = self.factory.get_archived_document(document_id)
         return DocumentResponse.model_validate(document_response)
 
+
     def get_all_archived_documents(self, filters: DocumentFilterParams) -> List[DocumentResponse]:
-        """Get all archived documents.
-        Args:
-            filters: Filter parameters
-        Returns:
-            List[DocumentResponse]: List of archived documents
-        """
+        """Get all archived documents."""
         documents = self.factory.get_all_archived_documents(filters)
         return [DocumentResponse.model_validate(a_document) for a_document in documents]
 
 
     def restore_document(self, document_id: UUID) -> DocumentResponse:
-        """Restore an archived document.
-        Args:
-            document_id: document UUID
-        Returns:
-            DocumentResponse: Restored document
-        """
+        """Restore an archived document."""
         restored_document = self.factory.restore_document(document_id)
         return DocumentResponse.model_validate(restored_document)
 
 
     def delete_archived_document(self, document_id: UUID) -> None:
-        """Permanently delete an archived document.
-        Args:
-            document_id: document UUID
-        """
+        """Permanently delete an archived document."""
         self.factory.delete_archived_document(document_id)

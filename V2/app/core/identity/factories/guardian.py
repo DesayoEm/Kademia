@@ -2,6 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.email_service.onboarding import OnboardingService
 from V2.app.core.auth.services.password_service import PasswordService
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -16,13 +17,13 @@ from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import (
     resolve_fk_on_update, resolve_fk_on_create, resolve_fk_on_delete
 )
 
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
 
 
-class GuardianFactory:
+class GuardianFactory(BaseFactory):
     """Factory class for managing guardian operations."""
 
-    def __init__(self, session: Session, model = Guardian):
+    def __init__(self, session: Session, model = Guardian, current_user = None):#
+        super().__init__(current_user)
         """Initialize factory with model and db session.
             Args:
             session: SQLAlchemy db session
@@ -37,6 +38,7 @@ class GuardianFactory:
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.onboarding_service = OnboardingService()
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "Guardian"
 
 
@@ -72,8 +74,8 @@ class GuardianFactory:
             email_address=self.validator.validate_email_address(data.email_address),
             address=self.validator.validate_address(data.address),
             phone=self.validator.validate_phone(data.phone),
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID,
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id,
         )
         return self.repository.create(new_guardian), password
 
@@ -144,8 +146,7 @@ class GuardianFactory:
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            existing.last_modified_by = SYSTEM_USER_ID
-            return self.repository.update(guardian_id, existing)
+            return self.repository.update(guardian_id, existing, modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(guardian_id, e)
@@ -169,7 +170,7 @@ class GuardianFactory:
                     entity_model=self.entity_model, identifier=guardian_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            return self.repository.archive(guardian_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(guardian_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(guardian_id, e)

@@ -14,55 +14,38 @@ from V2.app.core.academic_structure.schemas.academic_level import (
 class AcademicLevelCrud:
     """CRUD operations for academic levels."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user = None):
         """Initialize CRUD service.
         Args:
             session: SQLAlchemy db session
+            current_user: The authenticated user performing the operation, if any.
         """
         self.session = session
-        self.factory = AcademicLevelFactory(session)
+        self.current_user = current_user
+        self.factory = AcademicLevelFactory(session, current_user=current_user)
         self.export_service = ExportService(session)
 
 
     def create_level(self, data: AcademicLevelCreate) -> AcademicLevelResponse:
-        """Create a new academic level.
-        Args:
-            data: Validated academic level creation data
-        Returns:
-            AcademicLevelResponse: Created academic level
-        """
+        """Create a new academic level."""
         level = self.factory.create_academic_level(data)
         return AcademicLevelResponse.model_validate(level)
 
 
     def get_level(self, level_id: UUID) -> AcademicLevelResponse:
-        """Get academic level by ID.
-        Args:
-            level_id: academic level UUID
-        Returns:
-            AcademicLevelResponse: Retrieved academic level
-        """
+        """Get academic level by ID."""
         level = self.factory.get_academic_level(level_id)
         return AcademicLevelResponse.model_validate(level)
 
 
     def get_all_levels(self, filters: AcademicLevelFilterParams) -> List[AcademicLevelResponse]:
-        """Get all active academic level.
-        Returns:
-            List[AcademicLevelResponse]: List of active academic levels
-        """
+        """Get all active academic levels."""
         levels = self.factory.get_all_academic_levels(filters)
         return [AcademicLevelResponse.model_validate(level) for level in levels]
 
 
     def update_level(self, level_id: UUID, data: AcademicLevelUpdate) -> AcademicLevelResponse:
-        """Update academic level information.
-        Args:
-            level_id: academic level UUID
-            data: Validated update data
-        Returns:
-            AcademicLevelResponse: Updated academic level
-        """
+        """Update academic level information."""
         data = data.model_dump(exclude_unset=True)
         updated_level = self.factory.update_academic_level(level_id, data)
         return AcademicLevelResponse.model_validate(updated_level)
@@ -78,6 +61,7 @@ class AcademicLevelCrud:
         """
         self.factory.archive_academic_level(level_id, reason)
 
+
     def export_level(self, level_id: UUID, export_format: str) -> str:
         """Export level and its associated data
         Args:
@@ -88,50 +72,31 @@ class AcademicLevelCrud:
             AcademicLevel, level_id, export_format
         )
 
+
     def delete_level(self, level_id: UUID) -> None:
-        """Permanently delete a academic level.
-        Args:
-            level_id: academic level UUID
-        """
+        """Permanently delete a academic level."""
         self.factory.delete_academic_level(level_id)
 
 
     # Archived AcademicLevel operations
     def get_archived_level(self, level_id: UUID) -> AcademicLevelResponse:
-        """Get an archived academic level by ID.
-        Args:
-            level_id: academic level UUID
-        Returns:
-            AcademicLevelResponse: Retrieved archived academic level
-        """
+        """Get an archived academic level by ID."""
         level = self.factory.get_archived_academic_level(level_id)
         return AcademicLevelResponse.model_validate(level)
 
+
     def get_all_archived_levels(self, filters: AcademicLevelFilterParams) -> List[AcademicLevelResponse]:
-        """Get all archived academic levels.
-        Args:
-            filters: Filter parameters
-        Returns:
-            List[AcademicLevelResponse]: List of archived academic levels
-        """
+        """Get all archived academic levels."""
         levels = self.factory.get_all_archived_academic_levels(filters)
         return [AcademicLevelResponse.model_validate(level) for level in levels]
 
 
     def restore_level(self, level_id: UUID) -> AcademicLevelResponse:
-        """Restore an archived academic level.
-        Args:
-            level_id: academic level UUID
-        Returns:
-            AcademicLevelResponse: Restored academic level
-        """
+        """Restore an archived academic level."""
         level = self.factory.restore_academic_level(level_id)
         return AcademicLevelResponse.model_validate(level)
 
 
     def delete_archived_level(self, level_id: UUID) -> None:
-        """Permanently delete an archived academic level.
-        Args:
-            level_id: academic level UUID
-        """
+        """Permanently delete an archived academic level."""
         self.factory.delete_archived_academic_level(level_id)
