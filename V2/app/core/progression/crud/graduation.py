@@ -15,13 +15,16 @@ from V2.app.core.shared.schemas.enums import ArchiveReason
 class GraduationCrud:
     """CRUD operations for student graduations."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user = None):
         """Initialize CRUD service.
         Args:
             session: SQLAlchemy db session
+            current_user: The authenticated user performing the operation, if any.
         """
         self.session = session
-        self.factory = GraduationFactory(session)
+        self.current_user = current_user
+        self.factory = GraduationFactory(session, current_user=current_user)
+
 
     def create_graduation(self, student_id: UUID, data: GraduationCreate) -> GraduationResponse:
         """Create a new graduation record for a student."""
@@ -38,10 +41,6 @@ class GraduationCrud:
         graduations = self.factory.get_all_graduations(filters)
         return [GraduationResponse.model_validate(g) for g in graduations]
 
-    def update_graduation(self, graduation_id: UUID, data: dict) -> GraduationResponse:
-        """Update an existing graduation record."""
-        updated = self.factory.update_graduation(graduation_id, data.model_dump(exclude_unset=True))
-        return GraduationResponse.model_validate(updated)
 
     def archive_graduation(self, graduation_id: UUID, reason: ArchiveReason) -> None:
         """Archive a graduation record."""

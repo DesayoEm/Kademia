@@ -12,8 +12,7 @@ from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from V2.app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
-from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
+from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create,resolve_fk_on_delete
 from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
@@ -61,7 +60,7 @@ class PromotionFactory(BaseFactory):
         previous_level = academic_factory.get_academic_level(student.level_id)
         new_level = academic_factory.get_academic_level(data.new_level_id)
 
-        validated_new_level = self.validator.validate_next_level(previous_level, new_level)
+        validated_new_level = self.validator.validate_promotion_level(previous_level, new_level)
 
         new_promotion = Promotion(
             id=uuid4(),
@@ -90,24 +89,6 @@ class PromotionFactory(BaseFactory):
         fields = ['academic_session', 'status']
         return self.repository.execute_query(fields, filters)
 
-
-    @resolve_fk_on_update()
-    def update_promotion(self, promotion_id: UUID, data: dict) -> Promotion:
-        """Update a promotion record."""
-        copied_data = data.copy()
-        try:
-            existing = self.get_promotion(promotion_id)
-
-            for key, value in copied_data.items():
-                if hasattr(existing, key):
-                    setattr(existing, key, value)
-
-            return self.repository.update(promotion_id, existing, modified_by=self.actor_id)
-
-        except EntityNotFoundError as e:
-            self.raise_not_found(promotion_id, e)
-
-
     def archive_promotion(self, promotion_id: UUID, reason) -> Promotion:
         """Archive a promotion record."""
         try:
@@ -125,6 +106,7 @@ class PromotionFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(promotion_id, e)
 
+
     @resolve_fk_on_delete()
     def delete_promotion(self, promotion_id: UUID, is_archived=False) -> None:
         """Permanently delete a promotion record."""
@@ -135,10 +117,12 @@ class PromotionFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(promotion_id, e)
 
+
     def get_all_archived_promotions(self, filters) -> List[Promotion]:
         """Get all archived promotion records with filtering."""
         fields = ['academic_session', 'status']
         return self.repository.execute_archive_query(fields, filters)
+
 
     def get_archived_promotion(self, promotion_id: UUID) -> Promotion:
         """Get an archived promotion record by ID."""
@@ -147,12 +131,14 @@ class PromotionFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(promotion_id, e)
 
+
     def restore_promotion(self, promotion_id: UUID) -> Promotion:
         """Restore an archived promotion record."""
         try:
             return self.repository.restore(promotion_id)
         except EntityNotFoundError as e:
             self.raise_not_found(promotion_id, e)
+
 
     @resolve_fk_on_delete()
     def delete_archived_promotion(self, promotion_id: UUID, is_archived=True) -> None:

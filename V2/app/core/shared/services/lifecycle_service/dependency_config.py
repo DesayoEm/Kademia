@@ -78,7 +78,10 @@ DEPENDENCY_CONFIG = {
     Promotion: [
         ("promoted_student", Student, None, "promoted student")
     ],
-    Repetition: [],
+    Repetition: [
+        ("repeating_student", Student, None, "repeated student")
+    ],
+
     Graduation: [],
     Grade: [],
     AcademicLevelSubject: [],

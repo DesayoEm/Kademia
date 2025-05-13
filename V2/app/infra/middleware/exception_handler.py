@@ -72,9 +72,13 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         InvalidCodeError: status.HTTP_400_BAD_REQUEST,
         InvalidRankNumberError: status.HTTP_400_BAD_REQUEST,
 
-        # Archive/delete exceptions
+        # Assessment exceptions
         ScoreExceedsMaxError: status.HTTP_400_BAD_REQUEST,
         MaxScoreTooHighError: status.HTTP_400_BAD_REQUEST,
+
+        # Progression exceptions
+        InvalidPromotionLevelError: status.HTTP_400_BAD_REQUEST,
+        InvalidRepetitionLevelError: status.HTTP_400_BAD_REQUEST,
 
         # User profile exceptions (Staff/Student/Guardian)
         StaffTypeError: status.HTTP_400_BAD_REQUEST,
