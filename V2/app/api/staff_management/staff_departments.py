@@ -8,8 +8,9 @@ from V2.app.core.staff_management.factories.department import StaffDepartmentFac
 from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory, \
     get_authenticated_service
 
-from V2.app.core.staff_management.schemas.department import(
-    StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse, DepartmentFilterParams
+from V2.app.core.staff_management.schemas.department import (
+    StaffDepartmentCreate, StaffDepartmentUpdate, StaffDepartmentResponse,
+    DepartmentFilterParams, StaffDepartmentAudit
 )
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
@@ -38,6 +39,14 @@ def get_all_departments(
     """Get all active departments."""
     return factory.get_all_departments(filters)
 
+
+@router.get("/{department_id}/audit", response_model=StaffDepartmentAudit)
+def get_staff_department_audit(
+        department_id: UUID,
+        factory: StaffDepartmentFactory = Depends(get_authenticated_factory(StaffDepartmentFactory))
+    ):
+    """Get a department audit by ID."""
+    return factory.get_staff_department(department_id)
 
 
 @router.get("/{department_id}", response_model=StaffDepartmentResponse)

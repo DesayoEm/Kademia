@@ -55,12 +55,8 @@ class StaffDepartmentResponse(StaffDepartmentBase):
     manager_id: UUID | None = None
 
 
-class StaffDepartmentAudit:
+class StaffDepartmentAudit(BaseModel):
     """Represents stored staff departments"""
-    id: UUID
-    name: str
-    description: str
-    manager_id: UUID | None = None
     created_at: datetime
     created_by: UUID
     last_modified_at: datetime

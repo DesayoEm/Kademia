@@ -4,7 +4,7 @@ from fastapi import Depends, APIRouter
 from V2.app.core.staff_management.factories.department import StaffDepartmentFactory
 from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory
 from V2.app.core.staff_management.schemas.department import(
-   StaffDepartmentResponse, DepartmentFilterParams
+   StaffDepartmentResponse, DepartmentFilterParams, StaffDepartmentAudit
 )
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
@@ -21,6 +21,15 @@ def get_archived_staff_departments(
     ):
     """Get all archived departments."""
     return factory.get_all_archived_departments(filters)
+
+
+@router.get("/archived/{department_id}/audit", response_model=StaffDepartmentAudit)
+def get_archived_staff_department_audit(
+        department_id: UUID,
+        factory: StaffDepartmentFactory = Depends(get_authenticated_factory(StaffDepartmentFactory))
+    ):
+    """Get an archived department audit by ID."""
+    return factory.get_archived_department(department_id)
 
 
 @router.get("/archived/{department_id}", response_model=StaffDepartmentResponse)
