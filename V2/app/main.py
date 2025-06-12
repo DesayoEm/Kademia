@@ -7,26 +7,26 @@ load_dotenv(dotenv_path=env_path)
 from fastapi import FastAPI
 app = FastAPI()
 
-from V2.app.routers.staff_management import departments_archive, staff_roles_archive
-from V2.app.routers.staff_management import qualifications, departments, staff_roles, qualifications_archive
-from V2.app.routers.academic_structure import (
+from V2.app.api.staff_management import staff_departments_archive, staff_roles_archive
+from V2.app.api.staff_management import qualifications, staff_departments, staff_roles, qualifications_archive
+from V2.app.api.academic_structure import (
     academic_levels, academic_levels_archive, departments, departments_archive,
     classes, classes_archive
 )
-from V2.app.routers.curriculum import (
+from V2.app.api.curriculum import (
     level_subject, level_subject_archive, student_subject, student_subject_archive, subject,subject_archive,
     subject_educator, subject_educator_archive
 )
-from V2.app.routers.progression import (
+from V2.app.api.progression import (
     repetition, repetition_archive,
     promotion, promotion_archive,
     graduation, graduation_archive
 )
-from V2.app.routers.transfer import department_transfer, department_transfer_archive
-from V2.app.routers.assessment import grade, total_grade, grade_archive, total_grade_archive
-from V2.app.routers.documents import award, award_archive, document_archive, document
-from V2.app.routers.identity import guardian, guardian_archive, student, student_archive, staff_archive, staff
-from V2.app.routers.auth import password, auth, access_level_change, access_level_change_archive
+from V2.app.api.transfer import department_transfer, department_transfer_archive
+from V2.app.api.assessment import grade, total_grade, grade_archive, total_grade_archive
+from V2.app.api.documents import award, award_archive, document_archive, document
+from V2.app.api.identity import guardian, guardian_archive, student, student_archive, staff_archive, staff
+from V2.app.api.auth import password, auth, access_level_change, access_level_change_archive
 from V2.app.infra.middleware.exception_handler import ExceptionMiddleware
 from V2.app.infra.log_service.logger import logger
 
@@ -44,6 +44,28 @@ app.include_router(auth.router, prefix=f"/api/{version}/auth",
                    tags=["Auth"])
 app.include_router(password.router, prefix=f"/api/{version}/auth/password",
                    tags=["Auth"])
+
+
+# Staff
+app.include_router(staff.router, prefix=f"/api/{version}/staff",
+                   tags=["Staff", "Admin"])
+app.include_router(staff_archive.router, prefix=f"/api/{version}/staff/archived",
+                   tags=["Staff", "Admin"])
+
+app.include_router(staff_departments.router, prefix=f"/api/{version}/staff/departments",
+                   tags=["Staff Departments", "Admin"])
+app.include_router(staff_departments_archive.router, prefix=f"/api/{version}/staff/departments/archived",
+                   tags=["Staff Departments", "Admin"])
+
+app.include_router(staff_roles.router, prefix=f"/api/{version}/staff/roles",
+                   tags=["Staff Roles", "Admin"])
+app.include_router(staff_roles_archive.router, prefix=f"/api/{version}/staff/roles/archived",
+                   tags=["Staff Roles", "Admin"])
+
+app.include_router(qualifications.router, prefix=f"/api/{version}/staff/qualifications",
+                   tags=["Educator Qualifications", "Admin"])
+app.include_router(qualifications_archive.router, prefix=f"/api/{version}/staff/qualifications/archived",
+                   tags=["Educator Qualifications", "Admin"])
 
 # Access changes
 app.include_router(access_level_change.router, prefix=f"/api/{version}/access-levels",
@@ -71,23 +93,7 @@ app.include_router(subject_educator.router, prefix=f"/api/{version}/curriculum/s
 app.include_router(subject_educator_archive.router, prefix=f"/api/{version}/curriculum/subject-educators/archived",
                    tags=["Curriculum", "Admin"])
 
-# Staff
-app.include_router(staff.router, prefix=f"/api/{version}/staff",
-                   tags=["Staff", "Admin"])
-app.include_router(staff_archive.router, prefix=f"/api/{version}/staff/archived",
-                   tags=["Staff", "Admin"])
-app.include_router(departments.router, prefix=f"/api/{version}/staff/departments",
-                   tags=["Staff", "Admin"])
-app.include_router(departments_archive.router, prefix=f"/api/{version}/staff/departments/archived",
-                   tags=["Staff", "Admin"])
-app.include_router(staff_roles.router, prefix=f"/api/{version}/staff/roles",
-                   tags=["Staff", "Admin"])
-app.include_router(staff_roles_archive.router, prefix=f"/api/{version}/staff/roles/archived",
-                   tags=["Staff", "Admin"])
-app.include_router(qualifications.router, prefix=f"/api/{version}/staff/qualifications",
-                   tags=["Staff", "Admin"])
-app.include_router(qualifications_archive.router, prefix=f"/api/{version}/staff/qualifications/archived",
-                   tags=["Staff", "Admin"])
+
 
 # Students
 app.include_router(student.router, prefix=f"/api/{version}/students",

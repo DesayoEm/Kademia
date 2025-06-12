@@ -52,7 +52,23 @@ class StaffDepartmentUpdate(StaffDepartmentBase):
 
 class StaffDepartmentResponse(StaffDepartmentBase):
     """Response model for staff departments"""
-    pass
+    manager_id: UUID | None = None
+
+
+class StaffDepartmentAudit:
+    """Represents stored staff departments"""
+    id: UUID
+    name: str
+    description: str
+    manager_id: UUID | None = None
+    created_at: datetime
+    created_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason | None = None
 
 
 class StaffDepartmentInDB:
