@@ -18,7 +18,7 @@ from ....documents.models.documents import StudentDocument, StudentAward
 from ....auth.models.auth import AccessLevelChange
 from ....staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
 from ....academic_structure.models.academic_structure import StudentDepartment, Classes, AcademicLevel
-from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
+from ....transfer.models.transfer import DepartmentTransfer
 from ....assessment.models.assessment import Grade, TotalGrade
 from V2.app.core.progression.models.progression import Repetition
 from ....identity.models.staff import Staff, Educator, AdminStaff, SupportStaff
@@ -45,8 +45,7 @@ error_map = {
     AcademicLevel: (AcademicLevel, "academic level"),
     StudentDepartment: (StudentDepartment, "department"),
     Classes: (Classes, "class"),
-    ClassTransfer: (ClassTransfer, "class transfer"),
-    StudentDepartmentTransfer: (StudentDepartmentTransfer, "department transfer"),
+    DepartmentTransfer: (DepartmentTransfer, "department transfer"),
 
     # Curriculum models
     Subject: (Subject, "subject"),

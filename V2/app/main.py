@@ -22,11 +22,7 @@ from V2.app.routers.progression import (
     promotion, promotion_archive,
     graduation, graduation_archive
 )
-from V2.app.routers.transfer import (
-    class_transfer, class_transfer_archive,
-    department_transfer, department_transfer_archive
-)
-
+from V2.app.routers.transfer import department_transfer, department_transfer_archive
 from V2.app.routers.assessment import grade, total_grade, grade_archive, total_grade_archive
 from V2.app.routers.documents import award, award_archive, document_archive, document
 from V2.app.routers.identity import guardian, guardian_archive, student, student_archive, staff_archive, staff
@@ -148,20 +144,10 @@ app.include_router(graduation.router, prefix=f"/api/{version}/students/graduatio
 app.include_router(graduation_archive.router, prefix=f"/api/{version}/students/graduations/archived",
                    tags=["Progression", "Admin"])
 
-
-# Transfers (flat/global structure)
-app.include_router(class_transfer.router, prefix=f"/api/{version}/class-transfers",
-                   tags=["Class Transfers", "Admin"])
-app.include_router(class_transfer_archive.router, prefix=f"/api/{version}/class-transfers/archived",
-                   tags=["Class Transfers", "Admin"])
-
 app.include_router(department_transfer.router, prefix=f"/api/{version}/department-transfers",
                    tags=["Department Transfers", "Admin"])
 app.include_router(department_transfer_archive.router, prefix=f"/api/{version}/department-transfers/archived",
                    tags=["Department Transfers", "Admin"])
-
-
-
 
 
 # Guardians

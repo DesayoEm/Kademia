@@ -1,6 +1,6 @@
 # from .common_imports import Base
 # from ....curriculum.models.curriculum import SubjectEducator, StudentSubject, Subject, AcademicLevelSubject
-# from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
+# from ....transfer.models.transfer import StudentDepartmentTransfer
 # from ....documents.models.documents import StudentDocument, StudentAward
 # from ....auth.models.auth import AccessLevelChange
 # from ....staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification

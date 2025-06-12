@@ -89,7 +89,8 @@ class PromotionFactory(BaseFactory):
         fields = ['academic_session', 'status']
         return self.repository.execute_query(fields, filters)
 
-    def archive_promotion(self, promotion_id: UUID, reason) -> Promotion:
+
+    def archive_promotion(self, promotion_id: UUID, reason) -> None:
         """Archive a promotion record."""
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(

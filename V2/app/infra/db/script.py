@@ -2,15 +2,18 @@ from datetime import datetime
 from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from V2.app.core.identity.models.staff import System
+
+from V2.app.core.auth.services.password_service import PasswordService
+from V2.app.core.identity.models.staff import System, Staff
 from V2.app.core.staff_management.models.staff_management import StaffRole
 from V2.app.core.shared.models.enums import (
-    EmploymentStatus, StaffAvailability, StaffType, AccessLevel, Gender, UserType
+    EmploymentStatus, StaffAvailability, StaffType, AccessLevel, Gender, UserType,
 )
 from V2.app.infra.db.db_config import engine
 
 
 KADEMIA_ID = UUID('00000000-0000-0000-0000-000000000000')
+MORIA_ID = UUID('00000000-0000-0000-0000-000000000001')
 
 now = datetime.now()
 session = Session(engine)
@@ -34,7 +37,7 @@ try:
 
     system_user = System(
         id=KADEMIA_ID,
-        password_hash='Kademia_system_hash',
+        password_hash= PasswordService.hash_password('kademia'),
         first_name='Kademia',
         last_name='System',
         gender=Gender.SYSTEM,
@@ -45,7 +48,7 @@ try:
         status=EmploymentStatus.ACTIVE,
         availability=StaffAvailability.AVAILABLE,
         email_address='system@kademia.com',
-        phone='00000000000',
+        phone='00000000110',
         address='System Location',
         date_joined=now.date(),
         created_at=now,

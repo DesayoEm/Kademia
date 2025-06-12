@@ -2,29 +2,37 @@
 from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
+
+from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
+from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
 from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
-from V2.app.core.transfer.models.transfer import StudentDepartmentTransfer
-
-
-SYSTEM_USER_ID = UUID('00000000-0000-0000-0000-000000000000')
+from V2.app.core.transfer.models.transfer import DepartmentTransfer
 
 
 
-class DepartmentTransferFactory:
+class DepartmentTransferFactory(BaseFactory):
     """Factory class for managing department transfer operations."""
 
-    def __init__(self, session: Session, model=StudentDepartmentTransfer):
+    def __init__(self, session: Session, model=DepartmentTransfer, current_user = None):
+        super().__init__(current_user)
+        """Initialize factory with db session, model and current user.
+        Args:
+            session: SQLAlchemy db session
+            model: Model class, defaults to StudentDepartmentTransfer
+            current_user: The authenticated user performing the operation, if any.
+        """
+
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
+        self.actor_id: UUID = self.get_actor_id()
         self.domain = "StudentDepartmentTransfer"
 
     def raise_not_found(self, identifier, error):
@@ -36,62 +44,49 @@ class DepartmentTransferFactory:
         )
 
     @resolve_fk_on_create()
-    def create_transfer(self, student_id: UUID, data) -> StudentDepartmentTransfer:
-        new_transfer = StudentDepartmentTransfer(
+    def create_transfer(self, student_id: UUID, data) -> DepartmentTransfer:
+        new_transfer = DepartmentTransfer(
             id=uuid4(),
             student_id=student_id,
-            academic_session=int(data.academic_session.split("/")[0]),
-            previous_level_id=data.previous_level_id,
-            new_level_id=data.new_level_id,
-            previous_class_id=data.previous_class_id,
-            new_class_id=data.new_class_id,
+            academic_session=data.academic_session,
             previous_department_id=data.previous_department_id,
             new_department_id=data.new_department_id,
             reason=data.reason,
             status=data.status,
-            status_updated_by=data.status_updated_by,
-            status_updated_at=data.status_updated_at,
-            rejection_reason=data.rejection_reason,
-            created_by=SYSTEM_USER_ID,
-            last_modified_by=SYSTEM_USER_ID
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id
         )
         return self.repository.create(new_transfer)
 
-    def get_transfer(self, transfer_id: UUID) -> StudentDepartmentTransfer:
+
+    def get_transfer(self, transfer_id: UUID) -> DepartmentTransfer:
         try:
             return self.repository.get_by_id(transfer_id)
         except EntityNotFoundError as e:
             self.raise_not_found(transfer_id, e)
 
-    def get_all_transfers(self, filters) -> List[StudentDepartmentTransfer]:
+
+    def get_all_transfers(self, filters) -> List[DepartmentTransfer]:
         return self.repository.execute_query(['academic_session', 'status'], filters)
 
-    @resolve_fk_on_update()
-    def update_transfer(self, transfer_id: UUID, data: dict) -> StudentDepartmentTransfer:
-        copied_data = data.copy()
-        try:
-            existing = self.get_transfer(transfer_id)
-            for key, value in copied_data.items():
-                if hasattr(existing, key):
-                    setattr(existing, key, value)
-            existing.last_modified_by = SYSTEM_USER_ID
-            return self.repository.update(transfer_id, existing)
-        except EntityNotFoundError as e:
-            self.raise_not_found(transfer_id, e)
 
-    def archive_transfer(self, transfer_id: UUID, reason) -> StudentDepartmentTransfer:
+    def archive_transfer(self, transfer_id: UUID, reason) -> None:
+        """Archive a transfer record."""
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
-                entity_model=self.model, target_id=transfer_id
+                entity_model=self.model,
+                target_id=transfer_id
             )
             if failed_dependencies:
                 raise ArchiveDependencyError(
                     entity_model=self.entity_model, identifier=transfer_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            return self.repository.archive(transfer_id, SYSTEM_USER_ID, reason)
+            return self.repository.archive(transfer_id, self.actor_id, reason)
+
         except EntityNotFoundError as e:
             self.raise_not_found(transfer_id, e)
+
 
     @resolve_fk_on_delete()
     def delete_transfer(self, transfer_id: UUID, is_archived=False):
@@ -101,20 +96,24 @@ class DepartmentTransferFactory:
         except EntityNotFoundError as e:
             self.raise_not_found(transfer_id, e)
 
-    def get_all_archived_transfers(self, filters) -> List[StudentDepartmentTransfer]:
+
+    def get_all_archived_transfers(self, filters) -> List[DepartmentTransfer]:
         return self.repository.execute_archive_query(['academic_session', 'status'], filters)
 
-    def get_archived_transfer(self, transfer_id: UUID) -> StudentDepartmentTransfer:
+
+    def get_archived_transfer(self, transfer_id: UUID) -> DepartmentTransfer:
         try:
             return self.repository.get_archive_by_id(transfer_id)
         except EntityNotFoundError as e:
             self.raise_not_found(transfer_id, e)
 
-    def restore_transfer(self, transfer_id: UUID) -> StudentDepartmentTransfer:
+
+    def restore_transfer(self, transfer_id: UUID) -> DepartmentTransfer:
         try:
             return self.repository.restore(transfer_id)
         except EntityNotFoundError as e:
             self.raise_not_found(transfer_id, e)
+
 
     @resolve_fk_on_delete()
     def delete_archived_transfer(self, transfer_id: UUID, is_archived=True):

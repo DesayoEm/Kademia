@@ -7,7 +7,7 @@ from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.assessment.models.assessment import Grade, TotalGrade
 from V2.app.core.progression.models.progression import Repetition
 from V2.app.core.curriculum.models.curriculum import Subject, AcademicLevelSubject, StudentSubject, SubjectEducator
-from V2.app.core.transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
+from V2.app.core.transfer.models.transfer import DepartmentTransfer
 from V2.app.core.documents.models.documents import StudentDocument, StudentAward
 from V2.app.core.auth.models.auth import AccessLevelChange
 
@@ -37,6 +37,7 @@ class GatherData:
         self.transfer_gatherer = TransferGatherer()
         self.document_gatherer = DocumentsGatherer()
         self.auth_gatherer = AuthGatherer()
+
 
         self.gatherers = {
             # Identity
@@ -74,8 +75,7 @@ class GatherData:
             Repetition: self.progression_gatherer.gather_repetition_data,
 
             # Transfers
-            StudentDepartmentTransfer: self.transfer_gatherer.gather_student_department_transfer_data,
-            ClassTransfer: self.transfer_gatherer.gather_class_transfer_data,
+            DepartmentTransfer: self.transfer_gatherer.gather_student_department_transfer_data,
 
             # Auth Logs
             AccessLevelChange: self.auth_gatherer.gather_access_level_change_data,

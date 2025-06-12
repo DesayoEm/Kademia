@@ -3,10 +3,8 @@ from uuid import UUID
 from typing import List
 
 from V2.app.core.transfer.factories.department_transfer import DepartmentTransferFactory
-from V2.app.core.transfer.models.transfer import StudentDepartmentTransfer
 from V2.app.core.transfer.schemas.department_transfer import (
     StudentDepartmentTransferCreate,
-    StudentDepartmentTransferUpdate,
     StudentDepartmentTransferResponse,
     DepartmentTransferFilterParams
 )
@@ -16,9 +14,16 @@ from V2.app.core.shared.schemas.enums import ArchiveReason
 class StudentDepartmentTransferCrud:
     """CRUD operations for student department transfers."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user = None):
+        """Initialize CRUD service.
+        Args:
+            session: SQLAlchemy db session
+            current_user: The authenticated user performing the operation, if any.
+        """
         self.session = session
-        self.factory = DepartmentTransferFactory(session)
+        self.current_user = current_user
+        self.factory = DepartmentTransferFactory(session, current_user=current_user)
+
 
     def create_transfer(self, student_id: UUID, data: StudentDepartmentTransferCreate) -> StudentDepartmentTransferResponse:
         transfer = self.factory.create_transfer(student_id, data)
@@ -32,9 +37,6 @@ class StudentDepartmentTransferCrud:
         transfers = self.factory.get_all_transfers(filters)
         return [StudentDepartmentTransferResponse.model_validate(t) for t in transfers]
 
-    def update_transfer(self, transfer_id: UUID, data: StudentDepartmentTransferUpdate) -> StudentDepartmentTransferResponse:
-        updated = self.factory.update_transfer(transfer_id, data.model_dump(exclude_unset=True))
-        return StudentDepartmentTransferResponse.model_validate(updated)
 
     def archive_transfer(self, transfer_id: UUID, reason: ArchiveReason) -> None:
         self.factory.archive_transfer(transfer_id, reason)
@@ -42,8 +44,8 @@ class StudentDepartmentTransferCrud:
     def delete_transfer(self, transfer_id: UUID) -> None:
         self.factory.delete_transfer(transfer_id)
 
-    def get_archived_transfer(self_id: UUID) -> StudentDepartmentTransferResponse:
-        archived = self.factory.get_archived_transfer(self_id)
+    def get_archived_transfer(self, archived_id: UUID) -> StudentDepartmentTransferResponse:
+        archived = self.factory.get_archived_transfer(archived_id)
         return StudentDepartmentTransferResponse.model_validate(archived)
 
     def get_all_archived_transfers(self, filters: DepartmentTransferFilterParams) -> List[StudentDepartmentTransferResponse]:

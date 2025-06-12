@@ -3,7 +3,7 @@ from fastapi import Request
 from sqlalchemy.orm import Session
 
 from V2.app.core.shared.exceptions import RefreshTokenRequiredError, TokenRevokedError, AccessTokenRequiredError
-from V2.app.infra.db.redis.access_tokens import token_blocklist
+from V2.app.infra.db.redis_db.access_tokens import token_blocklist
 from V2.app.core.auth.services.token_service import TokenService
 
 token_service = TokenService()

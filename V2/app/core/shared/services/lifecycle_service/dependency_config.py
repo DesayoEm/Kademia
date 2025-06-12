@@ -3,7 +3,7 @@ from ....documents.models.documents import StudentDocument, StudentAward
 from ....auth.models.auth import AccessLevelChange
 from ....staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
 from ....academic_structure.models.academic_structure import StudentDepartment, Classes, AcademicLevel
-from ....transfer.models.transfer import StudentDepartmentTransfer, ClassTransfer
+from ....transfer.models.transfer import DepartmentTransfer
 from ....assessment.models.assessment import Grade, TotalGrade
 from V2.app.core.progression.models.progression import Repetition, Promotion, Graduation
 
@@ -26,8 +26,8 @@ DEPENDENCY_CONFIG = {
         ("grades", Grade, "student_id", "grades"),
         ("total_grades", TotalGrade, "student_id", "total grades"),
         ("classes_repeated", Repetition, "student_id", "class repetitions"),
-        ("department_transfers", StudentDepartmentTransfer, "student_id", "department transfers"),
-        ("class_transfers", ClassTransfer, "student_id", "class transfers")
+        ("department_transfers", DepartmentTransfer, "student_id", "department transfers"),
+
     ],
     Staff: [
         # ("access_changes", AccessLevelChange, "staff_id", "access level changes")

@@ -11,8 +11,8 @@ from V2.app.core.shared.exceptions.auth_errors import WrongPasswordError, Invali
     ResetLinkExpiredError, InvalidPasswordTokenError
 from V2.app.core.auth.validators.auth import AuthValidator
 from V2.app.core.auth.services.token_service import TokenService
-from V2.app.infra.db.redis.access_tokens import token_blocklist
-from V2.app.infra.db.redis.password_tokens import password_token_list
+from V2.app.infra.db.redis_db.access_tokens import token_blocklist
+from V2.app.infra.db.redis_db.password_tokens import password_token_list
 from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.identity.models.staff import Staff
 from V2.app.core.identity.models.student import Student

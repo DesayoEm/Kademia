@@ -13,7 +13,6 @@ class TotalGradeFilterParams(BaseFilterParams):
 class TotalGradeBase(BaseModel):
     """Base model for total grades"""
     total_score: int
-    created_by = UUID,
 
 
     model_config = ConfigDict(

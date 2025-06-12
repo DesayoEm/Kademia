@@ -22,8 +22,9 @@ class Grade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     weight: Mapped[float] = mapped_column(Float)
     file_url: Mapped[str] = mapped_column(String(225), nullable=True)
     feedback: Mapped[str] = mapped_column(String(500), nullable=True)
+    include_in_total: Mapped[bool] = mapped_column(Boolean, default=True)
     graded_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-                                                       ondelete='RESTRICT', name='fk_grades_educator_graded_by'))
+                            ondelete='RESTRICT', name='fk_grades_educator_graded_by'))
     graded_on: Mapped[pydate] = mapped_column(Date)
 
     # Relationships
