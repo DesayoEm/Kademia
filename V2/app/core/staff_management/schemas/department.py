@@ -57,6 +57,7 @@ class StaffDepartmentResponse(StaffDepartmentBase):
 
 class StaffDepartmentAudit(BaseModel):
     """Represents stored staff departments"""
+    id: UUID
     created_at: datetime
     created_by: UUID
     last_modified_at: datetime

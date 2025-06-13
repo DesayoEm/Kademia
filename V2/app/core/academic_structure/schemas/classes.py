@@ -53,17 +53,14 @@ class ClassCreate(ClassBase):
 class ClassResponse(ClassBase):
     """Response model for class levels"""
     order: int
-
-
-class ClassInDB:
-    """Represents stored class levels"""
-    id: UUID
-    level_id: UUID
-    code: ClassCode
-    order: int
     supervisor_id: UUID | None = None
     student_rep_id: UUID | None = None
     assistant_rep_id: UUID | None = None
+
+
+class ClassAudit(BaseModel):
+    """Represents stored class levels"""
+    id: UUID
     created_at: datetime
     created_by: UUID
     last_modified_at: datetime

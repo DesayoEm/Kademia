@@ -54,6 +54,7 @@ class StaffRoleResponse(StaffRoleBase):
 class StaffRoleAudit(BaseModel):
     """Audit information staff role entities"""
 
+    id: UUID
     created_at: datetime
     created_by: UUID
     last_modified_at: datetime

@@ -3,8 +3,8 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
 from V2.app.core.academic_structure.models.academic_structure import AcademicLevel
-from V2.app.core.academic_structure.services.academic_level import AcademicLevelService
-from V2.app.core.academic_structure.validators.academic_structure import AcademicStructureValidator
+from V2.app.core.academic_structure.services import AcademicStructureService
+from V2.app.core.academic_structure.validators import AcademicStructureValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
@@ -30,7 +30,7 @@ class AcademicLevelFactory(BaseFactory):
         """
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
-        self.service = AcademicLevelService(session)
+        self.service = AcademicStructureService(session)
         self.validator = AcademicStructureValidator()
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
@@ -65,7 +65,7 @@ class AcademicLevelFactory(BaseFactory):
             id=uuid4(),
             name=self.validator.validate_level_name(data.name),
             description=self.validator.validate_description(data.description),
-            display_order=self.service.return_default_order(),
+            display_order=self.service.return_default_level_order(),
             promotion_rank =self.validator.validate_promotion_rank(data.promotion_rank),
 
             created_by=self.actor_id,
