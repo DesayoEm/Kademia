@@ -2,7 +2,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from V2.app.core.shared.validators.entity_validators import EntityValidator
 from V2.app.core.staff_management.factories.department import StaffDepartmentFactory
-from V2.app.core.staff_management.models.staff_management import StaffDepartment
+from V2.app.core.staff_management.models.staff_management import StaffDepartment, StaffRole
 from V2.app.core.shared.services.export_service.export import ExportService
 
 
@@ -40,6 +40,16 @@ class StaffManagementService:
             StaffDepartment, department_id, export_format
         )
 
+
+    def export_role(self, role_id: UUID, export_format: str) -> str:
+        """Export role and its associated data
+        Args:
+            role_id: Role UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            StaffRole, role_id, export_format
+        )
 
 
 

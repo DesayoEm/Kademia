@@ -51,6 +51,19 @@ class StaffRoleResponse(StaffRoleBase):
     pass
 
 
+class StaffRoleAudit(BaseModel):
+    """Audit information staff role entities"""
+
+    created_at: datetime
+    created_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason | None = None
+
+
 class StaffRoleInDB:
     """Represents stored staff roles"""
     id: UUID
