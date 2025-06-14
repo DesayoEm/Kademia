@@ -2,8 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
-from V2.app.core.academic_structure.models.academic_structure import AcademicLevel
-from V2.app.core.academic_structure.services import AcademicStructureService
+from V2.app.core.academic_structure.models import AcademicLevel
 from V2.app.core.academic_structure.validators import AcademicStructureValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -29,8 +28,8 @@ class AcademicLevelFactory(BaseFactory):
             current_user: The authenticated user performing the operation, if any.
         """
         self.model = model
+        self.session = session
         self.repository = SQLAlchemyRepository(self.model, session)
-        self.service = AcademicStructureService(session)
         self.validator = AcademicStructureValidator()
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
@@ -61,11 +60,14 @@ class AcademicLevelFactory(BaseFactory):
         Returns:
             AcademicLevel: Created academic_level record
         """
+        from V2.app.core.academic_structure.services import AcademicStructureService
+        service = AcademicStructureService(self.session, self.current_user)
+
         new_level = AcademicLevel(
             id=uuid4(),
             name=self.validator.validate_level_name(data.name),
             description=self.validator.validate_description(data.description),
-            display_order=self.service.return_default_level_order(),
+            display_order=service.return_default_level_order(),
             promotion_rank =self.validator.validate_promotion_rank(data.promotion_rank),
 
             created_by=self.actor_id,

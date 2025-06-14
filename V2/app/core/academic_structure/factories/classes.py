@@ -3,8 +3,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
-from V2.app.core.academic_structure.models.academic_structure import Classes
-from V2.app.core.academic_structure.services import AcademicStructureService
+from V2.app.core.academic_structure.models import Classes
 from V2.app.core.academic_structure.validators import AcademicStructureValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -27,10 +26,10 @@ class ClassFactory(BaseFactory):
                 model: Model class, defaults to Classes
                 current_user: The authenticated user performing the operation,
         """
+        self.session = session
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = AcademicStructureValidator()
-        self.service = AcademicStructureService(session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
@@ -59,10 +58,14 @@ class ClassFactory(BaseFactory):
         Returns:
             Classes: Created class record
         """
+
+        from V2.app.core.academic_structure.services import AcademicStructureService
+        service = AcademicStructureService(self.session, self.current_user)
+
         new_class = Classes(
             id=uuid4(),
             level_id=data.level_id,
-            order=self.service.create_class_order(data.level_id),
+            order=service.create_class_order(data.level_id),
             code=data.code,
 
             created_by=self.actor_id,

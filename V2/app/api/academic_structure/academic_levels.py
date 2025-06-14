@@ -37,7 +37,7 @@ def get_levels(
     ):
     return factory.get_all_academic_levels(filters)
 
-@router.get("archived/{level_id}/audit", response_model=AcademicLevelAudit)
+@router.get("/{level_id}/audit", response_model=AcademicLevelAudit)
 def get_level_audit(
         level_id: UUID,
         factory: AcademicLevelFactory = Depends(get_authenticated_factory(AcademicLevelFactory))

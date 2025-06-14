@@ -15,7 +15,7 @@ from V2.app.core.auth.services.dependencies.current_user_deps import get_authent
 
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
-from V2.app.core.staff_management.services.staff_management import StaffManagementService
+from V2.app.core.staff_management.services import StaffManagementService
 
 token_service = TokenService()
 access = AccessTokenBearer()

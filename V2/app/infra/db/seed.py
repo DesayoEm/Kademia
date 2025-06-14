@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from V2.app.core.auth.services.password_service import PasswordService
-from V2.app.core.identity.models.staff import System, Staff
-from V2.app.core.staff_management.models.staff_management import StaffRole
+from V2.app.core.identity.models.staff import System
+from V2.app.core.staff_management.models import StaffRole
 from V2.app.core.shared.models.enums import (
     EmploymentStatus, StaffAvailability, StaffType, AccessLevel, Gender, UserType,
 )

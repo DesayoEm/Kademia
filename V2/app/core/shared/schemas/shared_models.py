@@ -15,3 +15,8 @@ class ArchiveRequest(BaseModel):
 class ExportRequest(BaseModel):
     export_format: ExportFormat
 
+class UploadResponse(BaseModel):
+    """Response model for successful uploads."""
+    filename: str
+    size: int
+    file_type: str

@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
 from V2.app.core.academic_structure.factories.academic_level import AcademicLevelFactory
-from V2.app.core.academic_structure.models.academic_structure import AcademicLevel
+from V2.app.core.academic_structure.models import AcademicLevel
 from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.identity.models.student import Student
 from V2.app.core.progression.models.progression import Promotion

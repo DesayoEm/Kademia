@@ -1,6 +1,6 @@
 from V2.app.core.shared.exceptions.export_errors import UnimplementedGathererError
-from V2.app.core.staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
-from V2.app.core.academic_structure.models.academic_structure import StudentDepartment, Classes, AcademicLevel
+from V2.app.core.staff_management.models import StaffDepartment, StaffRole, EducatorQualification
+from V2.app.core.academic_structure.models import StudentDepartment, Classes, AcademicLevel
 from V2.app.core.identity.models.staff import Educator, AdminStaff, SupportStaff
 from V2.app.core.identity.models.student import Student
 from V2.app.core.identity.models.guardian import Guardian

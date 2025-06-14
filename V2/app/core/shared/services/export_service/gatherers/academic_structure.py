@@ -1,5 +1,5 @@
 from typing import Dict, Tuple, Any
-from  V2.app.core.academic_structure.models.academic_structure import (
+from V2.app.core.academic_structure.models import (
     AcademicLevel, Classes, StudentDepartment
 )
 

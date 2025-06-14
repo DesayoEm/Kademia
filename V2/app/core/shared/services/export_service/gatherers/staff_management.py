@@ -1,5 +1,5 @@
 from typing import Dict, Tuple, Any
-from  V2.app.core.staff_management.models.staff_management import (
+from V2.app.core.staff_management.models import (
     EducatorQualification, StaffDepartment, StaffRole
  )
 

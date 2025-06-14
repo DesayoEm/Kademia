@@ -53,4 +53,4 @@ class DepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
 from V2.app.core.identity.models.student import Student
 from V2.app.core.identity.models.staff import Staff
-from V2.app.core.academic_structure.models.academic_structure import AcademicLevel, Classes, StudentDepartment
+from V2.app.core.academic_structure.models import AcademicLevel, Classes, StudentDepartment

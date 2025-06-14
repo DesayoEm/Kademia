@@ -86,22 +86,24 @@ app.include_router(staff.router, prefix=f"/api/{version}/staff",
 app.include_router(staff_archive.router, prefix=f"/api/{version}/staff/archived",
                    tags=["Staff", "Admin"])
 
+# Access level
+app.include_router(access_level_change.router, prefix=f"/api/{version}",
+                   tags=["Auth", "Access Level"])
+app.include_router(access_level_change_archive.router, prefix=f"/api/{version}",
+                   tags=["Auth", "Access Level"])
+
+
 app.include_router(guardian.router, prefix=f"/api/{version}/guardians",
                    tags=["Guardians", "Admin"])
 app.include_router(guardian_archive.router, prefix=f"/api/{version}/guardians/archived",
                    tags=["Guardians", "Admin"])
+
 
 app.include_router(student.router, prefix=f"/api/{version}/students",
                    tags=["Students", "Admin"])
 app.include_router(student_archive.router, prefix=f"/api/{version}/students/archived",
                    tags=["Students", "Admin"])
 
-
-# Access level
-app.include_router(access_level_change.router, prefix=f"/api/{version}/access-levels",
-                   tags=["Auth", "Access Level"])
-app.include_router(access_level_change_archive.router, prefix=f"/api/{version}/access-levels/archive",
-                   tags=["Auth", "Access Level"])
 
 #Docs
 app.include_router(award.router, prefix=f"/api/{version}/students/awards",

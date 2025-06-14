@@ -50,7 +50,9 @@ class DepartmentCreate(DepartmentBase):
 
 class DepartmentResponse(DepartmentBase):
     """Response model for class levels"""
-    pass
+    mentor_id: UUID | None = None
+    student_rep_id: UUID | None = None
+    assistant_rep_id: UUID | None = None
 
 
 class DepartmentAudit(BaseModel):

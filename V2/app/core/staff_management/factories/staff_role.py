@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.export_service.export import ExportService
-from V2.app.core.staff_management.validators.staff_management import StaffManagementValidator
-from V2.app.core.staff_management.models.staff_management import StaffRole
+from V2.app.core.staff_management.validators import StaffManagementValidator
+from V2.app.core.staff_management.models import StaffRole
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository

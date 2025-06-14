@@ -121,5 +121,5 @@ class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 from V2.app.core.identity.models.student import Student
 from V2.app.core.identity.models.staff import Educator
 from V2.app.core.assessment.models.assessment import Grade, TotalGrade
-from V2.app.core.academic_structure.models.academic_structure import AcademicLevel
+from V2.app.core.academic_structure.models import AcademicLevel
 

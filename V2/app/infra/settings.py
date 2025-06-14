@@ -20,6 +20,12 @@ class Settings(BaseSettings):
 
     EXPORT_DIR: str
 
+    AWS_ACCESS_KEY_ID :str
+    AWS_SECRET_ACCESS_KEY :str
+    AWS_DEFAULT_REGION :str
+    AWS_BUCKET_NAME: str
+    PROFILE_PICTURES_FOLDER: str
+
 
     model_config = SettingsConfigDict(
         env_file="../.env",

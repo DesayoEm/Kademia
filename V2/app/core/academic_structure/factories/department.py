@@ -4,7 +4,7 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
 from V2.app.core.shared.factory.base_factory import BaseFactory
-from V2.app.core.academic_structure.models.academic_structure import StudentDepartment
+from V2.app.core.academic_structure.models import StudentDepartment
 from V2.app.core.academic_structure.validators import AcademicStructureValidator
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService

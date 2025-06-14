@@ -147,6 +147,6 @@ class System(Staff):
         return f"System(name={self.first_name} {self.last_name}, role_id={self.role_id})"
 
 from V2.app.core.auth.models.auth import AccessLevelChange
-from V2.app.core.staff_management.models.staff_management import StaffDepartment, StaffRole, EducatorQualification
+from V2.app.core.staff_management.models import StaffDepartment, StaffRole, EducatorQualification
 from V2.app.core.curriculum.models.curriculum import SubjectEducator
-from V2.app.core.academic_structure.models.academic_structure import StudentDepartment, Classes
+from V2.app.core.academic_structure.models import StudentDepartment, Classes

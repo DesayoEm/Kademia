@@ -13,7 +13,7 @@ class EntityValidator:
 
     def validate_department_exists(self, department_id: UUID) -> UUID:
         """Validate that a staff department exists."""
-        from V2.app.core.staff_management.models.staff_management import StaffDepartment
+        from V2.app.core.staff_management.models import StaffDepartment
 
         repo = self.repository(StaffDepartment, self.session)
         if not repo.exists(department_id):
@@ -28,7 +28,7 @@ class EntityValidator:
 
     def validate_role_exists(self, role_id: UUID) -> UUID:#Cache later
         """Validate that a role exists."""
-        from V2.app.core.staff_management.models.staff_management import StaffRole
+        from V2.app.core.staff_management.models import StaffRole
 
         repo = self.repository(StaffRole, self.session)
         if not repo.exists(role_id):
