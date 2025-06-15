@@ -1,13 +1,11 @@
 import magic
-
+from typing import Dict, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import func, Integer
 from V2.app.core.identity.models.student import Student
-from V2.app.core.shared.exceptions.entry_validation_errors import EmptyFileError, FileTooSmallError, \
-    UnsupportedFileFormatError
-from V2.app.core.shared.services.upload_service.upload import S3Upload
+from V2.app.core.shared.services.upload_service.s3_upload import S3Upload
+from V2.app.infra.log_service.logger import logger
 from V2.app.infra.settings import config
-
 
 
 
@@ -17,40 +15,52 @@ class IdentityService:
         self.upload = S3Upload()
         self.current_user = current_user
 
-
-    def upload_profile_picture(self, file, user):
-
-        kb = 1024
-        mb  = 1024 * kb
-
-        supported_file_types = {
+        self.SUPPORTED_IMAGE_TYPES = {
             'image/png': 'png',
-            'image/jpeg': 'jpg'
+            'image/jpeg': 'jpg',
+            'image/jpg': 'jpg',
+            'image/webp': 'webp'
         }
 
-        if not file:
-            raise EmptyFileError(entry=file)
+        self.MIN_FILE_SIZE = 1 * self.upload.KB
+        self.MAX_FILE_SIZE = 5 * self.upload.MB
 
-        contents = file.file.read()
-        size = len(contents)
 
-        if not 0 < size <= 1 * mb:
-            raise FileTooSmallError(size = size, threshold = "1 MB")
+    def upload_profile_picture(self, file, user) -> Dict[str, Any]:
+        """
+        Upload and validate a profile picture for a user.
+        Args:
+            file: The uploaded file
+            user: User object
+        Returns:
+            dict: Upload result with success status and file info
+        """
+        try:
 
-        file_type = magic.from_buffer(buffer=contents, mime = True)
+            contents = self.upload.validate_file_upload(
+                file, self.MIN_FILE_SIZE, self.MAX_FILE_SIZE, self.SUPPORTED_IMAGE_TYPES
+            )
 
-        if file_type not in supported_file_types:
-            raise UnsupportedFileFormatError(file_type=file_type, acceptable_types="JPEG or PNG")
+            detected_type = magic.from_buffer(contents, mime=True)
+            file_extension = self.SUPPORTED_IMAGE_TYPES[detected_type]
 
-        profile_folder = config.PROFILE_PICTURES_FOLDER
-        file_name = f"{profile_folder}{user.user_type.value}_{user.first_name}_{user.last_name}_profile_photo.{supported_file_types[file_type]}"
-        self.upload.s3_upload(contents = contents, key = file_name)
+            s3_folder = config.PROFILE_PICTURES_FOLDER
+            filename = self.upload.generate_unique_filename(user, s3_folder, file_extension)
 
-        return {
-            "filename": file_name,
-            "size": len(contents),
-            "file_type": file_type
-        }
+            self.upload.s3_upload(contents=contents, key=filename)
+
+            logger.info(f"Profile picture uploaded successfully for user {user.id}: {filename}")
+
+            return {
+                "filename": filename,
+                "size": len(contents),
+                "file_type": detected_type
+            }
+
+        except Exception as e:
+            logger.error(f"Profile picture upload failed for user {user.id}: {str(e)}")
+            raise
+
 
 
     def generate_student_id(self, start_year: int):
