@@ -18,7 +18,7 @@ class AccessLevelChangeBase(BaseModel):
         json_schema_extra={
             "example": {
                 "new_level": "SUPERUSER",
-                "reason": "Promotion to department head"
+                "reason": "Promotion"
             }
         }
     )
@@ -32,7 +32,13 @@ class AccessLevelChangeCreate(AccessLevelChangeBase):
 class AccessLevelChangeResponse(AccessLevelChangeBase):
     """Response model for access level changes"""
     previous_level: AccessLevel
-    changed_by_id: UUID
-    changed_at: datetime
+
+
+
+class AccessLevelChangeAudit(AccessLevelChangeBase):
+    """Response model for access level changes"""
     staff_id: UUID
+    changed_at: datetime
+    changed_by_id: UUID
+
 

@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi import UploadFile, File
 
 from V2.app.core.auth.factories.access_level_factory import AccessLevelChangeFactory
-from V2.app.core.auth.schemas.access_level_change import AccessLevelChangeCreate
+from V2.app.core.auth.schemas.access_level_change import AccessLevelChangeCreate, AccessLevelChangeResponse
 from V2.app.core.identity.factories.staff import StaffFactory
 from V2.app.core.identity.services.profile_picture_service import ProfilePictureService
 from V2.app.core.identity.services.staff_service import StaffService
@@ -117,7 +117,7 @@ def archive_staff(
         return factory.archive_staff(staff_id, reason.reason)
 
 
-@router.patch("/{staff_id}/change_access_level", response_model=StaffResponse)
+@router.patch("/{staff_id}/change_access_level", response_model=AccessLevelChangeResponse)
 def change_staff_access_level(
         staff_id: UUID,
         payload:AccessLevelChangeCreate,

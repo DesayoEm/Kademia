@@ -18,7 +18,7 @@ class AccessLevelChange(Base, ArchiveMixins):
     # Audit
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=func.now()
-    ) #for filtering queries
+    )
     changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
     changed_by_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
             ondelete='RESTRICT',name='fk_access_level_changes_staff_changed_by')

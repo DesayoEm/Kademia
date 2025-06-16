@@ -53,7 +53,7 @@ class AccessLevelChangeFactory(BaseFactory):
         Returns:
             AccessLevelChange: Created level change record
         """
-        staff_factory = StaffFactory(self.session, Staff)
+        staff_factory = StaffFactory(self.session, Staff, current_user=self.current_user)
         staff = staff_factory.get_staff(staff_id)
 
         level_change = AccessLevelChange(
