@@ -17,15 +17,6 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
-@router.post("/{staff_id}", response_model=AccessLevelChangeResponse, status_code=201)
-def change_access_level(
-    staff_id: UUID,
-    data: AccessLevelChangeCreate,
-    crud: AccessLevelChangeCrud = Depends(get_authenticated_crud(AccessLevelChangeCrud))
-):
-    return crud.create_access_level_change(staff_id, data)
-
-
 @router.get("/", response_model=list[AccessLevelChangeResponse])
 def get_level_changes(
         filters: AccessLevelFilterParams = Depends(),

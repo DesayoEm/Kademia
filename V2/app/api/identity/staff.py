@@ -3,10 +3,13 @@ from uuid import UUID
 from typing import List
 from fastapi.responses import FileResponse
 from fastapi import UploadFile, File
+
+from V2.app.core.auth.factories.access_level_factory import AccessLevelChangeFactory
+from V2.app.core.auth.schemas.access_level_change import AccessLevelChangeCreate
 from V2.app.core.identity.factories.staff import StaffFactory
 from V2.app.core.identity.services.profile_picture_service import ProfilePictureService
 from V2.app.core.identity.services.staff_service import StaffService
-from V2.app.core.shared.schemas.enums import ExportFormat
+from V2.app.core.shared.schemas.enums import ExportFormat, StaffAvailability
 from V2.app.core.identity.schemas.staff import StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams
 from fastapi import Depends, APIRouter
 from V2.app.core.shared.schemas.shared_models import ArchiveRequest, UploadResponse
@@ -97,6 +100,49 @@ def update_staff(
     ):  
         payload = payload.model_dump(exclude_unset=True)
         return factory.update_staff(staff_id, payload)
+
+@router.patch("/{staff_id}", status_code=204)
+def archive_staff(
+        staff_id: UUID,
+        reason:ArchiveRequest,
+        factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
+    ):
+        return factory.archive_staff(staff_id, reason.reason)
+
+
+@router.patch("/{staff_id}/change_access_level")
+def change_staff_access_level(
+        staff_id: UUID,
+        payload:AccessLevelChangeCreate,
+        factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
+    ):
+        return factory.create_level_change(staff_id, payload)
+
+
+@router.patch("/{staff_id}/assign_role")
+def assign_staff_role(
+        staff_id: UUID,
+        role_id: UUID,
+        service: StaffService = Depends(get_authenticated_service(StaffService)),
+    ):
+        return service.assign_role(staff_id, role_id)
+
+
+@router.patch("/{staff_id}/remove_role")
+def remove_staff_role(
+        staff_id: UUID,
+        service: StaffService = Depends(get_authenticated_service(StaffService)),
+    ):
+        return service.assign_role(staff_id)
+
+
+@router.patch("/{staff_id}/change_availability")
+def change_staff_availability(
+        staff_id: UUID,
+        availability: StaffAvailability,
+        service: StaffService = Depends(get_authenticated_service(StaffService)),
+    ):
+        return service.update_staff_availability(staff_id, availability)
 
 
 @router.patch("/{staff_id}", status_code=204)
