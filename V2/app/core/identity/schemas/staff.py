@@ -17,8 +17,6 @@ class StaffBase(UserBase):
     phone: str
 
 
-
-
 class StaffCreate(StaffBase):
     """Used for creating new staff"""
     staff_type: StaffType

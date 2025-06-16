@@ -4,7 +4,7 @@ from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.shared.services.export_service.export import ExportService
 
 
-class StaffService:
+class GuardianService:
     def __init__(self, session: Session, current_user = None):
         self.session = session
         self.current_user = current_user
