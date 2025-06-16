@@ -1,6 +1,8 @@
 from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import func, Integer
+
+from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.identity.models.student import Student
 from V2.app.core.shared.services.export_service.export import ExportService
 
@@ -10,6 +12,7 @@ class StudentService:
         self.session = session
         self.current_user = current_user
         self.export_service = ExportService(session)
+        self.factory = StudentFactory(session = self.session, current_user=self.current_user)
 
 
     def generate_student_id(self, start_year: int):
@@ -38,6 +41,28 @@ class StudentService:
         formatted_serial = f"{next_serial:05d}"
         student_id = f"{school_code}-{year_code}-{formatted_serial}"
         return student_id
+
+
+    def assign_department(self, stu_id: UUID, department_id: UUID | None = None):
+        """Assign a student's department"""
+        if not department_id:
+            return self.factory.update_student(stu_id, {"department_id": None})
+
+        return self.factory.update_student(stu_id, {"department_id": department_id})
+
+
+    def assign_class(self, stu_id: UUID, class_id: UUID | None = None):
+        """Assign a student's class"""
+        if not class_id:
+            return self.factory.update_student(stu_id, {"class_id": None})
+
+        return self.factory.update_student(stu_id, {"class_id": class_id})
+
+
+
+    def change_guardian(self, stu_id: UUID, guardian_id: UUID):
+        """Change a student's guardian"""
+        return self.factory.update_student(stu_id, {"guardian_id": guardian_id})
 
 
     def export_student(self, stu_id: UUID, export_format: str) -> str:

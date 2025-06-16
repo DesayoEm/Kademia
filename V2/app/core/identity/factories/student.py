@@ -3,7 +3,6 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
 from V2.app.core.shared.factory.base_factory import BaseFactory
-from V2.app.core.identity.services.student_service import StudentService
 from V2.app.core.auth.services.password_service import PasswordService
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
@@ -30,12 +29,12 @@ class StudentFactory(BaseFactory):
             model: Model class, defaults to Student
             current_user: The authenticated user performing the operation, if any.
         """
-
+        self.session = session
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = IdentityValidator()
         self.password_service = PasswordService(session)
-        self.student_service = StudentService(session)
+
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
@@ -62,6 +61,8 @@ class StudentFactory(BaseFactory):
         Returns:
             student: Created student record
         """
+        from V2.app.core.identity.services.student_service import StudentService
+        student_service = StudentService(self.session, self.current_user)
         password = student_data.last_name.title()
 
         new_student = Student(
@@ -71,7 +72,7 @@ class StudentFactory(BaseFactory):
             password_hash=self.password_service.hash_password(password),
             guardian_id=student_data.guardian_id,
             session_start_year=self.validator.validate_session_start_year(student_data.session_start_year),
-            student_id=self.student_service.generate_student_id(student_data.session_start_year),
+            student_id=student_service.generate_student_id(student_data.session_start_year),
             gender=student_data.gender,
             date_of_birth=self.validator.validate_date(student_data.date_of_birth),
             level_id=student_data.level_id,

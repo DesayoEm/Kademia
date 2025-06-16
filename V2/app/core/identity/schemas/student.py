@@ -1,12 +1,14 @@
 from ...shared.schemas.common_imports import *
 from .base import UserBase, ProfileInDb
 from ...shared.schemas.shared_models import *
+from ...shared.schemas.enums import UserType, AccessLevel, StudentStatus
 
 
 class StudentFilterParams(BaseFilterParams):
     full_name: str | None = None
     student_id: str | None = None
     order_by: Literal["full_name", "student_id"] = "full_name"
+
 
 class StudentBase(UserBase):
     """Base model for students"""
@@ -57,49 +59,29 @@ class StudentUpdate(StudentBase):
 
 class StudentResponse(StudentCreate):
     """Response model for students"""
+
     student_id: str
+    department_id: UUID | None = None
+    class_id: UUID | None = None
+    is_repeating: bool
+    date_left: date | None = None
+    graduation_date: date | None = None
 
 
-class StudentInDB(StudentBase, ProfileInDb):
-    """Represents stored students"""
+class StudentAudit(BaseModel):
+    id: UUID | None = None
+    access_level: AccessLevel
+    status: StudentStatus
+    user_type: UserType
+    date_left: date | None = None
+    created_at: datetime | None = None
+    created_by: UUID
+    last_modified_at: datetime | None = None
+    last_modified_by: UUID
+    last_login: datetime | None = None
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason | None = None
+    deletion_eligible: bool
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        extra="ignore",
-        json_schema_extra={
-            "example": {
-            #Base Profile fields
-            "first_name": "Omotara",
-            "last_name": "Johnson",
-            "gender": "FEMALE",
-            #Student specific fields
-            "student_id": "STU/23/24/0001",
-            "user_type": "STUDENT",
-            "access_level": "USER",
-            "status": "ENROLLED",
-            "date_of_birth": "2010-05-15",
-            "image_url": "https://example.com/images/alice-johnson.jpg",
-            "class_id": "00000000-0000-0000-0000-000000000001",
-            "level_id": "00000000-0000-0000-0000-000000000002",
-            "department_id": "00000000-0000-0000-0000-000000000003",
-            "guardian_id": "00000000-0000-0000-0000-000000000004",
-            "is_repeating": False,
-            "admission_date": "2023-09-01",
-            "date_left": None,
-            "graduation_date": None,
-            #ProfileInDb fields
-            "id": "00000000-0000-0000-0000-000000000000",
-            "password_hash": "$2b$12$LQV3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewKxcqII5K8Ly.Nm",
-            "created_at": "2024-02-17T12:00:00Z",
-            "created_by": "00000000-0000-0000-0000-000000000001",
-            "last_login": "2024-02-17T14:30:00Z",
-            "deletion_eligible": False,
-            "last_modified_at": "2024-02-17T12:00:00Z",
-            "last_modified_by": "00000000-0000-0000-0000-000000000001",
-            "is_archived": False,
-            "archived_at": None,
-            "archived_by": None,
-            "archive_reason": None
-        }
-    }
-    )

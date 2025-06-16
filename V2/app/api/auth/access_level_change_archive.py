@@ -17,7 +17,8 @@ def get_archived_level_changes(
 ):
     return factory.get_all_archived_level_changes(filters)
 
-@router.get("/{level_change_id}/Audit", response_model=AccessLevelChangeAudit)
+
+@router.get("/{level_change_id}/audit", response_model=AccessLevelChangeAudit)
 def get_archived_level_change_audit(
         level_change_id: UUID,
         factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
