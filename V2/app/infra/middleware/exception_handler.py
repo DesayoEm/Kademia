@@ -44,11 +44,15 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         TransactionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         DBConnectionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
 
-        # Generic input validation exceptions
+        #File errors
         FileTooSmallError: status.HTTP_400_BAD_REQUEST,
         FileTooLargeError: status.HTTP_400_BAD_REQUEST,
         EmptyFileError: status.HTTP_400_BAD_REQUEST,
         UnsupportedFileFormatError: status.HTTP_400_BAD_REQUEST,
+        AbsentKeyError: status.HTTP_400_BAD_REQUEST,
+
+
+        # Generic input validation exceptions
         EmptyFieldError: status.HTTP_400_BAD_REQUEST,
         SessionYearFormatError: status.HTTP_400_BAD_REQUEST,
         PastYearError: status.HTTP_400_BAD_REQUEST,

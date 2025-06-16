@@ -2,7 +2,7 @@
 from uuid import UUID
 from fastapi.responses import FileResponse
 
-from V2.app.core.academic_structure.services import AcademicStructureService
+from V2.app.core.academic_structure.services.academic_structure import AcademicStructureService
 from V2.app.core.shared.schemas.enums import ExportFormat
 from V2.app.core.shared.schemas.shared_models import ArchiveRequest
 from fastapi import Depends, APIRouter

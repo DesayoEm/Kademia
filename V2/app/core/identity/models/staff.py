@@ -15,7 +15,6 @@ class Staff(UserBase):
     status: Mapped[EmploymentStatus] = mapped_column(Enum(EmploymentStatus, name='employmentstatus'), default=EmploymentStatus.ACTIVE)
     availability: Mapped[StaffAvailability] = mapped_column(Enum(StaffAvailability, name='staffavailability'), default=StaffAvailability.AVAILABLE)
     staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType, name='stafftype'))
-    image_url: Mapped[str] = mapped_column(String(200), nullable = True)
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))
     phone: Mapped[str] = mapped_column(String(14), unique=True)

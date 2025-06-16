@@ -16,6 +16,8 @@ class UserBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     first_name: Mapped[str] = mapped_column(String(30))
     last_name: Mapped[str] = mapped_column(String(30))
     gender: Mapped[Gender] = mapped_column(Enum(Gender, name="gender"))
+    profile_s3_key: Mapped[str] = mapped_column(String(200), nullable=True)
+
     last_login: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
     exported: Mapped[bool] = mapped_column(Boolean, default=False)
     deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)

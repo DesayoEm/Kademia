@@ -2,8 +2,6 @@
 from uuid import UUID
 from typing import List
 from fastapi.responses import FileResponse
-
-
 from V2.app.core.shared.schemas.enums import ExportFormat
 from V2.app.core.shared.schemas.shared_models import ArchiveRequest
 from fastapi import Depends, APIRouter
@@ -11,7 +9,7 @@ from fastapi import Depends, APIRouter
 from V2.app.core.academic_structure.schemas.classes import (
     ClassCreate, ClassUpdate, ClassFilterParams, ClassResponse, ClassAudit
 )
-from V2.app.core.academic_structure.services import AcademicStructureService
+from V2.app.core.academic_structure.services.academic_structure import AcademicStructureService
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
 from V2.app.core.academic_structure.factories.classes import ClassFactory

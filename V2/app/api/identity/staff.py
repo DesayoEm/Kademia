@@ -1,10 +1,11 @@
 
 from uuid import UUID
-from typing import List, Annotated
+from typing import List
 from fastapi.responses import FileResponse
 from fastapi import UploadFile, File
 from V2.app.core.identity.factories.staff import StaffFactory
-from V2.app.core.identity.services import IdentityService
+from V2.app.core.identity.services.profile_picture_service import ProfilePictureService
+from V2.app.core.identity.services.staff_service import StaffService
 from V2.app.core.shared.schemas.enums import ExportFormat
 from V2.app.core.identity.schemas.staff import StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams
 from fastapi import Depends, APIRouter
@@ -13,11 +14,12 @@ from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
 from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory, \
     get_authenticated_service
-
+from V2.app.core.shared.services.file_storage.s3_upload import S3Upload
 
 token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
+
 
 @router.post("/", response_model= StaffResponse, status_code=201)
 def create_staff(
@@ -32,13 +34,23 @@ def create_staff(
 def upload_profile_pic(
         staff_id: UUID,
         file: UploadFile = File(...),
-        service: IdentityService = Depends(get_authenticated_service(IdentityService)),
+        service: ProfilePictureService = Depends(get_authenticated_service(ProfilePictureService)),
         factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
     ):
         staff = factory.get_staff(staff_id)
         result = service.upload_profile_picture(file, staff)
 
         return UploadResponse(**result)
+
+
+@router.delete("/{staff_id}/profile/remove-profile-pic", status_code=204)
+def remove_profile_pic(
+        staff_id: UUID,
+        service: ProfilePictureService = Depends(get_authenticated_service(ProfilePictureService)),
+        factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
+    ):
+        staff = factory.get_staff(staff_id)
+        return service.remove_profile_pic(staff)
 
 
 @router.post("/", response_model= StaffResponse, status_code=201)
@@ -57,6 +69,18 @@ def get_staff(
         return factory.get_all_staff(filters)
 
 
+@router.get("/{staff_id}/profile_pic")
+def get_staff_profile_pic(
+        staff_id: UUID,
+        service: S3Upload = Depends(get_authenticated_service(S3Upload)),
+        factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
+    ):
+        staff = factory.get_staff(staff_id)
+        key = staff.profile_s3_key
+        return service.generate_presigned_url(key)
+
+
+
 @router.get("/{staff_id}", response_model=StaffResponse)
 def get_staff(
         staff_id: UUID,
@@ -71,7 +95,7 @@ def update_staff(
         staff_id: UUID,
         factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
     ):  
-        
+        payload = payload.model_dump(exclude_unset=True)
         return factory.update_staff(staff_id, payload)
 
 
@@ -88,9 +112,9 @@ def archive_staff(
 def export_staff(
         staff_id: UUID,
         export_format: ExportFormat,
-        factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
+        service: StaffService = Depends(get_authenticated_service(StaffService)),
     ):
-    file_path= factory.export_staff(staff_id, export_format.value)
+    file_path= service.export_staff(staff_id, export_format.value)
 
     return FileResponse(
         path=file_path,

@@ -1,43 +1,10 @@
 from .base_error import KademiaError
 from datetime import date
 
+
 class EntryValidationError(KademiaError):
     """Base exception class for entry-related exceptions."""
 
-class EmptyFileError(EntryValidationError):
-    """Raised when a required file is empty."""
-
-    def __init__(self, entry: str, domain=None):
-        super().__init__()
-        self.user_message = "No file found!"
-        self.log_message = f"Domain: {domain} -- Upload attempted without file: {entry}"
-
-
-class FileTooSmallError(EntryValidationError):
-    """Raised when a file is smaller than accepted."""
-
-    def __init__(self, size: int, threshold: str, domain=None):
-        super().__init__()
-        self.user_message = f"File needs to be larger than {threshold}"
-        self.log_message = f"Domain: {domain} -- Upload attempted with small file: {size} bytes"
-
-
-class FileTooLargeError(EntryValidationError):
-    """Raised when a file is larger than acceptable."""
-
-    def __init__(self, size: int, threshold: str, domain=None):
-        super().__init__()
-        self.user_message = f"File needs to be smaller than {threshold}"
-        self.log_message = f"Domain: {domain} -- Upload attempted with large file: {size} bytes"
-
-
-class UnsupportedFileFormatError(EntryValidationError):
-    """Raised when a file is in an unsupported format."""
-
-    def __init__(self, file_type: str, acceptable_types: str, domain=None):
-        super().__init__()
-        self.user_message = f"File format not supported. Acceptable formats: {acceptable_types}"
-        self.log_message = f"Domain: {domain} -- Upload attempted with unsupported file type: {file_type}"
 
 class EmptyFieldError(EntryValidationError):
     """Raised when a required field is empty."""

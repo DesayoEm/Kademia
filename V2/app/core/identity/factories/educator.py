@@ -17,9 +17,9 @@ class EducatorFactory(BaseFactory):
         super().__init__(current_user)
         """Initialize factory with db session, model and current actor.
             Args:
-            session: SQLAlchemy db session
-            model: Model class, defaults to Educator
-            current_user: The authenticated user performing the operation, if any.
+                session: SQLAlchemy db session
+                model: Model class, defaults to Educator
+                current_user: The authenticated user performing the operation, if any.
         """
 
         self.model = model

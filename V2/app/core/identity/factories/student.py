@@ -3,12 +3,12 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
 from V2.app.core.shared.factory.base_factory import BaseFactory
-from V2.app.core.identity.services import IdentityService
+from V2.app.core.identity.services.student_service import StudentService
 from V2.app.core.auth.services.password_service import PasswordService
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from V2.app.core.identity.validators import IdentityValidator
+from V2.app.core.identity.services.validators import IdentityValidator
 from V2.app.core.identity.models.student import Student
 from ...shared.exceptions.maps.error_map import error_map
 from ...shared.exceptions import ArchiveDependencyError, EntityNotFoundError
@@ -35,7 +35,7 @@ class StudentFactory(BaseFactory):
         self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = IdentityValidator()
         self.password_service = PasswordService(session)
-        self.student_service = IdentityService(session)
+        self.student_service = StudentService(session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)

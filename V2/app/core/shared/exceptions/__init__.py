@@ -56,12 +56,16 @@ from .export_errors import (
     UnimplementedGathererError,
 )
 
-from .entry_validation_errors import (
-    EntryValidationError,
+from .file_errors import (
+    AbsentKeyError,
     FileTooSmallError,
     FileTooLargeError,
     UnsupportedFileFormatError,
     EmptyFileError,
+)
+
+from .entry_validation_errors import (
+    EntryValidationError,
     EmptyFieldError,
     TextTooShortError,
     DBTextTooLongError,

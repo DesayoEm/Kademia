@@ -19,7 +19,7 @@ class Student(UserBase):
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)
     status: Mapped[StudentStatus] = mapped_column(Enum(StudentStatus, name='studentstatus'), default=StudentStatus.ENROLLED)
     date_of_birth: Mapped[date] = mapped_column(Date)
-    image_url: Mapped[str] = mapped_column(String(200), nullable=True)
+
     level_id: Mapped[UUID] = mapped_column(UUID, ForeignKey('academic_levels.id',
             ondelete='SET NULL',name='fk_students_academic_levels_level_id'), nullable = True
         )

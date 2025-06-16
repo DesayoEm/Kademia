@@ -13,7 +13,6 @@ class Guardian(UserBase):
     title: Mapped[Title] = mapped_column(Enum(Title, name='title'))
     access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.GUARDIAN)
-    image_url: Mapped[str] = mapped_column(String(225), nullable=True)
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))
     phone: Mapped[str] = mapped_column(String(14), unique=True)
