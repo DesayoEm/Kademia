@@ -144,6 +144,22 @@ def remove_staff_role(
     ):
         return service.assign_role(staff_id)
 
+@router.patch("/{staff_id}/department/assign", response_model=StaffResponse)
+def assign_staff_department(
+        staff_id: UUID,
+        role_id: UUID,
+        service: StaffService = Depends(get_authenticated_service(StaffService)),
+    ):
+        return service.assign_department(staff_id, role_id)
+
+
+@router.patch("/{staff_id}/department/remove", response_model=StaffResponse)
+def remove_staff_department(
+        staff_id: UUID,
+        service: StaffService = Depends(get_authenticated_service(StaffService)),
+    ):
+        return service.assign_department(staff_id)
+
 
 @router.patch("/{staff_id}/availability", response_model=StaffResponse)
 def change_staff_availability(

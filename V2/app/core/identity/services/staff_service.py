@@ -18,9 +18,17 @@ class StaffService:
     def assign_role(self, staff_id: UUID, role_id: UUID | None = None):
         """Assign a role to staff member"""
         if not role_id:
-            return self.factory.update_staff(staff_id, {"role_id": role_id})
+            return self.factory.update_staff(staff_id, {"role_id": None})
 
         return self.factory.update_staff(staff_id, {"role_id": role_id})
+
+
+    def assign_department(self, staff_id: UUID, department_id: UUID | None = None):
+        """Assign a department to staff member"""
+        if not department_id:
+            return self.factory.update_staff(staff_id, {"department_id": None})
+
+        return self.factory.update_staff(staff_id, {"department_id": department_id})
 
 
     def update_staff_availability(self, staff_id: UUID, availability: StaffAvailability):
