@@ -14,7 +14,7 @@ from V2.app.core.staff_management.schemas.department import (
 )
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
-from V2.app.core.staff_management.services import StaffManagementService
+from V2.app.core.staff_management.services.staff_management import StaffManagementService
 
 token_service = TokenService()
 access = AccessTokenBearer()
@@ -59,7 +59,7 @@ def get_staff_department(
     return factory.get_staff_department(department_id)
 
 
-@router.put("/{department_id}/assign-manager", response_model=StaffDepartmentResponse)
+@router.put("/{department_id}/manager", response_model=StaffDepartmentResponse)
 def assign_department_manager(
         department_id: UUID,
         manager_id: UUID,
@@ -69,13 +69,13 @@ def assign_department_manager(
     return service.assign_manager(department_id, manager_id)
 
 
-@router.put("/{department_id}/remove-manager", response_model=StaffDepartmentResponse)
+@router.put("/{department_id}/manager/remove", response_model=StaffDepartmentResponse)
 def remove_department_manager(
         department_id: UUID,
         service: StaffManagementService = Depends(get_authenticated_service(StaffManagementService))
     ):
     """Remove manager from a department."""
-    return service.remove_manager(department_id)
+    return service.assign_manager(department_id)
 
 
 @router.put("/{department_id}", response_model=StaffDepartmentResponse)

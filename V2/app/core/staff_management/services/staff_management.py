@@ -14,8 +14,13 @@ class StaffManagementService:
         self.export_service = ExportService(session)
 
 
-    def assign_manager(self, department_id: UUID, manager_id: UUID):
+    def assign_manager(self, department_id: UUID, manager_id: UUID | None = None):
         department = self.factory.get_staff_department(department_id)
+
+        if not manager_id:
+            return self.factory.update_staff_department(
+                department_id, {"manager_id": None}
+            )
 
         validated_manager_id = self.entity_validator.validate_staff_exists(manager_id)
         department.manager_id = validated_manager_id
@@ -23,11 +28,6 @@ class StaffManagementService:
         return self.factory.update_staff_department(
             department_id, {"manager_id": validated_manager_id}
         )
-
-
-    def remove_manager(self, department_id: UUID):
-        """Remove manager from a department."""
-        return self.factory.update_staff_department(department_id, {"manager_id": None})
 
 
     def export_department(self, department_id: UUID, export_format: str) -> str:
