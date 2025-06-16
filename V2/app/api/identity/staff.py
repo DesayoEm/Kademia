@@ -10,7 +10,7 @@ from V2.app.core.identity.factories.staff import StaffFactory
 from V2.app.core.identity.services.profile_picture_service import ProfilePictureService
 from V2.app.core.identity.services.staff_service import StaffService
 from V2.app.core.shared.schemas.enums import ExportFormat, StaffAvailability
-from V2.app.core.identity.schemas.staff import StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams
+from V2.app.core.identity.schemas.staff import StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams, StaffAudit
 from fastapi import Depends, APIRouter
 from V2.app.core.shared.schemas.shared_models import ArchiveRequest, UploadResponse
 from V2.app.core.auth.services.token_service import TokenService
@@ -83,6 +83,13 @@ def get_staff_profile_pic(
         return service.generate_presigned_url(key)
 
 
+@router.get("/{staff_id}/audit", response_model=StaffAudit)
+def get_staff_audit(
+        staff_id: UUID,
+        factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
+    ):
+        return factory.get_staff(staff_id)
+
 
 @router.get("/{staff_id}", response_model=StaffResponse)
 def get_staff(
@@ -110,7 +117,7 @@ def archive_staff(
         return factory.archive_staff(staff_id, reason.reason)
 
 
-@router.patch("/{staff_id}/change_access_level")
+@router.patch("/{staff_id}/change_access_level", response_model=StaffResponse)
 def change_staff_access_level(
         staff_id: UUID,
         payload:AccessLevelChangeCreate,
@@ -119,7 +126,7 @@ def change_staff_access_level(
         return factory.create_level_change(staff_id, payload)
 
 
-@router.patch("/{staff_id}/assign_role")
+@router.patch("/{staff_id}/assign_role", response_model=StaffResponse)
 def assign_staff_role(
         staff_id: UUID,
         role_id: UUID,
@@ -128,7 +135,7 @@ def assign_staff_role(
         return service.assign_role(staff_id, role_id)
 
 
-@router.patch("/{staff_id}/remove_role")
+@router.patch("/{staff_id}/remove_role", response_model=StaffResponse)
 def remove_staff_role(
         staff_id: UUID,
         service: StaffService = Depends(get_authenticated_service(StaffService)),
@@ -136,7 +143,7 @@ def remove_staff_role(
         return service.assign_role(staff_id)
 
 
-@router.patch("/{staff_id}/change_availability")
+@router.patch("/{staff_id}/change_availability", response_model=StaffResponse)
 def change_staff_availability(
         staff_id: UUID,
         availability: StaffAvailability,
