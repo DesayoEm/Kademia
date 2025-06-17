@@ -22,7 +22,6 @@ class DocumentBase(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "owner_id": "00000000-0000-0000-0000-000000000001",
                 "title": "First Term Report Card",
                 "academic_session": "2025/2026",
                 "document_type": "RESULT",

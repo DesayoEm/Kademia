@@ -16,10 +16,34 @@ from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
 from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory, \
     get_authenticated_service
 
+from V2.app.core.shared.services.file_storage.s3_upload import S3Upload
+
+
 token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
 
+
+
+@router.get("/{document_id}/file")
+def get_document_file(
+        document_id: UUID,
+        service: S3Upload = Depends(get_authenticated_service(S3Upload)),
+        factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
+    ):
+        document = factory.get_document(document_id)
+        key = document.document_s3_key
+        return service.generate_presigned_url(key)
+
+
+@router.delete("/{document_id}/file", status_code=204)
+def remove_document_file(
+        document_id: UUID,
+        service: DocumentService = Depends(get_authenticated_service(DocumentService)),
+        factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
+    ):
+        document = factory.get_document(document_id)
+        return service.remove_document_file(document)
 
 
 @router.post("{student_id}/", response_model= DocumentResponse, status_code=201)

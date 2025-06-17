@@ -1,4 +1,4 @@
-from uuid import uuid4
+
 import boto3
 import magic
 from sqlalchemy.orm import Session
@@ -16,7 +16,7 @@ bucket = s3.Bucket(config.AWS_BUCKET_NAME)
 
 
 class S3Upload:
-    def __init__(self, session: Session, current_user = None):
+    def __init__(self, session: Session, current_user):
         self.AWS_ACCESS_KEY_ID = config.AWS_ACCESS_KEY_ID
         self.AWS_SECRET_ACCESS_KEY = config.AWS_SECRET_ACCESS_KEY
         self.AWS_DEFAULT_REGION = config.AWS_DEFAULT_REGION
@@ -111,28 +111,30 @@ class S3Upload:
         return contents
 
 
-    @staticmethod
-    def generate_unique_key(user, s3_folder: str, file_extension: str) -> str:
+    def save_key_in_db(self, obj, s3_key: str, key_col_name: str):
         """
-        Generate a unique filename for the uploaded file.
+        Save S3 key to database.
         Args:
-            user: User object with user_type, first_name, last_name
-            s3_folder: S3 folder path (e.g., "profile-pictures/")
-            file_extension: File extension
-        Returns:
-            str: Unique filename
+            obj: database object
+            s3_key: S3 key to save
+            key_col_name: column name of the key on the database
         """
+        try:
+            setattr(obj, key_col_name, s3_key)
 
-        unique_id = str(uuid4())[:8]
+            obj.last_modified_by = self.current_user.id
+            self.session.commit()
 
-        first_name = user.first_name
-        last_name = user.last_name
-        user_type = user.user_type.value.lower()
+            logger.info(f"S3 key saved to database for obj {obj.id}: {s3_key}")
 
-        return f"{s3_folder}{user_type}_{first_name}_{last_name}_{unique_id}_profile.{file_extension}"
+        except Exception as e:
+            self.session.rollback()
+            logger.error(f"Failed to save S3 key to database for object {type(obj)}, id: {obj.id}: {str(e)}")
+            raise
 
 
-    def generate_presigned_url(self, s3_key: str, exp: int = 3600) -> str:
+
+    def generate_presigned_url(self, s3_key: str, exp: int = 3600 * 24) -> str:
         """
         Generate presigned URL for secure, temporary access.
         Default: 1 hour expiration

@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     AWS_DEFAULT_REGION :str
     AWS_BUCKET_NAME: str
     PROFILE_PICTURES_FOLDER: str
+    STUDENT_DOCUMENTS_FOLDER: str
+    STUDENT_AWARDS_FOLDER: str
 
 
     model_config = SettingsConfigDict(

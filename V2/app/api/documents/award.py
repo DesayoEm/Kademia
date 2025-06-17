@@ -2,11 +2,14 @@
 from uuid import UUID
 from typing import List
 from fastapi.responses import FileResponse
+from fastapi import UploadFile, File
+
 
 from V2.app.core.documents.factories.award_factory import AwardFactory
 from V2.app.core.documents.services.document_service import DocumentService
+from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.shared.schemas.enums import ExportFormat
-from V2.app.core.shared.schemas.shared_models import ArchiveRequest
+from V2.app.core.shared.schemas.shared_models import ArchiveRequest, UploadResponse
 from fastapi import Depends, APIRouter
 from V2.app.core.documents.schemas.student_award import (
     AwardFilterParams, AwardCreate, AwardUpdate, AwardResponse, AwardAudit
@@ -15,11 +18,50 @@ from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
 from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory, \
     get_authenticated_service
+from V2.app.core.shared.services.file_storage.s3_upload import S3Upload
+
 
 token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
 
+
+@router.post("/{student_id}/awards/{award_id}/file", response_model= UploadResponse,
+             status_code=201)
+def upload_award_file(
+        award_id: UUID,
+        student_id: UUID,
+        file: UploadFile = File(...),
+        service: DocumentService = Depends(get_authenticated_service(DocumentService)),
+        award_factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory)),
+        student_factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
+    ):
+        award = award_factory.get_award(award_id)
+        student = student_factory.get_student(student_id)
+        result = service.upload_award_file(file, student, award)
+
+        return UploadResponse(**result)
+
+
+@router.get("/{award_id}/file")
+def get_award_file(
+        award_id: UUID,
+        service: S3Upload = Depends(get_authenticated_service(S3Upload)),
+        factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
+    ):
+        award = factory.get_award(award_id)
+        key = award.award_s3_key
+        return service.generate_presigned_url(key)
+
+
+@router.delete("/{award_id}/file", status_code=204)
+def remove_award_file(
+        award_id: UUID,
+        service: DocumentService = Depends(get_authenticated_service(DocumentService)),
+        factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
+    ):
+        award = factory.get_award(award_id)
+        return service.remove_award_file(award)
 
 
 @router.post("{student_id}/", response_model= AwardResponse, status_code=201)

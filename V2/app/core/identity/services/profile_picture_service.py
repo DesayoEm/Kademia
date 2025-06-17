@@ -1,8 +1,7 @@
 import magic
+from uuid import uuid4
 from typing import Dict, Any
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.functions import current_user
-
 from V2.app.core.shared.services.file_storage.s3_upload import S3Upload
 from V2.app.infra.log_service.logger import logger
 from V2.app.infra.settings import config
@@ -44,14 +43,14 @@ class ProfilePictureService:
             file_extension = self.SUPPORTED_IMAGE_TYPES[detected_type]
 
             s3_folder = config.PROFILE_PICTURES_FOLDER
-
-            s3_key = self.upload.generate_unique_key(user, s3_folder, file_extension)
+            s3_key = self.generate_profile_pic_key(user, s3_folder, file_extension)
+            profile_pic_key_name = "profile_s3_key"
 
             self.upload.s3_upload(contents=contents, key=s3_key)
 
             logger.info(f"Profile picture uploaded successfully for user {user.id}: {s3_key}")
 
-            self.save_profile_pic_in_db(user, s3_key)
+            self.upload.save_key_in_db(user, s3_key, profile_pic_key_name)
 
             return {
                 "filename": s3_key.split('/')[-1],
@@ -62,6 +61,27 @@ class ProfilePictureService:
         except Exception as e:
             logger.error(f"Profile picture upload failed for user {user.id}: {str(e)}")
             raise
+
+
+    @staticmethod
+    def generate_profile_pic_key(user, s3_folder: str, file_extension: str) -> str:
+        """
+        Generate a unique filename for the uploaded file.
+        Args:
+            user: User object with user_type, first_name, last_name
+            s3_folder: S3 folder path (e.g., "profile-pictures/")
+            file_extension: File extension
+        Returns:
+            str: Unique filename
+        """
+
+        unique_id = str(uuid4())[:8]
+
+        first_name = user.first_name
+        last_name = user.last_name
+        user_type = user.user_type.value.lower()
+
+        return f"{s3_folder}{user_type}_{first_name}_{last_name}_{unique_id}_profile.{file_extension}"
 
 
     def remove_profile_pic(self, user) -> None:
@@ -88,21 +108,5 @@ class ProfilePictureService:
 
 
 
-    def save_profile_pic_in_db(self, user, s3_key: str):
-        """
-        Save S3 key to database.
-        Args:
-            user: User object
-            s3_key: S3 key to save
-        """
-        try:
-            user.profile_s3_key = s3_key
-            user.last_modified_by = self.current_user.id
-            self.session.commit()
-            logger.info(f"S3 key saved to database for user {user.id}: {s3_key}")
 
-        except Exception as e:
-            self.session.rollback()
-            logger.error(f"Failed to save S3 key to database for user {user.id}: {str(e)}")
-            raise
 
