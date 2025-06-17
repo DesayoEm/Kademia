@@ -13,7 +13,6 @@ class DocumentFilterParams(BaseFilterParams):
 
 class DocumentBase(BaseModel):
     """Base model for student documents"""
-    owner_id: UUID
     title: str
     academic_session: str
     document_type: DocumentType
@@ -57,6 +56,19 @@ class DocumentUpdate(BaseModel):
 
 class DocumentResponse(DocumentBase):
     """Response model for student documents"""
-    file_url: str |None = None
+    document_s3_key: str |None = None
 
 
+class DocumentAudit(BaseModel):
+    """Response model for student documents audit"""
+    id: UUID
+    owner_id: UUID
+    document_s3_key: str | None = None
+    created_at: datetime
+    created_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason | None = None

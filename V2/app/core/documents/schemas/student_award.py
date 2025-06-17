@@ -11,7 +11,6 @@ class AwardFilterParams(BaseFilterParams):
 
 class AwardBase(BaseModel):
     """Base model for student awards"""
-    owner_id: UUID
     title: str
     description: str|None = None
     academic_session: str
@@ -57,4 +56,19 @@ class AwardCreate(AwardBase):
 
 class AwardResponse(AwardBase):
     """Response model for student awards"""
-    file_url: str|None = None
+    award_s3_key: str|None = None
+
+
+class AwardAudit(BaseModel):
+    """Response model for student awards audit"""
+    id: UUID
+    owner_id: UUID
+    award_s3_key: str | None = None
+    created_at: datetime
+    created_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason | None = None

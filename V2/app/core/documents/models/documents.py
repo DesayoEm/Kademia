@@ -16,7 +16,7 @@ class StudentDocument(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     title: Mapped[str] = mapped_column(String(50))
     academic_session: Mapped[str] = mapped_column(String(9))
     document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType, name='documenttype'))
-    file_url: Mapped[str] = mapped_column(String(225), nullable = True)
+    document_s3_key: Mapped[str] = mapped_column(String(225), nullable = True)
 
     # Relationships
     owner: Mapped['Student'] = relationship(back_populates='documents_owned', foreign_keys='[StudentDocument.owner_id]')
@@ -44,7 +44,7 @@ class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     title: Mapped[str] = mapped_column(String(50))
     description: Mapped[str] = mapped_column(String(225), nullable = True)
     academic_session: Mapped[str] = mapped_column(String(9))
-    file_url: Mapped[str] = mapped_column(String(225), nullable = True)
+    award_s3_key: Mapped[str] = mapped_column(String(225), nullable = True)
 
     # Relationships
     owner: Mapped['Student'] = relationship(back_populates='awards_earned',
