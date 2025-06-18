@@ -2,6 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.documents.models.documents import StudentAward
+from V2.app.core.documents.services.document_service import DocumentService
 from V2.app.core.documents.services.validators import DocumentValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -25,6 +26,7 @@ class AwardFactory(BaseFactory):
             current_user: The authenticated user performing the operation, if any.
         """
         self.model = model
+        self.session = session
         self.current_user = current_user
         self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = DocumentValidator()
@@ -145,7 +147,11 @@ class AwardFactory(BaseFactory):
         Args:
             award_id (UUID): ID of Award to delete
         """
+        doc_service = DocumentService(self.session, self.current_user)
+
         try:
+            award = self.get_award(award_id)
+            doc_service.remove_award_file(award)
             self.repository.delete(award_id)
 
         except EntityNotFoundError as e:

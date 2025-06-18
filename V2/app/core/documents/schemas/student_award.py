@@ -21,7 +21,6 @@ class AwardBase(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "owner_id": "00000000-0000-0000-0000-000000000001",
                 "title": "Outstanding Academic Achievement",
                 "description": "Awarded for maintaining highest Math Score in the class",
                 "academic_session": "2025/2026",

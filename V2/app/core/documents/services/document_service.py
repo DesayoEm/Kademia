@@ -82,7 +82,7 @@ class DocumentService:
 
             self.upload.s3_upload(contents=contents, key=s3_key)
 
-            logger.info(f"Profile picture uploaded successfully for user {student.id}: {s3_key}")
+            logger.info(f"Award uploaded successfully for award {award.id}: {s3_key}")
 
             self.upload.save_key_in_db(award, s3_key, award_key_column)
 
@@ -93,7 +93,7 @@ class DocumentService:
             }
 
         except Exception as e:
-            logger.error(f"Award upload failed for user {award.id}: {str(e)}")
+            logger.error(f"Award upload failed for award {award.id}: {str(e)}")
             raise
 
 
@@ -150,13 +150,13 @@ class DocumentService:
             file_extension = self.SUPPORTED_DOCUMENT_TYPES[detected_type]
             doc_type = document.document_type.value
 
-            s3_folder = config.STUDENT_AWARDS_FOLDER
+            s3_folder = config.STUDENT_DOCUMENTS_FOLDER
             s3_key = self.generate_doc_key(student, doc_type, s3_folder, file_extension)
             document_key_column = "document_s3_key"
 
             self.upload.s3_upload(contents=contents, key=s3_key)
 
-            logger.info(f"Profile picture uploaded successfully for user {student.id}: {s3_key}")
+            logger.info(f"Document uploaded successfully for document {document.id}: {s3_key}")
 
             self.upload.save_key_in_db(document, s3_key, document_key_column)
 
@@ -167,7 +167,7 @@ class DocumentService:
             }
 
         except Exception as e:
-            logger.error(f"Document upload failed for user {document.id}: {str(e)}")
+            logger.error(f"Document upload failed for document {document.id}: {str(e)}")
             raise
 
 

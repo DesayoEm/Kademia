@@ -2,6 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.documents.models.documents import StudentDocument
+from V2.app.core.documents.services.document_service import DocumentService
 from V2.app.core.documents.services.validators import DocumentValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -25,6 +26,7 @@ class DocumentFactory(BaseFactory):
                 current_user: The authenticated user performing the operation, if any.
         """
         self.model = model
+        self.session = session
         self.current_user = current_user
         self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = DocumentValidator()
@@ -142,11 +144,16 @@ class DocumentFactory(BaseFactory):
 
     @resolve_fk_on_delete()
     def delete_document(self, document_id: UUID) -> None:
+        doc_service = DocumentService(self.session, self.current_user)
         """Permanently delete an Document
         Args:
             document_id (UUID): ID of Document to delete
         """
         try:
+            doc= self.get_document(document_id)
+
+            #remove the s3 file for the document
+            doc_service.remove_document_file(doc)
             self.repository.delete(document_id)
 
         except EntityNotFoundError as e:
@@ -173,6 +180,7 @@ class DocumentFactory(BaseFactory):
             return self.repository.get_archive_by_id(document_id)
         except EntityNotFoundError as e:
             self.raise_not_found(document_id, e)
+
 
 
     def restore_document(self, document_id: UUID) -> StudentDocument:
