@@ -10,6 +10,7 @@ class StudentSubjectFilterParams(BaseFilterParams):
 
     order_by: Literal["created_at"] = "created_at"
 
+
 class StudentSubjectBase(BaseModel):
     """Base model for student subject enrollments"""
     academic_level_subject_id: UUID
@@ -23,7 +24,7 @@ class StudentSubjectBase(BaseModel):
         json_schema_extra={
             "example": {
                 "academic_level_subject_id": "00000000-0000-0000-0000-000000000002",
-                "academic_session": "2023-2024",
+                "academic_session": "2025/2026",
                 "term": "FIRST",
                 "is_active": True
             }
@@ -39,3 +40,17 @@ class StudentSubjectResponse(StudentSubjectBase):
     """Response model for student subject enrollments"""
     pass
 
+
+
+class StudentSubjectAudit(BaseModel):
+    """Response model for subject audit"""
+    id: UUID
+    academic_level_subject_id: UUID
+    created_at: datetime
+    created_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason |None = None

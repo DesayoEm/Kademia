@@ -1,16 +1,19 @@
 from typing import List
 from uuid import UUID, uuid4
 from datetime import date
+
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from V2.app.core.curriculum.models.curriculum import SubjectEducator
 from V2.app.core.curriculum.services.validators import CurriculumValidator
+from V2.app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
-from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
+from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, UniqueViolationError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
 
@@ -46,9 +49,7 @@ class SubjectEducatorFactory(BaseFactory):
         )
 
 
-    @resolve_unique_violation({
-        "subject_educators_educator_id_subject_id_academic_session_term__key": ("name", lambda self, data: data.educator_id)
-    })
+
     @resolve_fk_on_create()
     def create_subject_educator(self, educator_id: UUID, data) -> SubjectEducator:
         """Create a new SubjectEducator.
@@ -58,20 +59,28 @@ class SubjectEducatorFactory(BaseFactory):
         Returns:
             SubjectEducator: Created SubjectEducator record
         """
-        new_subject_educator = SubjectEducator(
-            id=uuid4(),
-            academic_level_subject_id=data.academic_level_subject_id,
-            educator_id=educator_id,
-            level_id=data.level_id,
-            is_active=data.is_active,
-            term=data.term,
-            date_assigned=date.today(),
-            academic_session=self.validator.validate_academic_session(data.academic_session),
+        try:
+            new_subject_educator = SubjectEducator(
+                id=uuid4(),
+                academic_level_subject_id=data.academic_level_subject_id,
+                educator_id=educator_id,
+                is_active=data.is_active,
+                term=data.term,
+                date_assigned=date.today(),
+                academic_session=self.validator.validate_academic_session(data.academic_session),
 
-            created_by=self.actor_id,
-            last_modified_by=self.actor_id
-        )
-        return self.repository.create(new_subject_educator)
+                created_by=self.actor_id,
+                last_modified_by=self.actor_id
+            )
+            return self.repository.create(new_subject_educator)
+
+        except UniqueViolationError as e:
+            if "subject_educators_educator_id_subject_id_academic_session_term_key" in str(e):
+                raise CompositeDuplicateEntityError( #fix.not raised
+                    SubjectEducator, str(e),
+                    "This subject is already assigned to this educator for the specified session"
+                )
+            raise
 
 
     def get_subject_educator(self, subject_educator_id: UUID) -> SubjectEducator:

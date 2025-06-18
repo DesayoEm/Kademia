@@ -70,3 +70,15 @@ class AcademicLevelSubjectAudit(BaseModel):
 
 
 
+class SubjectAudit(BaseModel):
+    """Response model for subject audit"""
+    id: UUID
+    created_at: datetime
+    created_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason |None = None
+

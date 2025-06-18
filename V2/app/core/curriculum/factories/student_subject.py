@@ -1,15 +1,16 @@
 from typing import List
 from uuid import UUID, uuid4
+
 from sqlalchemy.orm import Session
 from V2.app.core.curriculum.models.curriculum import StudentSubject
 from V2.app.core.curriculum.services.validators import CurriculumValidator
+from V2.app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from V2.app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
-from V2.app.core.shared.exceptions import EntityNotFoundError
+from V2.app.core.shared.exceptions import EntityNotFoundError, UniqueViolationError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
 
@@ -44,10 +45,6 @@ class StudentSubjectFactory(BaseFactory):
         )
 
 
-    @resolve_unique_violation({
-        "uq_student_grade_composite": ("student grade", "Check student, subject, and session combination")
-
-    })
     @resolve_fk_on_create()
     def create_student_subject(self, student_id: UUID, data) -> StudentSubject:
         """Create a new StudentSubject.
@@ -57,17 +54,26 @@ class StudentSubjectFactory(BaseFactory):
         Returns:
             StudentSubject: Created StudentSubject record
         """
-        new_student_subject = StudentSubject(
-            id=uuid4(),
-            student_id=student_id,
-            academic_level_subject_id=data.academic_level_subject_id,
-            term=data.term,
-            academic_session=self.validator.validate_academic_session(data.academic_session),
+        try:
+            new_student_subject = StudentSubject(
+                id=uuid4(),
+                student_id=student_id,
+                academic_level_subject_id=data.academic_level_subject_id,
+                term=data.term,
+                academic_session=self.validator.validate_academic_session(data.academic_session),
 
-            created_by=self.actor_id,
-            last_modified_by=self.actor_id
-        )
-        return self.repository.create(new_student_subject)
+                created_by=self.actor_id,
+                last_modified_by=self.actor_id
+            )
+            return self.repository.create(new_student_subject)
+
+        except UniqueViolationError as e:
+            if "student_subjects_student_id_academic_level_subject_id_acade_key" in str(e):
+                raise CompositeDuplicateEntityError( #fix.not raised
+                    StudentSubject, str(e),
+                    "This subject is already assigned to this student for the specified session"
+                )
+            raise
 
 
     def get_student_subject(self, student_subject_id: UUID) -> StudentSubject:
@@ -108,14 +114,12 @@ class StudentSubjectFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_student_subject(self, student_subject_id: UUID, is_archived=False) -> None:
+    def delete_student_subject(self, student_subject_id: UUID) -> None:
         """Permanently delete an StudentSubject
         Args:
             student_subject_id (UUID): ID of StudentSubject to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-
             self.repository.delete(student_subject_id)
         except EntityNotFoundError as e:
             self.raise_not_found(student_subject_id, e)
@@ -157,11 +161,10 @@ class StudentSubjectFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_archived_student_subject(self, student_subject_id: UUID, is_archived = True) -> None:
+    def delete_archived_student_subject(self, student_subject_id: UUID) -> None:
         """Permanently delete an archived StudentSubject if there are no dependent entities.
         Args:
             student_subject_id: ID of StudentSubject to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
             self.repository.delete_archive(student_subject_id)

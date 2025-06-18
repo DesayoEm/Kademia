@@ -1,7 +1,6 @@
 from typing import List
 from uuid import UUID, uuid4
 
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from V2.app.core.curriculum.models.curriculum import AcademicLevelSubject
 from V2.app.core.curriculum.services.validators import CurriculumValidator
@@ -10,9 +9,8 @@ from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from V2.app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
-from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
+from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, UniqueViolationError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
 
@@ -69,7 +67,7 @@ class AcademicLevelSubjectFactory(BaseFactory):
             )
             return self.repository.create(new_academic_level_subject)
 
-        except IntegrityError as e:
+        except UniqueViolationError as e:
             if "level_id, subject_id, academic_session" in str(e):
                 raise CompositeDuplicateEntityError( #fix.not raised
                     AcademicLevelSubject, str(e),
