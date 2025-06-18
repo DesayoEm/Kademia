@@ -15,9 +15,7 @@ class SubjectBase(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-            "name": "Mathematics",
-            "department_id": "00000000-0000-0000-0000-000000000001",
-
+            "name": "Mathematics"
         }
         }
     )
@@ -43,4 +41,17 @@ class SubjectUpdate(SubjectBase):
 class SubjectResponse(SubjectBase):
     """Response model for subjects"""
     pass
+
+
+class SubjectAudit(BaseModel):
+    """Response model for subject audit"""
+    id: UUID
+    created_at: datetime
+    created_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason |None = None
 

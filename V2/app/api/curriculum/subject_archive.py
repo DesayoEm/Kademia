@@ -2,11 +2,14 @@ from typing import List
 from uuid import UUID
 from fastapi import Depends, APIRouter
 
-from V2.app.core.curriculum.crud.subject import SubjectCrud
-from V2.app.core.curriculum.schemas.subject import SubjectFilterParams, SubjectResponse
+from V2.app.core.curriculum.factories.subject import SubjectFactory
+
+from V2.app.core.curriculum.schemas.subject import SubjectFilterParams, SubjectResponse, SubjectAudit
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
-from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_crud
+from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory
+
+
 
 token_service=TokenService()
 access = AccessTokenBearer()
@@ -17,7 +20,7 @@ router = APIRouter()
 @router.get("/", response_model=List[SubjectResponse])
 def get_archived_subjects(
         filters: SubjectFilterParams = Depends(),
-        crud: SubjectCrud = Depends(get_authenticated_crud(SubjectCrud))
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
     ):
     return crud.get_all_archived_subjects(filters)
 
@@ -25,7 +28,23 @@ def get_archived_subjects(
 @router.get("/{subject_id}", response_model=SubjectResponse)
 def get_archived_subject(
         subject_id: UUID,
-        crud: SubjectCrud = Depends(get_authenticated_crud(SubjectCrud))
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
+    ):
+    return crud.get_archived_subject(subject_id)
+
+
+@router.get("/{subject_id}/audit", response_model=SubjectAudit)
+def get_archived_subject_audit(
+        subject_id: UUID,
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
+    ):
+    return crud.get_archived_subject(subject_id)
+
+
+@router.get("/{subject_id}", response_model=SubjectResponse)
+def get_archived_subject(
+        subject_id: UUID,
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
     ):
     return crud.get_archived_subject(subject_id)
 
@@ -33,7 +52,7 @@ def get_archived_subject(
 @router.patch("/{subject_id}", response_model=SubjectResponse)
 def restore_subject(
         subject_id: UUID,
-        crud: SubjectCrud = Depends(get_authenticated_crud(SubjectCrud))
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
     ):
     return crud.restore_subject(subject_id)
 
@@ -41,7 +60,7 @@ def restore_subject(
 @router.delete("/{subject_id}", status_code=204)
 def delete_archived_subject(
         subject_id: UUID,
-        crud: SubjectCrud = Depends(get_authenticated_crud(SubjectCrud))
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
     ):
     return crud.delete_archived_subject(subject_id)
 

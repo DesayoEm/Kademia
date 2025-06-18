@@ -1,14 +1,13 @@
-
 from uuid import UUID
 from typing import List
+from V2.app.core.curriculum.factories.academic_level_subject import AcademicLevelSubjectFactory
 from fastapi import Depends, APIRouter
-from V2.app.core.curriculum.crud.academic_level_subject import AcademicLevelSubjectCrud
-from V2.app.core.curriculum.schemas.academic_level_subject import (
-   AcademicLevelSubjectResponse, AcademicLevelSubjectFilterParams
+from V2.app.core.curriculum.schemas.academic_level_subject import(
+    AcademicLevelSubjectFilterParams, AcademicLevelSubjectResponse
 )
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
-from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_crud
+from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory
 
 
 token_service=TokenService()
@@ -19,33 +18,33 @@ router = APIRouter()
 @router.get("/", response_model=List[AcademicLevelSubjectResponse])
 def get_archived_level_subjects(
         filters: AcademicLevelSubjectFilterParams = Depends(),
-        crud: AcademicLevelSubjectCrud = Depends(get_authenticated_crud(AcademicLevelSubjectCrud))
+        factory: AcademicLevelSubjectFactory = Depends(get_authenticated_factory(AcademicLevelSubjectFactory))
     ):
-    return crud.get_all_archived_level_subjects(filters)
+    return factory.get_all_archived_academic_level_subjects(filters)
 
 
 @router.get("/{level_subject_id}", response_model=AcademicLevelSubjectResponse)
 def get_archived_level_subject(
         level_subject_id: UUID,
-        crud: AcademicLevelSubjectCrud = Depends(get_authenticated_crud(AcademicLevelSubjectCrud))
+        factory: AcademicLevelSubjectFactory = Depends(get_authenticated_factory(AcademicLevelSubjectFactory))
     ):
-    return crud.get_archived_level_subject(level_subject_id)
+    return factory.get_archived_academic_level_subject(level_subject_id)
 
 
 @router.patch("/{level_subject_id}", response_model=AcademicLevelSubjectResponse)
 def restore_level_subject(
         level_subject_id: UUID,
-        crud: AcademicLevelSubjectCrud = Depends(get_authenticated_crud(AcademicLevelSubjectCrud))
+        factory: AcademicLevelSubjectFactory = Depends(get_authenticated_factory(AcademicLevelSubjectFactory))
     ):
-    return crud.restore_level_subject(level_subject_id)
+    return factory.restore_academic_level_subject(level_subject_id)
 
 
 @router.delete("/{level_subject_id}", status_code=204)
 def delete_archived_level_subject(
         level_subject_id: UUID,
-        crud: AcademicLevelSubjectCrud = Depends(get_authenticated_crud(AcademicLevelSubjectCrud))
+        factory: AcademicLevelSubjectFactory = Depends(get_authenticated_factory(AcademicLevelSubjectFactory))
     ):
-    return crud.delete_archived_level_subject(level_subject_id)
+    return factory.delete_archived_academic_level_subject(level_subject_id)
 
 
 

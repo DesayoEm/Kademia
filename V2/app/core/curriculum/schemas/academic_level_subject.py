@@ -10,6 +10,7 @@ class AcademicLevelSubjectFilterParams(BaseFilterParams):
 class AcademicLevelSubjectBase(BaseModel):
     """Base model for academic level subject assignments"""
     subject_id: UUID
+    name: str | None = None
     is_elective: bool = True
     educator_id: UUID | None = None
     academic_session: str | None = None
@@ -22,6 +23,7 @@ class AcademicLevelSubjectBase(BaseModel):
             "example": {
                 "subject_id": "00000000-0000-0000-0000-000000000002",
                 "is_elective": True,
+                "name": "random",
                 "academic_session": "2025/2026",
             }
         }
@@ -51,4 +53,20 @@ class AcademicLevelSubjectUpdate(AcademicLevelSubjectBase):
             }
         }
     )
+
+
+class AcademicLevelSubjectAudit(BaseModel):
+    """Response model for level subject audit"""
+    id: UUID
+    subject_id: UUID
+    created_at: datetime
+    created_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason
+
+
 

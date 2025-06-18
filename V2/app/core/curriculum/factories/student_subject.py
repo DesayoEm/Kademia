@@ -2,14 +2,14 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.curriculum.models.curriculum import StudentSubject
-from V2.app.core.curriculum.validators import CurriculumValidator
+from V2.app.core.curriculum.services.validators import CurriculumValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
-from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
+from V2.app.core.shared.exceptions import EntityNotFoundError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
 
@@ -45,8 +45,8 @@ class StudentSubjectFactory(BaseFactory):
 
 
     @resolve_unique_violation({
-        "student_subjects_student_id_academic_level_subject_id_academic_session_term_key": (
-                "student_id", lambda self, data: data.student_id)
+        "uq_student_grade_composite": ("student grade", "Check student, subject, and session combination")
+
     })
     @resolve_fk_on_create()
     def create_student_subject(self, student_id: UUID, data) -> StudentSubject:

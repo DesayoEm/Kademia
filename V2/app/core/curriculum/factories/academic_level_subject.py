@@ -1,8 +1,11 @@
 from typing import List
 from uuid import UUID, uuid4
+
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from V2.app.core.curriculum.models.curriculum import AcademicLevelSubject
-from V2.app.core.curriculum.validators import CurriculumValidator
+from V2.app.core.curriculum.services.validators import CurriculumValidator
+from V2.app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
@@ -11,8 +14,6 @@ from V2.app.core.shared.exceptions.decorators.resolve_unique_violation import re
 from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
 from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
-
-
 
 
 class AcademicLevelSubjectFactory(BaseFactory):
@@ -45,9 +46,6 @@ class AcademicLevelSubjectFactory(BaseFactory):
         )
 
 
-    @resolve_unique_violation({
-        "academic_level_subjects_level_id_subject_id_academic_session_key": ("name", lambda self, data: data.subject_id)
-    })
     @resolve_fk_on_create()
     def create_academic_level_subject(self, level_id: UUID, data) -> AcademicLevelSubject:
         """Create a new AcademicLevelSubject.
@@ -57,17 +55,28 @@ class AcademicLevelSubjectFactory(BaseFactory):
         Returns:
             AcademicLevelSubject: Created AcademicLevelSubject record
         """
-        new_academic_level_subject = AcademicLevelSubject(
-            id=uuid4(),
-            subject_id=data.subject_id,
-            level_id=level_id,
-            is_elective=data.is_elective,
-            academic_session=self.validator.validate_academic_session(data.academic_session),
+        try:
+            new_academic_level_subject = AcademicLevelSubject(
+                id=uuid4(),
+                subject_id=data.subject_id,
+                level_id=level_id,
+                name=self.validator.validate_name(data.name),
+                is_elective=data.is_elective,
+                academic_session=self.validator.validate_academic_session(data.academic_session),
 
-            created_by=self.actor_id,
-            last_modified_by=self.actor_id
-        )
-        return self.repository.create(new_academic_level_subject)
+                created_by=self.actor_id,
+                last_modified_by=self.actor_id
+            )
+            return self.repository.create(new_academic_level_subject)
+
+        except IntegrityError as e:
+            if "level_id, subject_id, academic_session" in str(e):
+                raise CompositeDuplicateEntityError( #fix.not raised
+                    AcademicLevelSubject, str(e),
+                    "This subject is already assigned to this level for the specified session"
+                )
+            raise
+
 
 
     def get_academic_level_subject(self, academic_level_subject_id: UUID) -> AcademicLevelSubject:

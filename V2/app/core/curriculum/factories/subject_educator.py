@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 from datetime import date
 from sqlalchemy.orm import Session
 from V2.app.core.curriculum.models.curriculum import SubjectEducator
-from V2.app.core.curriculum.validators import CurriculumValidator
+from V2.app.core.curriculum.services.validators import CurriculumValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService

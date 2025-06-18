@@ -34,6 +34,14 @@ class DuplicateEntityError(UniqueViolationError):
         self.log_message = f"Duplicate {entity_model} creation: {detail}'"
 
 
+class CompositeDuplicateEntityError(UniqueViolationError):
+    """Raised when creation of a duplicate entity with multiple constraints is attempted."""
+    def __init__(self, entity_model, detail: str, display: str):
+        super().__init__(error=detail)
+        self.user_message = display
+        self.log_message = f"Duplicate {entity_model} creation: {detail}'"
+
+
 class RelationshipError(DBError):
     """Raised when a foreign key constraint is violated during data operations"""
 
