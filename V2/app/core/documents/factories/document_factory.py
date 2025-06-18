@@ -20,9 +20,9 @@ class DocumentFactory(BaseFactory):
         super().__init__(current_user)
         """Initialize factory.
             Args:
-            session: SQLAlchemy db session
-            model: Model class, defaults to Document
-            current_user: The authenticated user performing the operation, if any.
+                session: SQLAlchemy db session
+                model: Model class, defaults to Document
+                current_user: The authenticated user performing the operation, if any.
         """
         self.model = model
         self.current_user = current_user
@@ -45,7 +45,7 @@ class DocumentFactory(BaseFactory):
 
 
     @resolve_unique_violation({
-        "uq_student_document_title_owner_id": ("title", lambda self, data: data.title)
+        "uq_student_document_title_owner_id": ("title", lambda self,_, data: data.title)
     })
     @resolve_fk_on_create()
     def create_document(self, owner_id: UUID, data) -> StudentDocument:

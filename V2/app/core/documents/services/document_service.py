@@ -93,7 +93,7 @@ class DocumentService:
             }
 
         except Exception as e:
-            logger.error(f"Profile picture upload failed for user {student.id}: {str(e)}")
+            logger.error(f"Award upload failed for user {award.id}: {str(e)}")
             raise
 
 
@@ -158,7 +158,7 @@ class DocumentService:
 
             logger.info(f"Profile picture uploaded successfully for user {student.id}: {s3_key}")
 
-            self.upload.save_key_in_db(student, s3_key, document_key_column)
+            self.upload.save_key_in_db(document, s3_key, document_key_column)
 
             return {
                 "filename": s3_key.split('/')[-1],
@@ -167,7 +167,7 @@ class DocumentService:
             }
 
         except Exception as e:
-            logger.error(f"Profile picture upload failed for user {student.id}: {str(e)}")
+            logger.error(f"Document upload failed for user {document.id}: {str(e)}")
             raise
 
 

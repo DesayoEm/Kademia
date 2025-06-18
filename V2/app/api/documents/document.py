@@ -2,9 +2,11 @@
 from uuid import UUID
 from typing import List
 from fastapi.responses import FileResponse
+from fastapi import UploadFile, File
 
+from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.shared.schemas.enums import ExportFormat
-from V2.app.core.shared.schemas.shared_models import ArchiveRequest
+from V2.app.core.shared.schemas.shared_models import ArchiveRequest, UploadResponse
 from fastapi import Depends, APIRouter
 from V2.app.core.documents.factories.document_factory import DocumentFactory
 from V2.app.core.documents.services.document_service import DocumentService
@@ -22,6 +24,24 @@ from V2.app.core.shared.services.file_storage.s3_upload import S3Upload
 token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
+
+
+
+@router.post("/{student_id}/documents/{document_id}/file", response_model= UploadResponse,
+             status_code=201)
+def upload_document_file(
+        doc_id: UUID,
+        student_id: UUID,
+        file: UploadFile = File(...),
+        service: DocumentService = Depends(get_authenticated_service(DocumentService)),
+        doc_factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory)),
+        student_factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
+    ):
+        document = doc_factory.get_document(doc_id)
+        student = student_factory.get_student(student_id)
+        result = service.upload_document_file(file, student, document)
+
+        return UploadResponse(**result)
 
 
 
