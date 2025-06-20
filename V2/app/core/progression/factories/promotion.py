@@ -7,7 +7,7 @@ from V2.app.core.academic_structure.models import AcademicLevel
 from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.identity.models.student import Student
 from V2.app.core.progression.models.progression import Promotion
-from V2.app.core.progression.validators import ProgressionValidator
+from V2.app.core.progression.services.progression_service import ProgressionValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService

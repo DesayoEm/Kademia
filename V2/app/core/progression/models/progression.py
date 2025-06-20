@@ -11,44 +11,34 @@ class Repetition(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             ondelete='CASCADE',name='fk_repetitions_students_student_id')
         )
     academic_session: Mapped[str] = mapped_column(String(9))
-    previous_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
-            ondelete='RESTRICT',name='fk_repetitions_academic_levels_previous_level')
+    failed_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
+            ondelete='RESTRICT',name='fk_repetitions_academic_levels_failed_level')
         )
-    new_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
-            ondelete='RESTRICT',name='fk_repetitions_academic_levels_new_level')
+    repeat_level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
+            ondelete='RESTRICT',name='fk_repetitions_academic_levels_repeat_level')
         )
-    previous_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
-            ondelete='RESTRICT',name='fk_repetitions_classes_previous_class')
-        )
-    new_class_id: Mapped[UUID] = mapped_column(ForeignKey('classes.id',
-            ondelete='RESTRICT', name='fk_repetitions_classes_new_class')
-        )
-    reason: Mapped[str] = mapped_column(String(500))
+
     status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus, name='approvalstatus'), default=ApprovalStatus.PENDING)
-    status_updated_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-            ondelete='RESTRICT',name='fk_repetitions_staff_status_updated_by'),nullable=True
+    status_completed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
+            ondelete='RESTRICT',name='fk_repetitions_staff_status_completed_by'),nullable=True
         )
-    status_updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
-    rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    status_completed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
+    repetition_reason: Mapped[str] = mapped_column(String(500))
+    decision_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Relationships
     repeating_student: Mapped['Student'] = relationship(back_populates='classes_repeated',
                         foreign_keys='[Repetition.student_id]', passive_deletes=True)
-    previous_level: Mapped['AcademicLevel'] = relationship(foreign_keys='[Repetition.previous_level_id]')
-    new_level:Mapped['AcademicLevel'] =  relationship( foreign_keys='[Repetition.new_level_id]')
-    previous_class: Mapped['Classes'] = relationship(foreign_keys='[Repetition.previous_class_id]')
-    new_class:Mapped['Classes'] =  relationship( foreign_keys='[Repetition.new_class_id]')
-    status_updated_staff:Mapped['Staff'] =  relationship(foreign_keys='[Repetition.status_updated_by]')
+    failed_level: Mapped['AcademicLevel'] = relationship(foreign_keys='[Repetition.failed_level_id]')
+    repeat_level:Mapped['AcademicLevel'] =  relationship( foreign_keys='[Repetition.repeat_level_id]')
+    status_completed_staff:Mapped['Staff'] =  relationship(foreign_keys='[Repetition.status_completed_by]')
 
     __table_args__ = (
         Index('idx_repetition_status', 'student_id', 'status'),
         Index('idx_repetition_academic_session', 'student_id', 'academic_session'),
-        Index('idx_previous_repetition_level', 'previous_level_id'),
-        Index('idx_new_repetition_level', 'new_level_id'),
+        Index('idx_failed_level', 'failed_level_id'),
+        Index('idx_repeat_level', 'repeat_level_id'),
     )
-
-    def __repr__(self) -> str:
-        return f"student {self.student_id} repetition in {self.academic_session} was actioned by {self.status_updated_staff}"
 
 
 
@@ -118,4 +108,4 @@ class Graduation(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
 from V2.app.core.identity.models.student import Student
 from V2.app.core.identity.models.staff import Staff
-from V2.app.core.academic_structure.models import AcademicLevel, Classes
+from V2.app.core.academic_structure.models import AcademicLevel

@@ -17,7 +17,7 @@ class InvalidPromotionLevelError(ProgressionError):
 class InvalidRepetitionLevelError(ProgressionError):
     """Raised when an invalid level is passed in during repetition"""
 
-    def __init__(self, next_level_id: UUID, previous_level_id: UUID):
+    def __init__(self, repeat_level_id: UUID, failed_level_id: UUID):
         super().__init__()
         self.user_message = f"Invalid repetition:Repetition must be to a lower level."
-        self.log_message = f"Invalid repetition: id {next_level_id} is not less than {previous_level_id}"
+        self.log_message = f"Invalid repetition: id {repeat_level_id} is not less than {failed_level_id}"
