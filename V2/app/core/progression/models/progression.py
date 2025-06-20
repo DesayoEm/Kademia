@@ -34,6 +34,7 @@ class Repetition(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     status_completed_staff:Mapped['Staff'] =  relationship(foreign_keys='[Repetition.status_completed_by]')
 
     __table_args__ = (
+        UniqueConstraint('student_id', 'academic_session', name='uq_repetition_student_session'),
         Index('idx_repetition_status', 'student_id', 'status'),
         Index('idx_repetition_academic_session', 'student_id', 'academic_session'),
         Index('idx_failed_level', 'failed_level_id'),

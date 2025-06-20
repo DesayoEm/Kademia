@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.identity.models.student import Student
 from V2.app.core.progression.models.progression import Repetition
-from V2.app.core.progression.services.progression_service import ProgressionService
+from V2.app.core.progression.services.repetition_service import RepetitionService
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
@@ -33,7 +33,7 @@ class RepetitionFactory(BaseFactory):
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
-        self.service = ProgressionService(self.session, self.current_user)
+        self.service = RepetitionService(self.session, self.current_user)
         self.entity_model, self.display_name = self.error_details
         self.actor_id: UUID = self.get_actor_id()
         self.domain = "Repetition"
@@ -50,7 +50,7 @@ class RepetitionFactory(BaseFactory):
     @resolve_fk_on_create()
     def create_repetition(self, student_id: UUID, data) -> Repetition:
         """Create a new repetition record for a student."""
-        student_factory = StudentFactory(self.session, Student)
+        student_factory = StudentFactory(self.session, Student, self.current_user)
 
         student = student_factory.get_student(student_id)
 
@@ -59,11 +59,9 @@ class RepetitionFactory(BaseFactory):
             student_id=student_id,
             academic_session=data.academic_session,
             failed_level_id=student.level_id,
-            repeat_level_id=self.service.validate_repetition_level(student.level_id, data.repeat_level),
+            repeat_level_id=self.service.validate_repetition_level(student.level_id, data.repeat_level_id),
             repetition_reason=data.repetition_reason,
             status=data.status,
-            status_completed_by=data.status_completed_by,
-            status_completed_at=data.status_completed_at,
             created_by=self.actor_id,
             last_modified_by=self.actor_id
         )

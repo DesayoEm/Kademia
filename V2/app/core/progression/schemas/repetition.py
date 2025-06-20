@@ -23,12 +23,55 @@ class StudentRepetitionBase(BaseModel):
         json_schema_extra = {
                 "example": {
                     "academic_session": "2025/2026",
-                    "new_level_id": "00000000-0000-0000-0000-000000000002",
+                    "repeat_level_id": "00000000-0000-0000-0000-000000000002",
                     "repetition_reason": "Academic performance below promotion criteria"
                 }
             }
 
    )
+
+
+class StudentRepetitionReview(BaseModel):
+    """Model for reviewing student repetitions"""
+    repeat_level_id: UUID
+    repetition_reason: str
+
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra = {
+                "example": {
+                    "repeat_level_id": "00000000-0000-0000-0000-000000000002",
+                    "repetition_reason": "Academic performance below promotion criteria"
+                }
+            }
+
+   )
+
+
+class StudentRepetitionDecision(BaseModel):
+    """Model for reviewing student repetitions"""
+    repeat_level_id: UUID
+    repetition_reason: str
+    status: ApprovalStatus = ApprovalStatus.PENDING
+    decision_reason: str
+
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra = {
+                "example": {
+                    "repeat_level_id": "00000000-0000-0000-0000-000000000002",
+                    "repetition_reason": "Academic performance below promotion criteria",
+                    "decision_reason": "Academic performance below promotion criteria",
+                    "status": "APPROVED"
+                }
+            }
+
+   )
+
 
 class StudentRepetitionCreate(StudentRepetitionBase):
     """For creating a new student repetition"""

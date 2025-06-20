@@ -1,19 +1,23 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
 
-from V2.app.infra.db.session_manager import get_db
-from V2.app.core.progression.crud.repetition import RepetitionCrud
+from V2.app.core.progression.factories.repetition import RepetitionFactory
 from V2.app.core.progression.schemas.repetition import (
     StudentRepetitionCreate,
     StudentRepetitionResponse,
-    RepetitionFilterParams
+    RepetitionFilterParams, 
+    StudentRepetitionAudit
 )
+from fastapi.responses import FileResponse
+from V2.app.core.shared.schemas.enums import ExportFormat
+from V2.app.core.progression.services.repetition_service import RepetitionService
 from V2.app.core.shared.schemas.shared_models import ArchiveRequest
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
-from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_crud
+from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory, \
+    get_authenticated_service
+
 
 token_service=TokenService()
 access = AccessTokenBearer()
@@ -25,39 +29,63 @@ router = APIRouter()
 def create_repetition(
         student_id: UUID,
         data: StudentRepetitionCreate,
-        crud: RepetitionCrud = Depends(get_authenticated_crud(RepetitionCrud))
+        factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
     ):
-    return crud.create_repetition(student_id, data)
+    return factory.create_repetition(student_id, data)
 
 
 @router.get("/", response_model=List[StudentRepetitionResponse])
 def get_all_repetitions(
         filters: RepetitionFilterParams = Depends(),
-        crud: RepetitionCrud = Depends(get_authenticated_crud(RepetitionCrud))
+        factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
     ):
-    return crud.get_all_repetitions(filters)
+    return factory.get_all_repetitions(filters)
+
+
+@router.get("/{repetition_id}/audit", response_model=StudentRepetitionAudit)
+def get_repetition_audit(
+        repetition_id: UUID,
+        factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
+    ):
+    return factory.get_repetition(repetition_id)
 
 
 @router.get("/{repetition_id}", response_model=StudentRepetitionResponse)
 def get_repetition(
         repetition_id: UUID,
-        crud: RepetitionCrud = Depends(get_authenticated_crud(RepetitionCrud))
+        factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
     ):
-    return crud.get_repetition(repetition_id)
+    return factory.get_repetition(repetition_id)
 
 
 @router.patch("/{repetition_id}", status_code=204)
 def archive_repetition(
         repetition_id: UUID,
         reason: ArchiveRequest,
-        crud: RepetitionCrud = Depends(get_authenticated_crud(RepetitionCrud))
+        factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
     ):
-    return crud.archive_repetition(repetition_id, reason.reason)
+    return factory.archive_repetition(repetition_id, reason.reason)
 
 
 @router.delete("/{repetition_id}", status_code=204)
 def delete_repetition(
         repetition_id: UUID,
-        crud: RepetitionCrud = Depends(get_authenticated_crud(RepetitionCrud))
+        factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
     ):
-    return crud.delete_repetition(repetition_id)
+    return factory.delete_repetition(repetition_id)
+
+
+@router.post("/{repetition_id}", response_class=FileResponse,  status_code=204)
+def export_repetition_audit(
+        repetition_id: UUID,
+        export_format: ExportFormat,
+        service: RepetitionService = Depends(get_authenticated_service(RepetitionService)),
+    ):
+    file_path= service.export_repetition_audit(repetition_id, export_format.value)
+
+    return FileResponse(
+        path=file_path,
+        filename=file_path.split("/")[-1],
+        media_type="application/octet-stream"
+    )
+
