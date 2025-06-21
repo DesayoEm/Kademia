@@ -4,14 +4,17 @@ from sqlalchemy.orm import Session
 from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.identity.models.student import Student
 from V2.app.core.progression.models.progression import Repetition
-from V2.app.core.progression.services.repetition_service import RepetitionService
+from V2.app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
-from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
+from V2.app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, UniqueViolationError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
+from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import (
+    resolve_fk_on_update, resolve_fk_on_create, resolve_fk_on_delete
+)
+
 
 
 
@@ -33,7 +36,6 @@ class RepetitionFactory(BaseFactory):
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
-        self.service = RepetitionService(self.session, self.current_user)
         self.entity_model, self.display_name = self.error_details
         self.actor_id: UUID = self.get_actor_id()
         self.domain = "Repetition"
@@ -47,25 +49,35 @@ class RepetitionFactory(BaseFactory):
             display_name=self.display_name
         )
 
+
     @resolve_fk_on_create()
     def create_repetition(self, student_id: UUID, data) -> Repetition:
         """Create a new repetition record for a student."""
-        student_factory = StudentFactory(self.session, Student, self.current_user)
+        from V2.app.core.progression.services.repetition_service import RepetitionService
+        service = RepetitionService(self.session, self.current_user)
 
-        student = student_factory.get_student(student_id)
+        try:
+            student_factory = StudentFactory(self.session, Student, self.current_user)
 
-        new_repetition = Repetition(
-            id=uuid4(),
-            student_id=student_id,
-            academic_session=data.academic_session,
-            failed_level_id=student.level_id,
-            repeat_level_id=self.service.validate_repetition_level(student.level_id, data.repeat_level_id),
-            repetition_reason=data.repetition_reason,
-            status=data.status,
-            created_by=self.actor_id,
-            last_modified_by=self.actor_id
-        )
-        return self.repository.create(new_repetition)
+            student = student_factory.get_student(student_id)
+
+            new_repetition = Repetition(
+                id=uuid4(),
+                student_id=student_id,
+                academic_session=data.academic_session,
+                failed_level_id=student.level_id,
+                repeat_level_id=service.validate_repetition_level(student.level_id, data.repeat_level_id),
+                repetition_reason=data.repetition_reason,
+                status=data.status,
+                created_by=self.actor_id,
+                last_modified_by=self.actor_id
+            )
+            return self.repository.create(new_repetition)
+
+        except UniqueViolationError as e:
+            raise CompositeDuplicateEntityError(
+                Repetition, str(e),
+                f"This student has an existing repetition record for the {data.academic_session} session")
 
 
     def get_repetition(self, repetition_id: UUID) -> Repetition:
@@ -81,6 +93,34 @@ class RepetitionFactory(BaseFactory):
         fields = ['academic_session', 'status']
         return self.repository.execute_query(fields, filters)
 
+
+    @resolve_fk_on_update()
+    def update_repetition(self, repetition_id: UUID, data: dict) -> Repetition:
+        """Update a repetition record information."""
+        from V2.app.core.progression.services.repetition_service import RepetitionService
+        service = RepetitionService(self.session, self.current_user)
+
+        try:
+            existing = self.get_repetition(repetition_id)
+
+            if "repeat_level_id" in data:
+                existing.repeat_level_id = service.validate_repetition_level(
+                    existing.failed_level_id, data["repeat_level_id"])
+
+            if "repetition_reason" in data:
+                existing.repetition_reason = data["repetition_reason"]
+
+            for key, value in data.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
+
+            return self.repository.update(repetition_id, existing, modified_by=self.actor_id)
+
+        except EntityNotFoundError as e:
+            self.raise_not_found(repetition_id, e)
+            
+            
+    
 
     def archive_repetition(self, repetition_id: UUID, reason) -> Repetition:
         """Archive a repetition record."""

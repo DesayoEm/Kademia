@@ -87,6 +87,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         # Progression exceptions
         InvalidPromotionLevelError: status.HTTP_400_BAD_REQUEST,
         InvalidRepetitionLevelError: status.HTTP_400_BAD_REQUEST,
+        RepetitionStatusAlreadySetError: status.HTTP_400_BAD_REQUEST,
 
         # User profile exceptions (Staff/Student/Guardian)
         StaffTypeError: status.HTTP_400_BAD_REQUEST,

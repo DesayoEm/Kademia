@@ -6,8 +6,8 @@ from V2.app.core.progression.factories.repetition import RepetitionFactory
 from V2.app.core.progression.schemas.repetition import (
     StudentRepetitionCreate,
     StudentRepetitionResponse,
-    RepetitionFilterParams, 
-    StudentRepetitionAudit
+    RepetitionFilterParams,
+    StudentRepetitionAudit, StudentRepetitionReview, StudentRepetitionDecision
 )
 from fastapi.responses import FileResponse
 from V2.app.core.shared.schemas.enums import ExportFormat
@@ -25,13 +25,13 @@ router = APIRouter()
 
 
 
-@router.post("/students/{student_id}", response_model=StudentRepetitionResponse, status_code=201)
+@router.post("/{student_id}/repetitions", response_model=StudentRepetitionResponse, status_code=201)
 def create_repetition(
         student_id: UUID,
-        data: StudentRepetitionCreate,
+        payload: StudentRepetitionCreate,
         factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
     ):
-    return factory.create_repetition(student_id, data)
+    return factory.create_repetition(student_id, payload)
 
 
 @router.get("/", response_model=List[StudentRepetitionResponse])
@@ -48,6 +48,26 @@ def get_repetition_audit(
         factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
     ):
     return factory.get_repetition(repetition_id)
+
+
+@router.patch("/{student_id}/repetitions/action", response_model=StudentRepetitionResponse)
+def action_repetition(
+        repetition_id: UUID,
+        payload: StudentRepetitionDecision,
+        service: RepetitionService = Depends(get_authenticated_factory(RepetitionService))
+    ):
+    payload = payload.model_dump(exclude_unset=True)
+    return service.action_repetition_record(repetition_id, payload)
+
+
+@router.patch("/{student_id}/repetitions", response_model=StudentRepetitionResponse)
+def update_repetition(
+        repetition_id: UUID,
+        payload: StudentRepetitionReview,
+        factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
+    ):
+    payload = payload.model_dump(exclude_unset=True)
+    return factory.update_repetition(repetition_id, payload)
 
 
 @router.get("/{repetition_id}", response_model=StudentRepetitionResponse)

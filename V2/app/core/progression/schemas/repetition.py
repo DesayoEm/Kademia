@@ -52,8 +52,6 @@ class StudentRepetitionReview(BaseModel):
 
 class StudentRepetitionDecision(BaseModel):
     """Model for reviewing student repetitions"""
-    repeat_level_id: UUID
-    repetition_reason: str
     status: ApprovalStatus = ApprovalStatus.PENDING
     decision_reason: str
 
@@ -63,8 +61,6 @@ class StudentRepetitionDecision(BaseModel):
         extra="ignore",
         json_schema_extra = {
                 "example": {
-                    "repeat_level_id": "00000000-0000-0000-0000-000000000002",
-                    "repetition_reason": "Academic performance below promotion criteria",
                     "decision_reason": "Academic performance below promotion criteria",
                     "status": "APPROVED"
                 }
