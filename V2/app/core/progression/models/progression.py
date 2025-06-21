@@ -64,7 +64,7 @@ class Promotion(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             ondelete='RESTRICT',name='fk_promotions_staff_status_completed_by'),nullable=True
         )
     status_completed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
-    rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    decision_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Relationships
     promoted_student: Mapped['Student'] = relationship(back_populates='promotions',
@@ -93,9 +93,11 @@ class Graduation(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     academic_session: Mapped[str] = mapped_column(String(9))
     status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus, name='approvalstatus'),
             default=ApprovalStatus.PENDING)
-    status_approved_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-            ondelete='RESTRICT', name='fk_graduations_staff_status_approved_by'),
+    status_completed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
+            ondelete='RESTRICT', name='fk_graduations_staff_status_completed_by'),
                     nullable=True)
+    status_completed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
+
     notes: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     status_approved_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
     decision_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
@@ -103,7 +105,7 @@ class Graduation(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     # Relationships
     graduated_student: Mapped['Student'] = relationship(back_populates='graduation',
                 foreign_keys='[Graduation.student_id]', passive_deletes=True)
-    status_completed_staff: Mapped['Staff'] = relationship(foreign_keys='[Graduation.status_approved_by]')
+    status_completed_staff: Mapped['Staff'] = relationship(foreign_keys='[Graduation.status_completed_by]')
 
     __table_args__ = (
         Index('idx_graduation_status', 'student_id', 'status'),

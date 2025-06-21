@@ -14,7 +14,6 @@ class RepetitonBase(BaseModel):
     academic_session: str
     repeat_level_id: UUID
     repetition_reason: str
-    status: ApprovalStatus = ApprovalStatus.PENDING
 
 
     model_config = ConfigDict(

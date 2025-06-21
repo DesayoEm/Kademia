@@ -6,6 +6,7 @@ from V2.app.core.identity.models.student import Student
 from V2.app.core.progression.models.progression import Repetition
 from V2.app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
 from V2.app.core.shared.factory.base_factory import BaseFactory
+from V2.app.core.shared.schemas.enums import ApprovalStatus
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -68,7 +69,7 @@ class RepetitionFactory(BaseFactory):
                 failed_level_id=student.level_id,
                 repeat_level_id=service.validate_repetition_level(student.level_id, data.repeat_level_id),
                 repetition_reason=data.repetition_reason,
-                status=data.status,
+                status=ApprovalStatus.PENDING,
                 created_by=self.actor_id,
                 last_modified_by=self.actor_id
             )

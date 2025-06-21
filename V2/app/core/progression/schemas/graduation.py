@@ -12,7 +12,6 @@ class GraduationFilterParams(BaseFilterParams):
 class GraduationBase(BaseModel):
     """Base model for student graduations"""
     academic_session: str
-    status: ApprovalStatus = ApprovalStatus.PENDING
     status_updated_by: UUID | None = None
     status_updated_at: datetime | None = None
     rejection_reason: str | None = None

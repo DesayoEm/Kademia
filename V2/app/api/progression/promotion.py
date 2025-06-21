@@ -9,12 +9,14 @@ from V2.app.core.progression.schemas.promotion import (
     PromotionCreate,
     PromotionResponse,
     PromotionFilterParams,
-    PromotionAudit
+    PromotionAudit, PromotionReview, PromotionDecision
 )
+from V2.app.core.progression.services.promotion_service import PromotionService
 from V2.app.core.shared.schemas.shared_models import ArchiveRequest
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
-from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory
+from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory, \
+    get_authenticated_service
 
 token_service=TokenService()
 access = AccessTokenBearer()
@@ -53,6 +55,26 @@ def get_promotion(
         factory: PromotionFactory = Depends(get_authenticated_factory(PromotionFactory))
     ):
     return factory.get_promotion(promotion_id)
+
+
+@router.patch("/{student_id}/promotions/action", response_model=PromotionResponse)
+def action_promotion(
+        promotion_id: UUID,
+        payload: PromotionDecision,
+        service: PromotionService = Depends(get_authenticated_service(PromotionService))
+    ):
+    payload = payload.model_dump(exclude_unset=True)
+    return service.action_promotion_record(promotion_id, payload)
+
+
+@router.patch("/{student_id}/promotions", response_model=PromotionResponse)
+def update_promotion(
+        promotion_id: UUID,
+        payload: PromotionReview,
+        factory: PromotionFactory = Depends(get_authenticated_factory(PromotionFactory))
+    ):
+    payload = payload.model_dump(exclude_unset=True)
+    return factory.update_promotion(promotion_id, payload)
 
 
 @router.patch("/{promotion_id}", status_code=204)

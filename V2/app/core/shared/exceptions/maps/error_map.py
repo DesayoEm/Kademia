@@ -20,7 +20,7 @@ from V2.app.core.staff_management.models import StaffDepartment, StaffRole, Educ
 from V2.app.core.academic_structure.models import StudentDepartment, Classes, AcademicLevel
 from ....transfer.models.transfer import DepartmentTransfer
 from ....assessment.models.assessment import Grade, TotalGrade
-from V2.app.core.progression.models.progression import Repetition
+from V2.app.core.progression.models.progression import Repetition, Promotion
 from ....identity.models.staff import Staff, Educator, AdminStaff, SupportStaff
 from ....identity.models.student import Student
 from ....identity.models.guardian import Guardian
@@ -62,5 +62,6 @@ error_map = {
     AccessLevelChange: (AccessLevelChange, "access level change"),
 
     # Progression
-    Repetition: (Repetition, "class repetition"),
+    Repetition: (Repetition, "repetition record"),
+    Promotion: (Promotion, "promotion record")
 }

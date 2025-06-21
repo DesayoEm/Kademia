@@ -116,7 +116,7 @@ from .assessment_errors import (
 from .progression_errors import (
     InvalidRepetitionLevelError,
     InvalidPromotionLevelError,
-    RepetitionStatusAlreadySetError
+    ProgressionStatusAlreadySetError
 )
 
 logging.basicConfig(level=logging.INFO)

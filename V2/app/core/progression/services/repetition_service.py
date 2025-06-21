@@ -6,9 +6,10 @@ from V2.app.core.academic_structure.factories.academic_level import AcademicLeve
 from V2.app.core.academic_structure.models import AcademicLevel
 from V2.app.core.progression.factories.repetition import RepetitionFactory
 from V2.app.core.progression.models.progression import Repetition
-from V2.app.core.shared.exceptions import InvalidRepetitionLevelError, EmptyFieldError, RepetitionStatusAlreadySetError
+from V2.app.core.shared.exceptions import InvalidRepetitionLevelError, EmptyFieldError, \
+    ProgressionStatusAlreadySetError
 from V2.app.core.shared.services.export_service.export import ExportService
-from V2.app.infra.log_service.logger import logger
+
 
 
 class RepetitionService:
@@ -40,7 +41,7 @@ class RepetitionService:
                 repeat_level_id=repeat_level_id, failed_level_id=failed_level_id
             )
 
-        return repeat_level.id
+        return repeat_level_id
 
 
     def action_repetition_record(self, repetition_id: UUID, data: dict):
@@ -63,18 +64,17 @@ class RepetitionService:
         repetition = self.factory.get_repetition(repetition_id)
 
         if repetition.status == "REJECTED" and data["status"].value == "REJECTED":
-            raise RepetitionStatusAlreadySetError(
-                repetition.status, data["status"].value, repetition_id
+            raise ProgressionStatusAlreadySetError(
+                "repetition", repetition.status, data["status"].value, repetition_id
             )
 
         if repetition.status == "APPROVED" and data["status"].value == "APPROVED":
-            raise RepetitionStatusAlreadySetError(
-                repetition.status, data["status"].value, repetition_id
+            raise ProgressionStatusAlreadySetError(
+                "repetition", repetition.status, data["status"].value, repetition_id
             )
 
         #if rejected, state reason for rejection
         if data["status"].value == "REJECTED":
-            logger.debug(f"input is {data["status"].value}")
             if not data["decision_reason"]: #if rejected, state reason for rejection
                 raise EmptyFieldError(entry = data["decision_reason"])
 
@@ -94,7 +94,6 @@ class RepetitionService:
 
         #if approved, persist student's new academic level, and repetition record
         if data["status"].value == "APPROVED":
-            logger.debug(f"input is {data["status"].value}")
 
             student_factory.update_student(
                 repetition.student_id, {"level_id":repetition.repeat_level_id}
