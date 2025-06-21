@@ -46,7 +46,6 @@ class Student(UserBase):
     grades: Mapped[List['Grade']] = relationship(back_populates='student')
     classes_repeated: Mapped[List['Repetition']] = relationship(back_populates='repeating_student')
     promotions: Mapped[List['Promotion']] = relationship(back_populates='promoted_student')
-    graduation: Mapped['Graduation'] = relationship(back_populates='graduated_student')
     department_transfers: Mapped[List['DepartmentTransfer']] = relationship(back_populates='transferred_student')
 
 
@@ -88,5 +87,5 @@ from V2.app.core.identity.models.guardian import Guardian
 from V2.app.core.academic_structure.models import AcademicLevel, Classes, StudentDepartment
 from V2.app.core.curriculum.models.curriculum import StudentSubject
 from V2.app.core.assessment.models.assessment import Grade, TotalGrade
-from V2.app.core.progression.models.progression import Repetition, Promotion, Graduation
+from V2.app.core.progression.models.progression import Repetition, Promotion
 from V2.app.core.transfer.models.transfer import DepartmentTransfer

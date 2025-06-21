@@ -82,34 +82,6 @@ class Promotion(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class Graduation(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
-    """Represents a student's graduation from the institution"""
-    __tablename__ = 'graduations'
-
-    id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-                    ondelete='CASCADE', name='fk_graduations_students_student_id')
-        )
-    academic_session: Mapped[str] = mapped_column(String(9))
-    status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus, name='approvalstatus'),
-            default=ApprovalStatus.PENDING)
-    status_completed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-            ondelete='RESTRICT', name='fk_graduations_staff_status_completed_by'),
-                    nullable=True)
-    status_completed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
-
-    notes: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-    status_approved_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
-    decision_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-
-    # Relationships
-    graduated_student: Mapped['Student'] = relationship(back_populates='graduation',
-                foreign_keys='[Graduation.student_id]', passive_deletes=True)
-    status_completed_staff: Mapped['Staff'] = relationship(foreign_keys='[Graduation.status_completed_by]')
-
-    __table_args__ = (
-        Index('idx_graduation_status', 'student_id', 'status'),
-    )
 
 
 from V2.app.core.identity.models.student import Student
