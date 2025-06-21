@@ -25,25 +25,13 @@ class ProgressionService:
 
         return next_level
 
-    def validate_repetition_level(self, failed_level_id, repeat_level_id):
 
-        academic_factory = AcademicLevelFactory(self.session, AcademicLevel, self.current_user)
-        failed_level = academic_factory.get_academic_level(failed_level_id)
-        repeat_level = academic_factory.get_academic_level(repeat_level_id)
-
-        if not repeat_level.promotion_rank <= failed_level.promotion_rank:
-            raise InvalidRepetitionLevelError(
-                repeat_level_id=repeat_level_id, failed_level_id=failed_level_id
-            )
-
-        return repeat_level
-
-    def export_guardian(self, repetition_id: UUID, export_format: str) -> str:
-        """Export repetition object and its associated data
+    def export_promotion_audit(self, promotion_id: UUID, export_format: str) -> str:
+        """Export promotion object and its associated data
         Args:
-            repetition_id: Guardian UUID
+            promotion_id: Promotion UUID
             export_format: Preferred export format
         """
         return self.export_service.export_entity(
-            Repetition, repetition_id, export_format
+            Repetition, promotion_id, export_format
         )
