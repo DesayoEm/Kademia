@@ -4,9 +4,9 @@ from typing import List
 
 from V2.app.core.progression.factories.repetition import RepetitionFactory
 from V2.app.core.progression.schemas.repetition import (
-    StudentRepetitionResponse,
+    RepetitonResponse,
     RepetitionFilterParams, 
-    StudentRepetitionAudit
+    RepetitonAudit
 )
 
 from V2.app.core.auth.services.token_service import TokenService
@@ -20,7 +20,7 @@ router = APIRouter()
 
 
 
-@router.get("/", response_model=List[StudentRepetitionResponse])
+@router.get("/", response_model=List[RepetitonResponse])
 def get_all_archived_repetitions(
         filters: RepetitionFilterParams = Depends(), 
         factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
@@ -28,7 +28,7 @@ def get_all_archived_repetitions(
     return factory.get_all_archived_repetitions(filters)
 
 
-@router.get("/{repetition_id}/audit", response_model=StudentRepetitionAudit)
+@router.get("/{repetition_id}/audit", response_model=RepetitonAudit)
 def get_archived_repetition_audit(
         repetition_id: UUID,
         factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
@@ -36,7 +36,7 @@ def get_archived_repetition_audit(
     return factory.get_archived_repetition(repetition_id)
 
 
-@router.get("/{repetition_id}", response_model=StudentRepetitionResponse)
+@router.get("/{repetition_id}", response_model=RepetitonResponse)
 def get_archived_repetition(
         repetition_id: UUID,
         factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
@@ -44,7 +44,7 @@ def get_archived_repetition(
     return factory.get_archived_repetition(repetition_id)
 
 
-@router.patch("/{repetition_id}", response_model=StudentRepetitionResponse)
+@router.patch("/{repetition_id}", response_model=RepetitonResponse)
 def restore_repetition(
         repetition_id: UUID,
         factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))

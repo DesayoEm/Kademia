@@ -37,3 +37,16 @@ class GraduationCreate(GraduationBase):
 class GraduationResponse(GraduationBase):
     """Response model for student graduations"""
     student_id: UUID
+
+
+class GraduationAudit(BaseModel):
+    """Response model for student graduations"""
+    created_at: datetime | None = None
+    created_by: UUID
+    last_modified_at: datetime | None = None
+    last_modified_by: UUID
+    last_login: datetime | None = None
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason | None = None

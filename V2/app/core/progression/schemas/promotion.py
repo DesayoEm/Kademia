@@ -8,7 +8,7 @@ class PromotionFilterParams(BaseFilterParams):
     order_by: Literal["academic_session", "created_at"] = "academic_session"
 
 
-class StudentPromotionBase(BaseModel):
+class PromotionBase(BaseModel):
     """Base model for student promotions"""
     academic_session: str
     new_level_id: UUID
@@ -28,12 +28,12 @@ class StudentPromotionBase(BaseModel):
     )
 
 
-class StudentPromotionCreate(StudentPromotionBase):
+class PromotionCreate(PromotionBase):
     """For creating a new student promotion"""
     pass
 
 
-class StudentPromotionResponse(StudentPromotionBase):
+class PromotionResponse(PromotionBase):
     """Response model for student promotions"""
     student_id: UUID
     previous_level_id: UUID
@@ -41,3 +41,15 @@ class StudentPromotionResponse(StudentPromotionBase):
     status_updated_at: datetime | None = None
     rejection_reason: str | None = None
 
+
+class PromotionAudit(BaseModel):
+    """Response model for student promotions"""
+    created_at: datetime | None = None
+    created_by: UUID
+    last_modified_at: datetime | None = None
+    last_modified_by: UUID
+    last_login: datetime | None = None
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason | None = None
