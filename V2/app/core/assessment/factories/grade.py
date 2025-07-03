@@ -2,9 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.assessment.models.assessment import Grade
-from V2.app.core.assessment.validators import AssessmentValidator
-from V2.app.core.identity.factories.student import StudentFactory
-from V2.app.core.identity.models.student import Student
+from V2.app.core.assessment.services.validators import AssessmentValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
@@ -28,6 +26,7 @@ class GradeFactory(BaseFactory):
         """
         self.model = model
         self.session = session
+        self.current_user = current_user
         self.repository = SQLAlchemyRepository(self.model, session)
         self.entity_validator = EntityValidator(session)
         self.validator = AssessmentValidator(session)
@@ -47,24 +46,28 @@ class GradeFactory(BaseFactory):
         )
 
     @resolve_fk_on_create()
-    def create_grade(self, student_subject_id:UUID, data) -> Grade:
+    def create_grade(self, student_id:UUID, student_subject_id:UUID,  data) -> Grade:
         """Create a new Grade.
         Args:
-            student_subject_id: id of the subject to grade
+            student_id: id of the student to grade
+            student_subject_id: id of the student subject to grade
             data: Grade data
         Returns:
             Grade: Created Grade record
         """
+        from V2.app.core.assessment.services.assessment_service import AssessmentService
+        service = AssessmentService(self.session)
 
         new_grade = Grade(
             id=uuid4(),
+            student_id=student_id,
             student_subject_id=student_subject_id,
             academic_session=self.validator.validate_academic_session(data.academic_session),
             term=data.term,
             max_score=self.validator.validate_max_score(data.max_score),
             score=self.validator.validate_score(data.max_score, data.score),
-            weight=self.validator.validate_weight(
-                data.weight, data.student_id, data.subject_id, data.academic_session, data.term
+            weight=service.validate_grade_weight(
+                data.weight, student_subject_id
             ),
             type=data.type,
             graded_by =  self.entity_validator.validate_staff_exists(data.graded_by),
@@ -107,6 +110,9 @@ class GradeFactory(BaseFactory):
         Returns:
             Grade: Updated Grade record
         """
+        from V2.app.core.assessment.services.assessment_service import AssessmentService
+        service = AssessmentService(self.session)
+
         copied_data = data.copy()
         to_be_validated = ["score", "max_score", "academic_session", "weight", "graded_on"]
         try:
@@ -124,11 +130,9 @@ class GradeFactory(BaseFactory):
                 setattr(existing, "graded_on", updated_graded_on)
 
             if "weight" in data:
-                academic_session = data.academic_session if "academic_session" else existing.academic_session
-                term = data.term if "term" in data else existing.term
-
-                existing.weight = self.validator.validate_weight(
-                    data.weight, existing.student_id, existing.subject_id, academic_session, term
+                current_weight = existing.weight
+                existing.weight = service.validate_grade_weight_on_update(
+                    current_weight, data.get('weight'), existing.student_subject_id
                 )
 
             if "score" in data:

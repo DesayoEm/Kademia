@@ -66,14 +66,6 @@ def get_authenticated_service(service_class):
     return get_service
 
 
-
-
-
-
-
-
-
-
 def get_crud(crud_class):
     """Factory function to create a dependency that returns a CRUD instance without authentication"""
     def get_crud(db: Session = Depends(get_db)):

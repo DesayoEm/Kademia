@@ -28,3 +28,15 @@ class TotalGradeCreate(TotalGradeBase):
 class TotalGradeResponse(TotalGradeBase):
     """Response model for total grades"""
     rank: int | None = None
+
+class TotalGradeAudit(BaseModel):
+    """Response model for total grade object audit"""
+    id: UUID
+    created_at: datetime
+    created_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason

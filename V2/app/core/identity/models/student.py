@@ -44,6 +44,7 @@ class Student(UserBase):
     level: Mapped['AcademicLevel'] = relationship(back_populates='students', foreign_keys='[Student.level_id]')
     subjects_taken: Mapped[List['StudentSubject']] = relationship(back_populates='student')
     grades: Mapped[List['Grade']] = relationship(back_populates='student')
+    total_grades: Mapped['TotalGrade'] = relationship(back_populates='student')
     classes_repeated: Mapped[List['Repetition']] = relationship(back_populates='repeating_student')
     promotions: Mapped[List['Promotion']] = relationship(back_populates='promoted_student')
     department_transfers: Mapped[List['DepartmentTransfer']] = relationship(back_populates='transferred_student')

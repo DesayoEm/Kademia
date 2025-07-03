@@ -5,7 +5,7 @@ from V2.app.core.staff_management.models import StaffDepartment, StaffRole, Educ
 from V2.app.core.academic_structure.models import StudentDepartment, Classes, AcademicLevel
 from ....transfer.models.transfer import DepartmentTransfer
 from ....assessment.models.assessment import Grade, TotalGrade
-from V2.app.core.progression.models.progression import Repetition, Promotion, Graduation
+from V2.app.core.progression.models.progression import Repetition, Promotion
 
 from ....identity.models.staff import Staff, Educator
 from ....identity.models.student import Student
@@ -82,7 +82,6 @@ DEPENDENCY_CONFIG = {
         ("repeating_student", Student, None, "repeated student")
     ],
 
-    Graduation: [],
     Grade: [],
     AcademicLevelSubject: [],
     StudentSubject: [],

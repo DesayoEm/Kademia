@@ -19,8 +19,7 @@ from V2.app.api.curriculum import (
 )
 from V2.app.api.progression import (
     repetition, repetition_archive,
-    promotion, promotion_archive,
-    graduation, graduation_archive
+    promotion, promotion_archive
 )
 from V2.app.api.transfer import department_transfer, department_transfer_archive
 from V2.app.api.assessment import grade, total_grade, grade_archive, total_grade_archive
@@ -162,18 +161,12 @@ app.include_router(promotion.router, prefix=f"/api/{version}/students/promotions
 app.include_router(promotion_archive.router, prefix=f"/api/{version}/students/promotions/archived",
                    tags=["Progression", "Admin"])
 
-app.include_router(graduation.router, prefix=f"/api/{version}/students/graduations",
-                   tags=["Progression", "Admin"])
-app.include_router(graduation_archive.router, prefix=f"/api/{version}/students/graduations/archived",
-                   tags=["Progression", "Admin"])
+
 
 app.include_router(department_transfer.router, prefix=f"/api/{version}/department-transfers",
                    tags=["Department Transfers", "Admin"])
 app.include_router(department_transfer_archive.router, prefix=f"/api/{version}/department-transfers/archived",
                    tags=["Department Transfers", "Admin"])
-
-
-
 
 
 

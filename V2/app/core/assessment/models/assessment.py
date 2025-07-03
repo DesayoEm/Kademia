@@ -9,17 +9,16 @@ class Grade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-                                                        ondelete='CASCADE', name='fk_grades_students_student_id')
-                                             )
+            ondelete='RESTRICT', name='fk_grades_students_student_id')
+    ) #redundant column but faster for queries idc
+
     student_subject_id: Mapped[UUID] = mapped_column(
         ForeignKey('student_subjects.id', ondelete='RESTRICT',
                    name='fk_grades_student_subjects_id'))
-    academic_session: Mapped[str] = mapped_column(String(9))
-    term: Mapped[Term] = mapped_column(Enum(Term, name='term'))
     type: Mapped[GradeType] = mapped_column(Enum(GradeType, name='gradetype'))
     max_score: Mapped[int] = mapped_column(Integer)
     score: Mapped[float] = mapped_column(Float)
-    weight: Mapped[float] = mapped_column(Float)
+    weight: Mapped[int] = mapped_column(Float)
     file_url: Mapped[str] = mapped_column(String(225), nullable=True)
     feedback: Mapped[str] = mapped_column(String(500), nullable=True)
     include_in_total: Mapped[bool] = mapped_column(Boolean, default=True)
@@ -29,18 +28,16 @@ class Grade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     # Relationships
     student: Mapped['Student'] = relationship(back_populates='grades', foreign_keys='[Grade.student_id]',
-                                              passive_deletes=True)
+                            passive_deletes=True)
     grader: Mapped['Educator'] = relationship(foreign_keys="[Grade.graded_by]")
     student_subject: Mapped['StudentSubject'] = relationship(back_populates='grades',
-                                                             foreign_keys='[Grade.student_subject_id]')
+                                foreign_keys='[Grade.student_subject_id]')
 
     __table_args__ = (
         Index('idx_student_subject_id', 'student_subject_id'),
         Index('idx_score', 'score'),
         Index('idx_graded_by', 'graded_by'),
-        Index('idx_grade_academic_session', 'academic_session'),
-        Index('idx_student_grades', 'student_id', 'academic_session', 'term'),
-        Index('idx_student_subject_term_score', 'student_subject_id', 'term', 'score')
+        Index('idx_student_score', 'student_id', 'student_subject_id', 'score'),
     )
 
 
@@ -50,15 +47,20 @@ class TotalGrade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
 
+    student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
+                ondelete='RESTRICT', name='fk_grades_students_student_id')
+        )  # redundant column but faster for queries idc
+
     student_subject_id: Mapped[UUID] = mapped_column(
         ForeignKey('student_subjects.id', ondelete='RESTRICT',
                    name='fk_total_grades_student_subjects_id'), unique = True)
     total_score: Mapped[int] = mapped_column(Integer)
-    rank: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     # Relationships
     student_subject: Mapped['StudentSubject'] = relationship(back_populates='total_grade',
         foreign_keys='[TotalGrade.student_subject_id]')
+    student: Mapped['Student'] = relationship(
+        back_populates='total_grades', foreign_keys='[TotalGrade.student_id]')
 
     __table_args__ = (
         Index('idx_total_grade_score', 'total_score'),

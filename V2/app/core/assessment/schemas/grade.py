@@ -69,3 +69,14 @@ class GradeResponse(GradeCreate):
     feedback: str | None = None
     student_id: UUID
 
+class GradeAudit(BaseModel):
+    """Response model for grade object audit"""
+    id: UUID
+    created_at: datetime
+    created_by: UUID
+    last_modified_at: datetime
+    last_modified_by: UUID
+    is_archived: bool
+    archived_at: datetime | None = None
+    archived_by: UUID | None = None
+    archive_reason: ArchiveReason | None = None

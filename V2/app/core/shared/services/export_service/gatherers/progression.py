@@ -1,5 +1,5 @@
 from typing import Dict, Tuple, Any
-from V2.app.core.progression.models.progression import Repetition, Promotion, Graduation
+from V2.app.core.progression.models.progression import Repetition, Promotion
 
 class ProgressionGatherer:
     """Gathers data for progression entities"""
@@ -112,18 +112,3 @@ class ProgressionGatherer:
                 }, file_name)
 
 
-    @staticmethod
-    def gather_graduation(self, graduation: Graduation) -> dict:
-        return {
-            "Student": f"{graduation.graduated_student.first_name} {graduation.graduated_student.last_name}",
-            "Academic Session": graduation.academic_session,
-            "Status": graduation.status.name,
-            "Status Updated By": (
-                f"{graduation.status_updated_staff.first_name} {graduation.status_updated_staff.last_name}"
-                if graduation.status_updated_staff else None
-            ),
-            "Status Updated At": graduation.status_updated_at.isoformat() if graduation.status_updated_at else None,
-            "Rejection Reason": graduation.rejection_reason,
-            "Created At": graduation.created_at.isoformat(),
-            "Last Modified": graduation.last_modified_at.isoformat(),
-        }
