@@ -30,7 +30,7 @@ class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __tablename__ = 'academic_level_subjects'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    name: Mapped[str] = mapped_column(String(50), nullable = True)
+    code: Mapped[str] = mapped_column(String(50), nullable = True)
     level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
                 ondelete='RESTRICT',name='fk_academic_level_subjects_academic_levels_level_id')
         )
@@ -54,7 +54,7 @@ class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __table_args__ = (
         UniqueConstraint('level_id', 'subject_id', 'academic_session'),
         Index('idx_level_subject', 'level_id', 'subject_id'),
-        Index('idx_level_subject_name', 'name'),
+        Index('idx_level_subject_code', 'code'),
 
     )
 

@@ -58,7 +58,7 @@ class AcademicLevelSubjectFactory(BaseFactory):
                 id=uuid4(),
                 subject_id=data.subject_id,
                 level_id=level_id,
-                name=self.validator.validate_name(data.name),
+                code=self.validator.validate_name(data.code),
                 is_elective=data.is_elective,
                 academic_session=self.validator.validate_academic_session(data.academic_session),
 

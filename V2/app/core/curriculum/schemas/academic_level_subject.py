@@ -10,7 +10,7 @@ class AcademicLevelSubjectFilterParams(BaseFilterParams):
 class AcademicLevelSubjectBase(BaseModel):
     """Base model for academic level subject assignments"""
     subject_id: UUID
-    name: str | None = None
+    code: str | None = None
     is_elective: bool = True
     educator_id: UUID | None = None
     academic_session: str | None = None
@@ -23,7 +23,7 @@ class AcademicLevelSubjectBase(BaseModel):
             "example": {
                 "subject_id": "00000000-0000-0000-0000-000000000002",
                 "is_elective": True,
-                "name": "random",
+                "code": "BIO 222",
                 "academic_session": "2025/2026",
             }
         }
