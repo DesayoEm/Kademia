@@ -30,7 +30,7 @@ class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __tablename__ = 'academic_level_subjects'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    code: Mapped[str] = mapped_column(String(50), nullable = True)
+    code: Mapped[str] = mapped_column(String(50), nullable = True, unique=True)
     level_id: Mapped[UUID] = mapped_column(ForeignKey('academic_levels.id',
                 ondelete='RESTRICT',name='fk_academic_level_subjects_academic_levels_level_id')
         )
@@ -104,8 +104,7 @@ class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     educator_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
             ondelete='RESTRICT',name='fk_subject_educators_educators_educator_id')
         )
-    academic_session: Mapped[str] = mapped_column(String(9))
-    term: Mapped[Term] = mapped_column(Enum(Term, name='term'))
+
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     date_assigned: Mapped[Date] = mapped_column(Date)
 
@@ -114,7 +113,6 @@ class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     teacher: Mapped['Educator'] = relationship(back_populates='subject_assignments', foreign_keys='[SubjectEducator.educator_id]')
 
     __table_args__ = (
-        UniqueConstraint('educator_id', 'academic_level_subject_id', 'academic_session', 'term'),
         Index('idx_subject_level_educator', 'educator_id', 'academic_level_subject_id')
     )
 

@@ -65,9 +65,7 @@ class SubjectEducatorFactory(BaseFactory):
                 academic_level_subject_id=data.academic_level_subject_id,
                 educator_id=educator_id,
                 is_active=data.is_active,
-                term=data.term,
                 date_assigned=date.today(),
-                academic_session=self.validator.validate_academic_session(data.academic_session),
 
                 created_by=self.actor_id,
                 last_modified_by=self.actor_id

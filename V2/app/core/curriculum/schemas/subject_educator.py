@@ -14,9 +14,7 @@ class SubjectEducatorFilterParams(BaseFilterParams):
 class SubjectEducatorBase(BaseModel):
     """Base model for subject educator assignments"""
     academic_level_subject_id: UUID
-    academic_session: str
-    term: Term
-    is_active: bool = False
+    is_active: bool = True
 
 
     model_config = ConfigDict(
