@@ -4,7 +4,8 @@ from typing import List
 from fastapi.responses import FileResponse
 
 from V2.app.core.curriculum.factories.student_subject import StudentSubjectFactory
-
+from V2.app.core.curriculum.schemas.curriculum import CourseListRequest, CourseListResponse
+from V2.app.core.curriculum.services.curriculum_service import CurriculumService
 
 from V2.app.core.shared.schemas.enums import ExportFormat
 from V2.app.core.shared.schemas.shared_models import ArchiveRequest
@@ -15,7 +16,8 @@ from V2.app.core.curriculum.schemas.student_subject import (
 )
 from V2.app.core.auth.services.token_service import TokenService
 from V2.app.core.auth.services.dependencies.token_deps import AccessTokenBearer
-from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory
+from V2.app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory, \
+    get_authenticated_service
 
 token_service=TokenService()
 access = AccessTokenBearer()
@@ -30,6 +32,16 @@ def assign_student_subject(
     ):
     return factory.create_student_subject(student_id, payload)
 
+@router.post("/students/{student_id}/curriculum", response_model=CourseListResponse)
+def get_student_curriculum(
+        student_id: UUID,
+        payload: CourseListRequest,
+        service: CurriculumService = Depends(get_authenticated_service(CurriculumService))
+    ):
+    return service.generate_student_course_list(
+        student_id, payload.academic_session, payload.term
+    )
+
 
 @router.get("/", response_model=List[StudentSubjectResponse])
 def get_student_subjects(
@@ -37,7 +49,6 @@ def get_student_subjects(
         factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
     ):
     return factory.get_all_student_subjects(filters)
-
 
 
 @router.get("/{student_subject_id}/audit", response_model=StudentSubjectAudit)
@@ -66,20 +77,6 @@ def archive_student_subject(
     return factory.archive_student_subject(student_subject_id, reason.reason)
 
 
-@router.post("/{student_subject_id}", response_class=FileResponse,  status_code=204)
-def export_student_subject(
-        student_subject_id: UUID,
-        export_format: ExportFormat,
-        factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
-    ):
-    
-    file_path= factory.export_student_subject(student_subject_id, export_format.value)
-
-    return FileResponse(
-        path=file_path,
-        filename=file_path.split("/")[-1],
-        media_type="application/octet-stream"
-    )
 
 @router.delete("/{student_subject_id}", status_code=204)
 def delete_student_subject(

@@ -80,6 +80,10 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         InvalidCodeError: status.HTTP_400_BAD_REQUEST,
         InvalidRankNumberError: status.HTTP_400_BAD_REQUEST,
 
+        # Curriculum exceptions
+        AcademicLevelMismatchError: status.HTTP_400_BAD_REQUEST,
+
+
         # Assessment exceptions
         ScoreExceedsMaxError: status.HTTP_400_BAD_REQUEST,
         MaxScoreTooHighError: status.HTTP_400_BAD_REQUEST,

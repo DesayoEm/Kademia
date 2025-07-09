@@ -119,6 +119,10 @@ from .progression_errors import (
     ProgressionStatusAlreadySetError
 )
 
+from .curriculum_errors import (
+AcademicLevelMismatchError
+)
+
 logging.basicConfig(level=logging.INFO)
 
 for loader, module_name, is_pkg in pkgutil.walk_packages(__path__):

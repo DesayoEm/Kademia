@@ -48,8 +48,8 @@ class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     # Relationships
     subject: Mapped['Subject'] = relationship(back_populates='academic_levels', foreign_keys='[AcademicLevelSubject.subject_id]')
     level: Mapped['AcademicLevel'] = relationship(back_populates='subjects', foreign_keys='[AcademicLevelSubject.level_id]')
-    students: Mapped['StudentSubject'] = relationship(back_populates='subjects')
-    educators: Mapped['SubjectEducator'] = relationship(back_populates='subject')
+    students: Mapped['StudentSubject'] = relationship(back_populates='subject')
+    educators: Mapped[List['SubjectEducator']] = relationship(back_populates='subject')
 
     __table_args__ = (
         UniqueConstraint('level_id', 'subject_id', 'academic_session'),
@@ -77,7 +77,7 @@ class StudentSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     # Relationships
-    subjects: Mapped[List['AcademicLevelSubject']] = relationship(back_populates='students',
+    subject: Mapped[List['AcademicLevelSubject']] = relationship(back_populates='students',
             foreign_keys='[StudentSubject.academic_level_subject_id]',
             primaryjoin='AcademicLevelSubject.id == StudentSubject.academic_level_subject_id'
         )
@@ -109,11 +109,11 @@ class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     date_assigned: Mapped[Date] = mapped_column(Date)
 
     # Relationships
-    subject: Mapped['AcademicLevelSubject'] = relationship(back_populates='educators', foreign_keys='[SubjectEducator.academic_level_subject_id]')
+    subject: Mapped[List['AcademicLevelSubject']] = relationship(back_populates='educators', foreign_keys='[SubjectEducator.academic_level_subject_id]')
     teacher: Mapped['Educator'] = relationship(back_populates='subject_assignments', foreign_keys='[SubjectEducator.educator_id]')
 
     __table_args__ = (
-        Index('idx_subject_level_educator', 'educator_id', 'academic_level_subject_id')
+        Index('idx_subject_level_educator', 'educator_id', 'academic_level_subject_id'),
     )
 
 from V2.app.core.identity.models.student import Student

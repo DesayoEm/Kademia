@@ -3,6 +3,7 @@ from uuid import UUID, uuid4
 
 from sqlalchemy.orm import Session
 from V2.app.core.curriculum.models.curriculum import StudentSubject
+from V2.app.core.curriculum.services.curriculum_service import CurriculumService
 from V2.app.core.curriculum.services.validators import CurriculumValidator
 from V2.app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
 from V2.app.core.shared.factory.base_factory import BaseFactory
@@ -27,8 +28,10 @@ class StudentSubjectFactory(BaseFactory):
             current_user: The authenticated user performing the operation, if any.
         """
         self.model = model
+        self.session = session
         self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = CurriculumValidator()
+        self.service = CurriculumService(session, current_user)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
@@ -54,11 +57,18 @@ class StudentSubjectFactory(BaseFactory):
         Returns:
             StudentSubject: Created StudentSubject record
         """
+        from V2.app.core.curriculum.factories.academic_level_subject import AcademicLevelSubjectFactory
+        from V2.app.core.academic_structure.models import AcademicLevelSubject
+        academic_factory = AcademicLevelSubjectFactory(self.session, AcademicLevelSubject, self.current_user)
+        level_subject = academic_factory.get_academic_level_subject(data.academic_level_subject_id)
+        level_id = level_subject.level_id
         try:
             new_student_subject = StudentSubject(
                 id=uuid4(),
                 student_id=student_id,
-                academic_level_subject_id=data.academic_level_subject_id,
+                academic_level_subject_id=self.service.check_academic_level(
+                    student_id, level_id, data.academic_level_subject_id
+                ),
                 term=data.term,
                 academic_session=self.validator.validate_academic_session(data.academic_session),
 
