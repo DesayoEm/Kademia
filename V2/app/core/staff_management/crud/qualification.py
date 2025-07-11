@@ -4,7 +4,7 @@ from typing import List
 
 from V2.app.core.shared.schemas.enums import ArchiveReason
 from V2.app.core.staff_management.models import EducatorQualification
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 from V2.app.core.staff_management.factories.qualification import QualificationFactory
 from V2.app.core.staff_management.schemas.qualification import (
     QualificationCreate, QualificationUpdate, QualificationResponse, QualificationFilterParams

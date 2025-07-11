@@ -1,6 +1,6 @@
 from typing import Dict
 from jinja2 import Environment, FileSystemLoader
-from weasyprint import HTML
+# from weasyprint import HTML
 import io
 import re
 
@@ -21,7 +21,7 @@ class JinjaService:
 
         html_out = template.render(**data)
         pdf_io = io.BytesIO()
-        HTML(string=html_out).write_pdf(pdf_io)
+        # HTML(string=html_out).write_pdf(pdf_io)
 
         filename = self.slugify_filename(f"{filename}.pdf")
         pdf_io.seek(0)

@@ -36,7 +36,7 @@ class CurriculumValidator:
             raise TextTooLongError(entry=value, max_length=100, domain=self.domain)
 
 
-        return value.strip().title()
+        return value.strip().upper()
 
     def validate_academic_session(self, value):
         match = re.fullmatch(r"(\d{4})/(\d{4})", value)

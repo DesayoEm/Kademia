@@ -1,7 +1,7 @@
 from uuid import UUID
 from sqlalchemy.orm import Session
 from V2.app.core.shared.models.enums import AccessLevel
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 
 
 class AccessLevelService:

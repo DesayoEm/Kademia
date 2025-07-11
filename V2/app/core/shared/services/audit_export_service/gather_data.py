@@ -14,13 +14,13 @@ from V2.app.core.auth.models.auth import AccessLevelChange
 from .gatherers.identity.staff_gatherer import StaffGatherer
 from .gatherers.identity.student_gatherer import StudentGatherer
 from .gatherers.identity.guardian_gatherer import GuardianGatherer
-from V2.app.core.shared.services.export_service.gatherers.staff_management import StaffOrganizationGatherer
-from V2.app.core.shared.services.export_service.gatherers.academic_structure import AcademicStructureGatherer
-from V2.app.core.shared.services.export_service.gatherers.curriculum import CurriculumGatherer
-from V2.app.core.shared.services.export_service.gatherers.assessment import AssessmentGatherer
-from V2.app.core.shared.services.export_service.gatherers.transfer import TransferGatherer
-from V2.app.core.shared.services.export_service.gatherers.documents import DocumentsGatherer
-from V2.app.core.shared.services.export_service.gatherers.auth import AuthGatherer
+from V2.app.core.shared.services.audit_export_service.gatherers.staff_management import StaffOrganizationGatherer
+from V2.app.core.shared.services.audit_export_service.gatherers.academic_structure import AcademicStructureGatherer
+from V2.app.core.shared.services.audit_export_service.gatherers.curriculum import CurriculumGatherer
+from V2.app.core.shared.services.audit_export_service.gatherers.assessment import AssessmentGatherer
+from V2.app.core.shared.services.audit_export_service.gatherers.transfer import TransferGatherer
+from V2.app.core.shared.services.audit_export_service.gatherers.documents import DocumentsGatherer
+from V2.app.core.shared.services.audit_export_service.gatherers.auth import AuthGatherer
 from .gatherers.progression import ProgressionGatherer
 
 

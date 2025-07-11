@@ -3,7 +3,7 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from V2.app.core.shared.factory.base_factory import BaseFactory
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 from V2.app.core.staff_management.services.validators import StaffManagementValidator
 from V2.app.core.staff_management.models import StaffRole
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService

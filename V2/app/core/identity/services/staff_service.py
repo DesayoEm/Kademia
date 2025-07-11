@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from V2.app.core.identity.factories.staff import StaffFactory
 from V2.app.core.identity.models.staff import Staff
 from V2.app.core.shared.models.enums import StaffAvailability
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 
 
 class StaffService:

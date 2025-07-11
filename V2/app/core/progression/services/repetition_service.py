@@ -8,7 +8,7 @@ from V2.app.core.progression.factories.repetition import RepetitionFactory
 from V2.app.core.progression.models.progression import Repetition
 from V2.app.core.shared.exceptions import InvalidRepetitionLevelError, EmptyFieldError, \
     ProgressionStatusAlreadySetError
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 
 
 

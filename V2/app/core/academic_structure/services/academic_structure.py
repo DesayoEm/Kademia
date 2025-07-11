@@ -5,7 +5,7 @@ from V2.app.core.shared.validators.entity_validators import EntityValidator
 from V2.app.core.academic_structure.factories.classes import ClassFactory
 from V2.app.core.academic_structure.factories.academic_level import AcademicLevelFactory
 from V2.app.core.academic_structure.factories.department import StudentDepartmentFactory
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from V2.app.core.academic_structure.services.validators import AcademicStructureValidator
 from V2.app.core.academic_structure.models import AcademicLevel, Classes, StudentDepartment

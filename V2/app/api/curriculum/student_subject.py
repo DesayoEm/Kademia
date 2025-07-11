@@ -49,8 +49,6 @@ def download_course_list(
         headers={"Content-Disposition": f'attachment; filename="{filename}"'}
     )
 
-
-
 @router.post("/students/{student_id}/course_list", response_model=CourseListResponse)
 def get_student_course_list(
         student_id: UUID,

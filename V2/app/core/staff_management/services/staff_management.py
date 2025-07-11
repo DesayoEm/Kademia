@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from V2.app.core.shared.validators.entity_validators import EntityValidator
 from V2.app.core.staff_management.factories.department import StaffDepartmentFactory
 from V2.app.core.staff_management.models import StaffDepartment, StaffRole
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 
 
 class StaffManagementService:

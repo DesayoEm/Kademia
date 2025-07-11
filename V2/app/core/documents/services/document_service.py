@@ -8,7 +8,7 @@ from V2.app.core.shared.services.file_storage.s3_upload import S3Upload
 from V2.app.infra.log_service.logger import logger
 from V2.app.infra.settings import config
 
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 from V2.app.core.documents.models.documents import StudentAward, StudentDocument
 
 

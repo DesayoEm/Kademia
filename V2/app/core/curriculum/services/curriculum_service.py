@@ -2,14 +2,14 @@ from sqlalchemy.orm import Session, joinedload
 from datetime import date
 from uuid import UUID
 
-
+from V2.app.core.shared.services.pdf_service.reportlab_base import ReportLabService
 from V2.app.core.curriculum.models.curriculum import Subject, AcademicLevelSubject, StudentSubject, SubjectEducator
 from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.identity.models.student import Student
 from V2.app.core.shared.exceptions.curriculum_errors import AcademicLevelMismatchError
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 from V2.app.core.shared.schemas.enums import Term
-from V2.app.core.shared.services.template_service.jinja_service import JinjaService
+from V2.app.core.shared.services.pdf_service.templates.course_list import CourseListPDF
 from V2.app.infra.settings import config
 
 class CurriculumService:
@@ -18,7 +18,7 @@ class CurriculumService:
         self.current_user = current_user
         self.export_service = ExportService(self.session)
         self.student_factory = StudentFactory(session, Student, current_user)
-        self.template_service = JinjaService()
+        self.pdf_service = CourseListPDF()
         self.export_dir = config.EXPORT_DIR
 
 
@@ -66,7 +66,7 @@ class CurriculumService:
 
         return {
             "student_name": student_name,
-            "term": term,
+            "term": term.value,
             "academic_session": academic_session,
             "date_generated": date_generated,
             "enrollment_list": enrollment_list
@@ -79,9 +79,8 @@ class CurriculumService:
         file_name = f"{student_name} {academic_session} course list"
 
         data = self.generate_student_course_list(student_id, academic_session, term)
-        template_name = "course_list"
 
-        return self.template_service.render_pdf(data, template_name, file_name)
+        return self.pdf_service.render_pdf(data, file_name)
 
 
     def export_subject_audit(self, subject_id: UUID, export_format: str) -> str:

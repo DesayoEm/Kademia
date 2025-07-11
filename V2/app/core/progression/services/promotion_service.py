@@ -6,7 +6,7 @@ from uuid import UUID
 from V2.app.core.progression.factories.promotion import PromotionFactory
 from V2.app.core.progression.models.progression import Repetition, Promotion
 from V2.app.core.shared.exceptions import InvalidPromotionLevelError, EmptyFieldError, ProgressionStatusAlreadySetError
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 
 
 

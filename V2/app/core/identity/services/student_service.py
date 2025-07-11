@@ -4,7 +4,7 @@ from sqlalchemy import func, Integer
 
 from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.identity.models.student import Student
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 
 
 class StudentService:

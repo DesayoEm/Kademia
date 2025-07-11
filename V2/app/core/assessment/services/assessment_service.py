@@ -2,7 +2,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
 from V2.app.core.assessment.models.assessment import TotalGrade
-from V2.app.core.shared.services.export_service.export import ExportService
+from V2.app.core.shared.services.audit_export_service.export import ExportService
 from V2.app.core.shared.exceptions.assessment_errors import WeightTooHighError
 from V2.app.core.shared.exceptions import InvalidWeightError
 from V2.app.core.assessment.models.assessment import Grade
