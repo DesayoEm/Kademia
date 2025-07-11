@@ -1,8 +1,10 @@
-
+import io
 from uuid import UUID
 from typing import List
 from fastapi.responses import FileResponse
+from starlette.responses import StreamingResponse
 
+from V2.app.core.shared.schemas.enums import Term
 from V2.app.core.curriculum.factories.student_subject import StudentSubjectFactory
 from V2.app.core.curriculum.schemas.curriculum import CourseListRequest, CourseListResponse
 from V2.app.core.curriculum.services.curriculum_service import CurriculumService
@@ -32,8 +34,25 @@ def assign_student_subject(
     ):
     return factory.create_student_subject(student_id, payload)
 
-@router.post("/students/{student_id}/curriculum", response_model=CourseListResponse)
-def get_student_curriculum(
+@router.get("/students/{student_id}/course_list/download")
+def download_course_list(
+        student_id: UUID,
+        academic_session: str,
+        term: Term,
+        service: CurriculumService = Depends(get_authenticated_service(CurriculumService))
+):
+    pdf_bytes, filename = service.render_course_list_pdf(student_id, academic_session, term)
+
+    return StreamingResponse(
+        io.BytesIO(pdf_bytes),
+        media_type = "application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
+
+
+
+@router.post("/students/{student_id}/course_list", response_model=CourseListResponse)
+def get_student_course_list(
         student_id: UUID,
         payload: CourseListRequest,
         service: CurriculumService = Depends(get_authenticated_service(CurriculumService))

@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
 from datetime import date
-import os
 from uuid import UUID
 
 
@@ -74,12 +73,10 @@ class CurriculumService:
         }
 
 
-    def create_course_list_pdf(self, student_id: UUID, academic_session: str, term: Term):
+    def render_course_list_pdf(self, student_id: UUID, academic_session: str, term: Term):
         student = self.student_factory.get_student(student_id)
         student_name = f"{student.first_name} {student.last_name}"
         file_name = f"{student_name} {academic_session} course list"
-        filename = os.path.join(self.export_dir, f"{file_name}.pdf")
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
 
         data = self.generate_student_course_list(student_id, academic_session, term)
         template_name = "course_list"
