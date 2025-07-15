@@ -46,7 +46,7 @@ class GradeFactory(BaseFactory):
         )
 
     @resolve_fk_on_create()
-    def create_grade(self, student_id:UUID, student_subject_id:UUID,  data) -> Grade:
+    def create_grade(self, student_id:UUID, student_subject_id:UUID, data) -> Grade:
         """Create a new Grade.
         Args:
             student_id: id of the student to grade
@@ -62,14 +62,13 @@ class GradeFactory(BaseFactory):
             id=uuid4(),
             student_id=student_id,
             student_subject_id=student_subject_id,
-            academic_session=self.validator.validate_academic_session(data.academic_session),
-            term=data.term,
             max_score=self.validator.validate_max_score(data.max_score),
             score=self.validator.validate_score(data.max_score, data.score),
             weight=service.validate_grade_weight(
                 data.weight, student_subject_id
             ),
             type=data.type,
+            feedback=data.feedback,
             graded_by =  self.entity_validator.validate_staff_exists(data.graded_by),
             graded_on=self.validator.validate_graded_date(data.graded_on),
       
@@ -114,19 +113,16 @@ class GradeFactory(BaseFactory):
         service = AssessmentService(self.session)
 
         copied_data = data.copy()
-        to_be_validated = ["score", "max_score", "academic_session", "weight", "graded_on"]
+        to_be_validated = ["score", "max_score", "weight", "graded_on"]
         try:
             existing = self.get_grade(grade_id)
             for key, value in copied_data.items():
                 if hasattr(existing, key) and key not in to_be_validated:
                     setattr(existing, key, value)
 
-            if "academic_session" in data:
-                updated_academic_session = self.validator.validate_academic_session(data.academic_session)
-                setattr(existing, "academic_session", updated_academic_session)
 
             if "graded_on" in data:
-                updated_graded_on = self.validator.validate_graded_date(data.graded_on)
+                updated_graded_on = self.validator.validate_graded_date(data['graded_on'])
                 setattr(existing, "graded_on", updated_graded_on)
 
             if "weight" in data:
@@ -137,11 +133,11 @@ class GradeFactory(BaseFactory):
 
             if "score" in data:
                 max_score = (
-                    self.validator.validate_max_score(data.max_score)
+                    self.validator.validate_max_score(data['max_score'])
                     if "max_score" in data
                     else existing.max_score
                 )
-                validated_score = self.validator.validate_score(max_score, data.score)
+                validated_score = self.validator.validate_score(max_score, data['score'])
                 setattr(existing, "score", validated_score)
 
             return self.repository.update(grade_id, existing, modified_by=self.actor_id)

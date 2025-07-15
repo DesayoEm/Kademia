@@ -22,10 +22,11 @@ router = APIRouter()
 
 @router.post("/{student_subject_id}", response_model= TotalGradeResponse, status_code=201)
 def generate_total_grade(
+        student_id: UUID,
         student_subject_id: UUID,
         factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
     ):
-    return factory.create_total_grade(student_subject_id)
+    return factory.create_total_grade(student_id, student_subject_id)
 
 
 @router.get("/", response_model=List[TotalGradeResponse])

@@ -27,10 +27,10 @@ class ScoreExceedsMaxError(AssessmentError):
 class InvalidWeightError(AssessmentError):
     def __init__(self, entry: int, cumulative_weight: int):
         super().__init__()
-        self.user_message = (f"Cumulative weight for the term can't exceed 100. "
-                             f"Weight: {cumulative_weight}")
+        self.user_message = (f"Cumulative weight for the term can't exceed 10. "
+                             f"Total weight left: {10- cumulative_weight}")
         self.log_message = (
-            f"Weight entry {entry} caused cumulative weight {cumulative_weight} to exceed 100"
+            f"Weight entry {entry} caused cumulative weight {cumulative_weight} to exceed 10"
 
         )
 

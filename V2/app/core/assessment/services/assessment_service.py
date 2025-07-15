@@ -52,17 +52,24 @@ class AssessmentService:
 
     def calculate_total_grade(self, student_subject_id):
         """Calculate total grade from all the grades for a student subject"""
-        total_weight_stmt  = select(func.sum(Grade.weight).where(
+        from sqlalchemy import cast, Float
+
+        total_weight_stmt = select(func.sum(Grade.weight)).where(
             Grade.student_subject_id == student_subject_id,
-        ))
+        )
         total_weight = self.session.scalar(total_weight_stmt)
 
-        weighted_score_stmt = select(func.sum(
-            (Grade.score/Grade.max_score)*Grade.weight
-            )).where(
-                Grade.student_subject_id == student_subject_id,
-    )
+        weighted_score_stmt = select(
+            func.sum(
+                (cast(Grade.score, Float) / cast(Grade.max_score, Float)) * Grade.weight
+            )
+        ).where(
+            Grade.student_subject_id == student_subject_id,
+        )
         weighted_score = self.session.scalar(weighted_score_stmt)
+
+        if not total_weight or total_weight == 0:
+            return 0.0
 
         total_grade = (weighted_score / total_weight) * 100
         return round(total_grade, 2)

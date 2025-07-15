@@ -5,6 +5,7 @@ import time
 import uuid
 
 from V2.app.core.shared.exceptions import *
+from V2.app.core.shared.exceptions.assessment_errors import WeightTooHighError
 from V2.app.infra.log_service.logger import logger, auth_logger
 
 
@@ -87,6 +88,8 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         # Assessment exceptions
         ScoreExceedsMaxError: status.HTTP_400_BAD_REQUEST,
         MaxScoreTooHighError: status.HTTP_400_BAD_REQUEST,
+        WeightTooHighError:status.HTTP_400_BAD_REQUEST,
+        InvalidWeightError:status.HTTP_400_BAD_REQUEST,
 
         # Progression exceptions
         InvalidPromotionLevelError: status.HTTP_400_BAD_REQUEST,
