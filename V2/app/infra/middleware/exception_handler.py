@@ -90,6 +90,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         MaxScoreTooHighError: status.HTTP_400_BAD_REQUEST,
         WeightTooHighError:status.HTTP_400_BAD_REQUEST,
         InvalidWeightError:status.HTTP_400_BAD_REQUEST,
+        UnableToRecalculateError: status.HTTP_500_INTERNAL_SERVER_ERROR,
 
         # Progression exceptions
         InvalidPromotionLevelError: status.HTTP_400_BAD_REQUEST,

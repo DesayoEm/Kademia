@@ -59,10 +59,10 @@ def get_grade(
 def update_grade(
         payload: GradeUpdate,
         grade_id: UUID,
-        factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
+        service: AssessmentService = Depends(get_authenticated_service(AssessmentService))
     ):
     payload = payload.model_dump(exclude_unset=True)
-    return factory.update_grade(grade_id, payload)
+    return service.handle_grade_update(grade_id, payload)
 
 
 @router.patch("/{grade_id}",  status_code=204)

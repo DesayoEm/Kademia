@@ -1,5 +1,5 @@
 from .base_error import KademiaError
-
+from uuid import UUID
 class AssessmentError(KademiaError):
     """Base exception class for assessment-related exceptions."""
 
@@ -22,6 +22,14 @@ class ScoreExceedsMaxError(AssessmentError):
         super().__init__()
         self.user_message = f"Score '{entry}' exceeds maximum allowed score"
         self.log_message = f"Score entry {entry} exceeds max ({max_score})."
+
+
+class UnableToRecalculateError(AssessmentError):
+    def __init__(self, total_grade_id: UUID, error: str):
+        super().__init__()
+        self.user_message = f"Update successful but unable to recalculate total grades"
+        self.log_message = f"Update successful but unable to recalculate total grades for \
+            {str(total_grade_id)}: {error})."
 
 
 class InvalidWeightError(AssessmentError):

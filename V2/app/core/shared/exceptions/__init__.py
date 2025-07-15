@@ -110,7 +110,8 @@ from .identity_errors import (
 from .assessment_errors import (
     ScoreExceedsMaxError,
     MaxScoreTooHighError,
-    InvalidWeightError
+    InvalidWeightError,
+    UnableToRecalculateError,
 )
 
 from .progression_errors import (

@@ -109,38 +109,16 @@ class GradeFactory(BaseFactory):
         Returns:
             Grade: Updated Grade record
         """
-        from V2.app.core.assessment.services.assessment_service import AssessmentService
-        service = AssessmentService(self.session)
-
         copied_data = data.copy()
-        to_be_validated = ["score", "max_score", "weight", "graded_on"]
         try:
             existing = self.get_grade(grade_id)
             for key, value in copied_data.items():
-                if hasattr(existing, key) and key not in to_be_validated:
+                if hasattr(existing, key):
                     setattr(existing, key, value)
 
-
-            if "graded_on" in data:
-                updated_graded_on = self.validator.validate_graded_date(data['graded_on'])
-                setattr(existing, "graded_on", updated_graded_on)
-
-            if "weight" in data:
-                current_weight = existing.weight
-                existing.weight = service.validate_grade_weight_on_update(
-                    current_weight, data.get('weight'), existing.student_subject_id
-                )
-
-            if "score" in data:
-                max_score = (
-                    self.validator.validate_max_score(data['max_score'])
-                    if "max_score" in data
-                    else existing.max_score
-                )
-                validated_score = self.validator.validate_score(max_score, data['score'])
-                setattr(existing, "score", validated_score)
-
-            return self.repository.update(grade_id, existing, modified_by=self.actor_id)
+            return self.repository.update(
+                grade_id, existing, modified_by=self.actor_id
+            )
 
         except EntityNotFoundError as e:
                 self.raise_not_found(grade_id, e)

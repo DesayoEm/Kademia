@@ -2,13 +2,13 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.assessment.models.assessment import TotalGrade
-from V2.app.core.assessment.services.assessment_service import AssessmentService
 from V2.app.core.assessment.services.validators import AssessmentValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from V2.app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
+from V2.app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete, \
+    resolve_fk_on_update
 from V2.app.core.shared.exceptions import EntityNotFoundError
 from V2.app.core.shared.exceptions.maps.error_map import error_map
 
@@ -25,9 +25,9 @@ class TotalGradeFactory(BaseFactory):
             current_user: The authenticated user performing the operation, if any.
         """
         self.model = model
+        self.session = session
         self.repository = SQLAlchemyRepository(self.model, session)
         self.validator = AssessmentValidator(session)
-        self.service = AssessmentService(session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
         self.error_details = error_map.get(self.model)
@@ -52,11 +52,13 @@ class TotalGradeFactory(BaseFactory):
         Returns:
             TotalGrade: Created TotalGrade record
         """
+        from V2.app.core.assessment.services.assessment_service import AssessmentService
+        service = AssessmentService(self.session, self.current_user)
         new_total_grade = TotalGrade(
             id=uuid4(),
             student_subject_id=student_subject_id,
             student_id=student_id,
-            total_score=self.service.calculate_total_grade(
+            total_score=service.calculate_total_grade(
                 student_subject_id
             ),
             created_by=self.actor_id,
@@ -86,6 +88,27 @@ class TotalGradeFactory(BaseFactory):
         """
         fields = ['academic_session', 'term']
         return self.repository.execute_query(fields, filters)
+
+
+    @resolve_fk_on_update()
+    def update_total_grade(self, total_grade_id: UUID, data: dict) -> TotalGrade:
+        """Update a TotalGrade's information.
+        Args:
+            total_grade_id (UUID): ID of TotalGrade to update
+            data (dict): Dictionary containing fields to update
+        Returns:
+            Grade: Updated TotalGrade record
+        """
+        existing = self.get_total_grade(total_grade_id)
+        try:
+            for key, value in data.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
+
+            return self.repository.update(total_grade_id, existing, modified_by=self.actor_id)
+
+        except EntityNotFoundError as e:
+            self.raise_not_found(total_grade_id, e)
 
 
     def archive_total_grade(self, total_grade_id: UUID, reason) -> TotalGrade:

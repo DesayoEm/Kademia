@@ -86,6 +86,7 @@ class StudentSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     grades: Mapped[List['Grade']] = relationship(back_populates='student_subject')
     total_grade: Mapped['TotalGrade'] = relationship(back_populates='student_subject')
 
+
     __table_args__ = (
         UniqueConstraint('student_id', 'academic_level_subject_id', 'academic_session', 'term'),
         Index('idx_student_subject_term', 'student_id', 'academic_level_subject_id', 'term', 'academic_session')
