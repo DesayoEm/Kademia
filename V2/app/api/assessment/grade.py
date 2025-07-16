@@ -2,10 +2,13 @@
 from uuid import UUID
 from typing import List
 from fastapi.responses import FileResponse
+from fastapi import UploadFile, File
 
+from V2.app.core.assessment.services.assessment_file_service import AssessmentFileService
 from V2.app.core.assessment.services.assessment_service import AssessmentService
+from V2.app.core.identity.factories.student import StudentFactory
 from V2.app.core.shared.schemas.enums import ExportFormat
-from V2.app.core.shared.schemas.shared_models import ArchiveRequest
+from V2.app.core.shared.schemas.shared_models import ArchiveRequest, UploadResponse
 from V2.app.core.assessment.factories.grade import GradeFactory
 from fastapi import Depends, APIRouter
 from V2.app.core.assessment.schemas.grade import (
@@ -20,6 +23,21 @@ token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
 
+@router.post("/{student_id}/assessments/{grade_id}/file", response_model= UploadResponse,
+             status_code=201)
+def upload_assessment_file(
+        grade_id: UUID,
+        student_id: UUID,
+        file: UploadFile = File(...),
+        service: AssessmentFileService = Depends(get_authenticated_service(AssessmentFileService)),
+        grade_factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory)),
+        student_factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
+    ):
+        grade = grade_factory.get_grade(grade_id)
+        student = student_factory.get_student(student_id)
+        result = service.upload_assessment_file(file, student, grade)
+
+        return UploadResponse(**result)
 
 @router.post("/{student_subject_id}", response_model= GradeResponse, status_code=201)
 def grade_student(

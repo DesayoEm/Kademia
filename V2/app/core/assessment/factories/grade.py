@@ -2,6 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from V2.app.core.assessment.models.assessment import Grade
+from V2.app.core.assessment.services.assessment_file_service import AssessmentFileService
 from V2.app.core.assessment.services.validators import AssessmentValidator
 from V2.app.core.shared.factory.base_factory import BaseFactory
 from V2.app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -190,11 +191,14 @@ class GradeFactory(BaseFactory):
 
     @resolve_fk_on_delete()
     def delete_archived_grade(self, grade_id: UUID, is_archived = True) -> None:
-        """Permanently delete an archived Grade.
+        """Permanently delete an archived Grade .
         Args:
             grade_id: ID of Grade to delete
             is_archived: Whether to check archived or active entities
         """
+        grade = self.get_grade(grade_id)
+        service = AssessmentFileService(self.session, self.current_user)
+        service.remove_assessment_file(grade)
         try:
             self.repository.delete_archive(grade_id)
 

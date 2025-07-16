@@ -10,8 +10,9 @@ from V2.app.infra.settings import config
 class ProfilePictureService:
     def __init__(self, session: Session, current_user = None):
         self.session = session
-        self.upload = S3Upload(session)
         self.current_user = current_user
+        self.upload = S3Upload(session, current_user=current_user)
+
 
         self.SUPPORTED_IMAGE_TYPES = {
             'image/png': 'png',

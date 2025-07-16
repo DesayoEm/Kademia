@@ -53,6 +53,15 @@ def get_total_grade(
     return factory.get_total_grade(grade_id)
 
 
+@router.put("/{total_grade_id}", response_model=TotalGradeResponse)
+def recalculate_total_grade(
+        total_grade_id: UUID,
+        service: AssessmentService = Depends(get_authenticated_service(AssessmentService))
+    ):
+    return service.recalculate_total_grade(total_grade_id)
+
+
+
 @router.patch("/{grade_id}", response_model=TotalGradeResponse)
 def restore_total_grade(
         grade_id: UUID,

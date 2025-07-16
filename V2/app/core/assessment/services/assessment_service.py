@@ -141,6 +141,13 @@ class AssessmentService:
         return True if grade.student_subject.total_grade else False
 
 
+    def recalculate_total_grade(self, total_grade_id: UUID):
+        grade = self.total_grade_factory.get_total_grade(total_grade_id)
+        self.calculate_total_grade(grade.student_subject_id)
+
+        return self.total_grade_factory.get_total_grade(total_grade_id)
+
+
     def export_grade_audit(self, grade_id: UUID, export_format: str) -> str:
         """Export grade and its associated data
         Args:
