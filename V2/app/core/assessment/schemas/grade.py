@@ -18,6 +18,7 @@ class GradeBase(BaseModel):
     max_score: int
     graded_by: UUID
     graded_on:date
+    feedback: str | None = None
 
 
 class GradeCreate(GradeBase):

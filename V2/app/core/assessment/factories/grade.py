@@ -57,7 +57,7 @@ class GradeFactory(BaseFactory):
             Grade: Created Grade record
         """
         from V2.app.core.assessment.services.assessment_service import AssessmentService
-        service = AssessmentService(self.session)
+        service = AssessmentService(self.session, self.current_user)
 
         new_grade = Grade(
             id=uuid4(),
@@ -147,6 +147,10 @@ class GradeFactory(BaseFactory):
             grade_id (UUID): ID of Grade to delete
             is_archived: Whether to check archived or active entities
         """
+
+        service = AssessmentFileService(self.session, self.current_user)
+        grade = self.get_grade(grade_id)
+        service.remove_assessment_file(grade)
         try:
             return self.repository.delete(grade_id)
 
@@ -196,8 +200,9 @@ class GradeFactory(BaseFactory):
             grade_id: ID of Grade to delete
             is_archived: Whether to check archived or active entities
         """
-        grade = self.get_grade(grade_id)
         service = AssessmentFileService(self.session, self.current_user)
+
+        grade = self.get_grade(grade_id)
         service.remove_assessment_file(grade)
         try:
             self.repository.delete_archive(grade_id)

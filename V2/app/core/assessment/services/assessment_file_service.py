@@ -4,6 +4,7 @@ from typing import Dict, Any
 from sqlalchemy.orm import Session
 
 from V2.app.core.identity.models.student import Student
+from V2.app.core.shared.exceptions.assessment_errors import FileAlreadyExistsError
 from V2.app.core.shared.services.file_storage.s3_upload import S3Upload
 from V2.app.infra.log_service.logger import logger
 from V2.app.infra.settings import config
@@ -48,7 +49,7 @@ class AssessmentFileService:
         first_name = student.first_name
         last_name = student.last_name
 
-        return f"{s3_folder}_{first_name}_{last_name}_{grade_type}_{unique_id}.{file_extension}"
+        return f"{s3_folder}_{first_name}_{last_name}_{grade_type.value}_{unique_id}.{file_extension}"
 
 
     def upload_assessment_file(self, file, student, grade) -> Dict[str, Any]:
@@ -61,6 +62,9 @@ class AssessmentFileService:
         Returns:
             dict: Upload result with success status and file info
         """
+        if grade.file_url:
+            raise FileAlreadyExistsError(grade.id)
+
         try:
             contents = self.upload.validate_file_upload(
                 file, self.MIN_FILE_SIZE, self.MAX_FILE_SIZE, self.SUPPORTED_FILE_TYPES
@@ -90,14 +94,14 @@ class AssessmentFileService:
             logger.error(f"File upload failed for grade {grade.id}: {str(e)}")
             raise
 
+
     def remove_assessment_file(self, grade) -> None:
         """
         Delete assessment file from S3 and database.
         Args:
             grade: Grade object
         """
-        s3_key = grade.file_url
-        if s3_key:
+        if grade.file_url:
             try:
                 s3_key = grade.file_url
                 self.upload.s3_client.delete_object(Bucket=self.upload.AWS_BUCKET_NAME, Key=s3_key)

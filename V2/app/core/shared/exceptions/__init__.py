@@ -112,6 +112,8 @@ from .assessment_errors import (
     MaxScoreTooHighError,
     InvalidWeightError,
     UnableToRecalculateError,
+    WeightTooHighError,
+    FileAlreadyExistsError
 )
 
 from .progression_errors import (

@@ -39,6 +39,16 @@ def upload_assessment_file(
 
         return UploadResponse(**result)
 
+@router.delete("/{grade_id}/file", status_code=204)
+def remove_assessment_file(
+        grade_id: UUID,
+        service: AssessmentFileService = Depends(get_authenticated_service(AssessmentFileService)),
+        factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
+    ):
+        grade = factory.get_grade(grade_id)
+        return service.remove_assessment_file(grade)
+
+
 @router.post("/{student_subject_id}", response_model= GradeResponse, status_code=201)
 def grade_student(
         student_id: UUID,

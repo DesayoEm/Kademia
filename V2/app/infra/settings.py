@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     PROFILE_PICTURES_FOLDER: str
     STUDENT_DOCUMENTS_FOLDER: str
     STUDENT_AWARDS_FOLDER: str
+    ASSESSMENTS_FOLDER: str
 
 
     model_config = SettingsConfigDict(

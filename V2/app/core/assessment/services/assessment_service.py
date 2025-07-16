@@ -16,10 +16,11 @@ from V2.app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRe
 class AssessmentService:
     def __init__(self, session: Session, current_user=None):
         self.session = session
+        self.current_user = current_user
         self.export_service = ExportService(session)
         self.validator = AssessmentValidator(session)
-        self.grade_factory = GradeFactory(session , Grade, current_user = current_user)
-        self.total_grade_factory = TotalGradeFactory(session, TotalGrade, current_user=current_user)
+        self.grade_factory = GradeFactory(session , Grade, self.current_user)
+        self.total_grade_factory = TotalGradeFactory(session, TotalGrade, self.current_user)
         self.total_grade_repository = SQLAlchemyRepository(TotalGrade, session)
 
 

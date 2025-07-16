@@ -42,6 +42,11 @@ class InvalidWeightError(AssessmentError):
 
         )
 
-
+class FileAlreadyExistsError(AssessmentError):
+    def __init__(self, obj_id: UUID):
+        super().__init__()
+        self.user_message = (f"There's a file associated with this grade object. \""
+                             f"Please remove it to upload a new one")
+        self.log_message = f"File already exists for object ({obj_id})."
 
 
