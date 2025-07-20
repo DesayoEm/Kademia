@@ -1,12 +1,12 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from uuid import UUID
 
 from app.core.progression.factories.promotion import PromotionFactory
 from app.core.progression.models.progression import Repetition, Promotion
 from app.core.shared.exceptions import InvalidPromotionLevelError, EmptyFieldError, ProgressionStatusAlreadySetError, \
-    LevelNotFinalError
+    LevelNotFinalError, EntityNotFoundError
 from app.core.shared.services.audit_export_service.export import ExportService
 
 
@@ -46,10 +46,8 @@ class PromotionService:
 
 
     def graduate_student(self, student_id: UUID, academic_session: str):
-        from app.core.identity.factories.student import StudentFactory
         from app.core.identity.models.student import Student
-        from app.core.academic_structure.models import AcademicLevel
-        from app.core.exceptions import BadRequest
+        from app.core.shared.exceptions import LevelNotFinalError
 
         student = (
             self.session.query(Student)
@@ -58,8 +56,16 @@ class PromotionService:
             .one_or_none()
         )
 
+        if not student:
+            raise EntityNotFoundError(
+            entity_model=Student,
+            identifier=student_id,
+            error="Student not found",
+            display_name="student"
+        )
+
         if not student.level.is_final:
-            raise LevelNotFinalError(student.level_id)
+            raise LevelNotFinalError(student.level.id)
 
         student.graduation_year = academic_session
         student.is_graduated = True

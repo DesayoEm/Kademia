@@ -60,7 +60,7 @@ class AcademicLevelFactory(BaseFactory):
         Returns:
             AcademicLevel: Created academic_level record
         """
-        from app.core.academic_structure.services import AcademicStructureService
+        from app.core.academic_structure.services.academic_structure import AcademicStructureService
         service = AcademicStructureService(self.session, self.current_user)
 
         new_level = AcademicLevel(

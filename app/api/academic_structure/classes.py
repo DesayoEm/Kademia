@@ -36,6 +36,7 @@ def get_classes(
     ):
     return factory.get_all_classes(filters)
 
+
 @router.get("/{class_id}/audit", response_model=ClassAudit)
 def get_class_audit(
         class_id: UUID,

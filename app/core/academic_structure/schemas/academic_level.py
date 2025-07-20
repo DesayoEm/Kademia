@@ -11,6 +11,7 @@ class AcademicLevelBase(BaseModel):
     name: str
     description: str
     promotion_rank: int
+    is_final: bool
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -19,7 +20,8 @@ class AcademicLevelBase(BaseModel):
                 "example": {
                     "name": "JSS1",
                     "description": "First Level in the Secondary School System",
-                    "promotion_rank": 1
+                    "promotion_rank": 1,
+                    "is_final": False
 
                 }
         }

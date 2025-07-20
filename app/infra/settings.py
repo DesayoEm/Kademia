@@ -53,5 +53,6 @@ class EmailSettings(BaseSettings):
     class Config:
         env_file = "../.env"
         env_prefix = "EMAIL_"
+        extra = "ignore"
 
 email_settings = EmailSettings()
