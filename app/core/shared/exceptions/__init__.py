@@ -119,7 +119,8 @@ from .assessment_errors import (
 from .progression_errors import (
     InvalidRepetitionLevelError,
     InvalidPromotionLevelError,
-    ProgressionStatusAlreadySetError
+    ProgressionStatusAlreadySetError,
+    LevelNotFinalError
 )
 
 from .curriculum_errors import (

@@ -60,7 +60,7 @@ class PromotionFactory(BaseFactory):
         from app.core.progression.services.promotion_service import PromotionService
         service = PromotionService(self.session, self.current_user)
         validated_new_level_id = service.validate_promotion_level(
-            student.level_id, data.promoted_level_id
+            student.level_id, data.promoted_level_id, student_id, data.academic_session
         )
 
 

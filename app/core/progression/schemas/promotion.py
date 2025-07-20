@@ -8,6 +8,22 @@ class PromotionFilterParams(BaseFilterParams):
     order_by: Literal["academic_session", "created_at"] = "academic_session"
 
 
+
+class GraduationCreate(BaseModel):
+    """Base model for student promotions"""
+    academic_session: str
+
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        extra="ignore",
+        json_schema_extra={
+            "example": {
+                "academic_session": "2025/2026"
+            }
+        }
+    )
+
 class PromotionBase(BaseModel):
     """Base model for student promotions"""
     academic_session: str

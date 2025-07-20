@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
 
-from app.core.transfer.factories.department_transfer import DepartmentTransferFactory
+from app.core.transfer.factories.transfer import TransferFactory
 from app.core.transfer.schemas.department_transfer import (
     StudentDepartmentTransferCreate,
     StudentDepartmentTransferResponse,
@@ -22,7 +22,7 @@ class StudentDepartmentTransferCrud:
         """
         self.session = session
         self.current_user = current_user
-        self.factory = DepartmentTransferFactory(session, current_user=current_user)
+        self.factory = TransferFactory(session, current_user=current_user)
 
 
     def create_transfer(self, student_id: UUID, data: StudentDepartmentTransferCreate) -> StudentDepartmentTransferResponse:

@@ -34,3 +34,9 @@ class ProgressionStatusAlreadySetError(ProgressionError):
         self.log_message = f"Attempted to set status to {attempted_status} for {progression_type} \
                         {progression_id} that is already {current_status}"
 
+
+class LevelNotFinalError(ProgressionError):
+    def __init__(self, level_id: UUID):
+        super().__init__()
+        self.user_message = f"Invalid graduation:Student must be in final level to graduate."
+        self.log_message = f"Invalid graduation: id {level_id} is not a final level"

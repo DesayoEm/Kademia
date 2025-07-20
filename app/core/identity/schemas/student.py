@@ -65,6 +65,7 @@ class StudentResponse(StudentCreate):
     class_id: UUID | None = None
     is_repeating: bool
     date_left: date | None = None
+    is_graduated: bool
     graduation_date: date | None = None
 
 

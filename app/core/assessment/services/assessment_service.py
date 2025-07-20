@@ -115,7 +115,7 @@ class AssessmentService:
             validated_score = self.validator.validate_score(max_score, update_data["score"])
             update_data["score"] = validated_score
 
-        # If the grade has or will have a weight > 0, recalculate total grade
+        #If the grade has or will have a weight > 0, recalculate total grade
         if (existing_grade.weight or "weight" in update_data) and self.check_if_total_exists(existing_grade):
 
             updated = self.grade_factory.update_grade(grade_id, update_data)

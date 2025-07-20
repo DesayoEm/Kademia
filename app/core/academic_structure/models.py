@@ -12,6 +12,7 @@ class AcademicLevel(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     description: Mapped[str] = mapped_column(String(500))
     display_order: Mapped[int] = mapped_column(Integer, unique=True)
     promotion_rank: Mapped[int] = mapped_column(Integer, unique=True)
+    is_final: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Relationships
     classes: Mapped[List['Classes']] = relationship(back_populates='academic_level')

@@ -3,13 +3,14 @@ from fastapi import APIRouter, Depends
 from uuid import UUID
 from typing import List
 
+from app.core.identity.schemas.student import StudentResponse
 from app.core.progression.factories.promotion import PromotionFactory
 
 from app.core.progression.schemas.promotion import (
     PromotionCreate,
     PromotionResponse,
     PromotionFilterParams,
-    PromotionAudit, PromotionReview, PromotionDecision
+    PromotionAudit, PromotionReview, PromotionDecision, GraduationCreate
 )
 from app.core.progression.services.promotion_service import PromotionService
 from app.core.shared.schemas.shared_models import ArchiveRequest
@@ -21,6 +22,15 @@ from app.core.auth.services.dependencies.current_user_deps import get_authentica
 token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
+
+
+@router.post("/students/{student_id}/graduate", response_model=StudentResponse, status_code=201)
+def graduate_student(
+        student_id: UUID,
+        payload: GraduationCreate,
+        service: PromotionService = Depends(get_authenticated_service(PromotionService))
+):
+    return service.graduate_student(student_id, payload.academic_session)
 
 
 

@@ -5,7 +5,8 @@ from uuid import UUID
 
 from app.core.progression.factories.promotion import PromotionFactory
 from app.core.progression.models.progression import Repetition, Promotion
-from app.core.shared.exceptions import InvalidPromotionLevelError, EmptyFieldError, ProgressionStatusAlreadySetError
+from app.core.shared.exceptions import InvalidPromotionLevelError, EmptyFieldError, ProgressionStatusAlreadySetError, \
+    LevelNotFinalError
 from app.core.shared.services.audit_export_service.export import ExportService
 
 
@@ -20,16 +21,21 @@ class PromotionService:
         self.domain = "PROGRESSION"
 
 
-    def validate_promotion_level(self, previous_level_id: UUID, promoted_level_id: UUID):
+    def validate_promotion_level(
+            self, previous_level_id: UUID, promoted_level_id: UUID, student_id: UUID, academic_session: str
+    ):
     
         from app.core.academic_structure.factories.academic_level import AcademicLevelFactory
         from app.core.academic_structure.models import AcademicLevel
-       
+
         academic_factory = AcademicLevelFactory(self.session, AcademicLevel, self.current_user)
-        
+
         previous_level = academic_factory.get_academic_level(previous_level_id)
-        promoted_level = academic_factory.get_academic_level(promoted_level_id)
-        
+        promoted_level = academic_factory.get_academic_level(promoted_level_id) if promoted_level_id else None
+
+        if previous_level.is_final:
+            raise #graguate instead. error to be defined later
+
         if promoted_level.promotion_rank != previous_level.promotion_rank + 1:
             raise InvalidPromotionLevelError(
                 next_level_id=promoted_level_id,
@@ -37,6 +43,30 @@ class PromotionService:
             )
 
         return promoted_level_id
+
+
+    def graduate_student(self, student_id: UUID, academic_session: str):
+        from app.core.identity.factories.student import StudentFactory
+        from app.core.identity.models.student import Student
+        from app.core.academic_structure.models import AcademicLevel
+        from app.core.exceptions import BadRequest
+
+        student = (
+            self.session.query(Student)
+            .options(joinedload(Student.level))
+            .filter(Student.id == student_id)
+            .one_or_none()
+        )
+
+        if not student.level.is_final:
+            raise LevelNotFinalError(student.level_id)
+
+        student.graduation_year = academic_session
+        student.is_graduated = True
+
+        self.session.commit()
+        return student
+
 
 
     def action_promotion_record(self, promotion_id: UUID, data: dict):

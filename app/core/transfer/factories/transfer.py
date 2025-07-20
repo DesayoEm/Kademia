@@ -14,7 +14,7 @@ from app.core.transfer.models.transfer import DepartmentTransfer
 
 
 
-class DepartmentTransferFactory(BaseFactory):
+class TransferFactory(BaseFactory):
     """Factory class for managing department transfer operations."""
 
     def __init__(self, session: Session, model=DepartmentTransfer, current_user = None):
@@ -33,7 +33,7 @@ class DepartmentTransferFactory(BaseFactory):
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.actor_id: UUID = self.get_actor_id()
-        self.domain = "StudentDepartmentTransfer"
+        self.domain = "DepartmentTransfer"
 
     def raise_not_found(self, identifier, error):
         raise EntityNotFoundError(
@@ -45,11 +45,17 @@ class DepartmentTransferFactory(BaseFactory):
 
     @resolve_fk_on_create()
     def create_transfer(self, student_id: UUID, data) -> DepartmentTransfer:
+
+        from app.core.identity.models.student import Student
+        from app.core.identity.factories.student import StudentFactory
+        student_factory = StudentFactory(self.session, Student, self.current_user)
+        student = student_factory.get_student(student_id)
+
         new_transfer = DepartmentTransfer(
             id=uuid4(),
             student_id=student_id,
             academic_session=data.academic_session,
-            previous_department_id=data.previous_department_id,
+            previous_department_id=student.department_id,
             new_department_id=data.new_department_id,
             reason=data.reason,
             status=data.status,

@@ -32,7 +32,8 @@ class Student(UserBase):
     is_repeating: Mapped[bool] = mapped_column(Boolean, default=False)
     session_start_year: Mapped[int] = mapped_column(Integer)
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
-    graduation_date: Mapped[date] = mapped_column(Date, nullable=True)
+    is_graduated: Mapped[bool] = mapped_column(Boolean, default=False)
+    graduation_date: Mapped[str] = mapped_column(String(9), nullable=True)
 
     # Relationships
     documents_owned: Mapped[List['StudentDocument']] = relationship(back_populates='owner')
