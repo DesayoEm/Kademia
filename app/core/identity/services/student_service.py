@@ -2,8 +2,10 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import func, Integer
 
+
 from app.core.identity.factories.student import StudentFactory
 from app.core.identity.models.student import Student
+from app.core.shared.exceptions.academic_structure_errors import ClassLevelMismatchError
 from app.core.shared.services.audit_export_service.export import ExportService
 
 
@@ -55,6 +57,15 @@ class StudentService:
         """Assign a student's class"""
         if not class_id:
             return self.factory.update_student(stu_id, {"class_id": None})
+
+        from app.core.academic_structure.factories.classes import ClassFactory
+        class_factory = ClassFactory(session=self.session, current_user=self.current_user)
+
+        class_ = class_factory.get_class(class_id)
+        student = self.factory.get_student(stu_id)
+
+        if student.level_id != class_.level_id:
+            raise ClassLevelMismatchError(stu_id, class_id)
 
         return self.factory.update_student(stu_id, {"class_id": class_id})
 

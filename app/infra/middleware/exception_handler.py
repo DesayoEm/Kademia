@@ -79,6 +79,8 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         # Academic structure exceptions
         InvalidCodeError: status.HTTP_400_BAD_REQUEST,
         InvalidRankNumberError: status.HTTP_400_BAD_REQUEST,
+        ClassLevelMismatchError: status.HTTP_400_BAD_REQUEST,
+
 
         # Curriculum exceptions
         AcademicLevelMismatchError: status.HTTP_400_BAD_REQUEST,

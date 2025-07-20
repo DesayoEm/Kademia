@@ -1,4 +1,6 @@
 from .base_error import KademiaError
+from uuid import UUID
+
 
 
 class StudentOrganizationError(KademiaError):
@@ -30,3 +32,9 @@ class InvalidRankNumberError(StudentOrganizationError):
         super().__init__()
         self.user_message = f"Rank must be greater than 0!"
         self.log_message = f"Domain: {domain}-- Promotion rank entry attempted with Invalid integer: {entry}"
+
+
+class ClassLevelMismatchError(StudentOrganizationError):
+    def __init__(self, stu_id: UUID, class_id: UUID):
+        self.user_message = f"Student cannot be assigned to a class outside their academic level"
+        self.log_message = f"Student {stu_id} assigned a class {class_id} outside their level"
