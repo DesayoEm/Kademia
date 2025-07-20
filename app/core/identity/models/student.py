@@ -29,7 +29,6 @@ class Student(UserBase):
     department_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True),ForeignKey('student_departments.id',
             ondelete='SET NULL',name='fk_students_student_departments_department_id'),  nullable = True
         )
-    is_repeating: Mapped[bool] = mapped_column(Boolean, default=False)
     session_start_year: Mapped[int] = mapped_column(Integer)
     date_left: Mapped[date] = mapped_column(Date, nullable=True)
     is_graduated: Mapped[bool] = mapped_column(Boolean, default=False)

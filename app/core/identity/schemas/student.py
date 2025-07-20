@@ -63,10 +63,9 @@ class StudentResponse(StudentCreate):
     student_id: str
     department_id: UUID | None = None
     class_id: UUID | None = None
-    is_repeating: bool
     date_left: date | None = None
     is_graduated: bool
-    graduation_year: date | None = None
+    graduation_year: str | None = None
 
 
 class StudentAudit(BaseModel):

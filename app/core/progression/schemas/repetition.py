@@ -9,7 +9,7 @@ class RepetitionFilterParams(BaseFilterParams):
     order_by: Literal["academic_session", "created_at"] = "academic_session"
 
 
-class RepetitonBase(BaseModel):
+class RepetitionBase(BaseModel):
     """Base model for student repetitions"""
     academic_session: str
     repeat_level_id: UUID
@@ -30,7 +30,7 @@ class RepetitonBase(BaseModel):
    )
 
 
-class RepetitonReview(BaseModel):
+class RepetitionReview(BaseModel):
     """Model for reviewing student repetitions"""
     repeat_level_id: UUID
     repetition_reason: str
@@ -49,7 +49,7 @@ class RepetitonReview(BaseModel):
    )
 
 
-class RepetitonDecision(BaseModel):
+class RepetitionDecision(BaseModel):
     """Model for reviewing student repetitions"""
     status: ApprovalStatus = ApprovalStatus.PENDING
     decision_reason: str
@@ -68,12 +68,12 @@ class RepetitonDecision(BaseModel):
    )
 
 
-class RepetitonCreate(RepetitonBase):
+class RepetitionCreate(RepetitionBase):
     """For creating a new student repetition"""
     pass
 
 
-class RepetitonResponse(RepetitonBase):
+class RepetitionResponse(RepetitionBase):
     """Response model for student repetitions"""
     student_id: UUID
     failed_level_id: UUID
@@ -82,7 +82,7 @@ class RepetitonResponse(RepetitonBase):
     decision_reason: str | None = None
 
 
-class RepetitonAudit(BaseModel):
+class RepetitionAudit(BaseModel):
     """Response model for student repetitions"""
     created_at: datetime | None = None
     created_by: UUID

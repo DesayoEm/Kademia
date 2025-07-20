@@ -2,7 +2,7 @@ from .base_error import KademiaError
 from uuid import UUID
 
 class ProgressionError(KademiaError):
-    """Base exception class for all archive and deletion related exceptions"""
+    """Base exception class for all progression related exceptions"""
 
 
 class InvalidPromotionLevelError(ProgressionError):

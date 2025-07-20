@@ -8,11 +8,11 @@ class DepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     Represents a student's transfer between departments including the reason,approval status, and status updates.
     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
-    __tablename__ = 'student_department_transfers'
+    __tablename__ = 'department_transfers'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-                    ondelete='CASCADE',name='fk_student_department_transfers_students_student_id'))
+                    ondelete='CASCADE',name='fk_department_transfers_students_student_id'))
 
     academic_session: Mapped[str] = mapped_column(String(9))
 
@@ -25,30 +25,29 @@ class DepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
                                                     )
     reason: Mapped[str] = mapped_column(String(500))
     status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus, name='approvalstatus'), default=ApprovalStatus.PENDING)
-    status_updated_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-                    ondelete='RESTRICT',name='fk_student_department_transfers_staff_status_updated_by'),nullable=True
+    status_completed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
+                    ondelete='RESTRICT',name='fk_department_transfers_staff_status_completed_by'),nullable=True
                                                     )
-    status_updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
-    rejection_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    status_completed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
+    decision_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Relationships
     transferred_student: Mapped['Student'] = relationship(back_populates='department_transfers', foreign_keys='[DepartmentTransfer.student_id]',
                          passive_deletes=True)
-    former_dept: Mapped['StudentDepartment'] = relationship(foreign_keys='[DepartmentTransfer.previous_department_id]')
-    new_dept: Mapped['StudentDepartment'] = relationship(foreign_keys='[DepartmentTransfer.new_department_id]')
-    status_changer: Mapped['Staff'] = relationship(foreign_keys='[DepartmentTransfer.status_updated_by]')
+    former_department: Mapped['StudentDepartment'] = relationship(foreign_keys='[DepartmentTransfer.previous_department_id]')
+    new_department: Mapped['StudentDepartment'] = relationship(foreign_keys='[DepartmentTransfer.new_department_id]')
+    status_changer: Mapped['Staff'] = relationship(foreign_keys='[DepartmentTransfer.status_completed_by]')
 
     __table_args__ = (
-        Index('idx_dept_transfer_status', 'status'),
-        Index('idx_student_dept_transfer_status', 'student_id', 'status'),
-        Index('idx_student_dept_transfer_academic_session', 'student_id', 'academic_session'),
+        Index('idx_department_transfer_status', 'student_id', 'status'),
+        Index('idx_department_transfer_academic_session', 'student_id', 'academic_session'),
         Index('idx_previous_department_id', 'previous_department_id'),
         Index('idx_new_department_id', 'new_department_id'),
     )
 
     def __repr__(self) -> str:
         return f"student {self.student_id} transfer from {self.previous_department_id} to {self.new_department_id} in {self.academic_session}\
-        was actioned by {self.status_updated_by}"
+        was actioned by {self.status_completed_by}"
 
 
 from app.core.identity.models.student import Student

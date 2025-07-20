@@ -67,6 +67,7 @@ class AcademicLevelFactory(BaseFactory):
             id=uuid4(),
             name=self.validator.validate_level_name(data.name),
             description=self.validator.validate_description(data.description),
+            is_final=data.is_final,
             display_order=service.return_default_level_order(),
             promotion_rank =self.validator.validate_promotion_rank(data.promotion_rank),
 

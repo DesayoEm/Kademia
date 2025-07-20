@@ -7,7 +7,8 @@ from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
+from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete, \
+    resolve_fk_on_update
 from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
 from app.core.shared.exceptions.maps.error_map import error_map
 from app.core.transfer.models.transfer import DepartmentTransfer
@@ -27,6 +28,7 @@ class TransferFactory(BaseFactory):
         """
 
         self.model = model
+        self.session = session
         self.repository = SQLAlchemyRepository(self.model, session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
@@ -58,7 +60,6 @@ class TransferFactory(BaseFactory):
             previous_department_id=student.department_id,
             new_department_id=data.new_department_id,
             reason=data.reason,
-            status=data.status,
             created_by=self.actor_id,
             last_modified_by=self.actor_id
         )
@@ -76,6 +77,27 @@ class TransferFactory(BaseFactory):
         return self.repository.execute_query(['academic_session', 'status'], filters)
 
 
+
+    @resolve_fk_on_update()
+    def update_transfer(self, transfer_id: UUID, data: dict) -> DepartmentTransfer:
+        """Update a transfer record information."""
+        from app.core.transfer.services.transfer_service import TransferService
+        service = TransferService(self.session, self.current_user)
+
+        try:
+            existing = self.get_transfer(transfer_id)
+            if "reason" in data:
+                existing.transfer_reason = data["reason"]
+
+            for key, value in data.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
+
+            return self.repository.update(transfer_id, existing, modified_by=self.actor_id)
+
+        except EntityNotFoundError as e:
+            self.raise_not_found(transfer_id, e)
+            
     def archive_transfer(self, transfer_id: UUID, reason) -> None:
         """Archive a transfer record."""
         try:

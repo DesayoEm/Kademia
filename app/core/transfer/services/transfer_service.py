@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from uuid import UUID
 
+from app.core.shared.exceptions import TransferStatusAlreadySetError, EmptyFieldError
 from app.core.transfer.factories.transfer import TransferFactory
 from app.core.transfer.models.transfer import DepartmentTransfer
 from app.core.shared.services.audit_export_service.export import ExportService
@@ -33,13 +34,13 @@ class TransferService:
         transfer = self.factory.get_transfer(transfer_id)
 
         if transfer.status == "REJECTED" and data["status"].value == "REJECTED":
-            raise ProgressionStatusAlreadySetError(
-                "transfer", transfer.status, data["status"].value, transfer_id
+            raise TransferStatusAlreadySetError(
+                transfer.status, data["status"].value, transfer_id
             )
 
         if transfer.status == "APPROVED" and data["status"].value == "APPROVED":
-            raise ProgressionStatusAlreadySetError(
-                "transfer", transfer.status, data["status"].value, transfer_id
+            raise TransferStatusAlreadySetError(
+                transfer.status, data["status"].value, transfer_id
             )
 
         # if rejected, state reason for rejection
@@ -47,11 +48,6 @@ class TransferService:
             if not data["decision_reason"]:  # if rejected, state reason for rejection
                 raise EmptyFieldError(entry=data["decision_reason"])
 
-            # persist student's transfer record
-            student_factory.update_student(
-                transfer.student_id, {"level_id": transfer.previous_level_id}
-            )
-
             return self.factory.update_transfer(
                 transfer_id,
                 {"status": data["status"].value,
@@ -60,10 +56,10 @@ class TransferService:
                  "status_completed_at": datetime.now()}
             )
 
-        # if approved, persist student's new academic level, and transfer record
+        # if approved, persist student's new department, and transfer record
         if data["status"].value == "APPROVED":
             student_factory.update_student(
-                transfer.student_id, {"level_id": transfer.promoted_level_id}
+                transfer.student_id, {"department_id": transfer.new_department_id}
             )
 
             return self.factory.update_transfer(
@@ -73,6 +69,8 @@ class TransferService:
                  "status_completed_by": self.current_user.id,
                  "status_completed_at": datetime.now()}
             )
+        
+        
 
     def export_transfer_audit(self, transfer_id: UUID, export_format: str) -> str:
         """Export transfer object and its associated data
