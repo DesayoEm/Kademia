@@ -19,7 +19,6 @@ class CurriculumService:
         self.export_service = ExportService(self.session)
         self.student_factory = StudentFactory(session, Student, current_user)
         self.pdf_service = CourseListPDF()
-        self.export_dir = config.EXPORT_DIR
 
 
     def check_academic_level(self, student_id: UUID, level_id:UUID, academic_level_subject_id:UUID):

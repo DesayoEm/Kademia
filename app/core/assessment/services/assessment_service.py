@@ -1,15 +1,20 @@
 from uuid import UUID
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select, func
 
+from app.core.curriculum.models.curriculum import StudentSubject, AcademicLevelSubject, Subject
+from app.core.shared.schemas.enums import Term
 from app.core.assessment.factories.total_grade import TotalGradeFactory
 from app.core.assessment.services.validators import AssessmentValidator
 from app.core.assessment.factories.grade import GradeFactory
 from app.core.assessment.models.assessment import TotalGrade
+from app.core.identity.factories.student import StudentFactory
+from app.core.identity.models.student import Student
 from app.core.shared.services.audit_export_service.export import ExportService
 from app.core.shared.exceptions.assessment_errors import WeightTooHighError, UnableToRecalculateError
 from app.core.shared.exceptions import InvalidWeightError
 from app.core.assessment.models.assessment import Grade
+from app.core.shared.services.pdf_service.templates.results import ResultPDF
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 
@@ -20,8 +25,10 @@ class AssessmentService:
         self.export_service = ExportService(session)
         self.validator = AssessmentValidator(session)
         self.grade_factory = GradeFactory(session , Grade, self.current_user)
+        self.student_factory = StudentFactory(session, Student, self.current_user)
         self.total_grade_factory = TotalGradeFactory(session, TotalGrade, self.current_user)
         self.total_grade_repository = SQLAlchemyRepository(TotalGrade, session)
+        self.pdf_service = ResultPDF()
 
 
     def validate_grade_weight(self, value: int, student_subject_id: UUID) -> int:
@@ -148,6 +155,65 @@ class AssessmentService:
 
         return self.total_grade_factory.get_total_grade(total_grade_id)
 
+
+    def generate_student_results(self, student_id: UUID, academic_session: str, term: Term):
+        student = self.student_factory.get_student(student_id)
+        student_name = f"{student.first_name} {student.last_name}"
+
+        results = self.session.query(StudentSubject).options(
+            joinedload(StudentSubject.subject),
+            joinedload(StudentSubject.total_grade),
+        ).filter(
+            StudentSubject.student_id == student_id,
+            StudentSubject.academic_session == academic_session,
+            StudentSubject.term == term
+        ).all()
+
+        result_list = []
+
+        for result in results:
+            subject = result.subject
+            total_score = result.total_grade.total_score if result.total_grade else None
+
+            result_list.append({
+                "course_code": subject.code,
+                "course_title": subject.name,
+                "total_score": total_score,
+                "grading": self.generate_grading(total_score) if total_score is not None else None
+            })
+
+        return {
+            "student_name": student_name,
+            "term": term.value,
+            "academic_session": academic_session,
+            "result_list": result_list
+        }
+
+
+
+    def generate_assessment_pdf(self, student_id: UUID, academic_session: str, term: Term):
+        student = self.student_factory.get_student(student_id)
+        student_name = f"{student.first_name} {student.last_name}"
+        file_name = f"{student_name} {academic_session} {term} term results"
+
+        data = self.generate_student_results(student_id, academic_session, term)
+
+        return self.pdf_service.render_pdf(data, file_name)
+
+    @staticmethod
+    def generate_grading(self, score: int) -> str:
+        if score >= 70:
+            return "A"
+        elif score >= 60:
+            return "B"
+        elif score >= 50:
+            return "C"
+        elif score >= 45:
+            return "D"
+        elif score >= 40:
+            return "E"
+        else:
+            return "F"
 
     def export_grade_audit(self, grade_id: UUID, export_format: str) -> str:
         """Export grade and its associated data
