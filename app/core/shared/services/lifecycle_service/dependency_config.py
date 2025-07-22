@@ -20,8 +20,8 @@ DEPENDENCY_CONFIG = {
         ("wards", Student, "guardian_id", "wards")
     ],
     Student: [
-        ("documents_owned", StudentDocument, "owner_id", "documents"),
-        ("awards_earned", StudentAward, "owner_id", "awards"),
+        ("documents_owned", StudentDocument, "student_id", "documents"),
+        ("awards_earned", StudentAward, "student_id", "awards"),
         ("subjects_taken", StudentSubject, "student_id", "subject enrollments"),
         ("grades", Grade, "student_id", "grades"),
         ("total_grades", TotalGrade, "student_id", "total grades"),

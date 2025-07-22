@@ -5,7 +5,7 @@ from app.core.shared.schemas.shared_models import *
 
 class DocumentFilterParams(BaseFilterParams):
     title: str|None = None
-    owner_id: UUID|None = None
+    student_id: UUID|None = None
     academic_session: str|None = None
     document_type: DocumentType|None = None
 
@@ -61,7 +61,7 @@ class DocumentResponse(DocumentBase):
 class DocumentAudit(BaseModel):
     """Response model for student documents audit"""
     id: UUID
-    owner_id: UUID
+    student_id: UUID
     document_s3_key: str | None = None
     created_at: datetime
     created_by: UUID

@@ -116,10 +116,10 @@ fk_error_map = {
         "fk_student_department_transfers_staff_status_updated_by": ("Staff", "status_updated_by", "Status Updated By"),
     },
     "StudentDocumentFactory": {
-        "fk_student_documents_students_owner_id": ("Student", "owner_id", "Student"),
+        "fk_student_documents_students_student_id": ("Student", "student_id", "Student"),
     },
     "StudentAwardFactory": {
-        "fk_student_documents_students_owner_id": ("Student", "owner_id", "Student"),
+        "fk_student_documents_students_student_id": ("Student", "student_id", "Student"),
     },
     "AccessLevelChangeFactory": {
         "fk_access_level_changes_staff_staff_id": ("Staff", "staff_id", "Target Staff"),

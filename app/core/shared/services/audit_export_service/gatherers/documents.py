@@ -7,16 +7,16 @@ class DocumentsGatherer:
     @staticmethod
     def gather_student_document_data(doc: StudentDocument) -> Tuple[Dict[str, Any], str]:
         """Gather data for StudentDocument entity."""
-        file_name = f"StudentDocument_{doc.owner_id}_{doc.document_type}_{doc.academic_session}"
+        file_name = f"StudentDocument_{doc.student_id}_{doc.document_type}_{doc.academic_session}"
 
         return ({
                     "document": {
                         "id": str(doc.id),
-                        "owner_id": str(doc.owner_id),
+                        "student_id": str(doc.student_id),
                         "title": doc.title,
                         "academic_session": doc.academic_session,
                         "document_type": doc.document_type,
-                        "file_url": doc.file_url,
+                        "file_url": doc.document_s3_key,
                         "created_at": doc.created_at,
                         "created_by": str(doc.created_by) if doc.created_by else None,
                         "last_modified_at": doc.last_modified_at,
@@ -34,16 +34,16 @@ class DocumentsGatherer:
     @staticmethod
     def gather_student_award_data(award: StudentAward) -> Tuple[Dict[str, Any], str]:
         """Gather data for StudentAward entity."""
-        file_name = f"StudentAward_{award.owner_id}_{award.academic_session}_{award.title}"
+        file_name = f"StudentAward_{award.student_id}_{award.academic_session}_{award.title}"
 
         return ({
                     "award": {
                         "id": str(award.id),
-                        "owner_id": str(award.owner_id),
+                        "student_id": str(award.student_id),
                         "title": award.title,
                         "description": award.description,
                         "academic_session": award.academic_session,
-                        "file_url": award.file_url,
+                        "file_url": award.award_s3_key,
                         "created_at": award.created_at,
                         "created_by": str(award.created_by) if award.created_by else None,
                         "last_modified_at": award.last_modified_at,

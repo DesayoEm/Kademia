@@ -10,8 +10,8 @@ class StudentDocument(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __tablename__ = 'student_documents'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    owner_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-            ondelete='RESTRICT',name='fk_student_documents_students_owner_id'),default=uuid4
+    student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
+            ondelete='RESTRICT',name='fk_student_documents_students_student_id'),default=uuid4
         )
     title: Mapped[str] = mapped_column(String(50))
     academic_session: Mapped[str] = mapped_column(String(9))
@@ -19,16 +19,16 @@ class StudentDocument(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     document_s3_key: Mapped[str] = mapped_column(String(225), nullable = True)
 
     # Relationships
-    owner: Mapped['Student'] = relationship(back_populates='documents_owned', foreign_keys='[StudentDocument.owner_id]')
+    owner: Mapped['Student'] = relationship(back_populates='documents_owned', foreign_keys='[StudentDocument.student_id]')
 
     __table_args__ = (
-        UniqueConstraint('owner_id', 'title', name = "uq_student_document_title_owner_id"),
-        Index('idx_owner_document_type', 'owner_id', 'document_type'),
+        UniqueConstraint('student_id', 'title', name = "uq_student_document_title_student_id"),
+        Index('idx_owner_document_type', 'student_id', 'document_type'),
         Index('idx_academic_session', 'academic_session'),
     )
 
     def __repr__(self) -> str:
-        return f"Document(name={self.document_type}, {self.title}, owner={self.owner_id})"
+        return f"Document(name={self.document_type}, {self.title}, owner={self.student_id})"
 
 
 class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
@@ -38,8 +38,8 @@ class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """
     __tablename__ = 'student_awards'
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    owner_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-         ondelete='CASCADE',name='fk_student_documents_students_owner_id')
+    student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
+         ondelete='CASCADE',name='fk_student_documents_students_student_id')
         )
     title: Mapped[str] = mapped_column(String(50))
     description: Mapped[str] = mapped_column(String(225), nullable = True)
@@ -48,15 +48,15 @@ class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     # Relationships
     owner: Mapped['Student'] = relationship(back_populates='awards_earned',
-            foreign_keys='[StudentAward.owner_id]', passive_deletes=True)
+            foreign_keys='[StudentAward.student_id]', passive_deletes=True)
 
     __table_args__ = (
-        UniqueConstraint('owner_id', 'title', name="uq_student_award_title_owner_id"),
-        Index('idx_owner_title', 'owner_id', 'title'),
+        UniqueConstraint('student_id', 'title', name="uq_student_award_title_student_id"),
+        Index('idx_owner_title', 'student_id', 'title'),
     )
 
     def __repr__(self) -> str:
-        return f"Document(name={self.title}, owner={self.owner_id})"
+        return f"Document(name={self.title}, owner={self.student_id})"
 
 
 from app.core.identity.models.student import Student

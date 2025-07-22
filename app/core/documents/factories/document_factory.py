@@ -47,13 +47,13 @@ class DocumentFactory(BaseFactory):
 
 
     @resolve_unique_violation({
-        "uq_student_document_title_owner_id": ("title", lambda self,_, data: data.title)
+        "uq_student_document_title_student_id": ("title", lambda self,_, data: data.title)
     })
     @resolve_fk_on_create()
-    def create_document(self, owner_id: UUID, data) -> StudentDocument:
+    def create_document(self, student_id: UUID, data) -> StudentDocument:
         """Create a new Document.
         Args:
-            owner_id: id of document owner
+            student_id: id of document owner
             data: Document data
         Returns:
             Document: Created Document record
@@ -61,7 +61,7 @@ class DocumentFactory(BaseFactory):
         new_document = StudentDocument(
             id=uuid4(),
             title=self.validator.validate_name(data.title),
-            owner_id=owner_id,
+            student_id=student_id,
             academic_session=self.validator.validate_academic_session(data.academic_session),
             document_type = data.document_type,
 
@@ -89,12 +89,12 @@ class DocumentFactory(BaseFactory):
         Returns:
             List[Document]: List of active Documents
         """
-        fields = ['title', 'academic_session','document_type']
+        fields = ['title', 'academic_session','document_type','student_id']
         return self.repository.execute_query(fields, filters)
 
 
     @resolve_unique_violation({
-        "uq_student_document_title_owner_id": ("title", lambda self, *a: a[-1].get("title"))
+        "uq_student_document_title_student_id": ("title", lambda self, *a: a[-1].get("title"))
     })
     @resolve_fk_on_update()
     def update_document(self, document_id: UUID, data: dict) -> StudentDocument:
@@ -165,7 +165,7 @@ class DocumentFactory(BaseFactory):
         Returns:
             List[Document]: List of archived Document records
         """
-        fields = ['title', 'academic_session','document_type']
+        fields = ['title', 'academic_session','document_type','student_id']
         return self.repository.execute_archive_query(fields, filters)
 
 

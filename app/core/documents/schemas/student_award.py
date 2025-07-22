@@ -4,6 +4,7 @@ from app.core.shared.schemas.shared_models import *
 
 
 class AwardFilterParams(BaseFilterParams):
+    student_id: UUID|None = None
     title: str|None = None
     academic_session: str|None = None
     order_by: Literal["title", "created_at"] = "title"
@@ -61,7 +62,7 @@ class AwardResponse(AwardBase):
 class AwardAudit(BaseModel):
     """Response model for student awards audit"""
     id: UUID
-    owner_id: UUID
+    student_id: UUID
     award_s3_key: str | None = None
     created_at: datetime
     created_by: UUID

@@ -47,21 +47,21 @@ class AwardFactory(BaseFactory):
 
 
     @resolve_unique_violation({
-        "uq_student_award_title_owner_id": ("title", lambda self, data: data.title)
+        "uq_student_award_title_student_id": ("title", lambda self, data: data.title)
     })
     @resolve_fk_on_create()
-    def create_award(self, owner_id: UUID, data) -> StudentAward:
+    def create_award(self, student_id: UUID, data) -> StudentAward:
         """Create a new Award.
         Args:
             data: Award data
-            owner_id: id of award owner
+            student_id: id of award owner
         Returns:
             Award: Created Award record
         """
         new_award = StudentAward(
             id=uuid4(),
             title=self.validator.validate_name(data.title),
-            owner_id=owner_id,
+            student_id=student_id,
             academic_session=self.validator.validate_academic_session(data.academic_session),
 
             created_by=self.actor_id,
@@ -88,12 +88,12 @@ class AwardFactory(BaseFactory):
         Returns:
             List[Award]: List of active Awards
         """
-        fields = ['title', 'academic_session']
+        fields = ['title', 'academic_session', 'student_id']
         return self.repository.execute_query(fields, filters)
 
 
     @resolve_unique_violation({
-        "uq_student_award_title_owner_id": ("title", lambda self, *a: a[-1].get("title"))
+        "uq_student_award_title_student_id": ("title", lambda self, *a: a[-1].get("title"))
     })
     @resolve_fk_on_update()
     def update_award(self, award_id: UUID, data: dict) -> StudentAward:
@@ -162,7 +162,7 @@ class AwardFactory(BaseFactory):
         Returns:
             List[Award]: List of archived Award records
         """
-        fields = ['title', 'academic_session']
+        fields = ['title', 'academic_session', 'student_id']
         return self.repository.execute_archive_query(fields, filters)
 
 

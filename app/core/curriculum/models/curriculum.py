@@ -111,7 +111,7 @@ class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     teacher: Mapped['Educator'] = relationship(back_populates='subject_assignments', foreign_keys='[SubjectEducator.educator_id]')
 
     __table_args__ = (
-        Index('idx_subject_level_educator', 'educator_id', 'academic_level_subject_id'),
+        Index('idx_subject_level_educator', 'educator_id', 'academic_level_subject_id', 'academic_session'),
     )
 
 from app.core.identity.models.student import Student
