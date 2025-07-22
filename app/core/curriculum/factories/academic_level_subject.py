@@ -60,7 +60,6 @@ class AcademicLevelSubjectFactory(BaseFactory):
                 level_id=level_id,
                 code=self.validator.validate_code(data.code),
                 is_elective=data.is_elective,
-                academic_session=self.validator.validate_academic_session(data.academic_session),
 
                 created_by=self.actor_id,
                 last_modified_by=self.actor_id
@@ -68,7 +67,7 @@ class AcademicLevelSubjectFactory(BaseFactory):
             return self.repository.create(new_academic_level_subject)
 
         except UniqueViolationError as e:
-            if "level_id, subject_id, academic_session" in str(e):
+            if "level_id, subject_id" in str(e):
                 raise CompositeDuplicateEntityError( #fix.not raised
                     AcademicLevelSubject, str(e),
                     "This subject is already assigned to this level for the specified session"
@@ -95,8 +94,9 @@ class AcademicLevelSubjectFactory(BaseFactory):
         Returns:
             List[AcademicLevelSubject]: List of active AcademicLevelSubjects
         """
-        fields = ['academic_session', 'is_elective']
+        fields = ['is_elective', 'subject_id', 'level_id']
         return self.repository.execute_query(fields, filters)
+
 
     def archive_academic_level_subject(self, academic_level_subject_id: UUID, reason) -> AcademicLevelSubject:
         """Archive a AcademicLevelSubject if no active dependencies exist.
@@ -142,7 +142,7 @@ class AcademicLevelSubjectFactory(BaseFactory):
         Returns:
             List[AcademicLevelSubject]: List of archived AcademicLevelSubject records
         """
-        fields = ['academic_session', 'is_elective']
+        fields = ['is_elective', 'subject_id', 'level_id']
         return self.repository.execute_archive_query(fields, filters)
 
 

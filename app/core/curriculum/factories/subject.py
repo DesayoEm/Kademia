@@ -83,7 +83,7 @@ class SubjectFactory(BaseFactory):
         Returns:
             List[Subject]: List of active subjects
         """
-        fields = ['name']
+        fields = ['name', 'department_id']
         return self.repository.execute_query(fields, filters)
 
 
@@ -147,7 +147,7 @@ class SubjectFactory(BaseFactory):
 
     @resolve_fk_on_delete()
     def delete_subject(self, subject_id: UUID, is_archived=False) -> None:
-        """Permanently delete an subject if there are no dependent entities
+        """Permanently delete a subject if there are no dependent entities
         Args:
             subject_id (UUID): ID of subject to delete
             is_archived: Whether to check archived or active entities
@@ -164,7 +164,7 @@ class SubjectFactory(BaseFactory):
         Returns:
             List[Subject]: List of archived subject records
         """
-        fields = ['name']
+        fields = ['name', 'department_id']
         return self.repository.execute_archive_query(fields, filters)
 
 

@@ -10,10 +10,10 @@ class AcademicLevelSubjectFilterParams(BaseFilterParams):
 class AcademicLevelSubjectBase(BaseModel):
     """Base model for academic level subject assignments"""
     subject_id: UUID
+    level_id: UUID
     code: str | None = None
     is_elective: bool = True
-    educator_id: UUID | None = None
-    academic_session: str | None = None
+
 
 
     model_config = ConfigDict(
@@ -24,7 +24,6 @@ class AcademicLevelSubjectBase(BaseModel):
                 "subject_id": "00000000-0000-0000-0000-000000000002",
                 "is_elective": True,
                 "code": "BIO 222",
-                "academic_session": "2025/2026",
             }
         }
     )
@@ -41,7 +40,6 @@ class AcademicLevelSubjectCreate(AcademicLevelSubjectBase):
 class AcademicLevelSubjectUpdate(AcademicLevelSubjectBase):
     """For updating academic level subject assignments"""
     is_elective: bool = True
-    academic_session: str | None = None
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -49,7 +47,6 @@ class AcademicLevelSubjectUpdate(AcademicLevelSubjectBase):
         json_schema_extra={
             "example": {
                 "is_elective": True,
-                "academic_session": "2023-2024",
             }
         }
     )
@@ -67,18 +64,3 @@ class AcademicLevelSubjectAudit(BaseModel):
     archived_at: datetime | None = None
     archived_by: UUID | None = None
     archive_reason: ArchiveReason
-
-
-
-class SubjectAudit(BaseModel):
-    """Response model for subject audit"""
-    id: UUID
-    created_at: datetime
-    created_by: UUID
-    last_modified_at: datetime
-    last_modified_by: UUID
-    is_archived: bool
-    archived_at: datetime | None = None
-    archived_by: UUID | None = None
-    archive_reason: ArchiveReason |None = None
-

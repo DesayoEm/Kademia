@@ -65,6 +65,7 @@ class SubjectEducatorFactory(BaseFactory):
                 academic_level_subject_id=data.academic_level_subject_id,
                 educator_id=educator_id,
                 is_active=data.is_active,
+                academic_session=self.validator.validate_academic_session(data.academic_session),
                 date_assigned=date.today(),
 
                 created_by=self.actor_id,
@@ -99,7 +100,7 @@ class SubjectEducatorFactory(BaseFactory):
         Returns:
             List[SubjectEducator]: List of active SubjectEducators
         """
-        fields = ['academic_session','is_active', 'date_assigned','term']
+        fields = ['academic_session','is_active', 'date_assigned', 'term', 'academic_level_subject_id']
         return self.repository.execute_query(fields, filters)
 
 
@@ -147,7 +148,7 @@ class SubjectEducatorFactory(BaseFactory):
         Returns:
             List[SubjectEducator]: List of archived SubjectEducator records
         """
-        fields = ['academic_session','is_active', 'date_assigned','term']
+        fields = ['academic_session', 'is_active', 'date_assigned', 'term', 'academic_level_subject_id']
         return self.repository.execute_archive_query(fields, filters)
 
 

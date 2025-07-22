@@ -37,12 +37,8 @@ class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     subject_id: Mapped[UUID] = mapped_column(ForeignKey('subjects.id',
             ondelete='RESTRICT',name='fk_academic_level_subjects_subjects_subject_id')
         )
-    educator_id: Mapped[UUID] = mapped_column(ForeignKey('educators.id',
-            ondelete='RESTRICT',name='fk_academic_level_subjects_educators_educator_id'),
-            nullable=True
-        )
+
     is_elective: Mapped[bool] = mapped_column(Boolean, default=False)
-    academic_session: Mapped[str] = mapped_column(String(9))
     curriculum_url: Mapped[str] = mapped_column(String(225), nullable = True)
 
     # Relationships
@@ -52,7 +48,7 @@ class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     educators: Mapped[List['SubjectEducator']] = relationship(back_populates='subject')
 
     __table_args__ = (
-        UniqueConstraint('level_id', 'subject_id', 'academic_session'),
+        UniqueConstraint('level_id', 'subject_id'),
         Index('idx_level_subject', 'level_id', 'subject_id'),
         Index('idx_level_subject_code', 'code'),
 
@@ -107,6 +103,7 @@ class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    academic_session: Mapped[str] = mapped_column(String(9))
     date_assigned: Mapped[Date] = mapped_column(Date)
 
     # Relationships

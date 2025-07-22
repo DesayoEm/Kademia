@@ -3,7 +3,10 @@ from app.core.shared.schemas.shared_models import *
 
 class SubjectFilterParams(BaseFilterParams):
     name: str|None = None
+    department_id: UUID |None = None
     order_by: Literal["name", "created_at"] = "name"
+
+
 
 class SubjectBase(BaseModel):
     """Base model for subjects"""

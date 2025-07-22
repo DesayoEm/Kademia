@@ -104,7 +104,7 @@ class StudentSubjectFactory(BaseFactory):
         Returns:
             List[StudentSubject]: List of active StudentSubjects
         """
-        fields = ['academic_session', 'term', 'is_active']
+        fields = ['academic_session', 'term', 'is_active','student_id', 'academic_level_subject_id']
         return self.repository.execute_query(fields, filters)
 
 
@@ -140,7 +140,7 @@ class StudentSubjectFactory(BaseFactory):
         Returns:
             List[StudentSubject]: List of archived StudentSubject records
         """
-        fields = ['academic_session', 'term', 'is_active']
+        fields = ['academic_session', 'term', 'is_active','student_id', 'academic_level_subject_id']
         return self.repository.execute_archive_query(fields, filters)
 
 
