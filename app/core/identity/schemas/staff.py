@@ -7,6 +7,8 @@ from .base import UserBase
 class StaffFilterParams(BaseFilterParams):
     full_name: str | None = None
     staff_type: StaffType | None = None
+    department_id: UUID | None = None
+    role_id: UUID | None = None
     order_by: Literal["full_name", "created_at"] = "full_name"
 
 

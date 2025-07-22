@@ -121,7 +121,7 @@ class StaffFactory(BaseFactory):
         Returns:
             List[Staff]: List of active staffs
         """
-        fields = ['name', 'staff_type']
+        fields = ['name', 'staff_type', "department_id", "role_id"]
         return self.repository.execute_query(fields, filters)
 
 
@@ -208,7 +208,7 @@ class StaffFactory(BaseFactory):
         Returns:
             List[Staff]: List of archived staff records
         """
-        fields = ['name', 'staff_type']
+        fields = ['name', 'staff_type', "department_id", "role_id"]
         return self.repository.execute_archive_query(fields, filters)
 
 

@@ -99,7 +99,9 @@ class StudentFactory(BaseFactory):
         Returns:
             List[student]: List of active students
         """
-        fields = ['name', 'student_id']
+        fields = [
+            'name', 'student_id', 'level_id', 'department_id', 'is_graduated', 'graduation_year', 'guardian_id'
+        ]
         return self.repository.execute_query(fields, filters)
 
 
@@ -182,7 +184,9 @@ class StudentFactory(BaseFactory):
         Returns:
             List[student]: List of archived student records
         """
-        fields = ['name', 'student_id']
+        fields = [
+            'name', 'student_id', 'level_id', 'department_id', 'is_graduated', 'graduation_year', 'guardian_id'
+        ]
         return self.repository.execute_archive_query(fields, filters)
 
 
