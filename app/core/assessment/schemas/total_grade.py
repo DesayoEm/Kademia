@@ -5,7 +5,9 @@ from app.core.shared.schemas.shared_models import *
 
 
 class TotalGradeFilterParams(BaseFilterParams):
-    name: Optional[str] = None
+    student_id: UUID | None = None
+    student_subject_id: UUID | None = None
+
     order_by: Literal["order", "created_at"] = "order"
 
 

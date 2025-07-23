@@ -97,7 +97,7 @@ class GradeFactory(BaseFactory):
         Returns:
             List[Grade]: List of active Grades
         """
-        fields = ['type', 'academic_session', 'term', 'graded_on']
+        fields = ['student_id', 'student_subject_id', 'graded_by', 'graded_on', 'type']
         return self.repository.execute_query(fields, filters)
 
 
@@ -163,7 +163,7 @@ class GradeFactory(BaseFactory):
         Returns:
             List[Grade]: List of archived Grade records
         """
-        fields = ['type', 'academic_session', 'term', 'graded_on']
+        fields = ['student_id', 'student_subject_id', 'graded_by', 'graded_on', 'type']
         return self.repository.execute_archive_query(fields, filters)
 
 

@@ -5,6 +5,7 @@ from app.core.shared.schemas.enums import Term
 class SubjectEducatorFilterParams(BaseFilterParams):
     academic_session: str | None = None
     academic_level_subject_id: UUID | None = None
+    educator_id: UUID | None = None
     term: Term | None = None
     is_active: bool | None = None
     date_assigned: date| None = None

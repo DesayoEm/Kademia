@@ -100,7 +100,7 @@ class SubjectEducatorFactory(BaseFactory):
         Returns:
             List[SubjectEducator]: List of active SubjectEducators
         """
-        fields = ['academic_session','is_active', 'date_assigned', 'term', 'academic_level_subject_id']
+        fields = ['academic_session', 'is_active', 'date_assigned', 'term', 'academic_level_subject_id', 'educator_id']
         return self.repository.execute_query(fields, filters)
 
 
@@ -148,7 +148,7 @@ class SubjectEducatorFactory(BaseFactory):
         Returns:
             List[SubjectEducator]: List of archived SubjectEducator records
         """
-        fields = ['academic_session', 'is_active', 'date_assigned', 'term', 'academic_level_subject_id']
+        fields = ['academic_session', 'is_active', 'date_assigned', 'term', 'academic_level_subject_id', 'educator_id']
         return self.repository.execute_archive_query(fields, filters)
 
 

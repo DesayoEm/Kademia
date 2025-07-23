@@ -4,10 +4,12 @@ from app.core.shared.schemas.common_imports import *
 from app.core.shared.schemas.shared_models import *
 
 class GradeFilterParams(BaseFilterParams):
+    student_id: UUID | None = None
+    student_subject_id: UUID | None = None
+    graded_by: UUID | None = None
     type: GradeType | None = None
-    order_by: Literal["order", "created_at"] = "order"
-    academic_session: str | None = None
     graded_on: date| None = None
+    order_by: Literal["order", "created_at"] = "order"
 
 
 class GradeBase(BaseModel):

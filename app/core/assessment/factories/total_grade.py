@@ -86,7 +86,7 @@ class TotalGradeFactory(BaseFactory):
         Returns:
             List[TotalGrade]: List of active TotalGrades
         """
-        fields = ['academic_session', 'term']
+        fields = ['student_id', 'student_subject_id']
         return self.repository.execute_query(fields, filters)
 
 
@@ -143,7 +143,7 @@ class TotalGradeFactory(BaseFactory):
         Returns:
             List[TotalGrade]: List of archived TotalGrade records
         """
-        fields = ['academic_session', 'term']
+        fields = ['student_id', 'student_subject_id']
         return self.repository.execute_archive_query(fields, filters)
 
 
