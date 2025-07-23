@@ -74,8 +74,11 @@ class TransferFactory(BaseFactory):
 
 
     def get_all_transfers(self, filters) -> List[DepartmentTransfer]:
-        return self.repository.execute_query(['academic_session', 'status'], filters)
-
+        fields = [
+            'student_id','previous_department_id', 'new_department_id','academic_session', 'status',
+            'status_completed_by'
+        ]
+        return self.repository.execute_archive_query(fields, filters)
 
 
     @resolve_fk_on_update()
@@ -126,7 +129,11 @@ class TransferFactory(BaseFactory):
 
 
     def get_all_archived_transfers(self, filters) -> List[DepartmentTransfer]:
-        return self.repository.execute_archive_query(['academic_session', 'status'], filters)
+        fields = [
+            'student_id', 'previous_department_id', 'new_department_id', 'academic_session', 'status',
+            'status_completed_by'
+        ]
+        return self.repository.execute_archive_query(fields, filters)
 
 
     def get_archived_transfer(self, transfer_id: UUID) -> DepartmentTransfer:

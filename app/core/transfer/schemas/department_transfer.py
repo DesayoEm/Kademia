@@ -4,6 +4,9 @@ from app.core.shared.schemas.shared_models import *
 
 
 class DepartmentTransferFilterParams(BaseFilterParams):
+    student_id: UUID | None = None
+    previous_department_id: UUID | None = None
+    new_department_id: UUID | None = None
     academic_session: str | None = None
     status: str | None = None
     order_by: Literal["academic_session", "created_at"] = "academic_session"
