@@ -4,6 +4,9 @@ from app.core.shared.schemas.shared_models import *
 
 
 class RepetitionFilterParams(BaseFilterParams):
+    student_id: UUID | None = None
+    failed_level_id: UUID | None = None
+    status_completed_by: UUID | None = None
     academic_session: str | None = None
     status: ApprovalStatus | None = None
     order_by: Literal["academic_session", "created_at"] = "academic_session"

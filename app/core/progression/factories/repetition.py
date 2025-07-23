@@ -91,7 +91,7 @@ class RepetitionFactory(BaseFactory):
 
     def get_all_repetitions(self, filters) -> List[Repetition]:
         """Get all active repetition records with filtering."""
-        fields = ['academic_session', 'status']
+        fields = ['student_id', 'failed_level_id', 'academic_session', 'status','status_completed_by']
         return self.repository.execute_query(fields, filters)
 
 
@@ -154,7 +154,7 @@ class RepetitionFactory(BaseFactory):
 
     def get_all_archived_repetitions(self, filters) -> List[Repetition]:
         """Get all archived repetition records with filtering."""
-        fields = ['academic_session', 'status']
+        fields = ['student_id', 'failed_level_id', 'academic_session', 'status','status_completed_by']
         return self.repository.execute_archive_query(fields, filters)
 
 

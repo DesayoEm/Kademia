@@ -3,10 +3,11 @@ from app.core.shared.schemas.enums import ApprovalStatus
 from app.core.shared.schemas.shared_models import *
 
 class PromotionFilterParams(BaseFilterParams):
+    student_id: UUID | None = None
+    status_completed_by: UUID | None = None
     academic_session: str | None = None
     status: ApprovalStatus | None = None
     order_by: Literal["academic_session", "created_at"] = "academic_session"
-
 
 
 class GraduationCreate(BaseModel):

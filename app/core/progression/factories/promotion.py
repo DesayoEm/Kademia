@@ -96,7 +96,7 @@ class PromotionFactory(BaseFactory):
 
     def get_all_promotions(self, filters) -> List[Promotion]:
         """Get all active promotions with filtering."""
-        fields = ['academic_session', 'status']
+        fields = ['student_id', 'academic_session', 'status','status_completed_by']
         return self.repository.execute_query(fields, filters)
 
 
@@ -148,7 +148,7 @@ class PromotionFactory(BaseFactory):
 
     def get_all_archived_promotions(self, filters) -> List[Promotion]:
         """Get all archived promotion records with filtering."""
-        fields = ['academic_session', 'status']
+        fields = ['student_id', 'academic_session', 'status','status_completed_by']
         return self.repository.execute_archive_query(fields, filters)
 
 
