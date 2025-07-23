@@ -87,7 +87,7 @@ class AccessLevelChangeFactory(BaseFactory):
         Returns:
             List[AccessLevelChange]: List of active departments
         """
-        fields = ['changed_by']
+        fields = ['changed_by', 'staff_id']
         return self.repository.execute_query(fields, filters)
     
 
@@ -124,7 +124,7 @@ class AccessLevelChangeFactory(BaseFactory):
         Returns:
             List[AccessLevelChange]: List of archived level change records
         """
-        fields = ['changed_by']
+        fields = ['changed_by', 'staff_id']
         return self.repository.execute_archive_query(fields, filters)
 
 

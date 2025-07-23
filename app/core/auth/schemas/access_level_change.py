@@ -4,6 +4,8 @@ from app.core.shared.schemas.enums import AccessLevel
 
 class AccessLevelFilterParams(BaseFilterParams):
     changed_by_id: UUID | None = None
+    staff_id: UUID | None = None
+
 
 
 class AccessLevelChangeBase(BaseModel):
