@@ -44,11 +44,10 @@ class QualificationFactory(BaseFactory):
             display_name=self.display_name
         )
 
-
-
     @resolve_unique_violation({
-        "uq_educator_qualification_name": ("name", lambda self, data: data.name),
-    })
+        "uq_educator_qualification_name": ("name", lambda self,_, data: data.name)
+                })
+
     @resolve_fk_on_create()
     def create_qualification(self, educator_id: UUID, data) -> EducatorQualification:
         """Create a new qualification.
@@ -98,7 +97,7 @@ class QualificationFactory(BaseFactory):
 
     @resolve_fk_on_update()
     @resolve_unique_violation({
-        "uq_educator_qualification_name": ("name", lambda self, *a: a[-1].get("name")),
+        "uq_educator_qualification_name": ("name", lambda self, _, data: data.name)
     })
     def update_qualification(self, qualification_id: UUID, data: dict) -> EducatorQualification:
         """Update a qualification's information.

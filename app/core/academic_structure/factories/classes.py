@@ -48,8 +48,8 @@ class ClassFactory(BaseFactory):
 
     @resolve_fk_on_create()
     @resolve_unique_violation({
-        "classes_name_key": ("name", lambda self, data: data.name),
-        "uq_class_level_order": ("order", lambda self, data: str(data.order)),
+        "uq_class_level_code": ("code", lambda self, _, data: data.code.value),
+        "uq_class_level_order": ("order", lambda self, _, data: str(data.order)),
     })
     def create_class(self, data) -> Classes:
         """Create a new class.
@@ -98,8 +98,8 @@ class ClassFactory(BaseFactory):
 
     @resolve_fk_on_update()
     @resolve_unique_violation({
-        "classes_name_key": ("name", lambda self, *a: a[-1].get("name")),
-        "uq_class_level_order": ("order", lambda self, *a: a[-1].get("order")),
+        "uq_class_level_code": ("code", lambda self, _, data: data["code"].value),
+        "uq_class_level_order": ("order", lambda self, _, data: str(data["order"])),
     })
     def update_class(self, class_id: UUID, data: dict) -> Classes:
         """Update a class's information.
@@ -109,7 +109,7 @@ class ClassFactory(BaseFactory):
         Returns:
             Classes: Updated class record
         """
-        original = data.copy()
+        copied_data = data.copy() #preserve original payload for error extraction
         try:
             existing = self.get_class(class_id)
             validations = {
@@ -118,7 +118,8 @@ class ClassFactory(BaseFactory):
 
             for field, (validator_func, attr_name) in validations.items():
                 if field in data:
-                    setattr(existing, attr_name, validator_func(data.pop(field)))
+                    setattr(existing, attr_name, validator_func(copied_data.pop(field)))
+
 
             for key, value in data.items():
                 if hasattr(existing, key):

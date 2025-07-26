@@ -116,7 +116,7 @@ def update_class(
         class_id: UUID,
         factory: ClassFactory = Depends(get_authenticated_factory(ClassFactory))
 ):
-    update_data = payload.model_dunp(exclude_unset = True)
+    update_data = payload.model_dump(exclude_unset = True)
     return factory.update_class(class_id, update_data)
 
 
