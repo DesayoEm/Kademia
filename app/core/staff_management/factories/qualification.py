@@ -79,7 +79,7 @@ class QualificationFactory(BaseFactory):
         Returns:
             List[EducatorQualification]: List of active qualification records
         """
-        fields = ['name']
+        fields = ['name', 'educator_id', 'is_expired', 'validity_type']
         return self.repository.execute_query(fields, filters)
 
 
@@ -179,7 +179,7 @@ class QualificationFactory(BaseFactory):
         Returns:
             List[EducatorQualification]: List of archived qualification records
         """
-        fields = ['name']
+        fields = ['name', 'educator_id', 'is_expired', 'validity_type']
         return self.repository.execute_archive_query(fields, filters)
 
 

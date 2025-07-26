@@ -9,7 +9,7 @@ app = FastAPI()
 
 from app.api.staff_management import staff_departments_archive, staff_roles_archive
 from app.api.staff_management import staff_roles
-from app.api.staff_management import qualifications_archive, qualifications, staff_departments
+from app.api.staff_management import qualifications, staff_departments
 from app.api.academic_structure import (
     academic_levels, academic_levels_archive, departments, departments_archive,
     classes_archive
@@ -64,9 +64,6 @@ app.include_router(staff_roles_archive.router, prefix=f"/api/{version}/staff/rol
 
 app.include_router(qualifications.router, prefix=f"/api/{version}/staff/qualifications",
                    tags=["Educator Qualifications", "Admin"])
-app.include_router(qualifications_archive.router, prefix=f"/api/{version}/staff/qualifications/archived",
-                   tags=["Educator Qualifications", "Admin"])
-
 
 #Academic Structure
 app.include_router(departments.router, prefix=f"/api/{version}/students/departments",

@@ -11,4 +11,5 @@ def create_tables():
     print('create_tables')
     Base.metadata.create_all(engine)
 
-create_tables()
+if __name__ =='__main__':
+    create_tables()

@@ -41,7 +41,7 @@ def download_course_list(
         term: Term,
         service: CurriculumService = Depends(get_authenticated_service(CurriculumService))
 ):
-    pdf_bytes, filename = service.render_course_list_pdf(student_id, academic_session, term)
+    pdf_bytes, filename = service.render_enrollment_list_pdf(student_id, academic_session, term)
 
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
@@ -55,7 +55,7 @@ def get_student_course_list(
         payload: CourseListRequest,
         service: CurriculumService = Depends(get_authenticated_service(CurriculumService))
     ):
-    return service.generate_student_course_list(
+    return service.generate_enrollment_list(
         student_id, payload.academic_session, payload.term
     )
 

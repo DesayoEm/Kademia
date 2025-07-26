@@ -43,6 +43,11 @@ class StudentSubjectResponse(StudentSubjectBase):
     pass
 
 
+class EnrollmentResponse(BaseModel):
+    course_code: str
+    course_title: str
+    educator_name: str
+
 
 class StudentSubjectAudit(BaseModel):
     """Response model for subject audit"""

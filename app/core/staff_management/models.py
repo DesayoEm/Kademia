@@ -63,6 +63,7 @@ class EducatorQualification(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     validity_type: Mapped[ValidityType] = mapped_column(Enum(ValidityType, name='validitytype'),
                                     default=ValidityType.Temporary)
     valid_until: Mapped[str] = mapped_column(Text, nullable=False)
+    is_expired: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
     # Relationships

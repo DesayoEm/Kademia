@@ -5,8 +5,10 @@ from datetime import datetime
 
 
 class QualificationFilterParams(BaseFilterParams):
-    name: Optional[str] = None
-    educator_id: Optional[UUID] = None
+    name: str | None = None
+    educator_id: UUID | None = None
+    is_expired: bool | None = None
+    validity_type: ValidityType
     order_by: Literal["name", "created_at"] = "name"
 
 

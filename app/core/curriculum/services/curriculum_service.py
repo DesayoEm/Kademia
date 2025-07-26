@@ -29,7 +29,7 @@ class CurriculumService:
         return academic_level_subject_id
 
 
-    def generate_student_course_list(self, student_id: UUID, academic_session: str, term: Term):
+    def generate_enrollment_list(self, student_id: UUID, academic_session: str, term: Term):
         student = self.student_factory.get_student(student_id)
         student_name = f"{student.first_name} {student.last_name}"
         today = date.today()
@@ -72,12 +72,12 @@ class CurriculumService:
         }
 
 
-    def render_course_list_pdf(self, student_id: UUID, academic_session: str, term: Term):
+    def render_enrollment_list_pdf(self, student_id: UUID, academic_session: str, term: Term):
         student = self.student_factory.get_student(student_id)
         student_name = f"{student.first_name} {student.last_name}"
         file_name = f"{student_name} {academic_session} course list"
 
-        data = self.generate_student_course_list(student_id, academic_session, term)
+        data = self.generate_enrollment_list(student_id, academic_session, term)
 
         return self.pdf_service.render_pdf(data, file_name)
 

@@ -2,7 +2,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from app.core.shared.validators.entity_validators import EntityValidator
 from app.core.staff_management.factories.department import StaffDepartmentFactory
-from app.core.staff_management.models import StaffDepartment, StaffRole
+from app.core.staff_management.models import StaffDepartment, StaffRole, EducatorQualification
 from app.core.shared.services.audit_export_service.export import ExportService
 
 
@@ -30,7 +30,7 @@ class StaffManagementService:
         )
 
 
-    def export_department(self, department_id: UUID, export_format: str) -> str:
+    def export_department_audit(self, department_id: UUID, export_format: str) -> str:
         """Export department and its associated data
         Args:
             department_id: level UUID
@@ -41,7 +41,7 @@ class StaffManagementService:
         )
 
 
-    def export_role(self, role_id: UUID, export_format: str) -> str:
+    def export_role_audit(self, role_id: UUID, export_format: str) -> str:
         """Export role and its associated data
         Args:
             role_id: Role UUID
@@ -49,6 +49,17 @@ class StaffManagementService:
         """
         return self.export_service.export_entity(
             StaffRole, role_id, export_format
+        )
+
+
+    def export_qualification_audit(self, qualification_id: UUID, export_format: str) -> str:
+        """Export qualification and its associated data
+        Args:
+            qualification_id: Qualification UUID
+            export_format: Preferred export format
+        """
+        return self.export_service.export_entity(
+            EducatorQualification, qualification_id, export_format
         )
 
 
