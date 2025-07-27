@@ -92,9 +92,8 @@ class DocumentFactory(BaseFactory):
         fields = ['title', 'academic_session','document_type','student_id']
         return self.repository.execute_query(fields, filters)
 
-
     @resolve_unique_violation({
-        "uq_student_document_title_student_id": ("title", lambda self, *a: a[-1].get("title"))
+        "uq_student_document_title_student_id": ("title", lambda self, _, data: data.title)
     })
     @resolve_fk_on_update()
     def update_document(self, document_id: UUID, data: dict) -> StudentDocument:

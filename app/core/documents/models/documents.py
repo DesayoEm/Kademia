@@ -22,7 +22,7 @@ class StudentDocument(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     owner: Mapped['Student'] = relationship(back_populates='documents_owned', foreign_keys='[StudentDocument.student_id]')
 
     __table_args__ = (
-        UniqueConstraint('student_id', 'title', name = "uq_student_document_title_student_id"),
+        UniqueConstraint('student_id', 'title', 'academic_session',  name = "uq_student_document_title_student_id"),
         Index('idx_owner_document_type', 'student_id', 'document_type'),
         Index('idx_academic_session', 'academic_session'),
     )
@@ -51,7 +51,7 @@ class StudentAward(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             foreign_keys='[StudentAward.student_id]', passive_deletes=True)
 
     __table_args__ = (
-        UniqueConstraint('student_id', 'title', name="uq_student_award_title_student_id"),
+        UniqueConstraint('student_id', 'title', 'academic_session', name="uq_student_award_title_student_id"),
         Index('idx_owner_title', 'student_id', 'title'),
     )
 

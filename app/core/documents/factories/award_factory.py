@@ -46,8 +46,9 @@ class AwardFactory(BaseFactory):
         )
 
 
+
     @resolve_unique_violation({
-        "uq_student_award_title_student_id": ("title", lambda self, data: data.title)
+        "uq_student_award_title_student_id": ("title", lambda self, _, data: data.title)
     })
     @resolve_fk_on_create()
     def create_award(self, student_id: UUID, data) -> StudentAward:
@@ -91,9 +92,8 @@ class AwardFactory(BaseFactory):
         fields = ['title', 'academic_session', 'student_id']
         return self.repository.execute_query(fields, filters)
 
-
     @resolve_unique_violation({
-        "uq_student_award_title_student_id": ("title", lambda self, *a: a[-1].get("title"))
+        "uq_student_award_title_student_id": ("title", lambda self, _, data: data["title"])
     })
     @resolve_fk_on_update()
     def update_award(self, award_id: UUID, data: dict) -> StudentAward:
