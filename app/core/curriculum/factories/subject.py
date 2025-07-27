@@ -42,9 +42,8 @@ class SubjectFactory(BaseFactory):
             display_name=self.display_name
         )
 
-
     @resolve_unique_violation({
-        "subjects_name_key": ("name", lambda self, data: data.name)
+        "subjects_name_key": ("name", lambda self, _, data: data.name)
     })
     @resolve_fk_on_create()
     def create_subject(self, data) -> Subject:
@@ -88,7 +87,7 @@ class SubjectFactory(BaseFactory):
 
 
     @resolve_unique_violation({
-        "subjects_name_key": ("name", lambda self, *a: a[-1].get("name"))
+        "subjects_name_key": ("name", lambda self, _, data: data["name"])
     })
     @resolve_fk_on_update()
     def update_subject(self, subject_id: UUID, data: dict) -> Subject:

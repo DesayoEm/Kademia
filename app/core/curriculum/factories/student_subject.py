@@ -6,6 +6,7 @@ from app.core.curriculum.models.curriculum import StudentSubject
 from app.core.curriculum.services.curriculum_service import CurriculumService
 from app.core.curriculum.services.validators import CurriculumValidator
 from app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
+from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
@@ -47,7 +48,11 @@ class StudentSubjectFactory(BaseFactory):
             display_name=self.display_name
         )
 
-
+    @resolve_unique_violation({
+        "student_subjects_student_id_academic_level_subject_id_acade_key": (
+                "_", "This subject is already assigned to this student for the specified session"
+        )
+    })
     @resolve_fk_on_create()
     def create_student_subject(self, student_id: UUID, data) -> StudentSubject:
         """Create a new StudentSubject.
@@ -62,28 +67,21 @@ class StudentSubjectFactory(BaseFactory):
         academic_factory = AcademicLevelSubjectFactory(self.session, AcademicLevelSubject, self.current_user)
         level_subject = academic_factory.get_academic_level_subject(data.academic_level_subject_id)
         level_id = level_subject.level_id
-        try:
-            new_student_subject = StudentSubject(
-                id=uuid4(),
-                student_id=student_id,
-                academic_level_subject_id=self.service.check_academic_level(
-                    student_id, level_id, data.academic_level_subject_id
-                ),
-                term=data.term,
-                academic_session=self.validator.validate_academic_session(data.academic_session),
 
-                created_by=self.actor_id,
-                last_modified_by=self.actor_id
-            )
-            return self.repository.create(new_student_subject)
+        new_student_subject = StudentSubject(
+            id=uuid4(),
+            student_id=student_id,
+            academic_level_subject_id=self.service.check_academic_level(
+                  student_id, level_id, data.academic_level_subject_id
+             ),
+            term=data.term,
+            academic_session=self.validator.validate_academic_session(data.academic_session),
 
-        except UniqueViolationError as e:
-            if "student_subjects_student_id_academic_level_subject_id_acade_key" in str(e):
-                raise CompositeDuplicateEntityError( #fix.not raised
-                    StudentSubject, str(e),
-                    "This subject is already assigned to this student for the specified session"
-                )
-            raise
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id
+        )
+        return self.repository.create(new_student_subject)
+
 
 
     def get_student_subject(self, student_subject_id: UUID) -> StudentSubject:

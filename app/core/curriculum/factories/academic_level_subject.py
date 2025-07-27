@@ -5,11 +5,13 @@ from sqlalchemy.orm import Session
 from app.core.curriculum.models.curriculum import AcademicLevelSubject
 from app.core.curriculum.services.validators import CurriculumValidator
 from app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
+from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
+from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete, \
+    resolve_fk_on_update
 from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, UniqueViolationError
 from app.core.shared.exceptions.maps.error_map import error_map
 
@@ -43,7 +45,10 @@ class AcademicLevelSubjectFactory(BaseFactory):
             display_name=self.display_name
         )
 
-
+    @resolve_unique_violation({
+        "academic_level_subjects_level_id_subject_id_key": ("_", "This subject is already assigned to this level"),
+        "academic_level_subjects_code_key": ("name", lambda self, _,  data: data.code)
+    })
     @resolve_fk_on_create()
     def create_academic_level_subject(self, level_id: UUID, data) -> AcademicLevelSubject:
         """Create a new AcademicLevelSubject.
@@ -53,26 +58,18 @@ class AcademicLevelSubjectFactory(BaseFactory):
         Returns:
             AcademicLevelSubject: Created AcademicLevelSubject record
         """
-        try:
-            new_academic_level_subject = AcademicLevelSubject(
-                id=uuid4(),
-                subject_id=data.subject_id,
-                level_id=level_id,
-                code=self.validator.validate_code(data.code),
-                is_elective=data.is_elective,
 
-                created_by=self.actor_id,
-                last_modified_by=self.actor_id
+        new_academic_level_subject = AcademicLevelSubject(
+            id=uuid4(),
+            subject_id=data.subject_id,
+            level_id=level_id,
+            code=self.validator.validate_code(data.code),
+            is_elective=data.is_elective,
+
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id
             )
-            return self.repository.create(new_academic_level_subject)
-
-        except UniqueViolationError as e:
-            if "level_id, subject_id" in str(e):
-                raise CompositeDuplicateEntityError( #fix.not raised
-                    AcademicLevelSubject, str(e),
-                    "This subject is already assigned to this level for the specified session"
-                )
-            raise
+        return self.repository.create(new_academic_level_subject)
 
 
 
@@ -96,6 +93,41 @@ class AcademicLevelSubjectFactory(BaseFactory):
         """
         fields = ['is_elective', 'subject_id', 'level_id']
         return self.repository.execute_query(fields, filters)
+
+
+    @resolve_unique_violation({
+        "academic_level_subjects_level_id_subject_id_key": ("_", "This subject is already assigned to this level"),
+        "academic_level_subjects_code_key": ("name", lambda self,_,  data: data.code)
+    })
+    @resolve_fk_on_update()
+    def update_subject(self, subject_id: UUID, data: dict) -> AcademicLevelSubject:
+        """Update a subject's information.
+        Args:
+            subject_id (UUID): ID of subject to update
+            data (dict): Dictionary containing fields to update
+        Returns:
+            Subject: Updated subject record
+        """
+        copied_data = data.copy()
+        try:
+            existing = self.get_academic_level_subject(subject_id)
+            validations = {
+                "name": (self.validator.validate_name, "name"),
+            }
+
+            for field, (validator_func, model_attr) in validations.items():
+                if field in copied_data:
+                    validated_value = validator_func(copied_data.pop(field))
+                    setattr(existing, model_attr, validated_value)
+
+            for key, value in copied_data.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
+
+            return self.repository.update(subject_id, existing, modified_by=self.actor_id)
+
+        except EntityNotFoundError as e:
+            self.raise_not_found(subject_id, e)
 
 
     def archive_academic_level_subject(self, academic_level_subject_id: UUID, reason) -> AcademicLevelSubject:

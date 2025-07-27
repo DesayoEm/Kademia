@@ -10,7 +10,6 @@ class AcademicLevelSubjectFilterParams(BaseFilterParams):
 class AcademicLevelSubjectBase(BaseModel):
     """Base model for academic level subject assignments"""
     subject_id: UUID
-    level_id: UUID
     code: str | None = None
     is_elective: bool = True
 

@@ -47,7 +47,7 @@ class DocumentFactory(BaseFactory):
 
 
     @resolve_unique_violation({
-        "uq_student_document_title_student_id": ("title", lambda self,_, data: data.title)
+        "uq_student_document_title_student_id": ("_", "This document title exists for this student in the same academic session")
     })
     @resolve_fk_on_create()
     def create_document(self, student_id: UUID, data) -> StudentDocument:
@@ -93,7 +93,7 @@ class DocumentFactory(BaseFactory):
         return self.repository.execute_query(fields, filters)
 
     @resolve_unique_violation({
-        "uq_student_document_title_student_id": ("title", lambda self, _, data: data.title)
+        "uq_student_document_title_student_id": ("_", "This document title exists for this student in the same academic session")
     })
     @resolve_fk_on_update()
     def update_document(self, document_id: UUID, data: dict) -> StudentDocument:
