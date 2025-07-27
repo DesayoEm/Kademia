@@ -8,22 +8,9 @@ from app.core.shared.exceptions.entry_validation_errors import PastYearError, Se
     FutureYearError, InvalidSessionRangeError
 
 
-class DocumentValidator:
+class TransferValidator:
     def __init__(self):
         self.domain = "TRANSFER"
-
-    def validate_name(self, value:str) -> str:
-        value = (value or "").strip()
-        if not value:
-            raise EmptyFieldError(entry=value, domain=self.domain)
-        if len(value.strip()) < 3:
-            raise TextTooShortError(entry = value, domain = self.domain, min_length = 3)
-        if len(value.strip()) > 100:
-            raise TextTooLongError(entry=value, max_length=100, domain=self.domain)
-        if any(val.isnumeric() for val in value):
-            raise InvalidCharacterError(entry=value, domain=self.domain)
-
-        return value.strip().title()
 
     def validate_academic_session(self, value):
         match = re.fullmatch(r"(\d{4})/(\d{4})", value)

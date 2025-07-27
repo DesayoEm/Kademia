@@ -40,13 +40,15 @@ class DepartmentTransferCreate(DepartmentTransferBase):
 class DepartmentTransferUpdate(BaseModel):
     """Used for updating a transfer"""
     reason: str
+    academic_session: str
 
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
         json_schema_extra={
             "example": {
-                "reason": "New request"
+                "reason": "New request",
+                "academic_session": "2025/2026",
 
             }
         }

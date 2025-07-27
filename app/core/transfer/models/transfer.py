@@ -39,6 +39,7 @@ class DepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     status_changer: Mapped['Staff'] = relationship(foreign_keys='[DepartmentTransfer.status_completed_by]')
 
     __table_args__ = (
+        UniqueConstraint('student_id', 'academic_session', name='uq_transfer_student_session'),
         Index('idx_department_transfer_status', 'student_id', 'status'),
         Index('idx_department_transfer_academic_session', 'student_id', 'academic_session'),
         Index('idx_previous_department_id', 'previous_department_id'),

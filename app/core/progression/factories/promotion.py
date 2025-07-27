@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.core.progression.models.progression import Promotion
 from app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
+from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.models.enums import ApprovalStatus
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -46,8 +47,11 @@ class PromotionFactory(BaseFactory):
             display_name=self.display_name
         )
 
-
-
+    @resolve_unique_violation({
+        "uq_promotion_student_session": (
+                "_", "This student has an existing promotion record for the specified academic session"
+        )
+    })
     @resolve_fk_on_create()
     def create_promotion(self, student_id: UUID, data) -> Promotion:
         """Create a new promotion record for a student."""
@@ -99,7 +103,11 @@ class PromotionFactory(BaseFactory):
         fields = ['student_id', 'academic_session', 'status','status_completed_by']
         return self.repository.execute_query(fields, filters)
 
-
+    @resolve_unique_violation({
+        "uq_promotion_student_session": (
+                "_", "This student has an existing promotion record for the specified academic session"
+        )
+    })
     @resolve_fk_on_update()
     def update_promotion(self, promotion_id: UUID, data: dict) -> Promotion:
         """Update a promotion record information."""

@@ -3,13 +3,15 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
+from app.core.transfer.services.validators import TransferValidator
+from app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete, \
     resolve_fk_on_update
-from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
+from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, UniqueViolationError
 from app.core.shared.exceptions.maps.error_map import error_map
 from app.core.transfer.models.transfer import DepartmentTransfer
 
@@ -32,6 +34,7 @@ class TransferFactory(BaseFactory):
         self.repository = SQLAlchemyRepository(self.model, session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session)
+        self.validator = TransferValidator()
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.actor_id: UUID = self.get_actor_id()
@@ -53,17 +56,23 @@ class TransferFactory(BaseFactory):
         student_factory = StudentFactory(self.session, Student, self.current_user)
         student = student_factory.get_student(student_id)
 
-        new_transfer = DepartmentTransfer(
+        try:
+            new_transfer = DepartmentTransfer(
             id=uuid4(),
             student_id=student_id,
-            academic_session=data.academic_session,
+            academic_session=self.validator.validate_academic_session(data.academic_session),
             previous_department_id=student.department_id,
             new_department_id=data.new_department_id,
             reason=data.reason,
             created_by=self.actor_id,
             last_modified_by=self.actor_id
-        )
-        return self.repository.create(new_transfer)
+            )
+            return self.repository.create(new_transfer)
+
+        except UniqueViolationError as e:
+            raise CompositeDuplicateEntityError(
+                DepartmentTransfer, str(e),
+                f"This student has an existing transfer record for the {data.academic_session} session")
 
 
     def get_transfer(self, transfer_id: UUID) -> DepartmentTransfer:
@@ -84,13 +93,17 @@ class TransferFactory(BaseFactory):
     @resolve_fk_on_update()
     def update_transfer(self, transfer_id: UUID, data: dict) -> DepartmentTransfer:
         """Update a transfer record information."""
-        from app.core.transfer.services.transfer_service import TransferService
-        service = TransferService(self.session, self.current_user)
-
+        copied_data = data.copy
         try:
             existing = self.get_transfer(transfer_id)
-            if "reason" in data:
-                existing.transfer_reason = data["reason"]
+            validations = {
+                "academic_session": (self.validator.validate_academic_session, "academic_session"),
+            }
+
+            for field, (validator_func, model_attr) in validations.items():
+                if field in copied_data:
+                    validated_value = validator_func(copied_data.pop(field))
+                    setattr(existing, model_attr, validated_value)
 
             for key, value in data.items():
                 if hasattr(existing, key):

@@ -5,6 +5,7 @@ from app.core.identity.factories.student import StudentFactory
 from app.core.identity.models.student import Student
 from app.core.progression.models.progression import Repetition
 from app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
+from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.schemas.enums import ApprovalStatus
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -120,8 +121,7 @@ class RepetitionFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(repetition_id, e)
             
-            
-    
+
 
     def archive_repetition(self, repetition_id: UUID, reason) -> Repetition:
         """Archive a repetition record."""
