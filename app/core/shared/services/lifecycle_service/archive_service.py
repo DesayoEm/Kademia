@@ -42,8 +42,8 @@ class ArchiveService:
         failed = []
 
         for relationship_title, model_class, fk_field, display_name in dependencies:
+            #fk based check
             if fk_field:
-                #fk based check
                 table = model_class.__table__
                 stmt = select(exists().where(
                     table.c[fk_field] == target_id,
@@ -59,7 +59,7 @@ class ArchiveService:
                 if not backref:
                     raise ValueError(f"Relationship '{relationship_title}' must define back_populates.")
 
-                if related_attr.ptoperty.uselist:
+                if related_attr.property.uselist:
                     stmt = select(exists().where(
                         getattr(related_cls, backref.any(
                             id = target_id,
@@ -74,7 +74,7 @@ class ArchiveService:
                         )
                     ))
 
-                if self.session.execute(stmt).scalar_one():
-                    failed.append(display_name)
+            if self.session.execute(stmt).scalar_one():
+                failed.append(display_name)
 
         return failed

@@ -117,7 +117,7 @@ def export_guardian(
         export_format: ExportFormat, 
         service: GuardianService = Depends(get_authenticated_service(GuardianService)),
     ):
-    file_path= service.export_guardian(guardian_id, export_format.value)
+    file_path= service.export_guardian_audit(guardian_id, export_format.value)
 
     return FileResponse(
         path=file_path,
