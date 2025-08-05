@@ -19,26 +19,6 @@ DEPENDENCY_CONFIG = {
     Guardian: [
         ("wards", Student, "guardian_id", "wards")
     ],
-    Student: [
-        ("documents_owned", StudentDocument, "student_id", "documents"),
-        ("awards_earned", StudentAward, "student_id", "awards"),
-        ("subjects_taken", StudentSubject, "student_id", "subject enrollments"),
-        ("grades", Grade, "student_id", "grades"),
-        ("total_grades", TotalGrade, "student_id", "total grades"),
-        ("classes_repeated", Repetition, "student_id", "class repetitions"),
-        ("department_transfers", DepartmentTransfer, "student_id", "department transfers"),
-
-    ],
-    Staff: [
-        # ("access_changes", AccessLevelChange, "staff_id", "access level changes")
-    ],
-
-    Educator: [
-        ("qualifications", EducatorQualification, "educator_id", "qualifications"),
-        ("subject_assignments", SubjectEducator, "educator_id", "subject assignments"),
-        ("mentored_department", StudentDepartment, "mentor_id", "mentored departments"),
-        ("supervised_class", Classes, "supervisor_id", "supervised classes")
-    ],
 
     # Student Organization
     StudentDepartment: [
@@ -65,8 +45,26 @@ DEPENDENCY_CONFIG = {
         ("staff_members", Staff, "department_id", "staff members")
     ],
 
-    EducatorQualification: [],
+Student: [
+        ("documents_owned", StudentDocument, "student_id", "documents"),
+        ("awards_earned", StudentAward, "student_id", "awards"),
+        ("subjects_taken", StudentSubject, "student_id", "subject enrollments"),
+        ("grades", Grade, "student_id", "grades"),
+        ("total_grades", TotalGrade, "student_id", "total grades"),
+        ("classes_repeated", Repetition, "student_id", "class repetitions"),
+        ("department_transfers", DepartmentTransfer, "student_id", "department transfers"),
 
+    ],
+    Staff: [
+        ("access_changes", AccessLevelChange, "staff_id", "permission changes")
+    ],
+
+    Educator: [
+        ("qualifications", EducatorQualification, "educator_id", "qualifications"),
+        ("subject_assignments", SubjectEducator, "educator_id", "subject assignments"),
+        ("mentored_department", StudentDepartment, "mentor_id", "mentored departments"),
+        ("supervised_class", Classes, "supervisor_id", "supervised classes")
+    ],
     #Academic
     Subject: [
         ("students", StudentSubject, "subject_id", "enrolled students"),
@@ -75,13 +73,9 @@ DEPENDENCY_CONFIG = {
         ("grades", Grade, "subject_id", "grades"),
         ("total_grades", TotalGrade, "subject_id", "total grades")
     ],
-    Promotion: [
-        ("promoted_student", Student, None, "promoted student")
-    ],
-    Repetition: [
-        ("repeating_student", Student, None, "repeated student")
-    ],
-
+    Promotion: [],
+    Repetition: [],
+    EducatorQualification: [],
     Grade: [],
     AcademicLevelSubject: [],
     StudentSubject: [],

@@ -20,7 +20,49 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
-@router.get("/", response_model=List[AccessLevelChangeResponse])
+# Archived Access Level Changes
+@router.get("/archive/permission_changes/", response_model=List[AccessLevelChangeResponse])
+def get_archived_level_changes(
+        filters: AccessLevelFilterParams = Depends(),
+        factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
+):
+    return factory.get_all_archived_level_changes(filters)
+
+
+@router.get("/archive/permission_changes/{permissions_change_id}/audit", response_model=AccessLevelChangeAudit)
+def get_archived_level_change_audit(
+        level_change_id: UUID,
+        factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
+):
+    return factory.get_archived_level_change(level_change_id)
+
+
+@router.get("/archive/permission_changes/{permissions_change_id}", response_model=AccessLevelChangeResponse)
+def get_archived_level_change(
+        level_change_id: UUID,
+        factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
+):
+    return factory.get_archived_level_change(level_change_id)
+
+
+@router.patch("/archive/permission_changes/{permissions_change_id}", response_model=AccessLevelChangeResponse)
+def restore_level_change(
+        level_change_id: UUID,
+        factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
+):
+    return factory.restore_level_change(level_change_id)
+
+
+@router.delete("/archive/permission_changes/{permissions_change_id}", status_code=204)
+def delete_archived_level_change(
+        level_change_id: UUID,
+        factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
+):
+    return factory.delete_archived_level_change(level_change_id)
+
+
+# Archived Access Level Changes
+@router.get("/permission_changes/", response_model=List[AccessLevelChangeResponse])
 def get_level_changes(
         filters: AccessLevelFilterParams = Depends(),
         factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
@@ -29,7 +71,7 @@ def get_level_changes(
 
 
 
-@router.get("/{level_change_id}/audit", response_model=AccessLevelChangeAudit)
+@router.get("/permission_changes/{permissions_change_id}/audit", response_model=AccessLevelChangeAudit)
 def get_level_change_audit(
         level_change_id: UUID,
         factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
@@ -38,7 +80,7 @@ def get_level_change_audit(
     return factory.get_level_change(level_change_id)
 
 
-@router.get("/{level_change_id}", response_model=AccessLevelChangeResponse)
+@router.get("/permission_changes/{permissions_change_id}", response_model=AccessLevelChangeResponse)
 def get_level_change(
         level_change_id: UUID,
         factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
@@ -48,7 +90,7 @@ def get_level_change(
 
 
 
-@router.patch("/{level_change_id}",  status_code=204)
+@router.patch("/permission_changes/{permissions_change_id}",  status_code=204)
 def archive_level_change(
         level_change_id: UUID,
         reason:ArchiveRequest,
@@ -57,7 +99,7 @@ def archive_level_change(
     return factory.archive_level_change(level_change_id, reason.reason)
 
 
-@router.get("/{level_change_id}/export", response_class=FileResponse,  status_code=204)
+@router.get("/permission_changes/{permissions_change_id}/export", response_class=FileResponse,  status_code=204)
 def export_level_change(
         level_change_id: UUID,
         export_format: ExportFormat,
@@ -72,7 +114,7 @@ def export_level_change(
     )
 
 
-@router.delete("/{level_change_id}", status_code=204)
+@router.delete("/permission_changes/{permissions_change_id}", status_code=204)
 def delete_level_change(
         level_change_id: UUID,
         factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))

@@ -31,7 +31,7 @@ from app.api.documents import award
 from app.api.documents import document, document_archive, award_archive
 from app.api.identity import student, staff_archive, guardian, staff, student_archive, guardian_archive
 from app.api.auth import password
-from app.api.auth import access_level_change_archive, auth, access_level_change
+from app.api.auth import auth, access_level_change
 from app.infra.middleware.exception_handler import ExceptionMiddleware
 from app.infra.log_service.logger import logger
 
@@ -90,8 +90,6 @@ app.include_router(staff_archive.router, prefix=f"/api/{version}/staff/archived"
 
 # Access level
 app.include_router(access_level_change.router, prefix=f"/api/{version}",
-                   tags=["Auth", "Access Level"])
-app.include_router(access_level_change_archive.router, prefix=f"/api/{version}",
                    tags=["Auth", "Access Level"])
 
 

@@ -119,7 +119,7 @@ def archive_staff(
         return factory.archive_staff(staff_id, reason.reason)
 
 
-@router.patch("/{staff_id}/access-level", response_model=AccessLevelChangeResponse)
+@router.patch("/{staff_id}/permissions", response_model=AccessLevelChangeResponse)
 def change_staff_access_level(
         staff_id: UUID,
         payload:AccessLevelChangeCreate,
