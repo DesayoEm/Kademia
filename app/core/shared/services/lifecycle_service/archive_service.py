@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
 from .dependency_config import DEPENDENCY_CONFIG
+from ...exceptions import CascadeArchivalError
 
 
 class ArchiveService:
@@ -11,14 +12,15 @@ class ArchiveService:
     Methods check if an entity can be safely archived by verifying that no active entities are referencing it.
     """
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user):
         """
-        Initialize the archive service with a db session.
+        Initialize the archive service with a db session and user.
 
         Args:
             session (Session): SQLAlchemy db session
         """
         self.session = session
+        self.current_user = current_user
 
 
     def check_active_dependencies_exists(
@@ -78,3 +80,31 @@ class ArchiveService:
                 failed.append(display_name)
 
         return failed
+
+
+    def cascade_archive_object(self, entity_model, obj_factory, obj_id: UUID, reason: str) -> None:
+        dependencies = DEPENDENCY_CONFIG.get(entity_model)
+        obj = obj_factory.get(obj_id)
+
+        for relationship_title, model_class, fk_field, display_name in dependencies:
+
+            if relationship_title:
+                related_attr = getattr(obj, relationship_title)
+                backref = related_attr.property.back_populates
+                try:
+                    if not backref:
+                        raise ValueError(f"Relationship '{relationship_title}' must define back_populates.")
+
+                    if related_attr.property.uselist:
+                        for item in related_attr:
+                            item.archive(self.current_user, reason)
+                    else:
+                        related_attr.archive(self.current_user, reason)
+
+                except Exception as e:
+                    self.session.rollback()
+                    raise CascadeArchivalError(str(e))
+
+        obj.archive(self.current_user, reason)
+
+

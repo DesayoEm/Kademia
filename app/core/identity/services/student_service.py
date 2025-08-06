@@ -76,7 +76,10 @@ class StudentService:
         return self.factory.update_student(stu_id, {"guardian_id": guardian_id})
 
 
-    def export_student(self, stu_id: UUID, export_format: str) -> str:
+    def cascade_archive_student(self, student_id: UUID):
+        pass
+
+    def export_student_audit(self, stu_id: UUID, export_format: str) -> str:
         """Export Student object and its associated data
         Args:
             stu_id: Student UUID
@@ -85,3 +88,4 @@ class StudentService:
         return self.export_service.export_entity(
             Student, stu_id, export_format
         )
+

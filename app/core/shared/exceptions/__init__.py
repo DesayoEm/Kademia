@@ -9,6 +9,7 @@ from .base_error import KademiaError
 from .lifecycle_errors import (
     ArchiveAndDeleteError,
     CascadeDeletionError,
+    CascadeArchivalError,
     ArchiveDependencyError,
 )
 

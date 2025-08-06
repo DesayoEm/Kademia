@@ -161,7 +161,7 @@ def export_student(
         export_format: ExportFormat,
         service: StudentService = Depends(get_authenticated_service(StudentService))
     ):
-    file_path= service.export_student(student_id, export_format.value)
+    file_path= service.export_student_audit(student_id, export_format.value)
 
     return FileResponse(
         path=file_path,

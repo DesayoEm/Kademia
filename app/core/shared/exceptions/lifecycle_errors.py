@@ -12,8 +12,16 @@ class CascadeDeletionError(ArchiveAndDeleteError):
         super().__init__(f"")
 
         self.user_message = f"Deletion failed!"
-        self.log_message = f"Cascade deletion failed. DETAIL: {error} "
+        self.log_message = f"Cascade deletion failed. DETAIL: {error}"
 
+
+class CascadeArchivalError(ArchiveAndDeleteError):
+    """Raised when an error occurs during a cascade archival operation."""
+    def __init__(self, error: str):
+        super().__init__(f"")
+
+        self.user_message = f"Deep archive failed!"
+        self.log_message = f"Cascade archival failed. DETAIL: {error}"
 
 
 
