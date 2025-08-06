@@ -36,7 +36,7 @@ class StudentFactory(BaseFactory):
         self.password_service = PasswordService(session)
 
         self.delete_service = DeleteService(self.model, session)
-        self.archive_service = ArchiveService(session)
+        self.archive_service = ArchiveService(session, current_user = current_user)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.actor_id: UUID = self.get_actor_id()

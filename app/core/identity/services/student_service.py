@@ -7,6 +7,7 @@ from app.core.identity.factories.student import StudentFactory
 from app.core.identity.models.student import Student
 from app.core.shared.exceptions.academic_structure_errors import ClassLevelMismatchError
 from app.core.shared.services.audit_export_service.export import ExportService
+from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 
 
 class StudentService:
@@ -15,6 +16,7 @@ class StudentService:
         self.current_user = current_user
         self.export_service = ExportService(session)
         self.factory = StudentFactory(session = self.session, current_user=self.current_user)
+        self.archive_service = ArchiveService(session, current_user=current_user)
 
 
     def generate_student_id(self, start_year: int):
@@ -70,14 +72,14 @@ class StudentService:
         return self.factory.update_student(stu_id, {"class_id": class_id})
 
 
-
     def change_guardian(self, stu_id: UUID, guardian_id: UUID):
         """Change a student's guardian"""
         return self.factory.update_student(stu_id, {"guardian_id": guardian_id})
 
+    def cascade_student_archive(self, student_id: UUID, reason: str):
+        student = self.factory.get_student(student_id)
+        self.archive_service.cascade_archive_object(Student, student, reason)
 
-    def cascade_archive_student(self, student_id: UUID):
-        pass
 
     def export_student_audit(self, stu_id: UUID, export_format: str) -> str:
         """Export Student object and its associated data

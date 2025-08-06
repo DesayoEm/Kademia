@@ -8,7 +8,7 @@ from fastapi import UploadFile, File
 from app.core.identity.factories.student import StudentFactory
 from app.core.shared.services.file_storage.s3_upload import S3Upload
 from app.core.identity.services.student_service import StudentService
-from app.core.shared.schemas.enums import ExportFormat
+from app.core.shared.schemas.enums import ExportFormat, ArchiveReason
 
 from app.core.identity.schemas.student import StudentCreate, StudentUpdate, StudentResponse, StudentFilterParams, \
     StudentAudit
@@ -23,11 +23,49 @@ token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
 
+#Archive routers
+@router.get("/", response_model=List[StudentResponse])
+def get_archived_students(
+        filters: StudentFilterParams = Depends(),
+        factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
+    ):
+    return factory.get_all_archived_students(filters)
 
 
+@router.get("/archive/students/student_id}/audit", response_model=StudentAudit)
+def get_archived_student_audit(
+        student_id: UUID,
+        factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
+    ):
+    return factory.get_archived_student(student_id)
 
 
-@router.post("/{student_id}/profile/profile-picture", response_model= UploadResponse,
+@router.get("/archive/students/student_id}", response_model=StudentResponse)
+def get_archived_student(
+        student_id: UUID,
+        factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
+    ):
+    return factory.get_archived_student(student_id)
+
+
+@router.patch("/archive/students/student_id}", response_model=StudentResponse)
+def restore_student(
+        student_id: UUID,
+        factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
+):
+    return factory.restore_student(student_id)
+
+
+@router.delete("/archive/students/student_id}", status_code=204)
+def delete_archived_student(
+        student_id: UUID,
+        factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
+):
+    return factory.delete_archived_student(student_id)
+
+
+#Active routers
+@router.post("/students/{student_id}/profile/profile-picture", response_model= UploadResponse,
              status_code=201)
 def upload_profile_pic(
         student_id: UUID,
@@ -41,7 +79,7 @@ def upload_profile_pic(
     return UploadResponse(**result)
 
 
-@router.delete("/{staff_id}/profile/profile-picture", status_code=204)
+@router.delete("/students/{student_id}/profile/profile-picture", status_code=204)
 def remove_profile_pic(
         student_id: UUID,
         service: ProfilePictureService = Depends(get_authenticated_service(ProfilePictureService)),
@@ -51,18 +89,18 @@ def remove_profile_pic(
         return service.remove_profile_pic(student)
 
 
-@router.get("/{student_id}/profile/profile-picture")
+@router.get("/students/{student_id}/profile/profile-picture")
 def get_student_profile_pic(
         student_id: UUID,
         service: S3Upload = Depends(get_authenticated_service(S3Upload)),
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
     ):
-        staff = factory.get_student(student_id)
-        key = staff.profile_s3_key
+        student = factory.get_student(student_id)
+        key = student.profile_s3_key
         return service.generate_presigned_url(key)
 
 
-@router.post("/", response_model= StudentResponse, status_code=201)
+@router.post("/students", response_model= StudentResponse, status_code=201)
 def create_student(
         payload:StudentCreate,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
@@ -70,7 +108,7 @@ def create_student(
         return factory.create_student(payload)
 
 
-@router.get("/", response_model=List[StudentResponse])
+@router.get("/students", response_model=List[StudentResponse])
 def get_students(
         filters: StudentFilterParams = Depends(),
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
@@ -78,7 +116,7 @@ def get_students(
         return factory.get_all_students(filters)
 
 
-@router.get("/{student_id}/audit", response_model=StudentAudit)
+@router.get("/students/{student_id}/audit", response_model=StudentAudit)
 def get_student_audit(
         student_id: UUID,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
@@ -86,7 +124,7 @@ def get_student_audit(
         return factory.get_student(student_id)
 
 
-@router.get("/{student_id}", response_model=StudentResponse)
+@router.get("/students/{student_id}", response_model=StudentResponse)
 def get_student(
         student_id: UUID,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
@@ -94,7 +132,7 @@ def get_student(
         return factory.get_student(student_id)
 
 
-@router.put("/{student_id}", response_model=StudentResponse)
+@router.put("/students/{student_id}", response_model=StudentResponse)
 def update_student(
         payload: StudentUpdate,
         student_id: UUID,
@@ -104,7 +142,16 @@ def update_student(
         return factory.update_student(student_id, payload)
 
 
-@router.patch("/{student_id}/archive", status_code=204)
+@router.patch("/students/{student_id}/deep_archive", status_code=204)
+def cascade_archive_student(
+        student_id: UUID,
+        reason:ArchiveReason,
+        service: StudentService = Depends(get_authenticated_service(StudentService)),
+):
+    return service.cascade_student_archive(student_id, reason.value)
+
+
+@router.patch("/students/{student_id}/archive", status_code=204)
 def archive_student(
         student_id: UUID,
         reason:ArchiveRequest,
@@ -113,7 +160,7 @@ def archive_student(
         return factory.archive_student(student_id, reason.reason)
 
 
-@router.patch("/{student_id}/guardian", response_model=StudentResponse)
+@router.patch("/students/{student_id}/guardian", response_model=StudentResponse)
 def change_guardian(
         student_id: UUID,
         guardian_id:UUID,
@@ -121,7 +168,7 @@ def change_guardian(
     ):
         return service.change_guardian(student_id, guardian_id)
 
-@router.patch("/{student_id}/department/assign", response_model=StudentResponse)
+@router.patch("/students/{student_id}/department/assign", response_model=StudentResponse)
 def assign_department(
         student_id: UUID,
         department_id:UUID,
@@ -130,7 +177,7 @@ def assign_department(
         return service.assign_department(student_id, department_id)
 
 
-@router.patch("/{student_id}/department/remove", response_model=StudentResponse)
+@router.patch("/students/{student_id}/department/remove", response_model=StudentResponse)
 def remove_department(
         student_id: UUID,
         service: StudentService = Depends(get_authenticated_service(StudentService))
@@ -138,7 +185,7 @@ def remove_department(
         return service.assign_department(student_id)
 
 
-@router.patch("/{student_id}/class/assign",response_model=StudentResponse)
+@router.patch("/students/{student_id}/class/assign",response_model=StudentResponse)
 def assign_class(
         student_id: UUID,
         class_id:UUID,
@@ -147,7 +194,7 @@ def assign_class(
         return service.assign_class(student_id, class_id)
 
 
-@router.patch("/{student_id}/class/remove", response_model=StudentResponse)
+@router.patch("/students/{student_id}/class/remove", response_model=StudentResponse)
 def remove_class(
         student_id: UUID,
         service: StudentService = Depends(get_authenticated_service(StudentService))
@@ -155,7 +202,7 @@ def remove_class(
         return service.assign_class(student_id)
 
 
-@router.post("/{student_id}/export", response_class=FileResponse,  status_code=204)
+@router.post("/students/{student_id}/export", response_class=FileResponse,  status_code=204)
 def export_student(
         student_id: UUID,
         export_format: ExportFormat,
@@ -170,7 +217,7 @@ def export_student(
     )
 
 
-@router.delete("/{student_id}", status_code=204)
+@router.delete("/students/{student_id}", status_code=204)
 def delete_student(
         student_id: UUID,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))

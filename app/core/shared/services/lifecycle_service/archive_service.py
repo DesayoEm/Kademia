@@ -82,16 +82,17 @@ class ArchiveService:
         return failed
 
 
-    def cascade_archive_object(self, entity_model, obj_factory, obj_id: UUID, reason: str) -> None:
+    def cascade_archive_object(self, entity_model, target_obj, reason: str) -> None:
         dependencies = DEPENDENCY_CONFIG.get(entity_model)
-        obj = obj_factory.get(obj_id)
 
-        for relationship_title, model_class, fk_field, display_name in dependencies:
+        for relationship_title, _, _, _ in dependencies:
 
             if relationship_title:
-                related_attr = getattr(obj, relationship_title)
-                backref = related_attr.property.back_populates
+                related_attr = getattr(target_obj, relationship_title)
                 try:
+                    relationship_prop = getattr(type(target_obj), relationship_title).property
+                    backref = relationship_prop.back_populates
+
                     if not backref:
                         raise ValueError(f"Relationship '{relationship_title}' must define back_populates.")
 
@@ -105,6 +106,6 @@ class ArchiveService:
                     self.session.rollback()
                     raise CascadeArchivalError(str(e))
 
-        obj.archive(self.current_user, reason)
+        target_obj.archive(self.current_user, reason)
 
 

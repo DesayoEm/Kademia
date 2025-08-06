@@ -9,7 +9,7 @@ from app.core.auth.schemas.access_level_change import AccessLevelChangeCreate, A
 from app.core.identity.factories.staff import StaffFactory
 from app.core.identity.services.profile_picture_service import ProfilePictureService
 from app.core.identity.services.staff_service import StaffService
-from app.core.shared.schemas.enums import ExportFormat, StaffAvailability
+from app.core.shared.schemas.enums import ExportFormat, StaffAvailability, ArchiveReason
 from app.core.identity.schemas.staff import StaffCreate, StaffUpdate, StaffResponse, StaffFilterParams, StaffAudit
 from fastapi import Depends, APIRouter
 from app.core.shared.schemas.shared_models import ArchiveRequest, UploadResponse
@@ -24,7 +24,51 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
-@router.post("/", response_model= StaffResponse, status_code=201)
+#Archive routers
+
+@router.get("/archive/staff", response_model=List[StaffResponse])
+def get_archived_staff(
+        filters: StaffFilterParams = Depends(),
+        factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
+    ):
+    return factory.get_all_archived_staff(filters)
+
+
+@router.get("/archive/staff/{staff_id}/audit", response_model=StaffAudit)
+def get_archived_staff_audit(
+        staff_id: UUID,
+        factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
+    ):
+    return factory.get_archived_staff(staff_id)
+
+
+@router.get("/archive/staff/{staff_id}", response_model=StaffResponse)
+def get_archived_staff(
+        staff_id: UUID,
+        factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
+    ):
+    return factory.get_archived_staff(staff_id)
+
+
+@router.patch("/archive/staff/{staff_id}", response_model=StaffResponse)
+def restore_staff(
+        staff_id: UUID,
+        factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
+    ):
+    return factory.restore_staff(staff_id)
+
+
+@router.delete("/archive/staff/{staff_id}", status_code=204)
+def delete_archived_staff(
+        staff_id: UUID,
+        factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
+    ):
+    return factory.delete_archived_staff(staff_id)
+
+
+#Active routers
+
+@router.post("/staff", response_model= StaffResponse, status_code=201)
 def create_staff(
         payload:StaffCreate,
         factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory)),
@@ -32,7 +76,7 @@ def create_staff(
         return factory.create_staff(payload)
 
 
-@router.post("/{staff_id}/profile/profile-picture", response_model= UploadResponse,
+@router.post("/staff/{staff_id}/profile/profile-picture", response_model= UploadResponse,
              status_code=201)
 def upload_profile_pic(
         staff_id: UUID,
@@ -46,7 +90,7 @@ def upload_profile_pic(
         return UploadResponse(**result)
 
 
-@router.get("/{staff_id}/profile/profile-picture")
+@router.get("/staff/{staff_id}/profile/profile-picture")
 def get_staff_profile_pic(
         staff_id: UUID,
         service: S3Upload = Depends(get_authenticated_service(S3Upload)),
@@ -57,7 +101,7 @@ def get_staff_profile_pic(
         return service.generate_presigned_url(key)
 
 
-@router.delete("/{staff_id}/profile/profile-picture", status_code=204)
+@router.delete("/staff/{staff_id}/profile/profile-picture", status_code=204)
 def remove_profile_pic(
         staff_id: UUID,
         service: ProfilePictureService = Depends(get_authenticated_service(ProfilePictureService)),
@@ -67,7 +111,7 @@ def remove_profile_pic(
         return service.remove_profile_pic(staff)
 
 
-@router.post("/", response_model= StaffResponse, status_code=201)
+@router.post("/staff/", response_model= StaffResponse, status_code=201)
 def create_staff(
         payload:StaffCreate,
         factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory)),
@@ -75,7 +119,7 @@ def create_staff(
         return factory.create_staff(payload)
 
 
-@router.get("/", response_model=List[StaffResponse])
+@router.get("/staff/", response_model=List[StaffResponse])
 def get_staff(
         filters: StaffFilterParams = Depends(),
         factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
@@ -83,7 +127,7 @@ def get_staff(
         return factory.get_all_staff(filters)
 
 
-@router.get("/{staff_id}/audit", response_model=StaffAudit)
+@router.get("/staff/{staff_id}/audit", response_model=StaffAudit)
 def get_staff_audit(
         staff_id: UUID,
         factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
@@ -92,7 +136,7 @@ def get_staff_audit(
 
 
 
-@router.get("/{staff_id}", response_model=StaffResponse)
+@router.get("/staff/{staff_id}", response_model=StaffResponse)
 def get_staff(
         staff_id: UUID,
         factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
@@ -100,7 +144,7 @@ def get_staff(
         return factory.get_staff(staff_id)
 
 
-@router.put("/{staff_id}", response_model=StaffResponse)
+@router.put("/staff/{staff_id}", response_model=StaffResponse)
 def update_staff(
         payload: StaffUpdate,
         staff_id: UUID,
@@ -110,13 +154,22 @@ def update_staff(
         return factory.update_staff(staff_id, payload)
 
 
-@router.patch("/{staff_id}/archive", status_code=204)
+@router.patch("/staff/{staff_id}/archive", status_code=204)
 def archive_staff(
         staff_id: UUID,
         reason:ArchiveRequest,
         factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory))
     ):
         return factory.archive_staff(staff_id, reason.reason)
+
+
+@router.patch("/staff/{staff_id}/deep_archive", status_code=204)
+def cascade_archive_staff(
+        staff_id: UUID,
+        reason:ArchiveReason,
+        service: StaffService = Depends(get_authenticated_service(StaffService)),
+):
+    return service.cascade_staff_archive(staff_id, reason.value)
 
 
 @router.patch("/{staff_id}/permissions", response_model=AccessLevelChangeResponse)

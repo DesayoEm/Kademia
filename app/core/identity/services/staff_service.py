@@ -2,9 +2,10 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from app.core.identity.factories.staff import StaffFactory
-from app.core.identity.models.staff import Staff
-from app.core.shared.models.enums import StaffAvailability
+from app.core.identity.models.staff import Staff, Educator
+from app.core.shared.models.enums import StaffAvailability, StaffType
 from app.core.shared.services.audit_export_service.export import ExportService
+from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 
 
 class StaffService:
@@ -13,6 +14,7 @@ class StaffService:
         self.current_user = current_user
         self.factory = StaffFactory(session, Staff, current_user= current_user)
         self.export_service = ExportService(session)
+        self.archive_service = ArchiveService(session, current_user=current_user)
 
 
     def assign_role(self, staff_id: UUID, role_id: UUID | None = None):
@@ -34,6 +36,15 @@ class StaffService:
     def update_staff_availability(self, staff_id: UUID, availability: StaffAvailability):
         """Update staff availability status."""
         return self.factory.update_staff(staff_id, {"availability": availability.value})
+
+
+    def cascade_staff_archive(self, staff_id: UUID, reason: str):
+        staff = self.factory.get_staff(staff_id)
+
+        if staff.staff_type == StaffType.Educator:
+            self.archive_service.cascade_archive_object(Educator, staff, reason)
+        else:
+            self.archive_service.cascade_archive_object(Staff, staff, reason)
 
 
     def export_staff(self, staff_id: UUID, export_format: str) -> str:
