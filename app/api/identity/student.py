@@ -148,16 +148,17 @@ def cascade_archive_student(
         reason:ArchiveReason,
         service: StudentService = Depends(get_authenticated_service(StudentService)),
 ):
-    return service.cascade_student_archive(student_id, reason.value)
+    return service.cascade_student_archive(student_id, reason)
 
 
-@router.patch("/students/{student_id}/archive", status_code=204)
+@router.patch("/students/{student_id}/archive", status_code=200)
 def archive_student(
         student_id: UUID,
         reason:ArchiveRequest,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
     ):
-        return factory.archive_student(student_id, reason.reason)
+        factory.archive_student(student_id, reason.value)
+        return "Archive successful"
 
 
 @router.patch("/students/{student_id}/guardian", response_model=StudentResponse)

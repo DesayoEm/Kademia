@@ -142,8 +142,9 @@ class System(Staff):
         'inherit_condition': (id == Staff.id)
     }
 
-    def __repr__(self) -> str:
-        return f"System(name={self.first_name} {self.last_name}, role_id={self.role_id})"
+
+
+
 
 from app.core.auth.models.auth import AccessLevelChange
 from app.core.staff_management.models import StaffDepartment, StaffRole, EducatorQualification

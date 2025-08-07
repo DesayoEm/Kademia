@@ -2,6 +2,9 @@ from sqlalchemy import select, exists
 from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
+from sqlalchemy.orm.collections import InstrumentedList
+from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
+from app.infra.log_service.logger import logger
 from .dependency_config import DEPENDENCY_CONFIG
 from ...exceptions import CascadeArchivalError
 
@@ -82,30 +85,40 @@ class ArchiveService:
         return failed
 
 
+
     def cascade_archive_object(self, entity_model, target_obj, reason: str) -> None:
         dependencies = DEPENDENCY_CONFIG.get(entity_model)
 
         for relationship_title, _, _, _ in dependencies:
+            if not relationship_title:
+                continue
 
-            if relationship_title:
+            try:
+                relationship_prop = getattr(type(target_obj), relationship_title).property
+                backref = relationship_prop.back_populates
+
+                if not backref:
+                    raise ValueError(f"Relationship '{relationship_title}' must define back_populates.")
+
                 related_attr = getattr(target_obj, relationship_title)
-                try:
-                    relationship_prop = getattr(type(target_obj), relationship_title).property
-                    backref = relationship_prop.back_populates
 
-                    if not backref:
-                        raise ValueError(f"Relationship '{relationship_title}' must define back_populates.")
+                if isinstance(related_attr, InstrumentedList):
+                    for item in related_attr:
+                        item.archive(self.current_user, reason)
 
-                    if related_attr.property.uselist:
-                        for item in related_attr:
-                            item.archive(self.current_user, reason)
-                    else:
-                        related_attr.archive(self.current_user, reason)
+                elif related_attr is not None:
+                    related_attr.archive(self.current_user, reason)
 
-                except Exception as e:
-                    self.session.rollback()
-                    raise CascadeArchivalError(str(e))
+            except Exception as e:
+                self.session.rollback()
+                raise CascadeArchivalError(f"[{relationship_title}] Cascade failed: {e}")
 
-        target_obj.archive(self.current_user, reason)
+        try:
+            target_obj.archive(self.current_user, reason)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise CascadeArchivalError(f"[{entity_model}] Failed to archive main object: {e}")
+
 
 

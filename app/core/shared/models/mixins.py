@@ -90,19 +90,19 @@ class ArchiveMixins:
     archived_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
     archive_reason: Mapped[ArchiveReason] = mapped_column(Enum(ArchiveReason), nullable=True)
 
-    @declared_attr
-    def archived_by(cls):
-        return mapped_column(ForeignKey(
-            'staff.id', ondelete='SET NULL', name=f'fk_{cls.__tablename__}_staff_archived_by'),
-                    nullable=True
-                )
-
-    @declared_attr
-    def archived_by_staff(cls):
-        return relationship(
-            'Staff', foreign_keys=[cls.archived_by],
-                    primaryjoin=f"Staff.id == {cls.__name__}.archived_by"
-         )
+    # @declared_attr
+    # def archived_by(cls):
+    #     return mapped_column(ForeignKey(
+    #         'staff.id', ondelete='SET NULL', name=f'fk_{cls.__tablename__}_staff_archived_by'),
+    #                 nullable=True
+    #             )
+    #
+    # @declared_attr
+    # def archived_by_staff(cls):
+    #     return relationship(
+    #         'Staff', foreign_keys=[cls.archived_by],
+    #                 primaryjoin=f"Staff.id == {cls.__name__}.archived_by"
+    #      )
 
     def archive(self, archived_by: UUID, archive_reason: ArchiveReason) -> None:
         """
