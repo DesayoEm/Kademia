@@ -32,8 +32,9 @@ class TransferFactory(BaseFactory):
         self.model = model
         self.session = session
         self.repository = SQLAlchemyRepository(self.model, session)
+
         self.delete_service = DeleteService(self.model, session)
-        self.archive_service = ArchiveService(session)
+        self.archive_service = ArchiveService(session, current_user)
         self.validator = TransferValidator()
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
@@ -50,18 +51,15 @@ class TransferFactory(BaseFactory):
 
     @resolve_fk_on_create()
     def create_transfer(self, student_id: UUID, data) -> DepartmentTransfer:
-
-        from app.core.identity.models.student import Student
-        from app.core.identity.factories.student import StudentFactory
-        student_factory = StudentFactory(self.session, Student, self.current_user)
-        student = student_factory.get_student(student_id)
+        from app.core.transfer.services.transfer_service import TransferService
+        transfer_service = TransferService(self.session, self.current_user)
 
         try:
             new_transfer = DepartmentTransfer(
             id=uuid4(),
             student_id=student_id,
             academic_session=self.validator.validate_academic_session(data.academic_session),
-            previous_department_id=student.department_id,
+            previous_department_id= transfer_service.check_student_has_department(student_id),
             new_department_id=data.new_department_id,
             reason=data.reason,
             created_by=self.actor_id,

@@ -118,6 +118,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
         # Transfer exceptions
         TransferStatusAlreadySetError: status.HTTP_400_BAD_REQUEST,
+        DepartmentNotSetError: status.HTTP_400_BAD_REQUEST,
 
     }
 

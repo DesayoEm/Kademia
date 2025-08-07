@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from app.core.shared.exceptions import TransferStatusAlreadySetError, EmptyFieldError
+from app.core.shared.exceptions import TransferStatusAlreadySetError, EmptyFieldError, DepartmentNotSetError
 from app.core.transfer.factories.transfer import TransferFactory
 from app.core.transfer.models.transfer import DepartmentTransfer
 from app.core.shared.services.audit_export_service.export import ExportService
@@ -16,6 +16,19 @@ class TransferService:
         self.factory = TransferFactory(self.session, DepartmentTransfer, self.current_user)
         self.export_service = ExportService(session)
         self.domain = "TRANSFER"
+
+
+    def check_student_has_department(self, student_id: UUID):
+        """Check if a student is assigned to a department before attempting transfer."""
+        from app.core.identity.factories.student import StudentFactory
+        from app.core.identity.models.student import Student
+
+        student_factory = StudentFactory(self.session, Student, self.current_user)
+        student = student_factory.get_student(student_id)
+
+        if not student.department_id:
+            raise DepartmentNotSetError(student_id)
+        return student.department_id
 
 
     def action_transfer_record(self, transfer_id: UUID, data: dict):

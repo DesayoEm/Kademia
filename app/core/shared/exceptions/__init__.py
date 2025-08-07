@@ -131,7 +131,8 @@ AcademicLevelMismatchError
 )
 
 from .transfer_errors import (
-TransferStatusAlreadySetError
+TransferStatusAlreadySetError,
+DepartmentNotSetError
 )
 
 
