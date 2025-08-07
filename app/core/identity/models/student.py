@@ -35,8 +35,8 @@ class Student(UserBase):
     graduation_year: Mapped[str] = mapped_column(String(9), nullable=True)
 
     # Relationships
-    documents_owned: Mapped[List['StudentDocument']] = relationship(back_populates='owner')
-    awards_earned: Mapped[List['StudentAward']] = relationship(back_populates='owner')
+    documents_owned: Mapped[List['StudentDocument']] = relationship(back_populates='document_owner')
+    awards_earned: Mapped[List['StudentAward']] = relationship(back_populates='award_owner')
     guardian: Mapped['Guardian'] = relationship(back_populates='wards', foreign_keys='[Student.guardian_id]')
     class_: Mapped['Classes'] = relationship(back_populates='students',foreign_keys='[Student.class_id]',
         primaryjoin='Student.class_id == Classes.id')
