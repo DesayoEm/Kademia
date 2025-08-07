@@ -35,6 +35,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
         # Generic db exceptions
         KDDatabaseError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+        NoResultError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         EntityNotFoundError: status.HTTP_404_NOT_FOUND,
         RelatedEntityNotFoundError: status.HTTP_404_NOT_FOUND,
         UniqueViolationError: status.HTTP_409_CONFLICT,
@@ -95,7 +96,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         UnableToRecalculateError: status.HTTP_500_INTERNAL_SERVER_ERROR,
 
         # Progression exceptions
-        InvalidPromotionLevelError: status.HTTP_400_BAD_REQUEST,
+        StudentToGraduateError: status.HTTP_400_BAD_REQUEST,
         InvalidRepetitionLevelError: status.HTTP_400_BAD_REQUEST,
         ProgressionStatusAlreadySetError: status.HTTP_400_BAD_REQUEST,
         LevelNotFinalError: status.HTTP_400_BAD_REQUEST,

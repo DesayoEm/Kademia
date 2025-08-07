@@ -5,13 +5,13 @@ class ProgressionError(KademiaError):
     """Base exception class for all progression related exceptions"""
 
 
-class InvalidPromotionLevelError(ProgressionError):
-    """Raised when an invalid level is passed in during promotion"""
+class StudentToGraduateError(ProgressionError):
+    """Raised on an attempt to promote a  student in a final level"""
 
-    def __init__(self, next_level_id: UUID, previous_level_id: UUID):
+    def __init__(self, previous_level_id: UUID):
         super().__init__()
-        self.user_message = f"Invalid promotion:Promotion must be to the next immediate level."
-        self.log_message = f"Invalid promotion: id {next_level_id} is not the next level after {previous_level_id}"
+        self.user_message = f"Invalid promotion:Student is in final level. Graduate instead"
+        self.log_message = f"Invalid promotion: id {previous_level_id} is a final level"
 
 
 class InvalidRepetitionLevelError(ProgressionError):

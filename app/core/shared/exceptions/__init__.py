@@ -33,6 +33,7 @@ from .auth_errors import (
 
 from .database_errors import (
     DBError,
+    NoResultError,
     EntityNotFoundError,
     RelatedEntityNotFoundError,
     UniqueViolationError,
@@ -120,7 +121,7 @@ from .assessment_errors import (
 
 from .progression_errors import (
     InvalidRepetitionLevelError,
-    InvalidPromotionLevelError,
+    StudentToGraduateError,
     ProgressionStatusAlreadySetError,
     LevelNotFinalError
 )

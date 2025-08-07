@@ -34,7 +34,7 @@ class PromotionFactory(BaseFactory):
         self.current_user = current_user
         self.repository = SQLAlchemyRepository(self.model, session)
         self.delete_service = DeleteService(self.model, session)
-        self.archive_service = ArchiveService(session)
+        self.archive_service = ArchiveService(session, current_user)
         self.entity_model, self.display_name = error_map.get(self.model)
         self.actor_id: UUID = self.get_actor_id()
         self.domain = "Promotion"
@@ -63,9 +63,7 @@ class PromotionFactory(BaseFactory):
 
         from app.core.progression.services.promotion_service import PromotionService
         service = PromotionService(self.session, self.current_user)
-        validated_new_level_id = service.validate_promotion_level(
-            student.level_id, data.promoted_level_id, student_id, data.academic_session
-        )
+        promotion_level_id = service.generate_promotion_level(student.level_id)
 
 
         try:
@@ -75,7 +73,7 @@ class PromotionFactory(BaseFactory):
             academic_session=data.academic_session,
             notes=data.notes,
             previous_level_id=student.level_id,
-            promoted_level_id=validated_new_level_id,
+            promoted_level_id=promotion_level_id,
 
             status=ApprovalStatus.PENDING,
             created_by=self.actor_id,

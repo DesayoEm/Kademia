@@ -28,7 +28,6 @@ class GraduationCreate(BaseModel):
 class PromotionBase(BaseModel):
     """Base model for student promotions"""
     academic_session: str
-    promoted_level_id: UUID
     notes: str
 
 
@@ -38,7 +37,6 @@ class PromotionBase(BaseModel):
         json_schema_extra={
             "example": {
                 "academic_session": "2025/2026",
-                "promoted_level_id": "00000000-0000-0000-0000-000000000002",
                 "notes": "Met promotion criteria"
 
             }

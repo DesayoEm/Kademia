@@ -16,6 +16,16 @@ class EntityNotFoundError(DBError):
         super().__init__()
 
 
+class NoResultError(DBError):
+    """Raised when a query returns no result (not based on ID)."""
+    def __init__(self,query_description: str, criteria: str, display_name: str):
+        self.user_message = f"{display_name} {criteria} not found"
+        self.log_message = (
+            f"No result found for query: {query_description}"
+        )
+        super().__init__(self.log_message)
+
+
 class UniqueViolationError(DBError):
     """Raised when attempting to violate a unique constraint"""
     def __init__(self, error: str, constraint: str|None = None):

@@ -1,12 +1,14 @@
 from datetime import datetime
 
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import select
 from uuid import UUID
 
 from app.core.progression.factories.promotion import PromotionFactory
 from app.core.progression.models.progression import Repetition, Promotion
-from app.core.shared.exceptions import InvalidPromotionLevelError, EmptyFieldError, ProgressionStatusAlreadySetError, \
-    LevelNotFinalError, EntityNotFoundError
+from app.core.shared.exceptions import StudentToGraduateError, EmptyFieldError, ProgressionStatusAlreadySetError, \
+    LevelNotFinalError, EntityNotFoundError, NoResultError
 from app.core.shared.services.audit_export_service.export import ExportService
 
 
@@ -21,28 +23,30 @@ class PromotionService:
         self.domain = "PROGRESSION"
 
 
-    def validate_promotion_level(
-            self, previous_level_id: UUID, promoted_level_id: UUID, student_id: UUID, academic_session: str
-    ):
+    def generate_promotion_level(self, previous_level_id: UUID):
     
         from app.core.academic_structure.factories.academic_level import AcademicLevelFactory
         from app.core.academic_structure.models import AcademicLevel
-
         academic_factory = AcademicLevelFactory(self.session, AcademicLevel, self.current_user)
 
         previous_level = academic_factory.get_academic_level(previous_level_id)
-        promoted_level = academic_factory.get_academic_level(promoted_level_id) if promoted_level_id else None
 
         if previous_level.is_final:
-            raise #graguate instead. error to be defined later
+            raise StudentToGraduateError(previous_level_id)
 
-        if promoted_level.promotion_rank != previous_level.promotion_rank + 1:
-            raise InvalidPromotionLevelError(
-                next_level_id=promoted_level_id,
-                previous_level_id=previous_level_id
+        stmt = select(AcademicLevel).where(
+            AcademicLevel.promotion_rank == previous_level.promotion_rank + 1
+        )
+
+        promoted_level = self.session.scalar(stmt)
+
+        if not promoted_level:
+            raise NoResultError(
+                str(stmt), "greater than the student's current one", "academic level",
             )
 
-        return promoted_level_id
+        return promoted_level.id
+
 
 
     def graduate_student(self, student_id: UUID, academic_session: str):
