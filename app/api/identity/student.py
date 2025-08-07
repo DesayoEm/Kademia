@@ -24,7 +24,7 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 #Archive routers
-@router.get("/", response_model=List[StudentResponse])
+@router.get("/archive/students", response_model=List[StudentResponse])
 def get_archived_students(
         filters: StudentFilterParams = Depends(),
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
@@ -32,7 +32,7 @@ def get_archived_students(
     return factory.get_all_archived_students(filters)
 
 
-@router.get("/archive/students/student_id}/audit", response_model=StudentAudit)
+@router.get("/archive/students/{student_id}/audit", response_model=StudentAudit)
 def get_archived_student_audit(
         student_id: UUID,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
@@ -40,7 +40,7 @@ def get_archived_student_audit(
     return factory.get_archived_student(student_id)
 
 
-@router.get("/archive/students/student_id}", response_model=StudentResponse)
+@router.get("/archive/students/{student_id}", response_model=StudentResponse)
 def get_archived_student(
         student_id: UUID,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
@@ -48,7 +48,7 @@ def get_archived_student(
     return factory.get_archived_student(student_id)
 
 
-@router.patch("/archive/students/student_id}", response_model=StudentResponse)
+@router.patch("/archive/students/{student_id}", response_model=StudentResponse)
 def restore_student(
         student_id: UUID,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
@@ -56,7 +56,7 @@ def restore_student(
     return factory.restore_student(student_id)
 
 
-@router.delete("/archive/students/student_id}", status_code=204)
+@router.delete("/archive/students/{student_id}", status_code=204)
 def delete_archived_student(
         student_id: UUID,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
@@ -100,7 +100,7 @@ def get_student_profile_pic(
         return service.generate_presigned_url(key)
 
 
-@router.post("/students", response_model= StudentResponse, status_code=201)
+@router.post("/students/", response_model= StudentResponse, status_code=201)
 def create_student(
         payload:StudentCreate,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
