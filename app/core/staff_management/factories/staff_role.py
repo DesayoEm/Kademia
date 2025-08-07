@@ -29,7 +29,7 @@ class StaffRoleFactory(BaseFactory):
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
         self.delete_service = DeleteService(self.model, session)
-        self.archive_service = ArchiveService(session)
+        self.archive_service = ArchiveService(session, current_user)
         self.export_service = ExportService(session)
         self.validator = StaffManagementValidator()
         self.error_details = error_map.get(self.model)

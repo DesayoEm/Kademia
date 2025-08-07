@@ -74,13 +74,27 @@ Student: [
         ("grades", Grade, "subject_id", "grades"),
         ("total_grades", TotalGrade, "subject_id", "total grades")
     ],
+
+    AcademicLevelSubject: [
+            ("students", StudentSubject, "subject_id", "enrolled students"),
+            ("educators", SubjectEducator, "subject_id", "assigned educators"),
+            ("academic_levels", AcademicLevelSubject, "subject_id", "academic level assignments"),
+            ("grades", Grade, "subject_id", "grades"),
+            ("total_grades", TotalGrade, "subject_id", "total grades")
+        ],
+
+    StudentSubject: [
+                ("students", StudentSubject, "subject_id", "enrolled students"),
+                ("educators", SubjectEducator, "subject_id", "assigned educators"),
+                ("academic_levels", AcademicLevelSubject, "subject_id", "academic level assignments"),
+                ("grades", Grade, "subject_id", "grades"),
+                ("total_grades", TotalGrade, "subject_id", "total grades")
+            ],
     Promotion: [],
     Repetition: [],
     EducatorQualification: [],
-    Grade: [],
-    AcademicLevelSubject: [],
-    StudentSubject: [],
     SubjectEducator: [],
+    Grade: [],
     TotalGrade: [],
     StudentAward: [],
     StudentDocument: [],

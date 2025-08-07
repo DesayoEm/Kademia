@@ -34,7 +34,7 @@ class StudentSubjectFactory(BaseFactory):
         self.validator = CurriculumValidator()
         self.service = CurriculumService(session, current_user)
         self.delete_service = DeleteService(self.model, session)
-        self.archive_service = ArchiveService(session)
+        self.archive_service = ArchiveService(session, current_user)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.actor_id: UUID = self.get_actor_id()
