@@ -135,7 +135,7 @@ def export_class(
         export_format: ExportFormat,
         service: AcademicStructureService = Depends(get_authenticated_service(AcademicStructureService))
     ):
-    file_path= service.export_class(class_id, export_format.value)
+    file_path= service.export_class_audit(class_id, export_format.value)
 
     return FileResponse(
         path=file_path,

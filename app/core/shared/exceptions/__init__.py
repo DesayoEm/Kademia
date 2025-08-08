@@ -127,12 +127,18 @@ from .progression_errors import (
 )
 
 from .curriculum_errors import (
-AcademicLevelMismatchError
+    AcademicLevelMismatchError,
+)
+
+from .academic_structure_errors import (
+    ClassRepMismatchError,
+    ClassLevelMismatchError,
+    DepartmentRepMismatchError
 )
 
 from .transfer_errors import (
-TransferStatusAlreadySetError,
-DepartmentNotSetError
+    TransferStatusAlreadySetError,
+    DepartmentNotSetError
 )
 
 

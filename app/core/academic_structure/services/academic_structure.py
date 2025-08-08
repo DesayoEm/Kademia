@@ -1,10 +1,13 @@
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 from uuid import UUID
+
+from app.core.shared.exceptions import DepartmentRepMismatchError, ClassRepMismatchError
 from app.core.shared.validators.entity_validators import EntityValidator
 from app.core.academic_structure.factories.classes import ClassFactory
 from app.core.academic_structure.factories.academic_level import AcademicLevelFactory
 from app.core.academic_structure.factories.department import StudentDepartmentFactory
+from app.core.identity.factories.student import StudentFactory
 from app.core.shared.services.audit_export_service.export import ExportService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from app.core.academic_structure.services.validators import AcademicStructureValidator
@@ -17,6 +20,7 @@ class AcademicStructureService:
         self.class_factory = ClassFactory(session, current_user=current_user)
         self.level_factory = AcademicLevelFactory(session, current_user=current_user)
         self.department_factory = StudentDepartmentFactory(session, current_user=current_user)
+        self.student_factory = StudentFactory(session, current_user=current_user)
 
         self.level_repository = SQLAlchemyRepository(AcademicLevel, session)
         self.class_repository = SQLAlchemyRepository(Classes, session)
@@ -71,19 +75,27 @@ class AcademicStructureService:
 
     def assign_class_student_rep(self, class_id: UUID, rep_id: UUID | None = None):
         """Assign a student representative to a class"""
+        student = self.student_factory.get_student(rep_id)
+        if not student.class_id == class_id:
+            raise ClassRepMismatchError
 
         return self.class_factory.update_class(
             class_id, {"student_rep_id": rep_id}
         )
 
+
     def assign_class_assistant_rep(self, class_id: UUID, asst_rep_id: UUID | None = None):
         """Assign an assistant representative to a class"""
+
+        student = self.student_factory.get_student(asst_rep_id)
+        if not student.class_id == class_id:
+            raise ClassRepMismatchError
 
         return self.class_factory.update_class(
             class_id, {"assistant_rep_id": asst_rep_id}
         )
 
-    def export_class(self, class_id: UUID, export_format: str) -> str:
+    def export_class_audit(self, class_id: UUID, export_format: str) -> str:
         """Export class and its associated data
         Args:
             class_id: class UUID
@@ -113,12 +125,20 @@ class AcademicStructureService:
     def assign_department_student_rep(self, department_id: UUID, rep_id: UUID | None = None):
         """Assign a student representative to a department"""
 
+        student = self.student_factory.get_student(rep_id)
+        if not student.department_id == department_id:
+            raise DepartmentRepMismatchError
+
         return self.department_factory.update_student_department(
             department_id, {"student_rep_id": rep_id}
         )
 
     def assign_department_assistant_rep(self, department_id: UUID, asst_rep_id: UUID | None = None):
         """Assign an assistant representative to a department"""
+
+        student = self.student_factory.get_student(asst_rep_id)
+        if not student.department_id == department_id:
+            raise DepartmentRepMismatchError
 
         return self.department_factory.update_student_department(
             department_id, {"assistant_rep_id": asst_rep_id}

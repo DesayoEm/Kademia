@@ -38,3 +38,15 @@ class ClassLevelMismatchError(StudentOrganizationError):
     def __init__(self, stu_id: UUID, class_id: UUID):
         self.user_message = f"Student cannot be assigned to a class outside their academic level"
         self.log_message = f"Student {stu_id} assigned a class {class_id} outside their level"
+
+
+class ClassRepMismatchError(StudentOrganizationError):
+    def __init__(self, stu_id: UUID, class_id: UUID):
+        self.user_message = f"Student cannot be assigned to represent a class they dont belong to"
+        self.log_message = f"Student {stu_id} assigned a class {class_id} they dont belong to"
+
+
+class DepartmentRepMismatchError(StudentOrganizationError):
+    def __init__(self, stu_id: UUID, department_id: UUID):
+        self.user_message = f"Student cannot be assigned to represent a department they dont belong to"
+        self.log_message = f"Student {stu_id} assigned a department {department_id} they dont belong to"

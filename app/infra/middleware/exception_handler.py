@@ -81,6 +81,8 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         InvalidCodeError: status.HTTP_400_BAD_REQUEST,
         InvalidRankNumberError: status.HTTP_400_BAD_REQUEST,
         ClassLevelMismatchError: status.HTTP_400_BAD_REQUEST,
+        ClassRepMismatchError: status.HTTP_400_BAD_REQUEST,
+        DepartmentRepMismatchError: status.HTTP_400_BAD_REQUEST,
 
 
         # Curriculum exceptions
