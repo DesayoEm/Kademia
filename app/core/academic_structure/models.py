@@ -113,9 +113,7 @@ class StudentDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     mentor: Mapped['Educator'] = relationship(
         back_populates='mentored_department', foreign_keys='[StudentDepartment.mentor_id]'
     )
-    subjects: Mapped[List['Subject']] = relationship(
-        back_populates='department', foreign_keys='[StudentDepartment.mentor_id]'
-    )
+    subjects: Mapped[List['Subject']] = relationship(back_populates='department')
 
     student_rep: Mapped['Student'] = relationship(
         'Student', back_populates='represented_department',

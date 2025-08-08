@@ -18,7 +18,7 @@ class Subject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     # Relationships
     academic_level_subject: Mapped[List['AcademicLevelSubject']] = relationship(back_populates='base_subject')
-    department: Mapped['StudentDepartment'] = relationship(back_populates='subject', foreign_keys='[Subject.department_id]')
+    department: Mapped['StudentDepartment'] = relationship(back_populates='subjects', foreign_keys='[Subject.department_id]')
 
 
     __table_args__ = (

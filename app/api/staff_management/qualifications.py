@@ -18,7 +18,8 @@ token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
 
-@router.get("/", response_model=list[QualificationResponse])
+
+@router.get("/archived/qualifications/", response_model=list[QualificationResponse])
 def get_archived_qualifications(
         filters: QualificationFilterParams = Depends(),
         factory: QualificationFactory = Depends(get_authenticated_factory(QualificationFactory))
@@ -26,7 +27,7 @@ def get_archived_qualifications(
     return factory.get_all_archived_qualifications(filters)
 
 
-@router.get("/{qualification_id}", response_model=QualificationResponse)
+@router.get("/archived/qualifications/{qualification_id}", response_model=QualificationResponse)
 def get_archived_qualification(
         qualification_id: UUID,
         factory: QualificationFactory = Depends(get_authenticated_factory(QualificationFactory))
@@ -34,7 +35,7 @@ def get_archived_qualification(
     return factory.get_archived_qualification(qualification_id)
 
 
-@router.patch("/{qualification_id}", response_model=QualificationResponse)
+@router.patch("/archived/qualifications/{qualification_id}", response_model=QualificationResponse)
 def restore_qualification(
         qualification_id: UUID,
         factory: QualificationFactory = Depends(get_authenticated_factory(QualificationFactory))
@@ -42,7 +43,7 @@ def restore_qualification(
     return factory.restore_qualification(qualification_id)
 
 
-@router.delete("/{qualification_id}", status_code=204)
+@router.delete("/archived/qualifications/{qualification_id}", status_code=204)
 def delete_archived_qualification(
         qualification_id: UUID,
         factory: QualificationFactory = Depends(get_authenticated_factory(QualificationFactory))
@@ -51,7 +52,7 @@ def delete_archived_qualification(
 
 
 
-@router.post("/{educator_id}", response_model= QualificationResponse, status_code=201)
+@router.post("/qualifications/{educator_id}", response_model= QualificationResponse, status_code=201)
 def add_qualification(
         educator_id: UUID,
         payload:QualificationCreate,
@@ -60,7 +61,7 @@ def add_qualification(
         return factory.create_qualification(educator_id, payload)
 
 
-@router.get("/", response_model=list[QualificationResponse])
+@router.get("/qualifications/", response_model=list[QualificationResponse])
 def get_qualifications(
         filters: QualificationFilterParams = Depends(),
         factory: QualificationFactory = Depends(get_authenticated_factory(QualificationFactory))
@@ -68,7 +69,7 @@ def get_qualifications(
         return factory.get_all_qualifications(filters)
 
 
-@router.get("/{qualification_id}", response_model=QualificationResponse)
+@router.get("/qualifications/{qualification_id}", response_model=QualificationResponse)
 def get_qualification(
         qualification_id: UUID,
         factory: QualificationFactory = Depends(get_authenticated_factory(QualificationFactory))
@@ -76,7 +77,7 @@ def get_qualification(
         return factory.get_qualification(qualification_id)
 
 
-@router.put("/{qualification_id}", response_model=QualificationResponse)
+@router.put("/qualifications/{qualification_id}", response_model=QualificationResponse)
 def update_qualification(
         payload: QualificationUpdate,
         qualification_id: UUID,
@@ -86,7 +87,7 @@ def update_qualification(
         return factory.update_qualification(qualification_id, payload)
 
 
-@router.patch("/{qualification_id}", status_code=204)
+@router.patch("/qualifications/{qualification_id}", status_code=204)
 def archive_qualification(
         qualification_id: UUID,
         reason:ArchiveRequest,
@@ -95,7 +96,7 @@ def archive_qualification(
         return factory.archive_qualification(qualification_id, reason.reason)
 
 
-@router.post("/{qualification_id}", response_class=FileResponse,  status_code=204)
+@router.post("/qualifications/{qualification_id}", response_class=FileResponse,  status_code=204)
 def export_qualification(
         qualification_id: UUID,
         export_format: ExportFormat,
@@ -110,7 +111,7 @@ def export_qualification(
     )
 
 
-@router.delete("/{qualification_id}", status_code=204)
+@router.delete("/qualifications/{qualification_id}", status_code=204)
 def delete_qualification(
         qualification_id: UUID,
         factory: QualificationFactory = Depends(get_authenticated_factory(QualificationFactory))
