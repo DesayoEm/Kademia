@@ -113,6 +113,10 @@ class StudentDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     mentor: Mapped['Educator'] = relationship(
         back_populates='mentored_department', foreign_keys='[StudentDepartment.mentor_id]'
     )
+    subjects: Mapped[List['Subject']] = relationship(
+        back_populates='department', foreign_keys='[StudentDepartment.mentor_id]'
+    )
+
     student_rep: Mapped['Student'] = relationship(
         'Student', back_populates='represented_department',
         foreign_keys='[StudentDepartment.student_rep_id]'
@@ -124,4 +128,4 @@ class StudentDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
 from app.core.identity.models.student import Student
 from app.core.identity.models.staff import Educator
-from app.core.curriculum.models.curriculum import AcademicLevelSubject
+from app.core.curriculum.models.curriculum import AcademicLevelSubject, Subject

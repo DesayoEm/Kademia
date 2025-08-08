@@ -1,3 +1,4 @@
+
 from app.core.shared.models.common_imports import *
 from app.core.shared.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
 from app.core.shared.models.enums import Term
@@ -16,7 +17,8 @@ class Subject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
 
     # Relationships
-    academic_levels: Mapped[List['AcademicLevelSubject']] = relationship(back_populates='subject')
+    academic_level_subject: Mapped[List['AcademicLevelSubject']] = relationship(back_populates='base_subject')
+    department: Mapped['StudentDepartment'] = relationship(back_populates='subject', foreign_keys='[Subject.department_id]')
 
 
     __table_args__ = (
@@ -42,7 +44,7 @@ class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     curriculum_url: Mapped[str] = mapped_column(String(225), nullable = True)
 
     # Relationships
-    subject: Mapped['Subject'] = relationship(back_populates='academic_levels', foreign_keys='[AcademicLevelSubject.subject_id]')
+    base_subject: Mapped['Subject'] = relationship(back_populates='academic_level_subject', foreign_keys='[AcademicLevelSubject.subject_id]')
     level: Mapped['AcademicLevel'] = relationship(back_populates='subjects', foreign_keys='[AcademicLevelSubject.level_id]')
     students: Mapped['StudentSubject'] = relationship(back_populates='subject')
     educators: Mapped[List['SubjectEducator']] = relationship(back_populates='subject')
@@ -116,6 +118,7 @@ class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
 from app.core.identity.models.student import Student
 from app.core.identity.models.staff import Educator
+from app.core.academic_structure.models import StudentDepartment
 from app.core.assessment.models.assessment import Grade, TotalGrade
 from app.core.academic_structure.models import AcademicLevel
 

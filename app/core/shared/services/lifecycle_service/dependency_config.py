@@ -23,7 +23,10 @@ DEPENDENCY_CONFIG = {
     # Student Organization
     StudentDepartment: [
         ("students", Student, "department_id", "students"),
-        ("subjects", Subject, "department_id", "subjects")
+        ("subjects", Subject, "department_id", "subjects"),
+        ("mentor", Educator, "", "students"),
+        ("student_rep", Student, "", "representatives"),
+        ("assistant_rep", Student, "", "assistant representatives")
     ],
 
     AcademicLevel: [
@@ -45,14 +48,15 @@ DEPENDENCY_CONFIG = {
         ("staff_members", Staff, "department_id", "staff members")
     ],
 
-Student: [
-        ("documents_owned", StudentDocument, "student_id", "documents"),
-        ("awards_earned", StudentAward, "student_id", "awards"),
-        ("subjects_taken", StudentSubject, "student_id", "subject enrollments"),
-        ("grades", Grade, "student_id", "grades"),
-        ("total_grades", TotalGrade, "student_id", "total grades"),
-        ("classes_repeated", Repetition, "student_id", "class repetitions"),
-        ("department_transfers", DepartmentTransfer, "student_id", "department transfers"),
+    #Users
+    Student: [
+            ("documents_owned", StudentDocument, "student_id", "documents"),
+            ("awards_earned", StudentAward, "student_id", "awards"),
+            ("subjects_taken", StudentSubject, "student_id", "subject enrollments"),
+            ("grades", Grade, "student_id", "grades"),
+            ("total_grades", TotalGrade, "student_id", "total grades"),
+            ("classes_repeated", Repetition, "student_id", "class repetitions"),
+            ("department_transfers", DepartmentTransfer, "student_id", "department transfers"),
 
     ],
     Staff: [
