@@ -32,7 +32,7 @@ Built a dependency-aware archival system that prevents orphaned data while maint
 
 **Cascade Deletion System**
 
-Built a dependency-aware deletion system that restricts data deletion prevents orphaned data and maintain referential integrity.
+Built a dependency-aware deletion system that restricts data deletion to prevent orphaned data and maintain referential integrity.
 
 **Polymorphic Staff Inheritance**
 
@@ -45,6 +45,8 @@ Every entity includes comprehensive audit trails (created_by, modified_by, archi
 **Comprehensive Decorator-Based Error Handling**
 
 Domain-specific exception hierarchy with middleware that translates technical errors into actionable user messages. Foreign key violations and unique constraint errors are centralized using decorators to provide consistent, user-friendly error messages across all endpoints while maintaining detailed logging for debugging.
+
+
 
 
 
