@@ -64,9 +64,8 @@ DEPENDENCY_CONFIG = {
     Educator: [
         ("qualifications", EducatorQualification, "educator_id", "qualifications"),
         ("subject_assignments", SubjectEducator, "educator_id", "subject assignments"),
-        ("mentored_department", StudentDepartment, "mentor_id", "mentored departments"),
-        ("supervised_class", Classes, "supervisor_id", "supervised classes"),
-        ("access_changes", AccessLevelChange, "staff_id", "permission changes")
+        ("access_changes", AccessLevelChange, "staff_id", "permission changes"),
+
     ],
 
     #Curriculum

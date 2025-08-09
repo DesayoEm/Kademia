@@ -30,10 +30,7 @@ class ArchiveService:
             self, entity_model, target_id: UUID,
             is_archived_field: str = "is_archived") -> List[str]:
         """
-        Check if any active entities are referencing the target entity.
-
-        Examines configured dependency relationships to see if any  non-archived entities reference the target entity.
-
+        Check if any active entities are referencing the target entity using DEPENDENCY CONFIG
         Args:
             entity_model: SQLAlchemy model class for the entity type being checked
             target_id (UUID): The ID of the entity to check for dependencies
@@ -46,7 +43,7 @@ class ArchiveService:
         dependencies = DEPENDENCY_CONFIG.get(entity_model)
         failed = []
 
-        for relationship_title, model_class, fk_field, display_name in dependencies:
+        for _, model_class, fk_field, display_name in dependencies:
             #fk based check
             table = model_class.__table__
             stmt = select(exists().where(

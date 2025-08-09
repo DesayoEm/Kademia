@@ -157,7 +157,7 @@ def archive_student(
         reason:ArchiveRequest,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
     ):
-        factory.archive_student(student_id, reason.value)
+        factory.archive_student(student_id, reason)
         return "Archive successful"
 
 
