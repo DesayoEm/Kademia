@@ -12,7 +12,7 @@ from app.core.shared.services.lifecycle_service.archive_service import ArchiveSe
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
-from app.core.shared.exceptions import EntityNotFoundError, UniqueViolationError
+from app.core.shared.exceptions import EntityNotFoundError, UniqueViolationError, ArchiveDependencyError
 from app.core.shared.exceptions.maps.error_map import error_map
 
 
@@ -115,6 +115,15 @@ class StudentSubjectFactory(BaseFactory):
             StudentSubject: Archived StudentSubject record
         """
         try:
+            failed_dependencies = self.archive_service.check_active_dependencies_exists(
+                entity_model=self.model,
+                target_id=student_subject_id
+            )
+            if failed_dependencies:
+                raise ArchiveDependencyError(
+                    entity_model=self.entity_model, identifier=student_subject_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             return self.repository.archive(student_subject_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:

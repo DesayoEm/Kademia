@@ -14,10 +14,6 @@ from ....identity.models.guardian import Guardian
 #[(relationship_name, model_class, fk, display name), ...]
 
 DEPENDENCY_CONFIG = {
-    # User
-    Guardian: [
-        ("wards", Student, "guardian_id", "wards")
-    ],
 
     # Student Organization
     StudentDepartment: [
@@ -46,6 +42,11 @@ DEPENDENCY_CONFIG = {
     ],
 
     #Users
+
+    Guardian: [
+            ("wards", Student, "guardian_id", "wards")
+        ],
+
     Student: [
             ("documents_owned", StudentDocument, "student_id", "documents"),
             ("awards_earned", StudentAward, "student_id", "awards"),
@@ -74,14 +75,13 @@ DEPENDENCY_CONFIG = {
     ],
 
     AcademicLevelSubject: [
-            ("students", StudentSubject, "subject_id", "enrolled students"),
-            ("educators", SubjectEducator, "subject_id", "assigned educators"),
+            ("students", StudentSubject, "academic_level_subject_id", "enrolled students"),
+            ("educators", SubjectEducator, "academic_level_subject_id", "assigned educators"),
         ],
 
     StudentSubject: [
-                ("students", StudentSubject, "subject_id", "enrolled students"),
-                ("grades", Grade, "subject_id", "grades"),
-                ("total_grades", TotalGrade, "subject_id", "total grades")
+                ("grades", Grade, "student_subject_id", "grades"),
+                ("total_grades", TotalGrade, "student_subject_id", "total grades")
             ],
 
     Promotion: [],
