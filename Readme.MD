@@ -34,6 +34,10 @@ Built a dependency-aware archival system that prevents orphaned data while maint
 
 Built a dependency-aware deletion system that restricts data deletion to prevent orphaned data and maintain referential integrity.
 
+**Assignment vs Ownership Separation**
+Distinguished between entity ownership and role assignments in cascade operations. When archiving staff/students, the system first unassigns them from roles (mentorships, supervision, representatives) by setting foreign keys to NULL, then cascade archives entities they own (grades, documents, qualifications). 
+This prevents archived entities from maintaining active assignments while preserving organizational structure.
+
 **Polymorphic Staff Inheritance**
 
 Used joined table inheritance for staff types (Educator, Admin, Support) to handle role-specific relationships efficiently. Educators have complex dependencies (qualifications, subject assignments, mentored departments) while other staff types remain lightweight.
