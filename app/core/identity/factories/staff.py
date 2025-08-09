@@ -3,6 +3,7 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
 from app.core.shared.factory.base_factory import BaseFactory
+from app.core.shared.models.enums import StaffType
 from app.core.shared.services.email_service.onboarding import OnboardingService
 from app.core.auth.services.password_service import PasswordService
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -173,14 +174,20 @@ class StaffFactory(BaseFactory):
                 Staff: Archived staff record
             """
             try:
+                staff = self.get_staff(staff_id)
+                if staff.staff_type == StaffType.Educator:
+                    model, display_name = Educator, "educator"
+                else:
+                    model, display_name = Staff, "staff"
+
                 failed_dependencies = self.archive_service.check_active_dependencies_exists(
-                    entity_model=self.model,
+                    entity_model=model,
                     target_id=staff_id
                 )
                 if failed_dependencies:
                     raise ArchiveDependencyError(
-                        entity_model=self.entity_model, identifier=staff_id,
-                        display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                        entity_model=self.model, identifier=staff_id,
+                        display_name=display_name, related_entities=", ".join(failed_dependencies)
                     )
                 return self.repository.archive(staff_id, self.actor_id, reason)
 

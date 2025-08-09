@@ -54,30 +54,32 @@ class ArchiveService:
                     table.c[fk_field] == target_id,
                     table.c[is_archived_field] == False
                 ))
-
             else:
-                # relationship based check
-                related_attr = getattr(entity_model, relationship_title)
-                related_cls = related_attr.property.mapper.class_
-                backref = related_attr.property.back_populates
-
-                if not backref:
-                    raise ValueError(f"Relationship '{relationship_title}' must define back_populates.")
-
-                if related_attr.property.uselist:
-                    stmt = select(exists().where(
-                        getattr(related_cls, backref.any(
-                            id = target_id,
-                            **{is_archived_field: False}
-                        ))
-                    ))
-                else:
-                    stmt = select(exists().where(
-                        getattr(related_cls, backref).has(
-                        id=target_id,
-                        **{is_archived_field: False}
-                        )
-                    ))
+                pass
+            #
+            # else:
+            #     # relationship based check
+            #     related_attr = getattr(entity_model, relationship_title)
+            #     related_cls = related_attr.property.mapper.class_
+            #     backref = related_attr.property.back_populates
+            #
+            #     if not backref:
+            #         raise ValueError(f"Relationship '{relationship_title}' must define back_populates.")
+            #
+            #     if related_attr.property.uselist:
+            #         stmt = select(exists().where(
+            #             getattr(related_cls, backref.any(
+            #                 id = target_id,
+            #                 **{is_archived_field: False}
+            #             ))
+            #         ))
+            #     else:
+            #         stmt = select(exists().where(
+            #             getattr(related_cls, backref).has(
+            #             id=target_id,
+            #             **{is_archived_field: False}
+            #             )
+            #         ))
 
             if self.session.execute(stmt).scalar_one():
                 failed.append(display_name)

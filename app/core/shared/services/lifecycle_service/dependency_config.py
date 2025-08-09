@@ -6,7 +6,6 @@ from app.core.academic_structure.models import StudentDepartment, Classes, Acade
 from ....transfer.models.transfer import DepartmentTransfer
 from ....assessment.models.assessment import Grade, TotalGrade
 from app.core.progression.models.progression import Repetition, Promotion
-
 from ....identity.models.staff import Staff, Educator
 from ....identity.models.student import Student
 from ....identity.models.guardian import Guardian
@@ -24,13 +23,11 @@ DEPENDENCY_CONFIG = {
     StudentDepartment: [
         ("students", Student, "department_id", "students"),
         ("subjects", Subject, "department_id", "subjects"),
-        ("mentor", Educator, "", "students"),
-        ("student_rep", Student, "", "representatives"),
-        ("assistant_rep", Student, "", "assistant representatives")
+        ("new_department", DepartmentTransfer, "new_department_id", "transfers"),
     ],
 
     AcademicLevel: [
-        ("subjects", AcademicLevelSubject, "level_id", "subject assignments"),
+        ("subjects", AcademicLevelSubject, "level_id", "academic level subjects"),
         ("classes", Classes, "level_id", "classes"),
         ("students", Student, "level_id", "students")
     ],
