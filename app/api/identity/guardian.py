@@ -3,6 +3,9 @@ from uuid import UUID
 from typing import List
 from fastapi.responses import FileResponse
 from fastapi import Depends, APIRouter, UploadFile, File
+
+from app.core.identity.factories.student import StudentFactory
+from app.core.identity.schemas.student import StudentFilterParams, StudentResponse
 from app.core.shared.services.file_storage.s3_upload import S3Upload
 from app.core.shared.schemas.enums import ExportFormat
 from app.core.identity.schemas.guardian import (
@@ -66,6 +69,16 @@ def remove_profile_pic(
     ):
         guardian = factory.get_guardian(guardian_id)
         return service.remove_profile_pic(guardian)
+
+
+@router.get("/students", response_model=List[StudentResponse])
+def get_guardians_wards(
+        ward_id: UUID,
+        filters: StudentFilterParams = Depends(),
+        factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
+    ):
+        filters.ward_id = ward_id
+        return factory.get_all_students(filters)
 
 
 @router.get("/", response_model=List[GuardianResponse])

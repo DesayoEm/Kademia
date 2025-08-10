@@ -1,11 +1,13 @@
 
 from app.core.shared.schemas.common_imports import *
+from app.core.shared.schemas.enums import DocumentType
 from app.core.shared.schemas.shared_models import *
 
 
 class AwardFilterParams(BaseFilterParams):
     student_id: UUID|None = None
     title: str|None = None
+    document_type: DocumentType | None = None
     academic_session: str|None = None
     order_by: Literal["title", "created_at"] = "title"
 

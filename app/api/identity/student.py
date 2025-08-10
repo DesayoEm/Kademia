@@ -5,6 +5,16 @@ from fastapi import Depends, APIRouter
 from fastapi.responses import FileResponse
 from fastapi import UploadFile, File
 
+from app.core.assessment.factories.grade import GradeFactory
+from app.core.assessment.factories.total_grade import TotalGradeFactory
+from app.core.assessment.schemas.grade import GradeResponse, GradeFilterParams
+from app.core.assessment.schemas.total_grade import TotalGradeFilterParams, TotalGradeResponse
+from app.core.curriculum.factories.student_subject import StudentSubjectFactory
+from app.core.curriculum.schemas.student_subject import StudentSubjectFilterParams, StudentSubjectResponse
+from app.core.documents.factories.award_factory import AwardFactory
+from app.core.documents.factories.document_factory import DocumentFactory
+from app.core.documents.schemas.student_award import AwardResponse, AwardFilterParams
+from app.core.documents.schemas.student_document import DocumentResponse, DocumentFilterParams
 from app.core.identity.factories.student import StudentFactory
 from app.core.shared.services.file_storage.s3_upload import S3Upload
 from app.core.identity.services.student_service import StudentService
@@ -108,14 +118,6 @@ def create_student(
         return factory.create_student(payload)
 
 
-@router.get("/students", response_model=List[StudentResponse])
-def get_students(
-        filters: StudentFilterParams = Depends(),
-        factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
-    ):
-        return factory.get_all_students(filters)
-
-
 @router.get("/students/{student_id}/audit", response_model=StudentAudit)
 def get_student_audit(
         student_id: UUID,
@@ -124,12 +126,72 @@ def get_student_audit(
         return factory.get_student(student_id)
 
 
+@router.get("/students/{student_id}/enrollments", response_model=StudentSubjectResponse)
+def get_student_subjects(
+        student_id: UUID,
+        filters: StudentSubjectFilterParams = Depends(),
+        factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
+    ):
+        filters.student_id = student_id
+        return factory.get_all_student_subjects(filters)
+
+
+@router.get("/students/{student_id}/documents", response_model=List[DocumentResponse])
+def get_student_documents(
+        student_id: UUID,
+        filters: DocumentFilterParams = Depends(),
+        factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
+    ):
+    filters.student_id = student_id
+    return factory.get_all_documents(filters)
+
+
+@router.get("/", response_model=List[AwardResponse])
+def get_student_awards(
+        student_id: UUID,
+        filters: AwardFilterParams = Depends(),
+        factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
+    ):
+    filters.student_id = student_id
+    return factory.get_all_awards(filters)
+
+
+@router.get("/students/{student_id}/grades", response_model=GradeResponse)
+def get_student_grades(
+        student_id: UUID,
+        filters: GradeFilterParams = Depends(),
+        factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
+    ):
+        filters.student_id = student_id
+        return factory.get_all_grades(filters)
+
+
+@router.get("/students/{student_id}/total-grades", response_model=TotalGradeResponse)
+def get_student_total_grades(
+        student_id: UUID,
+        filters: TotalGradeFilterParams = Depends(),
+        factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
+    ):
+        filters.student_id = student_id
+        return factory.get_all_total_grades(filters)
+
+
+
 @router.get("/students/{student_id}", response_model=StudentResponse)
 def get_student(
         student_id: UUID,
         factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
     ):
         return factory.get_student(student_id)
+
+
+
+@router.get("/students", response_model=List[StudentResponse])
+def get_students(
+        filters: StudentFilterParams = Depends(),
+        factory: StudentFactory = Depends(get_authenticated_factory(StudentFactory))
+    ):
+        return factory.get_all_students(filters)
 
 
 @router.put("/students/{student_id}", response_model=StudentResponse)

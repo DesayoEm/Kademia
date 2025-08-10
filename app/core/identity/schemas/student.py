@@ -7,6 +7,7 @@ from ...shared.schemas.enums import UserType, AccessLevel, StudentStatus
 class StudentFilterParams(BaseFilterParams):
     full_name: str | None = None
     student_id: str | None = None
+    ward_id: UUID | None = None
     order_by: Literal["full_name", "student_id"] = "full_name"
 
 
