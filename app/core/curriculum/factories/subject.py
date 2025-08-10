@@ -9,7 +9,7 @@ from app.core.shared.services.lifecycle_service.delete_service import DeleteServ
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
-from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
+from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, DeletionDependencyError
 from app.core.shared.exceptions.maps.error_map import error_map
 
 
@@ -145,18 +145,25 @@ class SubjectFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_subject(self, subject_id: UUID, is_archived=False) -> None:
+    def delete_subject(self, subject_id: UUID) -> None:
         """Permanently delete a subject if there are no dependent entities
         Args:
             subject_id (UUID): ID of subject to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, subject_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, subject_id)
+
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=subject_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
+
             return self.repository.delete(subject_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(subject_id, e)
+
 
     def get_all_archived_subjects(self, filters) -> List[Subject]:
         """Get all archived subjects with filtering.
@@ -194,14 +201,19 @@ class SubjectFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_archived_subject(self, subject_id: UUID, is_archived = True) -> None:
+    def delete_archived_subject(self, subject_id: UUID) -> None:
         """Permanently delete an archived subject if there are no dependent entities.
         Args:
             subject_id: ID of subject to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, subject_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, subject_id)
+
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=subject_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             self.repository.delete_archive(subject_id)
 
         except EntityNotFoundError as e:

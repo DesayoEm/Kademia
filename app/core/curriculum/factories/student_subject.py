@@ -12,7 +12,8 @@ from app.core.shared.services.lifecycle_service.archive_service import ArchiveSe
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
-from app.core.shared.exceptions import EntityNotFoundError, UniqueViolationError, ArchiveDependencyError
+from app.core.shared.exceptions import EntityNotFoundError, UniqueViolationError, ArchiveDependencyError, \
+    DeletionDependencyError
 from app.core.shared.exceptions.maps.error_map import error_map
 
 
@@ -137,7 +138,15 @@ class StudentSubjectFactory(BaseFactory):
             student_subject_id (UUID): ID of StudentSubject to delete
         """
         try:
-            self.repository.delete(student_subject_id)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, student_subject_id)
+
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=student_subject_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
+            self.repository.delete_archive(student_subject_id)
+
         except EntityNotFoundError as e:
             self.raise_not_found(student_subject_id, e)
 
@@ -184,6 +193,13 @@ class StudentSubjectFactory(BaseFactory):
             student_subject_id: ID of StudentSubject to delete
         """
         try:
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, student_subject_id)
+
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=student_subject_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             self.repository.delete_archive(student_subject_id)
 
         except EntityNotFoundError as e:

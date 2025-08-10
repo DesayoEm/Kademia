@@ -12,7 +12,8 @@ from app.core.shared.services.lifecycle_service.delete_service import DeleteServ
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete, \
     resolve_fk_on_update
-from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, UniqueViolationError
+from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, UniqueViolationError, \
+    DeletionDependencyError
 from app.core.shared.exceptions.maps.error_map import error_map
 
 
@@ -155,14 +156,19 @@ class AcademicLevelSubjectFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_academic_level_subject(self, academic_level_subject_id: UUID, is_archived=False) -> None:
+    def delete_academic_level_subject(self, academic_level_subject_id: UUID) -> None:
         """Permanently delete an AcademicLevelSubject if there are no dependent entities
         Args:
             academic_level_subject_id (UUID): ID of AcademicLevelSubject to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, academic_level_subject_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, academic_level_subject_id)
+
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=academic_level_subject_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             return self.repository.delete(academic_level_subject_id)
 
         except EntityNotFoundError as e:
@@ -205,14 +211,19 @@ class AcademicLevelSubjectFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_archived_academic_level_subject(self, academic_level_subject_id: UUID, is_archived = True) -> None:
+    def delete_archived_academic_level_subject(self, academic_level_subject_id: UUID) -> None:
         """Permanently delete an archived AcademicLevelSubject if there are no dependent entities.
         Args:
             academic_level_subject_id: ID of AcademicLevelSubject to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, academic_level_subject_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model,academic_level_subject_id)
+
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=academic_level_subject_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             self.repository.delete_archive(academic_level_subject_id)
 
         except EntityNotFoundError as e:

@@ -44,6 +44,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         RelationshipError: status.HTTP_400_BAD_REQUEST,
         TransactionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         DBConnectionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+        RelationshipErrorOnDelete: status.HTTP_500_INTERNAL_SERVER_ERROR,
 
         #File errors
         FileTooSmallError: status.HTTP_400_BAD_REQUEST,

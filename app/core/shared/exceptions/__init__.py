@@ -46,6 +46,7 @@ from .database_errors import (
     KDDatabaseError,
     NullFKConstraintMisconfiguredError,
     CascadeFKConstraintMisconfiguredError,
+    RelationshipErrorOnDelete,
 )
 
 from .email_errors import (

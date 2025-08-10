@@ -92,6 +92,7 @@ class DocumentFactory(BaseFactory):
         fields = ['title', 'academic_session','document_type','student_id']
         return self.repository.execute_query(fields, filters)
 
+
     @resolve_unique_violation({
         "uq_student_document_title_student_id": ("_", "This document title exists for this student in the same academic session")
     })
@@ -197,12 +198,21 @@ class DocumentFactory(BaseFactory):
 
     @resolve_fk_on_delete()
     def delete_archived_document(self, document_id: UUID) -> None:
-        """Permanently delete an archived Document 
+        """
+        Permanently delete an archived Document and it's S3 file
         Args:
             document_id: ID of Document to delete
         """
+        doc_service = DocumentService(self.session, self.current_user)
+
         try:
+            doc = self.get_archived_document(document_id)
+
+            # remove the s3 file for the document
+            doc_service.remove_document_file(doc)
             self.repository.delete_archive(document_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(document_id, e)
+
+

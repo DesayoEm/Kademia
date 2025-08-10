@@ -111,7 +111,8 @@ class TransferFactory(BaseFactory):
 
         except EntityNotFoundError as e:
             self.raise_not_found(transfer_id, e)
-            
+
+
     def archive_transfer(self, transfer_id: UUID, reason) -> None:
         """Archive a transfer record."""
         try:
@@ -131,9 +132,8 @@ class TransferFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_transfer(self, transfer_id: UUID, is_archived=False):
+    def delete_transfer(self, transfer_id: UUID):
         try:
-            self.delete_service.check_safe_delete(self.model, transfer_id, is_archived)
             return self.repository.delete(transfer_id)
         except EntityNotFoundError as e:
             self.raise_not_found(transfer_id, e)
@@ -161,10 +161,9 @@ class TransferFactory(BaseFactory):
             self.raise_not_found(transfer_id, e)
 
 
-    @resolve_fk_on_delete()
-    def delete_archived_transfer(self, transfer_id: UUID, is_archived=True):
+    @resolve_fk_on_delete(display="Transfer record")
+    def delete_archived_transfer(self, transfer_id: UUID):
         try:
-            self.delete_service.check_safe_delete(self.model, transfer_id, is_archived)
             self.repository.delete_archive(transfer_id)
         except EntityNotFoundError as e:
             self.raise_not_found(transfer_id, e)

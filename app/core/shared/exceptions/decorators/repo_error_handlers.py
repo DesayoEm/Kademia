@@ -4,7 +4,7 @@ from psycopg2 import errors as pg_errors
 
 from app.core.shared.exceptions import (
     EntityNotFoundError, UniqueViolationError, RelationshipError, DBConnectionError,
-    KDDatabaseError, DBTextTooLongError
+    KDDatabaseError, DBTextTooLongError, RelationshipErrorOnDelete
 )
 
 
@@ -30,6 +30,13 @@ def handle_write_errors(operation: str = "unknown"):
 
                 if 'unique' in msg or isinstance(orig, pg_errors.UniqueViolation):
                     raise UniqueViolationError(error=msg, constraint=constraint_name)
+
+                if ('foreign key' in msg and 'delet' in msg) or isinstance(orig, pg_errors.ForeignKeyViolation):
+                    raise RelationshipErrorOnDelete(
+                        error=msg,
+                        display = "Unknown",
+                        constraint=constraint_name
+                    )
 
                 if 'foreign key' in msg or isinstance(orig, pg_errors.ForeignKeyViolation):
                     raise RelationshipError(

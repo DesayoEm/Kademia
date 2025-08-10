@@ -152,7 +152,6 @@ class QualificationFactory(BaseFactory):
             EducatorQualification: Archived qualification record
         """
         try:
-            #There's no need to check for dependent entities before archiving as there are none
             return self.repository.archive(qualification_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
@@ -166,7 +165,6 @@ class QualificationFactory(BaseFactory):
             qualification_id: ID of qualification to delete
         """
         try:
-            #There's no need to check for dependent entities before deletion as there are none
             self.repository.delete(qualification_id)
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)
@@ -215,7 +213,6 @@ class QualificationFactory(BaseFactory):
             qualification_id: ID of qualification to delete
         """
         try:
-            #There's no need to check for dependent entities before deletion as there are none
             self.repository.delete_archive(qualification_id)
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)

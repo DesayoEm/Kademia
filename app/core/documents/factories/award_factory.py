@@ -198,7 +198,10 @@ class AwardFactory(BaseFactory):
         Args:
             award_id: ID of Award to delete
         """
+        doc_service = DocumentService(self.session, self.current_user)
         try:
+            award = self.get_archived_award(award_id)
+            doc_service.remove_award_file(award)
             self.repository.delete_archive(award_id)
 
         except EntityNotFoundError as e:

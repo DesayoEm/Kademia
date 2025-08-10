@@ -11,7 +11,7 @@ from app.core.shared.services.lifecycle_service.delete_service import DeleteServ
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
-from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
+from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, DeletionDependencyError
 from app.core.shared.exceptions.maps.error_map import error_map
 
 
@@ -88,6 +88,7 @@ class StaffRoleFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(role_id, e)
 
+
     @resolve_fk_on_update()
     @resolve_unique_violation({
         "staff_roles_name_key": ("name", lambda self, *a: a[-1].get("name")),
@@ -144,14 +145,20 @@ class StaffRoleFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_role(self, role_id: UUID, is_archived = False) -> None:
+    def delete_role(self, role_id: UUID) -> None:
         """Permanently delete a staff role if there are no dependent entities.
         Args:
             role_id: id of role to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, role_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, role_id)
+
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=role_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
+
             return self.repository.delete(role_id)
 
         except EntityNotFoundError as e:
@@ -195,14 +202,19 @@ class StaffRoleFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_archived_role(self, role_id: UUID, is_archived = True) -> None:
+    def delete_archived_role(self, role_id: UUID) -> None:
         """Permanently delete an archived role if there are no dependent entities.
         Args:
             role_id: id of role to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, role_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, role_id)
+
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=role_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             self.repository.delete_archive(role_id)
 
         except EntityNotFoundError as e:

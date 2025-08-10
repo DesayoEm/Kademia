@@ -1,4 +1,6 @@
 from functools import wraps
+
+from app.core.shared.exceptions.database_errors import RelationshipErrorOnDelete
 from app.core.shared.exceptions.maps.fk_mapper import fk_error_map
 from app.core.shared.exceptions import RelationshipError, RelatedEntityNotFoundError
 
@@ -108,16 +110,16 @@ def resolve_fk_on_update():
     return decorator
 
 
-def resolve_fk_on_delete():
+def resolve_fk_on_delete(display: str):
     def decorator(func):
         @wraps(func)
         def wrapper(self, *args, **kwargs):
             try:
                 return func(self, *args, **kwargs)
             except RelationshipError as e:
-                raise RelationshipError(
+                raise RelationshipErrorOnDelete(
                     error=str(e),
-                    operation="delete"
+                    display=display
                 )
         return wrapper
     return decorator

@@ -5,7 +5,6 @@ from app.core.identity.factories.student import StudentFactory
 from app.core.identity.models.student import Student
 from app.core.progression.models.progression import Repetition
 from app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
-from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.schemas.enums import ApprovalStatus
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -126,15 +125,6 @@ class RepetitionFactory(BaseFactory):
     def archive_repetition(self, repetition_id: UUID, reason) -> Repetition:
         """Archive a repetition record."""
         try:
-            failed_dependencies = self.archive_service.check_active_dependencies_exists(
-                entity_model=self.model,
-                target_id=repetition_id
-            )
-            if failed_dependencies:
-                raise ArchiveDependencyError(
-                    entity_model=self.entity_model, identifier=repetition_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
-                )
             return self.repository.archive(repetition_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
@@ -145,7 +135,6 @@ class RepetitionFactory(BaseFactory):
     def delete_repetition(self, repetition_id: UUID, is_archived=False) -> None:
         """Permanently delete a repetition record."""
         try:
-            self.delete_service.check_safe_delete(self.model, repetition_id, is_archived)
             return self.repository.delete(repetition_id)
 
         except EntityNotFoundError as e:
@@ -175,10 +164,9 @@ class RepetitionFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_archived_repetition(self, repetition_id: UUID, is_archived=True) -> None:
+    def delete_archived_repetition(self, repetition_id: UUID) -> None:
         """Permanently delete an archived repetition record."""
         try:
-            self.delete_service.check_safe_delete(self.model, repetition_id, is_archived)
             self.repository.delete_archive(repetition_id)
 
         except EntityNotFoundError as e:

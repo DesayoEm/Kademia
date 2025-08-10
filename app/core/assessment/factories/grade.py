@@ -141,11 +141,10 @@ class GradeFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_grade(self, grade_id: UUID, is_archived=False) -> None:
+    def delete_grade(self, grade_id: UUID) -> None:
         """Permanently delete a Grade
         Args:
             grade_id (UUID): ID of Grade to delete
-            is_archived: Whether to check archived or active entities
         """
 
         service = AssessmentFileService(self.session, self.current_user)
@@ -194,15 +193,14 @@ class GradeFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_archived_grade(self, grade_id: UUID, is_archived = True) -> None:
+    def delete_archived_grade(self, grade_id: UUID) -> None:
         """Permanently delete an archived Grade .
         Args:
             grade_id: ID of Grade to delete
-            is_archived: Whether to check archived or active entities
         """
         service = AssessmentFileService(self.session, self.current_user)
 
-        grade = self.get_grade(grade_id)
+        grade = self.get_archived_grade(grade_id)
         service.remove_assessment_file(grade)
         try:
             self.repository.delete_archive(grade_id)

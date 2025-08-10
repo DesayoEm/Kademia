@@ -129,14 +129,12 @@ class SubjectEducatorFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_subject_educator(self, subject_educator_id: UUID, is_archived=False) -> None:
-        """Permanently delete an SubjectEducator if there are no dependent entities
+    def delete_subject_educator(self, subject_educator_id: UUID) -> None:
+        """Permanently delete an SubjectEducator
         Args:
             subject_educator_id (UUID): ID of SubjectEducator to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, subject_educator_id, is_archived)
             return self.repository.delete(subject_educator_id)
 
         except EntityNotFoundError as e:
@@ -179,14 +177,12 @@ class SubjectEducatorFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_archived_subject_educator(self, subject_educator_id: UUID, is_archived = True) -> None:
+    def delete_archived_subject_educator(self, subject_educator_id: UUID) -> None:
         """Permanently delete an archived SubjectEducator if there are no dependent entities.
         Args:
             subject_educator_id: ID of SubjectEducator to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, subject_educator_id, is_archived)
             self.repository.delete_archive(subject_educator_id)
 
         except EntityNotFoundError as e:

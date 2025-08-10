@@ -101,6 +101,7 @@ class PromotionFactory(BaseFactory):
         fields = ['student_id', 'academic_session', 'status','status_completed_by']
         return self.repository.execute_query(fields, filters)
 
+
     @resolve_unique_violation({
         "uq_promotion_student_session": (
                 "_", "This student has an existing promotion record for the specified academic session"
@@ -126,15 +127,6 @@ class PromotionFactory(BaseFactory):
     def archive_promotion(self, promotion_id: UUID, reason) -> None:
         """Archive a promotion record."""
         try:
-            failed_dependencies = self.archive_service.check_active_dependencies_exists(
-                entity_model=self.model,
-                target_id=promotion_id
-            )
-            if failed_dependencies:
-                raise ArchiveDependencyError(
-                    entity_model=self.entity_model, identifier=promotion_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
-                )
             return self.repository.archive(promotion_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
@@ -178,7 +170,6 @@ class PromotionFactory(BaseFactory):
     def delete_archived_promotion(self, promotion_id: UUID, is_archived=True) -> None:
         """Permanently delete an archived promotion record."""
         try:
-            self.delete_service.check_safe_delete(self.model, promotion_id, is_archived)
             self.repository.delete_archive(promotion_id)
 
         except EntityNotFoundError as e:
