@@ -131,7 +131,7 @@ class TransferFactory(BaseFactory):
             self.raise_not_found(transfer_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="Transfer Record")
     def delete_transfer(self, transfer_id: UUID):
         try:
             return self.repository.delete(transfer_id)

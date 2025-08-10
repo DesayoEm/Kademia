@@ -155,7 +155,7 @@ class AcademicLevelSubjectFactory(BaseFactory):
             self.raise_not_found(academic_level_subject_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="level subject")
     def delete_academic_level_subject(self, academic_level_subject_id: UUID) -> None:
         """Permanently delete an AcademicLevelSubject if there are no dependent entities
         Args:
@@ -210,7 +210,7 @@ class AcademicLevelSubjectFactory(BaseFactory):
             self.raise_not_found(academic_level_subject_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="level subject")
     def delete_archived_academic_level_subject(self, academic_level_subject_id: UUID) -> None:
         """Permanently delete an archived AcademicLevelSubject if there are no dependent entities.
         Args:

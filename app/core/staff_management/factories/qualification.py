@@ -158,7 +158,7 @@ class QualificationFactory(BaseFactory):
             self.raise_not_found(qualification_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="qualification")
     def delete_qualification(self, qualification_id: UUID) -> None:
         """Permanently delete a qualification.
         Args:
@@ -206,7 +206,7 @@ class QualificationFactory(BaseFactory):
             self.raise_not_found(qualification_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="qualification")
     def delete_archived_qualification(self, qualification_id: UUID) -> None:
         """Permanently delete an archived qualification.
         Args:

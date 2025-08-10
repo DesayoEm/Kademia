@@ -128,7 +128,7 @@ class SubjectEducatorFactory(BaseFactory):
             self.raise_not_found(subject_educator_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="subject educator")
     def delete_subject_educator(self, subject_educator_id: UUID) -> None:
         """Permanently delete an SubjectEducator
         Args:
@@ -176,7 +176,7 @@ class SubjectEducatorFactory(BaseFactory):
             self.raise_not_found(subject_educator_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="subject educator")
     def delete_archived_subject_educator(self, subject_educator_id: UUID) -> None:
         """Permanently delete an archived SubjectEducator if there are no dependent entities.
         Args:

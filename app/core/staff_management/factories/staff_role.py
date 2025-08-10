@@ -144,7 +144,7 @@ class StaffRoleFactory(BaseFactory):
             self.raise_not_found(role_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="role")
     def delete_role(self, role_id: UUID) -> None:
         """Permanently delete a staff role if there are no dependent entities.
         Args:
@@ -201,7 +201,7 @@ class StaffRoleFactory(BaseFactory):
             self.raise_not_found(role_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="role")
     def delete_archived_role(self, role_id: UUID) -> None:
         """Permanently delete an archived role if there are no dependent entities.
         Args:

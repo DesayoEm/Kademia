@@ -151,7 +151,7 @@ class StudentDepartmentFactory(BaseFactory):
             self.raise_not_found(department_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="department")
     def delete_student_department(self, department_id: UUID, is_archived=False) -> None:
         """Permanently delete a student department if there are no dependent entities.
         Args:
@@ -208,6 +208,7 @@ class StudentDepartmentFactory(BaseFactory):
             self.raise_not_found(department_id, e)
 
 
+    @resolve_fk_on_delete(display="department")
     def delete_archived_department(self, department_id: UUID) -> None:
         """Permanently delete an archived department if there are no dependent entities.
         Args:

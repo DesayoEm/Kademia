@@ -131,7 +131,7 @@ class RepetitionFactory(BaseFactory):
             self.raise_not_found(repetition_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="repetition")
     def delete_repetition(self, repetition_id: UUID, is_archived=False) -> None:
         """Permanently delete a repetition record."""
         try:
@@ -163,7 +163,7 @@ class RepetitionFactory(BaseFactory):
             self.raise_not_found(repetition_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="repetition")
     def delete_archived_repetition(self, repetition_id: UUID) -> None:
         """Permanently delete an archived repetition record."""
         try:

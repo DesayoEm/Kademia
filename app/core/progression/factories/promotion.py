@@ -133,7 +133,7 @@ class PromotionFactory(BaseFactory):
             self.raise_not_found(promotion_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="promotion")
     def delete_promotion(self, promotion_id: UUID, is_archived=False) -> None:
         """Permanently delete a promotion record."""
         try:
@@ -166,7 +166,7 @@ class PromotionFactory(BaseFactory):
             self.raise_not_found(promotion_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="promotion")
     def delete_archived_promotion(self, promotion_id: UUID, is_archived=True) -> None:
         """Permanently delete an archived promotion record."""
         try:

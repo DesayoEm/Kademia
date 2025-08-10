@@ -160,7 +160,7 @@ class AcademicLevelFactory(BaseFactory):
             self.raise_not_found(level_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="Academic level")
     def delete_academic_level(self, level_id: UUID) -> None:
         """Permanently delete an academic level if there are no dependent entities
         Args:
@@ -215,7 +215,7 @@ class AcademicLevelFactory(BaseFactory):
             self.raise_not_found(level_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="Academic level")
     def delete_archived_academic_level(self, level_id: UUID) -> None:
         """Permanently delete an archived academic_level if there are no dependent entities.
         Args:

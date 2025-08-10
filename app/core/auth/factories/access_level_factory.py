@@ -106,7 +106,7 @@ class AccessLevelChangeFactory(BaseFactory):
             self.raise_not_found(level_change_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="level change")
     def delete_level_change(self, level_change_id: UUID) -> None:
         """Permanently delete an access level if there are no dependent entities.
         Args:
@@ -154,6 +154,7 @@ class AccessLevelChangeFactory(BaseFactory):
             self.raise_not_found(level_change_id, e)
 
 
+    @resolve_fk_on_delete(display="level change")
     def delete_archived_level_change(self, level_change_id: UUID) -> None:
         """Permanently delete an archived level change if there are no dependent entities.
         Args:

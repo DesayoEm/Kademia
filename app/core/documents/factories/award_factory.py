@@ -141,7 +141,7 @@ class AwardFactory(BaseFactory):
             self.raise_not_found(award_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="award")
     def delete_award(self, award_id: UUID) -> None:
         """Permanently delete an Award
         Args:
@@ -156,6 +156,7 @@ class AwardFactory(BaseFactory):
 
         except EntityNotFoundError as e:
             self.raise_not_found(award_id, e)
+
 
     def get_all_archived_awards(self, filters) -> List[StudentAward]:
         """Get all archived Awards with filtering.
@@ -192,7 +193,7 @@ class AwardFactory(BaseFactory):
             self.raise_not_found(award_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="award")
     def delete_archived_award(self, award_id: UUID) -> None:
         """Permanently delete an archived Award
         Args:

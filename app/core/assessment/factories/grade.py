@@ -140,7 +140,7 @@ class GradeFactory(BaseFactory):
             self.raise_not_found(grade_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="grade")
     def delete_grade(self, grade_id: UUID) -> None:
         """Permanently delete a Grade
         Args:
@@ -192,7 +192,7 @@ class GradeFactory(BaseFactory):
             self.raise_not_found(grade_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="grade")
     def delete_archived_grade(self, grade_id: UUID) -> None:
         """Permanently delete an archived Grade .
         Args:

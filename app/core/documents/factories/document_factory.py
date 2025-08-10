@@ -142,7 +142,7 @@ class DocumentFactory(BaseFactory):
             self.raise_not_found(document_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="document")
     def delete_document(self, document_id: UUID) -> None:
         doc_service = DocumentService(self.session, self.current_user)
         """Permanently delete an Document
@@ -182,7 +182,6 @@ class DocumentFactory(BaseFactory):
             self.raise_not_found(document_id, e)
 
 
-
     def restore_document(self, document_id: UUID) -> StudentDocument:
         """Restore an archived Document.
         Args:
@@ -196,7 +195,7 @@ class DocumentFactory(BaseFactory):
             self.raise_not_found(document_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="document")
     def delete_archived_document(self, document_id: UUID) -> None:
         """
         Permanently delete an archived Document and it's S3 file

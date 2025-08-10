@@ -125,7 +125,8 @@ class TotalGradeFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(total_grade_id, e)
 
-    @resolve_fk_on_delete()
+
+    @resolve_fk_on_delete(display="total grade")
     def delete_total_grade(self, total_grade_id: UUID) -> None:
         """Permanently delete a TotalGrade
         Args:
@@ -173,7 +174,7 @@ class TotalGradeFactory(BaseFactory):
             self.raise_not_found(total_grade_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="total grade")
     def delete_archived_total_grade(self, total_grade_id: UUID) -> None:
         """Permanently delete an archived TotalGrade.
         Args:

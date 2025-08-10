@@ -131,7 +131,7 @@ class StudentSubjectFactory(BaseFactory):
             self.raise_not_found(student_subject_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="student subject")
     def delete_student_subject(self, student_subject_id: UUID) -> None:
         """Permanently delete an StudentSubject
         Args:
@@ -186,7 +186,7 @@ class StudentSubjectFactory(BaseFactory):
             self.raise_not_found(student_subject_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="student subject")
     def delete_archived_student_subject(self, student_subject_id: UUID) -> None:
         """Permanently delete an archived StudentSubject if there are no dependent entities.
         Args:

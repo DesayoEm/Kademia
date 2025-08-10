@@ -154,7 +154,7 @@ class ClassFactory(BaseFactory):
             self.raise_not_found(class_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="Class")
     def delete_class(self, class_id: UUID) -> None:
         """Permanently delete a class if there are no dependent entities
         Args:
@@ -209,7 +209,7 @@ class ClassFactory(BaseFactory):
             self.raise_not_found(class_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="Class")
     def delete_archived_class(self, class_id: UUID) -> None:
         """Permanently delete an archived class if there are no dependent entities.
         Args:
