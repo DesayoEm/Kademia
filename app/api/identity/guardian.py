@@ -27,7 +27,47 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
+#Archive routers
+@router.get("/archive/guardian/", response_model=List[GuardianResponse])
+def get_archived_guardians(
+        filters: GuardianFilterParams = Depends(),
+        factory: GuardianFactory = Depends(get_authenticated_factory(GuardianFactory)),
+    ):
+    return factory.get_all_archived_guardians(filters)
 
+
+@router.get("/archive/guardian/{guardian_id}/audit", response_model=GuardianAudit)
+def get_archived_guardian_audit(
+        guardian_id: UUID,
+        factory: GuardianFactory = Depends(get_authenticated_factory(GuardianFactory)),
+    ):
+    return factory.get_archived_guardian(guardian_id)
+
+@router.get("/archive/guardian/{guardian_id}", response_model=GuardianResponse)
+def get_archived_guardian(
+        guardian_id: UUID,
+        factory: GuardianFactory = Depends(get_authenticated_factory(GuardianFactory)),
+    ):
+    return factory.get_archived_guardian(guardian_id)
+
+
+@router.patch("/archive/guardian/{guardian_id}", response_model=GuardianResponse)
+def restore_guardian(
+        guardian_id: UUID,
+        factory: GuardianFactory = Depends(get_authenticated_factory(GuardianFactory)),
+    ):
+    return factory.restore_guardian(guardian_id)
+
+
+@router.delete("/archive/guardian/{guardian_id}", status_code=204)
+def delete_archived_guardian(
+        guardian_id: UUID,
+        factory: GuardianFactory = Depends(get_authenticated_factory(GuardianFactory)),
+    ):
+    return factory.delete_archived_guardian(guardian_id)
+
+
+#Active routers
 @router.post("/", response_model= GuardianResponse, status_code=201)
 def create_guardian(
         payload:GuardianCreate,

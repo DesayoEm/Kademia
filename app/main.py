@@ -29,7 +29,7 @@ from app.api.assessment import total_grade
 from app.api.assessment import grade_archive, grade, total_grade_archive
 from app.api.documents import award
 from app.api.documents import document, document_archive, award_archive
-from app.api.identity import student, guardian, staff, guardian_archive, educator
+from app.api.identity import student, guardian, staff, educator
 from app.api.auth import password
 from app.api.auth import auth, access_level_change
 from app.infra.middleware.exception_handler import ExceptionMiddleware
@@ -85,17 +85,14 @@ app.include_router(classes_archive.router, prefix=f"/api/{version}/students/clas
 #Users
 app.include_router(staff.router, prefix=f"/api/{version}", tags=["Staff", "Admin"])
 app.include_router(educator.router, prefix=f"/api/{version}", tags=["Educators", "Admin"])
-
 app.include_router(guardian.router, prefix=f"/api/{version}/guardians",tags=["Guardians", "Admin"])
-app.include_router(guardian_archive.router, prefix=f"/api/{version}/guardians/archived",
-                   tags=["Guardians", "Admin"])
+app.include_router(student.router, prefix=f"/api/{version}",tags=["Students", "Admin"])
 
 
-app.include_router(student.router, prefix=f"/api/{version}",
-                   tags=["Students", "Admin"])
 # Access level
 app.include_router(access_level_change.router, prefix=f"/api/{version}",
                    tags=["Auth", "Access Level"])
+
 #Docs
 app.include_router(award.router, prefix=f"/api/{version}/students/awards",
                    tags=["Awards", "Admin"])
