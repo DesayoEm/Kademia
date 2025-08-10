@@ -116,6 +116,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         CascadeDeletionError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         CascadeArchivalError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         ArchiveDependencyError: status.HTTP_409_CONFLICT,
+        DeletionDependencyError: status.HTTP_409_CONFLICT,
 
 
         # Transfer exceptions

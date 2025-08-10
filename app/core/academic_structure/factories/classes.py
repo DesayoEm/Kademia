@@ -11,7 +11,7 @@ from app.core.shared.services.lifecycle_service.delete_service import DeleteServ
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
-from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError
+from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, DeletionDependencyError
 from app.core.shared.exceptions.maps.error_map import error_map
 
 
@@ -155,14 +155,19 @@ class ClassFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_class(self, class_id: UUID, is_archived=False) -> None:
+    def delete_class(self, class_id: UUID) -> None:
         """Permanently delete a class if there are no dependent entities
         Args:
             class_id (UUID): ID of class to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, class_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, class_id)
+
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=class_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             self.repository.delete(class_id)
 
         except EntityNotFoundError as e:
@@ -205,14 +210,19 @@ class ClassFactory(BaseFactory):
 
 
     @resolve_fk_on_delete()
-    def delete_archived_class(self, class_id: UUID, is_archived=True) -> None:
+    def delete_archived_class(self, class_id: UUID) -> None:
         """Permanently delete an archived class if there are no dependent entities.
         Args:
             class_id: ID of class to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, class_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, class_id)
+
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=class_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             self.repository.delete_archive(class_id)
 
         except EntityNotFoundError as e:

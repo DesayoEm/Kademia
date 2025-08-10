@@ -3,8 +3,6 @@ from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
 from sqlalchemy.orm.collections import InstrumentedList
-from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.infra.log_service.logger import logger
 from .dependency_config import DEPENDENCY_CONFIG
 from ...exceptions import CascadeArchivalError
 

@@ -11,6 +11,7 @@ from .lifecycle_errors import (
     CascadeDeletionError,
     CascadeArchivalError,
     ArchiveDependencyError,
+    DeletionDependencyError
 )
 
 from .auth_errors import (

@@ -1,11 +1,14 @@
 from uuid import UUID
+from typing import List
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+from sqlalchemy import select, exists
 from app.core.shared.exceptions import EntityInUseError
 from app.core.shared.exceptions.maps.error_map import error_map
 from app.infra.settings import config
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from .dependency_config import DEPENDENCY_CONFIG
+
 
 class DeleteService:
     """
@@ -33,67 +36,32 @@ class DeleteService:
         self.anonymous_user = UUID(config.ANONYMIZED_ID)
 
 
-    @staticmethod
-    def check_dependent_entities(entity, entity_model):
+
+    def check_active_dependencies_exists(
+            self, entity_model, target_id: UUID) -> List[str]:
         """
-        Check if the entity has active related entities that depend on it.
-
-        Examines configured dependency relationships to see if any references
-        to this entity exist, which would prevent safe deletion.
-
+        Check if any active entities are referencing the target entity using DEPENDENCY CONFIG
         Args:
-            entity: The entity instance to check
-            entity_model: The SQLAlchemy model class of the entity
+            entity_model: SQLAlchemy model class for the entity type being checked
+            target_id (UUID): The ID of the entity to check for dependencies
 
         Returns:
-            list: Names of dependent entity types that reference this entity
+            List[str]: Display names of entity types that have active dependencies
+                       on the target entity. Empty list if no dependencies exist.
         """
         dependencies = DEPENDENCY_CONFIG.get(entity_model)
-        dependent_fields = []
+        failed = []
 
-        for relationship_title, model_class, fk_field, display_name in dependencies:
-            related = getattr(entity, relationship_title, None)
+        for _, model_class, fk_field, display_name in dependencies:
+            #fk based check
+            table = model_class.__table__
+            stmt = select(exists().where(table.c[fk_field] == target_id,
+               ))
 
-            if related:
-                if isinstance(related, list) and len(related) > 0:
-                    dependent_fields.append(display_name)
-                elif related is not None:
-                    dependent_fields.append(display_name)
+            if self.session.execute(stmt).scalar_one():
+                failed.append(display_name)
 
-        return dependent_fields
-
-
-    def check_safe_delete(self, entity_model, entity_id: UUID, is_archived):
-        """
-        Safely delete an entity only if no dependent entities exist.
-
-        Checks for any active references to this entity and raises an appropriate
-        error if dependencies exist, preventing accidental deletion of referenced entities.
-
-        Args:
-            entity_model: SQLAlchemy model class for the entity
-            entity_id (UUID): Unique identifier of the entity to delete
-            is_archived: Whether to check archived or active entities
-
-        Raises:
-            DeletionDependencyError: If active dependencies exist that prevent deletion
-            EntityNotFoundError: If the entity doesn't exist
-        """
-
-        entity = (self.repository.get_archive_by_id(entity_id) if is_archived
-                  else self.repository.get_by_id(entity_id))
-
-        error_info = error_map.get(entity_model)
-        _, display_name = error_info
-
-        dependent_fields = self.check_dependent_entities(entity, entity_model)
-
-        if dependent_fields:
-                raise EntityInUseError(
-                    entity_model=entity_model, dependencies=", ".join(dependent_fields),
-                    display_name=display_name,
-                    detail="Could not safely delete"
-            )
+        return failed
 
 
     def get_fk_delete_rules_from_info_schema(self, table_name: str) -> dict:
