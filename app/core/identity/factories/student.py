@@ -10,7 +10,7 @@ from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepos
 from app.core.identity.services.validators import IdentityValidator
 from app.core.identity.models.student import Student
 from ...shared.exceptions.maps.error_map import error_map
-from ...shared.exceptions import ArchiveDependencyError, EntityNotFoundError
+from ...shared.exceptions import ArchiveDependencyError, EntityNotFoundError, DeletionDependencyError
 from ...shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from ...shared.exceptions.decorators.resolve_fk_violation import (
     resolve_fk_on_update, resolve_fk_on_create, resolve_fk_on_delete
@@ -94,6 +94,7 @@ class StudentFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(student_id, e)
 
+
     def get_all_students(self, filters) -> List[Student]:
         """Get all active student with filtering.
         Returns:
@@ -164,15 +165,20 @@ class StudentFactory(BaseFactory):
             self.raise_not_found(student_id, e)
 
 
-    @resolve_fk_on_delete()
-    def delete_student(self, student_id: UUID, is_archived=False) -> None:
+    @resolve_fk_on_delete(display="Student")
+    def delete_student(self, student_id: UUID) -> None:
         """Permanently delete a student if there are no dependent entities.
         Args:
             student_id (UUID): ID of student to delete
-            is_archived(bool): Whether to check active or archived records
         """
         try:
-            self.delete_service.check_safe_delete(self.model, student_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, student_id)
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=student_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
+
             return self.repository.delete(student_id)
 
         except EntityNotFoundError as e:
@@ -217,15 +223,19 @@ class StudentFactory(BaseFactory):
             self.raise_not_found(student_id, e)
 
 
-    @resolve_fk_on_delete()
-    def delete_archived_student(self, student_id: UUID, is_archived=True) -> None:
+    @resolve_fk_on_delete(display = "Student")
+    def delete_archived_student(self, student_id: UUID) -> None:
         """Permanently delete an archived student.
         Args:
             student_id: ID of student to delete
-            is_archived(bool): Whether to check active or archived records
         """
         try:
-            self.delete_service.check_safe_delete(self.model, student_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, student_id)
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=student_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             self.repository.delete_archive(student_id)
 
         except EntityNotFoundError as e:

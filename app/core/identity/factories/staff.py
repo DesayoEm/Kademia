@@ -12,7 +12,7 @@ from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepos
 from app.core.identity.services.validators import IdentityValidator
 from app.core.identity.models.staff import Staff, Educator, SupportStaff, AdminStaff
 from ...shared.exceptions.maps.error_map import error_map
-from ...shared.exceptions import ArchiveDependencyError, EntityNotFoundError, StaffTypeError
+from ...shared.exceptions import ArchiveDependencyError, EntityNotFoundError, StaffTypeError, DeletionDependencyError
 from ...shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from ...shared.exceptions.decorators.resolve_fk_violation import (
     resolve_fk_on_update, resolve_fk_on_create, resolve_fk_on_delete
@@ -195,15 +195,20 @@ class StaffFactory(BaseFactory):
                 self.raise_not_found(staff_id, e)
 
 
-    @resolve_fk_on_delete()
-    def delete_staff(self, staff_id: UUID, is_archived = False) -> None:
+    @resolve_fk_on_delete(display="Staff Member")
+    def delete_staff(self, staff_id: UUID) -> None:
         """Permanently delete a staff member if there are no dependent entities.
         Args:
             staff_id (UUID): ID of staff to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, staff_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, staff_id)
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=staff_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
+
             return self.repository.delete(staff_id)
 
         except EntityNotFoundError as e:
@@ -247,7 +252,7 @@ class StaffFactory(BaseFactory):
             self.raise_not_found(staff_id, e)
 
 
-    @resolve_fk_on_delete()
+    @resolve_fk_on_delete(display="Staff Member")
     def delete_archived_staff(self, staff_id: UUID, is_archived = True) -> None:
         """Permanently delete an archived staff member if there are no dependent entities.
         Args:
@@ -255,7 +260,13 @@ class StaffFactory(BaseFactory):
             is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, staff_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, staff_id)
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=staff_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
+
             self.repository.delete_archive(staff_id)
 
         except EntityNotFoundError as e:

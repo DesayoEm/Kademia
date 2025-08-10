@@ -11,7 +11,7 @@ from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepos
 from app.core.identity.services.validators import IdentityValidator
 from app.core.identity.models.guardian import Guardian
 from app.core.shared.exceptions.maps.error_map import error_map
-from app.core.shared.exceptions import ArchiveDependencyError, EntityNotFoundError
+from app.core.shared.exceptions import ArchiveDependencyError, EntityNotFoundError, DeletionDependencyError
 from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
 from app.core.shared.exceptions.decorators.resolve_fk_violation import (
     resolve_fk_on_update, resolve_fk_on_create, resolve_fk_on_delete
@@ -178,15 +178,19 @@ class GuardianFactory(BaseFactory):
             self.raise_not_found(guardian_id, e)
 
 
-    @resolve_fk_on_delete()
-    def delete_guardian(self, guardian_id: UUID, is_archived = False) -> None:
+    @resolve_fk_on_delete(display="guardian")
+    def delete_guardian(self, guardian_id: UUID) -> None:
         """Permanently delete an active guardian if there are no dependent entities.
         Args:
             guardian_id (UUID): ID of guardian to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, guardian_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model,guardian_id)
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=guardian_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
             return self.repository.delete(guardian_id)
 
         except EntityNotFoundError as e:
@@ -228,15 +232,20 @@ class GuardianFactory(BaseFactory):
             self.raise_not_found(guardian_id, e)
 
 
-    @resolve_fk_on_delete()
-    def delete_archived_guardian(self, guardian_id: UUID, is_archived = True) -> None:
+    @resolve_fk_on_delete(display="guardian")
+    def delete_archived_guardian(self, guardian_id: UUID) -> None:
         """Permanently delete an archived guardian if there are no dependent entities.
         Args:
             guardian_id: ID of guardian to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            self.delete_service.check_safe_delete(self.model, guardian_id, is_archived)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, guardian_id)
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=self.entity_model, identifier=guardian_id,
+                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                )
+
             self.repository.delete_archive(guardian_id)
 
         except EntityNotFoundError as e:
