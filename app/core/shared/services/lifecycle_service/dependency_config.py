@@ -54,9 +54,11 @@ DEPENDENCY_CONFIG = {
             ("grades", Grade, "student_id", "grades"),
             ("total_grades", TotalGrade, "student_id", "total grades"),
             ("classes_repeated", Repetition, "student_id", "class repetitions"),
+            ("promotions", Promotion, "student_id", "promotions"),
             ("department_transfers", DepartmentTransfer, "student_id", "department transfers"),
 
     ],
+
     Staff: [
         ("access_changes", AccessLevelChange, "staff_id", "permission changes")
     ],

@@ -9,7 +9,7 @@ class Grade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-            ondelete='RESTRICT', name='fk_grades_students_student_id')
+            ondelete='CASCADE', name='fk_grades_students_student_id')
     ) #redundant column but faster for queries idc
 
     student_subject_id: Mapped[UUID] = mapped_column(
@@ -47,7 +47,7 @@ class TotalGrade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
 
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-                ondelete='RESTRICT', name='fk_grades_students_student_id')
+                ondelete='CASCADE', name='fk_grades_students_student_id')
         )  # redundant column but faster for queries idc
 
     student_subject_id: Mapped[UUID] = mapped_column(

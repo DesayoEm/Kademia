@@ -209,15 +209,15 @@ class StaffFactory(BaseFactory):
             else:
                 model, display_name = Staff, "staff"
 
-            # failed_dependencies = self.delete_service.check_active_dependencies_exists(
-            #     entity_model=model,
-            #     target_id=staff_id
-            # )
-            # if failed_dependencies:
-            #     raise DeletionDependencyError(
-            #         entity_model=model, identifier=staff_id,
-            #         display_name=self.display_name, related_entities=", ".join(failed_dependencies)
-            #     )
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(
+                entity_model=model,
+                target_id=staff_id
+            )
+            if failed_dependencies:
+                raise DeletionDependencyError(
+                    entity_model=model, identifier=staff_id,
+                    display_name=display_name, related_entities=", ".join(failed_dependencies)
+                )
 
             return self.repository.delete(staff_id)
 
