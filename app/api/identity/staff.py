@@ -5,7 +5,8 @@ from fastapi.responses import FileResponse
 from fastapi import UploadFile, File
 
 from app.core.auth.factories.access_level_factory import AccessLevelChangeFactory
-from app.core.auth.schemas.access_level_change import AccessLevelChangeCreate, AccessLevelChangeResponse
+from app.core.auth.schemas.access_level_change import AccessLevelChangeCreate, AccessLevelChangeResponse, \
+    AccessLevelFilterParams
 from app.core.identity.factories.staff import StaffFactory
 from app.core.identity.services.profile_picture_service import ProfilePictureService
 from app.core.identity.services.staff_service import StaffService
@@ -117,6 +118,16 @@ def create_staff(
         factory: StaffFactory = Depends(get_authenticated_factory(StaffFactory)),
     ):
         return factory.create_staff(payload)
+
+
+@router.get("/staff/{staff_id}/profile/permissions-change-history", response_model=List[AccessLevelChangeResponse])
+def get_staff_level_change_history(
+        staff_id: UUID,
+        filters: AccessLevelFilterParams = Depends(),
+        factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
+    ):
+        filters.staff_id = staff_id
+        return factory.get_all_level_changes(filters)
 
 
 @router.get("/staff/", response_model=List[StaffResponse])

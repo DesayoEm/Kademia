@@ -5,6 +5,7 @@ from app.core.shared.schemas.shared_models import *
 class DepartmentFilterParams(BaseFilterParams):
     name: Optional[str] = None
     description: Optional[str] = None
+    mentor_id: UUID|None = None
     order_by: Literal["name", "created_at"] = "name"
 
 

@@ -8,6 +8,7 @@ class ClassCodeRequest(BaseModel):
 class ClassFilterParams(BaseFilterParams):
     level_id: UUID | None = None
     code: str |None = None
+    supervisor_id: UUID | None = None
     order_by: Literal["order", "created_at"] = "order"
 
 
