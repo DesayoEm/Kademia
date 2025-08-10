@@ -202,12 +202,22 @@ class StaffFactory(BaseFactory):
             staff_id (UUID): ID of staff to delete
         """
         try:
-            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, staff_id)
-            if failed_dependencies:
-                raise DeletionDependencyError(
-                    entity_model=self.entity_model, identifier=staff_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
-                )
+            staff = self.get_staff(staff_id)
+
+            if staff.staff_type == StaffType.Educator:
+                model, display_name = Educator, "educator"
+            else:
+                model, display_name = Staff, "staff"
+
+            # failed_dependencies = self.delete_service.check_active_dependencies_exists(
+            #     entity_model=model,
+            #     target_id=staff_id
+            # )
+            # if failed_dependencies:
+            #     raise DeletionDependencyError(
+            #         entity_model=model, identifier=staff_id,
+            #         display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+            #     )
 
             return self.repository.delete(staff_id)
 
@@ -253,17 +263,26 @@ class StaffFactory(BaseFactory):
 
 
     @resolve_fk_on_delete(display="Staff Member")
-    def delete_archived_staff(self, staff_id: UUID, is_archived = True) -> None:
+    def delete_archived_staff(self, staff_id: UUID) -> None:
         """Permanently delete an archived staff member if there are no dependent entities.
         Args:
             staff_id: ID of staff to delete
-            is_archived: Whether to check archived or active entities
         """
         try:
-            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, staff_id)
+            staff = self.get_archived_staff(staff_id)
+
+            if staff.staff_type == StaffType.Educator:
+                model, display_name = Educator, "educator"
+            else:
+                model, display_name = Staff, "staff"
+
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(
+                entity_model=model,
+                target_id=staff_id
+            )
             if failed_dependencies:
                 raise DeletionDependencyError(
-                    entity_model=self.entity_model, identifier=staff_id,
+                    entity_model=model, identifier=staff_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
 

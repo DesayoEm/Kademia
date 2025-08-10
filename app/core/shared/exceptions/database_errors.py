@@ -66,10 +66,13 @@ class RelationshipError(DBError):
 class RelationshipErrorOnDelete(DBError):
     """Raised when a foreign key constraint is violated during delete operations"""
 
-    def __init__(self, error: str, display: str, constraint: str | None = None):
+    def __init__(self, error: str, display: None | str = "unknown"):
+        self.display = display
         self.user_message = f"Deletion failed - {display} still in use by other objects"
         self.log_message = f"ForeignKeyViolation: during deletion - {error}"
-        super().__init__()
+
+        super().__init__(display)
+
 
 
 class RelatedEntityNotFoundError(RelationshipError):

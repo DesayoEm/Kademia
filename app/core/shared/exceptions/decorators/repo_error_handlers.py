@@ -31,10 +31,10 @@ def handle_write_errors(operation: str = "unknown"):
                 if 'unique' in msg or isinstance(orig, pg_errors.UniqueViolation):
                     raise UniqueViolationError(error=msg, constraint=constraint_name)
 
-                if ('foreign key' in msg and 'delet' in msg) or isinstance(orig, pg_errors.ForeignKeyViolation):
-                    raise RelationshipErrorOnDelete(
+                if 'null value in column' in msg or isinstance(orig, pg_errors.ForeignKeyViolation):
+                    raise RelationshipError(
                         error=msg,
-                        display = "Unknown",
+                        operation=operation,
                         constraint=constraint_name
                     )
 
