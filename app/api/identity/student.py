@@ -16,6 +16,10 @@ from app.core.documents.factories.document_factory import DocumentFactory
 from app.core.documents.schemas.student_award import AwardResponse, AwardFilterParams
 from app.core.documents.schemas.student_document import DocumentResponse, DocumentFilterParams
 from app.core.identity.factories.student import StudentFactory
+from app.core.progression.factories.promotion import PromotionFactory
+from app.core.progression.factories.repetition import RepetitionFactory
+from app.core.progression.schemas.promotion import PromotionResponse, PromotionFilterParams
+from app.core.progression.schemas.repetition import RepetitionResponse, RepetitionFilterParams
 from app.core.shared.services.file_storage.s3_upload import S3Upload
 from app.core.identity.services.student_service import StudentService
 from app.core.shared.schemas.enums import ExportFormat, ArchiveReason
@@ -28,6 +32,8 @@ from app.core.auth.services.token_service import TokenService
 from app.core.auth.services.dependencies.token_deps import AccessTokenBearer
 from app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory, \
     get_authenticated_service
+from app.core.transfer.factories.transfer import TransferFactory
+from app.core.transfer.schemas.department_transfer import DepartmentTransferFilterParams, DepartmentTransferResponse
 
 token_service=TokenService()
 access = AccessTokenBearer()
@@ -176,6 +182,35 @@ def get_student_total_grades(
         return factory.get_all_total_grades(filters)
 
 
+@router.get("/students/{student_id}/transfers/", response_model=List[DepartmentTransferResponse])
+def get_student_transfers(
+        student_id: UUID,
+        filters: DepartmentTransferFilterParams = Depends(),
+        factory: TransferFactory = Depends(get_authenticated_factory(TransferFactory))
+    ):
+    filters.student_id = student_id
+    return factory.get_all_transfers(filters)
+
+
+@router.get("/students/{student_id}/transfers/", response_model=List[PromotionResponse])
+def get_student_promotions(
+        student_id: UUID,
+        filters: PromotionFilterParams = Depends(),
+        factory: PromotionFactory = Depends(get_authenticated_factory(PromotionFactory))
+    ):
+    filters.student_id = student_id
+    return factory.get_all_promotions(filters)
+
+
+@router.get("/students/{student_id}/repetitions/", response_model=List[RepetitionResponse])
+def get_student_repetitions(
+        student_id: UUID,
+        filters: RepetitionFilterParams = Depends(),
+        factory: RepetitionFactory = Depends(get_authenticated_factory(RepetitionFactory))
+    ):
+    filters.student_id = student_id
+    return factory.get_all_repetitions(filters)
+
 
 @router.get("/students/{student_id}", response_model=StudentResponse)
 def get_student(
@@ -210,7 +245,7 @@ def cascade_archive_student(
         reason:ArchiveReason,
         service: StudentService = Depends(get_authenticated_service(StudentService)),
 ):
-    return service.cascade_student_archive(student_id, reason)
+    return service.cascade_archive_student(student_id, reason)
 
 
 @router.patch("/students/{student_id}/archive", status_code=200)

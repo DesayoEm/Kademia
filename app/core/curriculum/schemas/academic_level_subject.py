@@ -5,6 +5,8 @@ from app.core.shared.schemas.shared_models import *
 class AcademicLevelSubjectFilterParams(BaseFilterParams):
     is_elective: str | None = None
     academic_session: str | None = None
+    subject_id: UUID | None = None
+    level_id: UUID | None = None
 
 
 class AcademicLevelSubjectBase(BaseModel):

@@ -21,8 +21,42 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
+#Archive
+@router.get("/archive/transfers", response_model=List[DepartmentTransferResponse])
+def get_archived_transfers(
+        filters: DepartmentTransferFilterParams = Depends(),
+        factory:  TransferFactory = Depends(get_authenticated_factory(TransferFactory))
+    ):
+    return factory.get_all_archived_transfers(filters)
 
-@router.post("/students/{student_id}", response_model=DepartmentTransferResponse, status_code=201)
+
+@router.get("/archive/transfers/{transfer_id}", response_model=DepartmentTransferResponse)
+def get_archived_transfer(
+        transfer_id: UUID,
+        factory:  TransferFactory = Depends(get_authenticated_factory(TransferFactory))
+    ):
+    return factory.get_archived_transfer(transfer_id)
+
+
+@router.patch("/archive/transfers/{transfer_id}", response_model=DepartmentTransferResponse)
+def restore_transfer(
+        transfer_id: UUID,
+        factory:  TransferFactory = Depends(get_authenticated_factory(TransferFactory))
+    ):
+    return factory.restore_transfer(transfer_id)
+
+
+@router.delete("/archive/transfers/{transfer_id}", status_code=204)
+def delete_archived_transfer(
+        transfer_id: UUID,
+        factory:  TransferFactory = Depends(get_authenticated_factory(TransferFactory))
+    ):
+    return factory.delete_archived_transfer(transfer_id)
+
+
+
+
+@router.post("/students/{student_id}/transfer", response_model=DepartmentTransferResponse, status_code=201)
 def create_transfer(
         student_id: UUID, 
         payload: DepartmentTransferCreate,
@@ -31,7 +65,7 @@ def create_transfer(
     return factory.create_transfer(student_id, payload)
 
 
-@router.get("/", response_model=List[DepartmentTransferResponse])
+@router.get("/transfers/", response_model=List[DepartmentTransferResponse])
 def get_transfers(
         filters: DepartmentTransferFilterParams = Depends(), 
         factory: TransferFactory = Depends(get_authenticated_factory(TransferFactory))
@@ -39,14 +73,15 @@ def get_transfers(
     return factory.get_all_transfers(filters)
 
 
-@router.get("/{transfer_id}", response_model=DepartmentTransferResponse)
+@router.get("/transfers/{transfer_id}", response_model=DepartmentTransferResponse)
 def get_transfer(
         transfer_id: UUID, 
         factory: TransferFactory = Depends(get_authenticated_factory(TransferFactory))
     ):
     return factory.get_transfer(transfer_id)
 
-@router.patch("/{student_id}/transfers/action", response_model=DepartmentTransferResponse)
+
+@router.patch("/transfers/{transfer_id}/action", response_model=DepartmentTransferResponse)
 def action_transfer(
         transfer_id: UUID,
         payload: DepartmentTransferDecision,
@@ -56,7 +91,7 @@ def action_transfer(
     return service.action_transfer_record(transfer_id, payload)
 
 
-@router.patch("/{student_id}/transfers", response_model=DepartmentTransferResponse)
+@router.patch("/transfers/{transfer_id}", response_model=DepartmentTransferResponse)
 def update_transfer(
         transfer_id: UUID,
         payload: DepartmentTransferUpdate,
@@ -66,7 +101,7 @@ def update_transfer(
     return factory.update_transfer(transfer_id, payload)
 
 
-@router.patch("/{student_id}/{transfer_id}", status_code=204)
+@router.patch("/transfers/{transfer_id}", status_code=204)
 def archive_transfer(
         transfer_id: UUID, 
         reason: ArchiveRequest, 
@@ -75,7 +110,7 @@ def archive_transfer(
     return factory.archive_transfer(transfer_id, reason.reason)
 
 
-@router.delete("/{transfer_id}", status_code=204)
+@router.delete("/transfers/{transfer_id}", status_code=204)
 def delete_transfer(
         transfer_id: UUID, 
         factory: TransferFactory = Depends(get_authenticated_factory(TransferFactory))
@@ -84,35 +119,4 @@ def delete_transfer(
 
 
 
-#Archive
-@router.get("/archived", response_model=List[DepartmentTransferResponse])
-def get_archived_transfers(
-        filters: DepartmentTransferFilterParams = Depends(), 
-        factory:  TransferFactory = Depends(get_authenticated_factory(TransferFactory))
-    ):
-    return factory.get_all_archived_transfers(filters)
-
-
-@router.get("archived/{transfer_id}", response_model=DepartmentTransferResponse)
-def get_archived_transfer(
-        transfer_id: UUID,
-        factory:  TransferFactory = Depends(get_authenticated_factory(TransferFactory))
-    ):
-    return factory.get_archived_transfer(transfer_id)
-
-
-@router.patch("archived/{transfer_id}", response_model=DepartmentTransferResponse)
-def restore_transfer(
-        transfer_id: UUID, 
-        factory:  TransferFactory = Depends(get_authenticated_factory(TransferFactory))
-    ):
-    return factory.restore_transfer(transfer_id)
-
-
-@router.delete("archived/{transfer_id}", status_code=204)
-def delete_archived_transfer(
-        transfer_id: UUID, 
-        factory:  TransferFactory = Depends(get_authenticated_factory(TransferFactory))
-    ):
-    return factory.delete_archived_transfer(transfer_id)
 

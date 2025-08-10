@@ -8,13 +8,9 @@ from fastapi import FastAPI
 app = FastAPI()
 
 from app.api.staff_management import staff_departments_archive, staff_roles_archive
-from app.api.staff_management import staff_roles
-from app.api.staff_management import qualifications, staff_departments
-from app.api.academic_structure import (
-    academic_levels, academic_levels_archive, departments, departments_archive,
-    classes_archive
-)
-from app.api.academic_structure import classes
+from app.api.staff_management import qualifications, staff_departments, staff_roles
+from app.api.academic_structure import academic_levels, departments, classes
+
 from app.api.curriculum import (
     level_subject, student_subject, student_subject_archive, subject_educator_archive
 )
@@ -66,21 +62,9 @@ app.include_router(qualifications.router, prefix=f"/api/{version}/staff/qualific
                    tags=["Educator Qualifications", "Admin"])
 
 #Academic Structure
-app.include_router(departments.router, prefix=f"/api/{version}/students/departments",
-                   tags=["Student Department", "Admin"])
-app.include_router(departments_archive.router, prefix=f"/api/{version}/students/departments/archived",
-                   tags=["Student Department", "Admin"])
-
-app.include_router(academic_levels.router, prefix=f"/api/{version}/students/academic-levels",
-                   tags=["Level", "Admin"])
-app.include_router(academic_levels_archive.router, prefix=f"/api/{version}/students/academic-levels/archived",
-                   tags=["Level", "Admin"])
-
-app.include_router(classes.router, prefix=f"/api/{version}/students/classes",
-                   tags=["Classes", "Admin"])
-app.include_router(classes_archive.router, prefix=f"/api/{version}/students/classes/archived",
-                   tags=["Classes", "Admin"])
-
+app.include_router(departments.router, prefix=f"/api/{version}/students/departments",tags=["Student Department", "Admin"])
+app.include_router(academic_levels.router, prefix=f"/api/{version}/students/academic-levels",tags=["Level", "Admin"])
+app.include_router(classes.router, prefix=f"/api/{version}/students/classes",tags=["Classes", "Admin"])
 
 #Users
 app.include_router(staff.router, prefix=f"/api/{version}", tags=["Staff", "Admin"])
@@ -90,8 +74,7 @@ app.include_router(student.router, prefix=f"/api/{version}",tags=["Students", "A
 
 
 # Access level
-app.include_router(access_level_change.router, prefix=f"/api/{version}",
-                   tags=["Auth", "Access Level"])
+app.include_router(access_level_change.router, prefix=f"/api/{version}",tags=["Auth", "Access Level"])
 
 #Docs
 app.include_router(award.router, prefix=f"/api/{version}/students/awards",
