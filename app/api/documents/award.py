@@ -25,7 +25,49 @@ token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
 
+#Archive routers
+@router.get("/archive/awards/", response_model=List[AwardResponse])
+def get_archived_awards(
+        filters: AwardFilterParams = Depends(),
+        factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
+    ):
+    return factory.get_all_archived_awards(filters)
 
+
+@router.get("/archive/awards/{award_id}/audit", response_model=AwardAudit)
+def get_archived_award_audit(
+        award_id: UUID,
+        factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
+    ):
+    return factory.get_archived_award(award_id)
+
+
+@router.get("/archive/awards/{award_id}", response_model=AwardResponse)
+def get_archived_award(
+        award_id: UUID,
+        factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
+    ):
+    return factory.get_archived_award(award_id)
+
+
+@router.patch("/archive/awards/{award_id}", response_model=AwardResponse)
+def restore_award(
+        award_id: UUID,
+        factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
+    ):
+    return factory.restore_award(award_id)
+
+
+@router.delete("/archive/awards/{award_id}", status_code=204)
+def delete_archived_award(
+        award_id: UUID,
+        factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
+    ):
+    return factory.delete_archived_award(award_id)
+
+
+
+#Active routers
 @router.post("/{student_id}/awards/{award_id}/file", response_model= UploadResponse,
              status_code=201)
 def upload_award_file(
@@ -43,7 +85,7 @@ def upload_award_file(
         return UploadResponse(**result)
 
 
-@router.get("/{award_id}/file")
+@router.get("/awards/{award_id}/file")
 def get_award_file(
         award_id: UUID,
         service: S3Upload = Depends(get_authenticated_service(S3Upload)),
@@ -54,7 +96,7 @@ def get_award_file(
         return service.generate_presigned_url(key)
 
 
-@router.delete("/{award_id}/file", status_code=204)
+@router.delete("/awards/{award_id}/file", status_code=204)
 def remove_award_file(
         award_id: UUID,
         service: DocumentService = Depends(get_authenticated_service(DocumentService)),
@@ -73,7 +115,7 @@ def create_award(
     return factory.create_award(student_id, payload)
 
 
-@router.get("/", response_model=List[AwardResponse])
+@router.get("/awards/", response_model=List[AwardResponse])
 def get_awards(
         filters: AwardFilterParams = Depends(),
         factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
@@ -81,7 +123,7 @@ def get_awards(
     return factory.get_all_awards(filters)
 
 
-@router.get("/{award_id}/audit", response_model=AwardAudit)
+@router.get("/awards/{award_id}/audit", response_model=AwardAudit)
 def get_award_audit(
         award_id: UUID,
         factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
@@ -89,7 +131,7 @@ def get_award_audit(
     return factory.get_award(award_id)
 
 
-@router.get("/{award_id}", response_model=AwardResponse)
+@router.get("/awards/{award_id}", response_model=AwardResponse)
 def get_award(
         award_id: UUID,
         factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))
@@ -97,7 +139,7 @@ def get_award(
     return factory.get_award(award_id)
 
 
-@router.put("/{award_id}", response_model=AwardResponse)
+@router.put("/awards/{award_id}", response_model=AwardResponse)
 def update_award(
         payload: AwardUpdate,
         award_id: UUID,
@@ -107,7 +149,7 @@ def update_award(
     return factory.update_award(award_id, payload)
 
 
-@router.patch("/{award_id}",  status_code=204)
+@router.patch("/awards/{award_id}",  status_code=204)
 def archive_award(
         award_id: UUID,
         reason:ArchiveRequest,
@@ -116,7 +158,7 @@ def archive_award(
     return factory.archive_award(award_id, reason.reason)
 
 
-@router.post("/{award_id}/audit", response_class=FileResponse,  status_code=204)
+@router.post("/awards/{award_id}/audit", response_class=FileResponse,  status_code=204)
 def export_award_audit(
         award_id: UUID,
         export_format: ExportFormat,
@@ -131,7 +173,7 @@ def export_award_audit(
     )
 
 
-@router.delete("/{award_id}", status_code=204)
+@router.delete("/awards/{award_id}", status_code=204)
 def delete_award(
         award_id: UUID,
         factory: AwardFactory = Depends(get_authenticated_factory(AwardFactory))

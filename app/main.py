@@ -13,19 +13,15 @@ from app.api.staff_management import qualifications, staff_departments, staff_ro
 from app.api.academic_structure import academic_levels, departments, classes
 from app.api.curriculum import subject, level_subject, student_subject, subject_educator
 
-from app.api.progression import (
-    repetition_archive,
-    promotion, promotion_archive
-)
-from app.api.progression import repetition
+from app.api.progression import repetition_archive,promotion, promotion_archive, repetition
 from app.api.transfer import department_transfer
-from app.api.assessment import total_grade
-from app.api.assessment import grade_archive, grade, total_grade_archive
-from app.api.documents import award
-from app.api.documents import document, document_archive, award_archive
+from app.api.assessment import total_grade, grade
+from app.api.documents import award, document
+
 from app.api.identity import student, guardian, staff, educator
 from app.api.auth import password
 from app.api.auth import auth, access_level_change
+
 from app.infra.middleware.exception_handler import ExceptionMiddleware
 from app.infra.log_service.logger import logger
 
@@ -39,11 +35,11 @@ app = FastAPI(
 app.add_middleware(ExceptionMiddleware)
 
 # Authentication
-app.include_router(auth.router, prefix=f"/api/{version}/auth",
-                   tags=["Auth"])
-app.include_router(password.router, prefix=f"/api/{version}/auth/password",
-                   tags=["Auth"])
+app.include_router(auth.router, prefix=f"/api/{version}/auth",tags=["Auth"])
+app.include_router(password.router, prefix=f"/api/{version}/auth/password",tags=["Auth"])
 
+# Access level
+app.include_router(access_level_change.router, prefix=f"/api/{version}",tags=["Auth", "Access Level"])
 
 # Staff Org
 app.include_router(staff_departments.router, prefix=f"/api/{version}/staff/departments",
@@ -70,54 +66,19 @@ app.include_router(educator.router, prefix=f"/api/{version}", tags=["Educators",
 app.include_router(guardian.router, prefix=f"/api/{version}/guardians",tags=["Guardians", "Admin"])
 app.include_router(student.router, prefix=f"/api/{version}",tags=["Students", "Admin"])
 
-
-# Access level
-app.include_router(access_level_change.router, prefix=f"/api/{version}",tags=["Auth", "Access Level"])
-
 #Docs
-app.include_router(award.router, prefix=f"/api/{version}/students/awards",
-                   tags=["Awards", "Admin"])
-app.include_router(award_archive.router, prefix=f"/api/{version}/students/awards/archived",
-                   tags=["Awards", "Admin"])
-
-app.include_router(document.router, prefix=f"/api/{version}/students/documents",
-                   tags=["Documents", "Admin"])
-app.include_router(document_archive.router, prefix=f"/api/{version}/students/documents/archived",
-                   tags=["Documents", "Admin"])
+app.include_router(award.router, prefix=f"/api/{version}/students/awards",tags=["Awards", "Admin"])
+app.include_router(document.router, prefix=f"/api/{version}/students/documents",tags=["Documents", "Admin"])
 
 # Curriculum
-app.include_router(subject.router, prefix=f"/api/{version}/curriculum/subjects",
-                   tags=["Subjects", "Admin"])
-app.include_router(subject_archive.router, prefix=f"/api/{version}/curriculum/subjects/archived",
-                   tags=["Subjects", "Admin"])
-
-app.include_router(level_subject.router, prefix=f"/api/{version}/curriculum/level-subjects",
-                   tags=["Level Subjects", "Admin"])
-app.include_router(level_subject_archive.router, prefix=f"/api/{version}/curriculum/level-subjects/archived",
-                   tags=["Level Subjects", "Admin"])
-
-app.include_router(student_subject.router, prefix=f"/api/{version}/curriculum/student-subjects",
-                   tags=["Student Subjects", "Admin"])
-app.include_router(student_subject_archive.router, prefix=f"/api/{version}/curriculum/student-subjects/archived",
-                   tags=["Student Subjects", "Admin"])
-
-app.include_router(subject_educator.router, prefix=f"/api/{version}/curriculum/subject-educators",
-                   tags=["Subject Educator", "Admin"])
-app.include_router(subject_educator_archive.router, prefix=f"/api/{version}/curriculum/subject-educators/archived",
-                   tags=["Subject Educator", "Admin"])
-
-
-
+app.include_router(subject.router, prefix=f"/api/{version}/curriculum/subjects",tags=["Subjects", "Admin"])
+app.include_router(level_subject.router, prefix=f"/api/{version}/curriculum/level-subjects",tags=["Level Subjects", "Admin"])
+app.include_router(student_subject.router, prefix=f"/api/{version}/curriculum/student-subjects",tags=["Student Subjects", "Admin"])
+app.include_router(subject_educator.router, prefix=f"/api/{version}/curriculum/subject-educators",tags=["Subject Educator", "Admin"])
 
 # Assessment
-app.include_router(grade.router, prefix=f"/api/{version}/students/assessment/grades",
-                   tags=["Assessment", "Admin"])
-app.include_router(grade_archive.router, prefix=f"/api/{version}/students/assessment/archived/grade",
-                   tags=["Assessment", "Admin"])
-
+app.include_router(grade.router, prefix=f"/api/{version}/students/assessment/grades",tags=["Assessment", "Admin"])
 app.include_router(total_grade.router, prefix=f"/api/{version}/students/assessment/total-grades",
-                   tags=["Assessment", "Admin"])
-app.include_router(total_grade_archive.router, prefix=f"/api/{version}/students/assessment/archived/total-grade",
                    tags=["Assessment", "Admin"])
 
 # Progression
@@ -131,13 +92,8 @@ app.include_router(promotion.router, prefix=f"/api/{version}/students/promotions
 app.include_router(promotion_archive.router, prefix=f"/api/{version}/students/promotions/archived",
                    tags=["Progression", "Admin"])
 
-
-
 app.include_router(department_transfer.router, prefix=f"/api/{version}/department-transfers",
                    tags=["Department Transfers", "Admin"])
-
-
-
 
 
 

@@ -5,7 +5,9 @@ from typing import List
 from fastapi.responses import FileResponse
 
 from app.core.curriculum.factories.academic_level_subject import AcademicLevelSubjectFactory
+from app.core.curriculum.factories.subject_educator import SubjectEducatorFactory
 from app.core.curriculum.schemas.student_subject import StudentSubjectFilterParams
+from app.core.curriculum.schemas.subject_educator import SubjectEducatorResponse, SubjectEducatorFilterParams
 from app.core.curriculum.services.curriculum_service import CurriculumService
 from app.core.identity.factories.student import StudentFactory
 from app.core.identity.schemas.student import StudentResponse
@@ -72,6 +74,17 @@ def assign_level_subject(
     return factory.create_academic_level_subject(level_id, payload)
 
 
+@router.get("/level-subjects/{level_subject_id}/educators", response_model=SubjectEducatorResponse)
+def get_level_subject_educators(
+        level_subject_id: UUID,
+        filters: SubjectEducatorFilterParams = Depends(),
+        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
+    ):
+    filters.academic_level_subject_id = level_subject_id
+    return factory.get_all_subject_educators(level_subject_id)
+
+
+
 @router.get("/level-subjects/", response_model=List[AcademicLevelSubjectResponse])
 def get_level_subjects(
         filters: AcademicLevelSubjectFilterParams = Depends(),
@@ -86,7 +99,6 @@ def get_level_subject_audit(
         factory: AcademicLevelSubjectFactory = Depends(get_authenticated_factory(AcademicLevelSubjectFactory))
     ):
     return factory.get_academic_level_subject(level_subject_id)
-
 
 
 @router.get("/level-subjects/{level_subject_id}", response_model=AcademicLevelSubjectResponse)

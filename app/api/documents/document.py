@@ -25,8 +25,48 @@ token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
 
+#Archive router
+@router.get("/archive/documents/", response_model=List[DocumentResponse])
+def get_archived_documents(
+        filters: DocumentFilterParams = Depends(),
+        factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
+    ):
+    return factory.get_all_archived_documents(filters)
 
 
+@router.get("/archive/documents/{document_id}/audit", response_model=DocumentAudit)
+def get_archived_document_audit(
+        document_id: UUID,
+        factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
+    ):
+    return factory.get_archived_document(document_id)
+
+
+@router.get("/archive/documents/{document_id}", response_model=DocumentResponse)
+def get_archived_document(
+        document_id: UUID,
+        factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
+    ):
+    return factory.get_archived_document(document_id)
+
+
+@router.patch("/archive/documents/{document_id}", response_model=DocumentResponse)
+def restore_document(
+        document_id: UUID,
+        factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
+    ):
+    return factory.restore_document(document_id)
+
+
+@router.delete("/archive/documents/{document_id}", status_code=204)
+def delete_archived_document(
+        document_id: UUID,
+        factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
+    ):
+    return factory.delete_archived_document(document_id)
+
+
+#Active routers
 @router.post("/{student_id}/documents/{document_id}/file", response_model= UploadResponse,
              status_code=201)
 def upload_document_file(
@@ -45,7 +85,7 @@ def upload_document_file(
 
 
 
-@router.get("/{document_id}/file")
+@router.get("/documents/{document_id}/file")
 def get_document_file(
         document_id: UUID,
         service: S3Upload = Depends(get_authenticated_service(S3Upload)),
@@ -56,7 +96,7 @@ def get_document_file(
         return service.generate_presigned_url(key)
 
 
-@router.delete("/{document_id}/file", status_code=204)
+@router.delete("/documents/{document_id}/file", status_code=204)
 def remove_document_file(
         document_id: UUID,
         service: DocumentService = Depends(get_authenticated_service(DocumentService)),
@@ -66,7 +106,7 @@ def remove_document_file(
         return service.remove_document_file(document)
 
 
-@router.post("{student_id}/", response_model= DocumentResponse, status_code=201)
+@router.post("{student_id}/documents/", response_model= DocumentResponse, status_code=201)
 def create_document(
         student_id: UUID,
         payload:DocumentCreate,
@@ -75,7 +115,7 @@ def create_document(
     return factory.create_document(student_id, payload)
 
 
-@router.get("/", response_model=List[DocumentResponse])
+@router.get("/documents/", response_model=List[DocumentResponse])
 def get_documents(
         filters: DocumentFilterParams = Depends(),
         factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
@@ -83,7 +123,7 @@ def get_documents(
     return factory.get_all_documents(filters)
 
 
-@router.get("/{document_id}/audit", response_model=DocumentAudit)
+@router.get("/documents/{document_id}/audit", response_model=DocumentAudit)
 def get_document_audit(
         document_id: UUID,
         factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
@@ -91,7 +131,7 @@ def get_document_audit(
     return factory.get_document(document_id)
 
 
-@router.get("/{document_id}", response_model=DocumentResponse)
+@router.get("/documents/{document_id}", response_model=DocumentResponse)
 def get_document(
         document_id: UUID,
         factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
@@ -99,7 +139,7 @@ def get_document(
     return factory.get_document(document_id)
 
 
-@router.put("/{document_id}", response_model=DocumentResponse)
+@router.put("/documents/{document_id}", response_model=DocumentResponse)
 def update_document(
         payload: DocumentUpdate,
         document_id: UUID,
@@ -109,7 +149,7 @@ def update_document(
     return factory.update_document(document_id, payload)
 
 
-@router.patch("/{document_id}",  status_code=204)
+@router.patch("/documents/{document_id}",  status_code=204)
 def archive_document(
         document_id: UUID,
         reason:ArchiveRequest,
@@ -118,7 +158,7 @@ def archive_document(
     return factory.archive_document(document_id, reason.reason)
 
 
-@router.post("/{document_id}/audit", response_class=FileResponse,  status_code=204)
+@router.post("/documents/{document_id}/audit", response_class=FileResponse,  status_code=204)
 def export_document_audit(
         document_id: UUID,
         export_format: ExportFormat,
@@ -133,7 +173,7 @@ def export_document_audit(
     )
 
 
-@router.delete("/{document_id}", status_code=204)
+@router.delete("/documents/{document_id}", status_code=204)
 def delete_document(
         document_id: UUID,
         factory: DocumentFactory = Depends(get_authenticated_factory(DocumentFactory))
