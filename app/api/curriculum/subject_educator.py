@@ -19,8 +19,50 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
+#Archive routers
+@router.get("/", response_model=List[SubjectEducatorResponse])
+def get_archived_subject_educators(
+        filters: SubjectEducatorFilterParams = Depends(),
+        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
+    ):
+    return factory.get_all_archived_subject_educators(filters)
 
-@router.post("/{educator_id}", response_model= SubjectEducatorResponse, status_code=201)
+
+@router.get("/archive/subject-educators/{subject_educator_id}/audit", response_model=SubjectEducatorAudit)
+def get_archived_subject_educator_audit(
+        subject_educator_id: UUID,
+        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
+    ):
+    return factory.get_archived_subject_educator(subject_educator_id)
+
+
+@router.get("/archive/subject-educators/{subject_educator_id}", response_model=SubjectEducatorResponse)
+def get_archived_subject_educator(
+        subject_educator_id: UUID,
+        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
+    ):
+    return factory.get_archived_subject_educator(subject_educator_id)
+
+
+@router.patch("/archive/subject-educators/{subject_educator_id}", response_model=SubjectEducatorResponse)
+def restore_subject_educator(
+        subject_educator_id: UUID,
+        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
+    ):
+    return factory.restore_subject_educator(subject_educator_id)
+
+
+@router.delete("/archive/subject-educators/{subject_educator_id}", status_code=204)
+def delete_archived_subject_educator(
+        subject_educator_id: UUID,
+        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
+    ):
+    return factory.delete_archived_subject_educator(subject_educator_id)
+
+
+
+#Active routers
+@router.post("/subject-educators/educator_id}", response_model= SubjectEducatorResponse, status_code=201)
 def assign_subject_educator(
         educator_id: UUID,
         data:SubjectEducatorCreate,
@@ -29,7 +71,7 @@ def assign_subject_educator(
     return factory.create_subject_educator(educator_id,data)
 
 
-@router.get("/", response_model=List[SubjectEducatorResponse])
+@router.get("/subject-educators/", response_model=List[SubjectEducatorResponse])
 def get_subject_educators(
         filters: SubjectEducatorFilterParams = Depends(),
         factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
@@ -37,7 +79,7 @@ def get_subject_educators(
     return factory.get_all_subject_educators(filters)
 
 
-@router.get("/{subject_educator_id}/audit", response_model=SubjectEducatorAudit)
+@router.get("/subject-educators/{subject_educator_id}/audit", response_model=SubjectEducatorAudit)
 def get_subject_educator_audit(
         subject_educator_id: UUID,
         factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
@@ -45,7 +87,7 @@ def get_subject_educator_audit(
     return factory.get_subject_educator(subject_educator_id)
 
 
-@router.get("/{subject_educator_id}", response_model=SubjectEducatorResponse)
+@router.get("/subject-educators/{subject_educator_id}", response_model=SubjectEducatorResponse)
 def get_subject_educator(
         subject_educator_id: UUID,
         factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
@@ -53,7 +95,7 @@ def get_subject_educator(
     return factory.get_subject_educator(subject_educator_id)
 
 
-@router.patch("/{subject_educator_id}",  status_code=204)
+@router.patch("/subject-educators/{subject_educator_id}",  status_code=204)
 def archive_subject_educator(
         subject_educator_id: UUID,
         reason:ArchiveRequest,
@@ -62,7 +104,7 @@ def archive_subject_educator(
     return factory.archive_subject_educator(subject_educator_id, reason.reason)
 
 
-@router.delete("/{subject_educator_id}", status_code=204)
+@router.delete("/subject-educators/{subject_educator_id}", status_code=204)
 def delete_subject_educator(
         subject_educator_id: UUID,
         factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))

@@ -7,14 +7,12 @@ load_dotenv(dotenv_path=env_path)
 from fastapi import FastAPI
 app = FastAPI()
 
+
 from app.api.staff_management import staff_departments_archive, staff_roles_archive
 from app.api.staff_management import qualifications, staff_departments, staff_roles
 from app.api.academic_structure import academic_levels, departments, classes
+from app.api.curriculum import subject, level_subject, student_subject, subject_educator
 
-from app.api.curriculum import (
-    level_subject, student_subject, student_subject_archive, subject_educator_archive
-)
-from app.api.curriculum import subject, level_subject_archive, subject_educator, subject_archive
 from app.api.progression import (
     repetition_archive,
     promotion, promotion_archive

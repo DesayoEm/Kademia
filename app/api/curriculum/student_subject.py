@@ -26,13 +26,58 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
-@router.post("/{student_id}", response_model= StudentSubjectResponse, status_code=201)
+#Archive queries
+
+@router.get("/archive/enrollments/", response_model=List[StudentSubjectResponse])
+def get_archived_student_subjects(
+        filters: StudentSubjectFilterParams = Depends(),
+        factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
+    ):
+    return factory.get_all_archived_student_subjects(filters)
+
+
+@router.get("/archive/enrollments/{student_subject_id}/audit", response_model=StudentSubjectAudit)
+def get_archived_student_subject_audit(
+        student_subject_id: UUID,
+        factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
+    ):
+    return factory.get_archived_student_subject(student_subject_id)
+
+
+@router.get("/archive/enrollments/{student_subject_id}", response_model=StudentSubjectResponse)
+def get_archived_student_subject(
+        student_subject_id: UUID,
+        factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
+    ):
+    return factory.get_archived_student_subject(student_subject_id)
+
+
+@router.patch("/archive/enrollments/{student_subject_id}", response_model=StudentSubjectResponse)
+def restore_student_subject(
+        student_subject_id: UUID,
+        factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
+    ):
+    return factory.restore_student_subject(student_subject_id)
+
+
+@router.delete("/archive/enrollments/{student_subject_id}", status_code=204)
+def delete_archived_student_subject(
+        student_subject_id: UUID,
+        factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
+    ):
+    return factory.delete_archived_student_subject(student_subject_id)
+
+
+
+#Active queries
+@router.post("/enrollments/{student_id}", response_model= StudentSubjectResponse, status_code=201)
 def assign_student_subject(
         student_id: UUID,
         payload:StudentSubjectCreate,
         factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
     ):
     return factory.create_student_subject(student_id, payload)
+
 
 @router.get("/students/{student_id}/course_list/download")
 def download_course_list(
@@ -60,7 +105,7 @@ def get_student_course_list(
     )
 
 
-@router.get("/", response_model=List[StudentSubjectResponse])
+@router.get("/enrollments/", response_model=List[StudentSubjectResponse])
 def get_student_subjects(
         filters: StudentSubjectFilterParams = Depends(),
         factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
@@ -76,7 +121,7 @@ def get_student_subject_audit(
     return factory.get_student_subject(student_subject_id)
 
 
-@router.get("/{student_subject_id}", response_model=StudentSubjectResponse)
+@router.get("/enrollments/{student_subject_id}", response_model=StudentSubjectResponse)
 def get_student_subject(
         student_subject_id: UUID,
         factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))
@@ -84,7 +129,7 @@ def get_student_subject(
     return factory.get_student_subject(student_subject_id)
 
 
-@router.patch("/{student_subject_id}",  status_code=204)
+@router.patch("/enrollments/{student_subject_id}",  status_code=204)
 def archive_student_subject(
         student_subject_id: UUID,
         reason:ArchiveRequest,
@@ -95,7 +140,7 @@ def archive_student_subject(
 
 
 
-@router.delete("/{student_subject_id}", status_code=204)
+@router.delete("/enrollments/{student_subject_id}", status_code=204)
 def delete_student_subject(
         student_subject_id: UUID,
         factory: StudentSubjectFactory = Depends(get_authenticated_factory(StudentSubjectFactory))

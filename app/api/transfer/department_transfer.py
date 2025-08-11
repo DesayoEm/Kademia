@@ -54,8 +54,6 @@ def delete_archived_transfer(
     return factory.delete_archived_transfer(transfer_id)
 
 
-
-
 @router.post("/students/{student_id}/transfer", response_model=DepartmentTransferResponse, status_code=201)
 def create_transfer(
         student_id: UUID, 

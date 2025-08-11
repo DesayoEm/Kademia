@@ -22,8 +22,57 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
+#Archive queries
+@router.get("/archive/subjects/", response_model=List[SubjectResponse])
+def get_archived_subjects(
+        filters: SubjectFilterParams = Depends(),
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
+    ):
+    return crud.get_all_archived_subjects(filters)
 
-@router.post("/", response_model= SubjectResponse, status_code=201)
+
+@router.get("/archive/subjects/{subject_id}", response_model=SubjectResponse)
+def get_archived_subject(
+        subject_id: UUID,
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
+    ):
+    return crud.get_archived_subject(subject_id)
+
+
+@router.get("/archive/subjects/{subject_id}/audit", response_model=SubjectAudit)
+def get_archived_subject_audit(
+        subject_id: UUID,
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
+    ):
+    return crud.get_archived_subject(subject_id)
+
+
+@router.get("/archive/subjects/{subject_id}", response_model=SubjectResponse)
+def get_archived_subject(
+        subject_id: UUID,
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
+    ):
+    return crud.get_archived_subject(subject_id)
+
+
+@router.patch("/archive/subjects/{subject_id}", response_model=SubjectResponse)
+def restore_subject(
+        subject_id: UUID,
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
+    ):
+    return crud.restore_subject(subject_id)
+
+
+@router.delete("/archive/subjects/{subject_id}", status_code=204)
+def delete_archived_subject(
+        subject_id: UUID,
+        crud: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
+    ):
+    return crud.delete_archived_subject(subject_id)
+
+
+#Active queries
+@router.post("/subjects", response_model= SubjectResponse, status_code=201)
 def create_subject(
         payload:SubjectCreate,
         factory: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
@@ -31,7 +80,7 @@ def create_subject(
     return factory.create_subject(payload)
 
 
-@router.get("/", response_model=List[SubjectResponse])
+@router.get("/subjects/", response_model=List[SubjectResponse])
 def get_subjects(
         filters: SubjectFilterParams = Depends(),
         factory: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
@@ -39,7 +88,7 @@ def get_subjects(
     return factory.get_all_subjects(filters)
 
 
-@router.get("/{subject_id}/audit", response_model=SubjectAudit)
+@router.get("/subjects/{subject_id}/audit", response_model=SubjectAudit)
 def get_subject_audit(
         subject_id: UUID,
         factory: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
@@ -47,7 +96,7 @@ def get_subject_audit(
     return factory.get_subject(subject_id)
 
 
-@router.get("/{subject_id}", response_model=SubjectResponse)
+@router.get("/subjects/{subject_id}", response_model=SubjectResponse)
 def get_subject(
         subject_id: UUID,
         factory: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
@@ -55,7 +104,7 @@ def get_subject(
     return factory.get_subject(subject_id)
 
 
-@router.post("/{subject_id}/audit", response_class=FileResponse, status_code=204)
+@router.post("/subjects/{subject_id}/audit", response_class=FileResponse, status_code=204)
 def export_subject_audit(
         subject_id: UUID,
         export_format: ExportFormat,
@@ -70,8 +119,7 @@ def export_subject_audit(
     )
 
 
-
-@router.put("/{subject_id}", response_model=SubjectResponse)
+@router.put("/subjects/{subject_id}", response_model=SubjectResponse)
 def update_subject(
         payload: SubjectUpdate,
         subject_id: UUID,
@@ -81,7 +129,7 @@ def update_subject(
     return factory.update_subject(subject_id, payload)
 
 
-@router.patch("/{subject_id}",  status_code=204)
+@router.patch("/subjects/{subject_id}",  status_code=204)
 def archive_subject(
         subject_id: UUID,
         reason:ArchiveRequest,
@@ -90,7 +138,7 @@ def archive_subject(
     return factory.archive_subject(subject_id, reason.reason)
 
 
-@router.delete("/{subject_id}", status_code=204)
+@router.delete("/subjects/{subject_id}", status_code=204)
 def delete_subject(
         subject_id: UUID,
         factory: SubjectFactory = Depends(get_authenticated_factory(SubjectFactory))
