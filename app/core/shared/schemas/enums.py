@@ -24,7 +24,6 @@ class UserType(str, Enum):
 class DocumentType(str, Enum):
     RESULT = 'RESULT'
     ID = 'ID'
-    AWARD = 'AWARD'
     CERTIFICATE = 'CERTIFICATE'
     ARTICLE = 'ARTICLE'
     OTHER = 'OTHER'

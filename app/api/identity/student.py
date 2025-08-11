@@ -220,7 +220,6 @@ def get_student(
         return factory.get_student(student_id)
 
 
-
 @router.get("/students", response_model=List[StudentResponse])
 def get_students(
         filters: StudentFilterParams = Depends(),

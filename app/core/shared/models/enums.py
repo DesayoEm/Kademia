@@ -37,19 +37,9 @@ class AccessLevel(str, Enum):
 class DocumentType(str, Enum):
     RESULT = 'RESULT'
     ID = 'ID'
-    AWARD = 'AWARD'
     CERTIFICATE = 'CERTIFICATE'
     ARTICLE = 'ARTICLE'
     OTHER = 'OTHER'
-
-class AcademicLevel(str, Enum):
-    JSS1 = 'JSS1'
-    JSS2 = 'JSS2'
-    JSS3 = 'JSS3'
-    SSS1 = 'SSS1'
-    SSS2 = 'SSS2'
-    SSS3 = 'SSS3'
-    ALEVELS = 'ALEVELS'
 
 
 class StaffAvailability(str, Enum):
