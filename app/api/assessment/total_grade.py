@@ -20,6 +20,48 @@ access = AccessTokenBearer()
 router = APIRouter()
 
 
+#Archive router
+@router.get("/archive/total-grades/", response_model=List[TotalGradeResponse])
+def get_archived_total_grades(
+        filters: TotalGradeFilterParams = Depends(),
+        factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
+    ):
+    return factory.get_all_archived_total_grades(filters)
+
+
+@router.get("/archive/total-grades/{total_grade_id}/audit", response_model=TotalGradeAudit)
+def get_archived_total_grade_audit(
+        total_grade_id: UUID,
+        factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
+    ):
+    return factory.get_archived_total_grade(total_grade_id)
+
+
+@router.get("/archive/total-grades/{total_grade_id}", response_model=TotalGradeResponse)
+def get_archived_total_grade(
+        total_grade_id: UUID,
+        factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
+    ):
+    return factory.get_archived_total_grade(total_grade_id)
+
+
+@router.patch("/archive/total-grades/{total_grade_id}", response_model=TotalGradeResponse)
+def restore_total_grade(
+        total_grade_id: UUID,
+        factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
+    ):
+    return factory.restore_total_grade(total_grade_id)
+
+
+@router.delete("/archive/total-grades/{total_grade_id}", status_code=204)
+def delete_archived_total_grade(
+        total_grade_id: UUID,
+        factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
+    ):
+    return factory.delete_archived_total_grade(total_grade_id)
+
+
+#Active routers
 @router.post("/{student_subject_id}", response_model= TotalGradeResponse, status_code=201)
 def generate_total_grade(
         student_id: UUID,
@@ -29,7 +71,7 @@ def generate_total_grade(
     return factory.create_total_grade(student_id, student_subject_id)
 
 
-@router.get("/", response_model=List[TotalGradeResponse])
+@router.get("/total-grades/", response_model=List[TotalGradeResponse])
 def get_total_grades(
         filters: TotalGradeFilterParams = Depends(),
         factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
@@ -37,7 +79,7 @@ def get_total_grades(
     return factory.get_all_total_grades(filters)
 
 
-@router.get("/{grade_id}/audit", response_model=TotalGradeAudit)
+@router.get("/total-grades//{grade_id}/audit", response_model=TotalGradeAudit)
 def get_total_grade_audit(
         grade_id: UUID,
         factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
@@ -45,7 +87,7 @@ def get_total_grade_audit(
     return factory.get_total_grade(grade_id)
 
 
-@router.get("/{grade_id}", response_model=TotalGradeResponse)
+@router.get("/total-grades//{grade_id}", response_model=TotalGradeResponse)
 def get_total_grade(
         grade_id: UUID,
         factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
@@ -53,7 +95,7 @@ def get_total_grade(
     return factory.get_total_grade(grade_id)
 
 
-@router.put("/{total_grade_id}", response_model=TotalGradeResponse)
+@router.put("/total-grades/{total_grade_id}", response_model=TotalGradeResponse)
 def recalculate_total_grade(
         total_grade_id: UUID,
         service: AssessmentService = Depends(get_authenticated_service(AssessmentService))
@@ -62,7 +104,7 @@ def recalculate_total_grade(
 
 
 
-@router.patch("/{grade_id}", response_model=TotalGradeResponse)
+@router.patch("/total-grades/{grade_id}", response_model=TotalGradeResponse)
 def restore_total_grade(
         grade_id: UUID,
         factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
@@ -70,7 +112,7 @@ def restore_total_grade(
     return factory.restore_total_grade(grade_id)
 
 
-@router.delete("/{grade_id}", status_code=204)
+@router.delete("/total-grades/{grade_id}", status_code=204)
 def delete_total_grade(
         grade_id: UUID,
         factory: TotalGradeFactory = Depends(get_authenticated_factory(TotalGradeFactory))
@@ -78,7 +120,7 @@ def delete_total_grade(
     return factory.delete_total_grade(grade_id)
 
 
-@router.get("/{total_grade_id}/audit/export", response_class=FileResponse,  status_code=200)
+@router.get("/total-grades/{total_grade_id}/audit/export", response_class=FileResponse,  status_code=200)
 def export_total_grade_audit(
         total_grade_id: UUID,
         export_format: ExportFormat,

@@ -23,6 +23,51 @@ token_service=TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
 
+
+
+#Archive routers
+@router.get("/archive/grades/", response_model=List[GradeResponse])
+def get_archived_grades(
+        filters: GradeFilterParams = Depends(),
+        factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
+    ):
+    return factory.get_all_archived_grades(filters)
+
+
+@router.get("/archive/grades/{grade_id}/audit", response_model=GradeAudit)
+def get_archived_grade_audit(
+        grade_id: UUID,
+        factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
+):
+    return factory.get_archived_grade(grade_id)
+
+
+@router.get("/archive/grades/{grade_id}", response_model=GradeResponse)
+def get_archived_grade(
+        grade_id: UUID,
+        factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
+):
+    return factory.get_archived_grade(grade_id)
+
+
+@router.patch("/archive/grades/{grade_id}", response_model=GradeResponse)
+def restore_grade(
+        grade_id: UUID,
+        factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
+    ):
+    return factory.restore_grade(grade_id)
+
+
+@router.delete("/archive/grades/{grade_id}", status_code=204)
+def delete_archived_grade(
+        grade_id: UUID,
+        factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
+    ):
+    return factory.delete_archived_grade(grade_id)
+
+
+
+#Active routers
 @router.post("/{student_id}/assessments/{grade_id}/file", response_model= UploadResponse,
              status_code=201)
 def upload_assessment_file(
@@ -39,7 +84,8 @@ def upload_assessment_file(
 
         return UploadResponse(**result)
 
-@router.delete("/{grade_id}/file", status_code=204)
+
+@router.delete("/grades/{grade_id}/file", status_code=204)
 def remove_assessment_file(
         grade_id: UUID,
         service: AssessmentFileService = Depends(get_authenticated_service(AssessmentFileService)),
@@ -49,7 +95,7 @@ def remove_assessment_file(
         return service.remove_assessment_file(grade)
 
 
-@router.post("/{student_subject_id}", response_model= GradeResponse, status_code=201)
+@router.post("/grades/{student_subject_id}", response_model= GradeResponse, status_code=201)
 def grade_student(
         student_id: UUID,
         student_subject_id: UUID,
@@ -59,7 +105,7 @@ def grade_student(
     return factory.create_grade(student_id, student_subject_id, payload)
 
 
-@router.get("/", response_model=List[GradeResponse])
+@router.get("/grades/", response_model=List[GradeResponse])
 def get_grades(
         filters: GradeFilterParams = Depends(),
         factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
@@ -67,7 +113,7 @@ def get_grades(
     return factory.get_all_grades(filters)
 
 
-@router.get("/student-subject/{grade_id}/audit", response_model=GradeAudit)
+@router.get("/grades/student-subject/{grade_id}/audit", response_model=GradeAudit)
 def get_grade_audit(
         grade_id: UUID,
         factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
@@ -75,7 +121,7 @@ def get_grade_audit(
     return factory.get_grade(grade_id)
 
 
-@router.get("/student-subject/{grade_id}", response_model=GradeResponse)
+@router.get("/grades/{grade_id}", response_model=GradeResponse)
 def get_grade(
         grade_id: UUID,
         factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
@@ -83,7 +129,7 @@ def get_grade(
     return factory.get_grade(grade_id)
 
 
-@router.put("/{grade_id}", response_model=GradeResponse)
+@router.put("/grades/{grade_id}", response_model=GradeResponse)
 def update_grade(
         payload: GradeUpdate,
         grade_id: UUID,
@@ -93,7 +139,7 @@ def update_grade(
     return service.handle_grade_update(grade_id, payload)
 
 
-@router.patch("/{grade_id}",  status_code=204)
+@router.patch("/grades/{grade_id}",  status_code=204)
 def archive_grade(
         grade_id: UUID,
         reason:ArchiveRequest,
@@ -102,7 +148,7 @@ def archive_grade(
     return factory.archive_grade(grade_id, reason.reason)
 
 
-@router.get("/{grade_id}/audit/export", response_class=FileResponse,  status_code=200)
+@router.get("/grades/{grade_id}/audit/export", response_class=FileResponse,  status_code=200)
 def export_grade_audit(
         grade_id: UUID,
         export_format: ExportFormat,
@@ -116,7 +162,7 @@ def export_grade_audit(
         media_type="application/octet-stream"
     )
 
-@router.delete("/{grade_id}", status_code=204)
+@router.delete("/grades/{grade_id}", status_code=204)
 def delete_grade(
         grade_id: UUID,
         factory: GradeFactory = Depends(get_authenticated_factory(GradeFactory))
