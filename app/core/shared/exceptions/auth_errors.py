@@ -4,12 +4,12 @@ from uuid import UUID
 class AuthError(KademiaError):
     """Base exception for all authorization and authentication-related exceptions"""
 
-class SameLevelError(AuthError):
-    """Raised when attempting to set an access level that is the same as the current one"""
+class SameRoleError(AuthError):
+    """Raised when attempting to set a role that is the same as the current one"""
     def __init__(self, new, previous):
         super().__init__()
-        self.user_message = "Previous level and new level cannot be the same"
-        self.log_message = (f"Access level with previous and new levels attempted.\
+        self.user_message = "Previous role and new role cannot be the same"
+        self.log_message = (f"Role change with same previous and new role attempted.\
             Previous: {previous} New: {new}")
 
 

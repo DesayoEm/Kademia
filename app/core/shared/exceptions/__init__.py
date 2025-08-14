@@ -29,7 +29,7 @@ from .auth_errors import (
     AccessTokenRequiredError,
     RefreshTokenRequiredError,
     TokenRevokedError,
-    SameLevelError
+    SameRoleError
 )
 
 from .database_errors import (
