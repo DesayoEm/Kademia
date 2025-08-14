@@ -1,5 +1,4 @@
 from typing import Dict, List, Set
-
 from app.core.shared.models.enums import Resource
 from app.core.shared.models.enums import Action
 
@@ -63,7 +62,7 @@ PERMISSION_MATRIX: Dict[str, Dict[Resource, List[Action]]] = {
                                Action.APPROVE, Action.REJECT],
 
         # System
-        Resource.ACCESS_LEVEL_CHANGE: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+        Resource.ROLE_CHANGE: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
                                        Action.APPROVE, Action.REJECT],
         Resource.AUDITS: [Action.READ],
         Resource.SYSTEM_CONFIG: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
@@ -166,7 +165,7 @@ PERMISSION_MATRIX: Dict[str, Dict[Resource, List[Action]]] = {
         Resource.REPETITIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.APPROVE, Action.REJECT],  # For their students
 
         # System
-        Resource.ACCESS_LEVEL_CHANGE: [Action.READ],  # Own changes only
+        Resource.ROLE_CHANGE: [Action.READ],  # Own changes only
         Resource.AUDITS: [Action.READ],  # Limited audit access
     },
 
@@ -207,7 +206,7 @@ PERMISSION_MATRIX: Dict[str, Dict[Resource, List[Action]]] = {
         Resource.REPETITIONS: [Action.CREATE, Action.READ, Action.UPDATE],
 
         # System
-        Resource.ACCESS_LEVEL_CHANGE: [Action.READ],
+        Resource.ROLE_CHANGE: [Action.READ],
         Resource.AUDITS: [Action.READ],
     },
 
