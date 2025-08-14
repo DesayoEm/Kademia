@@ -20,11 +20,20 @@ class UserType(str, Enum):
     STAFF = 'STAFF'
     SYSTEM = 'SYSTEM'
 
+
+class DocumentType(str, Enum):
+    RESULT = 'RESULT'
+    ID = 'ID'
+    CERTIFICATE = 'CERTIFICATE'
+    ARTICLE = 'ARTICLE'
+    OTHER = 'OTHER'
+
+
 class StaffType(str, Enum):
-    Educator = 'Educator'
-    Admin = 'Admin'
-    Support = 'Support'
-    System = 'System'
+    EDUCATOR = 'Educator'
+    ADMIN = 'Admin'
+    SUPPORT = 'Support'
+    SYSTEM = 'System'
 
 class AccessLevel(str, Enum):
     INACTIVE = 'INACTIVE'
@@ -33,13 +42,6 @@ class AccessLevel(str, Enum):
     ADMIN = 'ADMIN'
     SUPERUSER = 'SUPERUSER'
     SYSTEM = 'SYSTEM'
-
-class DocumentType(str, Enum):
-    RESULT = 'RESULT'
-    ID = 'ID'
-    CERTIFICATE = 'CERTIFICATE'
-    ARTICLE = 'ARTICLE'
-    OTHER = 'OTHER'
 
 
 class StaffAvailability(str, Enum):
@@ -84,8 +86,8 @@ class GradeType(str, Enum):
     EXAM = 'EXAM'
     TEST = 'TEST'
     ASSIGNMENT = 'ASSIGNMENT'
-    PRACTICALS = 'PRACTICALS'
-    MOCKEXAM = 'MOCKEXAM'
+    PRACTICAL = 'PRACTICAL'
+    MOCK = 'MOCK'
     EXTRACURRICULAR = 'EXTRACURRICULAR'
 
 
@@ -102,8 +104,64 @@ class ArchiveReason(str, Enum):
     WITHDRAWN = 'WITHDRAWN'
     ADMINISTRATIVE = 'ADMINISTRATIVE'
 
-
 class ExportFormat(str, Enum):
-    PDF = 'PDF'
-    CSV = 'CSV'
-    EXCEL = 'EXCEL'
+    pdf = "pdf"
+    csv = "csv"
+    excel = "excel"
+
+
+class Permissions(str, Enum):
+    INACTIVE = 'INACTIVE'
+    STUDENT = 'STUDENT'
+    GUARDIAN = 'GUARDIAN'
+    EDUCATOR = 'EDUCATOR'
+    SUPER_EDUCATOR = 'SUPER_EDUCATOR'
+    ADMIN = 'ADMIN'
+    SUPERUSER = 'SUPERUSER'
+    SYSTEM = 'SYSTEM'
+
+
+class Action(Enum):
+    CREATE = "CREATE"
+    READ = "READ"
+    UPDATE = "UPDATE"
+    DELETE = "DELETE"
+    ARCHIVE = "ARCHIVE"
+    RESTORE = "RESTORE"
+    APPROVE = "APPROVE"
+    REJECT = "REJECT"
+
+
+class Resource(Enum):
+    ACCESS_LEVEL_CHANGE = "ACCESS_LEVEL_CHANGE"
+    PERMISSION_CHANGE = "PERMISSION_CHANGE"
+    STUDENTS = "STUDENTS"
+    STAFF = "STAFF"
+    EDUCATORS = "EDUCATORS"
+    GUARDIANS = "GUARDIANS"
+
+    STAFF_DEPARTMENTS = "STAFF_DEPARTMENTS"
+    STAFF_ROLES = "STAFF_ROLES"
+    EDUCATOR_QUALIFICATIONS = "EDUCATOR_QUALIFICATIONS"
+
+    CLASSES = "CLASSES"
+    DEPARTMENTS = "DEPARTMENTS"
+    ACADEMIC_LEVELS = "ACADEMIC_LEVELS"
+
+    SUBJECTS = "SUBJECTS"
+    ACADEMIC_LEVEL_SUBJECTS = "ACADEMIC_LEVEL_SUBJECTS"
+    STUDENT_SUBJECTS = "STUDENT_SUBJECTS"
+    SUBJECT_EDUCATORS = "SUBJECT_EDUCATORS"
+
+    GRADES = "GRADES"
+    TOTAL_GRADES = "TOTAL_GRADES"
+
+    DOCUMENTS = "DOCUMENTS"
+    AWARDS = "AWARDS"
+
+    TRANSFERS = "TRANSFERS"
+    PROMOTIONS = "PROMOTIONS"
+    REPETITIONS = "REPETITIONS"
+
+    AUDITS = "AUDITS"
+    SYSTEM_CONFIG = "SYSTEM_CONFIG"

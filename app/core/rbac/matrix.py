@@ -1,11 +1,11 @@
 from typing import Dict, List, Set
 
-from app.core.rbac.actions import Action
-from app.core.rbac.resources import Resource
+from app.core.shared.models.enums import Resource
+from app.core.shared.models.enums import Action
 
 
 PERMISSION_MATRIX: Dict[str, Dict[Resource, List[Action]]] = {
-    "SUPER_ADMIN": {
+    "SUPERUSER": {
         # Identity Management
         Resource.STUDENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
                             Action.APPROVE, Action.REJECT],
@@ -70,6 +70,66 @@ PERMISSION_MATRIX: Dict[str, Dict[Resource, List[Action]]] = {
                                  Action.APPROVE, Action.REJECT],
     },
 
+    "SUPER_EDUCATOR": {
+        # Identity Management
+        Resource.STUDENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                            Action.APPROVE, Action.REJECT],
+        Resource.STAFF: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                         Action.APPROVE, Action.REJECT],
+        Resource.EDUCATORS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                             Action.APPROVE, Action.REJECT],
+        Resource.GUARDIANS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                             Action.APPROVE, Action.REJECT],
+
+        # Staff Management
+        Resource.STAFF_DEPARTMENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
+                                     Action.RESTORE, Action.APPROVE, Action.REJECT],
+        Resource.STAFF_ROLES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                               Action.APPROVE, Action.REJECT],
+        Resource.EDUCATOR_QUALIFICATIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
+                                           Action.RESTORE, Action.APPROVE, Action.REJECT],
+
+        # Academic Structure
+        Resource.CLASSES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                           Action.APPROVE, Action.REJECT],
+        Resource.DEPARTMENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                               Action.APPROVE, Action.REJECT],
+        Resource.ACADEMIC_LEVELS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
+                                   Action.RESTORE, Action.APPROVE, Action.REJECT],
+
+        # Curriculum
+        Resource.SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                            Action.APPROVE, Action.REJECT],
+        Resource.ACADEMIC_LEVEL_SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
+                                           Action.RESTORE, Action.APPROVE, Action.REJECT],
+        Resource.STUDENT_SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
+                                    Action.RESTORE, Action.APPROVE, Action.REJECT],
+        Resource.SUBJECT_EDUCATORS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
+                                     Action.RESTORE, Action.APPROVE, Action.REJECT],
+
+        # Assessment
+        Resource.GRADES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                          Action.APPROVE, Action.REJECT],
+        Resource.TOTAL_GRADES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
+                                Action.RESTORE,
+                                Action.APPROVE, Action.REJECT],
+
+        # Documents & Awards
+        Resource.DOCUMENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                             Action.APPROVE, Action.REJECT],
+        Resource.AWARDS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                          Action.APPROVE, Action.REJECT],
+
+        # Progression
+        Resource.TRANSFERS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                             Action.APPROVE, Action.REJECT],
+        Resource.PROMOTIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                              Action.APPROVE, Action.REJECT],
+        Resource.REPETITIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                               Action.APPROVE, Action.REJECT],
+
+    },
+
     "EDUCATOR": {
         # Identity Management - Contextual access only
         Resource.STUDENTS: [Action.READ, Action.UPDATE],  # Only their students
@@ -110,7 +170,7 @@ PERMISSION_MATRIX: Dict[str, Dict[Resource, List[Action]]] = {
         Resource.AUDITS: [Action.READ],  # Limited audit access
     },
 
-    "ADMIN_STAFF": {
+    "ADMIN": {
         # Identity Management
         Resource.STUDENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.ARCHIVE, Action.RESTORE],
         Resource.STAFF: [Action.CREATE, Action.READ, Action.UPDATE, Action.ARCHIVE, Action.RESTORE],
