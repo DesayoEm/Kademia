@@ -1,6 +1,7 @@
 from .base import UserBase
 from app.core.shared.models.common_imports import *
-from app.core.shared.models.enums import AccessLevel, EmploymentStatus, UserType, StaffType, StaffAvailability
+from app.core.shared.models.enums import UserRole, EmploymentStatus, UserType, StaffType, StaffAvailability
+
 
 
 class Staff(UserBase):
@@ -10,11 +11,12 @@ class Staff(UserBase):
     """
     __tablename__ = 'staff'
 
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)
+    current_role: Mapped[UserRole] = mapped_column(Enum(UserRole, name='userrole'), default=UserRole.INACTIVE)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.STAFF)
+    staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType, name='stafftype'))
+
     status: Mapped[EmploymentStatus] = mapped_column(Enum(EmploymentStatus, name='employmentstatus'), default=EmploymentStatus.ACTIVE)
     availability: Mapped[StaffAvailability] = mapped_column(Enum(StaffAvailability, name='staffavailability'), default=StaffAvailability.AVAILABLE)
-    staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType, name='stafftype'))
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))
     phone: Mapped[str] = mapped_column(String(14), unique=True)
@@ -33,10 +35,10 @@ class Staff(UserBase):
     # Relationships
     department: Mapped["StaffDepartment"] = relationship(back_populates='staff_members', foreign_keys="[Staff.department_id]")
     role: Mapped["StaffRole"] = relationship(back_populates='staff_members', foreign_keys='[Staff.role_id]')
-    access_changes: Mapped[List["AccessLevelChange"]] = relationship(
-        "AccessLevelChange",
+    role_changes: Mapped[List["RoleHistory"]] = relationship(
+        "RoleHistory",
         back_populates="user",
-        primaryjoin="foreign(AccessLevelChange.staff_id) == Staff.id"
+        primaryjoin="foreign(RoleHistory.staff_id) == Staff.id"
     )
 
     __table_args__ = (
@@ -146,7 +148,7 @@ class System(Staff):
 
 
 
-from app.core.auth.models.auth import AccessLevelChange
+from ...rbac.models import RoleHistory
 from app.core.staff_management.models import StaffDepartment, StaffRole, EducatorQualification
 from app.core.curriculum.models.curriculum import SubjectEducator
 from app.core.academic_structure.models import StudentDepartment, Classes

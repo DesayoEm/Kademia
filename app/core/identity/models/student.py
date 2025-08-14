@@ -1,7 +1,7 @@
 from .base import UserBase
 
 from app.core.shared.models.common_imports import *
-from app.core.shared.models.enums import AccessLevel, StudentStatus, UserType
+from app.core.shared.models.enums import UserRole, StudentStatus, UserType
 
 
 class Student(UserBase):
@@ -16,7 +16,7 @@ class Student(UserBase):
                 ondelete='RESTRICT',name='fk_students_guardians_guardian_id')
             )
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.STUDENT)
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)
+    current_role: Mapped[UserRole] = mapped_column(Enum(UserRole, name='userrole'), default=UserRole.STUDENT)
     status: Mapped[StudentStatus] = mapped_column(Enum(StudentStatus, name='studentstatus'), default=StudentStatus.ENROLLED)
     date_of_birth: Mapped[date] = mapped_column(Date)
 

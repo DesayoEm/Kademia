@@ -35,14 +35,6 @@ class StaffType(str, Enum):
     SUPPORT = 'Support'
     SYSTEM = 'System'
 
-class AccessLevel(str, Enum):
-    INACTIVE = 'INACTIVE'
-    READ = 'READ'
-    EDUCATOR = 'EDUCATOR'
-    ADMIN = 'ADMIN'
-    SUPERUSER = 'SUPERUSER'
-    SYSTEM = 'SYSTEM'
-
 
 class StaffAvailability(str, Enum):
     AVAILABLE = 'AVAILABLE'
@@ -104,13 +96,14 @@ class ArchiveReason(str, Enum):
     WITHDRAWN = 'WITHDRAWN'
     ADMINISTRATIVE = 'ADMINISTRATIVE'
 
+
 class ExportFormat(str, Enum):
     pdf = "pdf"
     csv = "csv"
     excel = "excel"
 
 
-class Permissions(str, Enum):
+class UserRole(str, Enum):
     INACTIVE = 'INACTIVE'
     STUDENT = 'STUDENT'
     GUARDIAN = 'GUARDIAN'
@@ -133,7 +126,7 @@ class Action(Enum):
 
 
 class Resource(Enum):
-    ACCESS_LEVEL_CHANGE = "ACCESS_LEVEL_CHANGE"
+    ROLE_CHANGE = "ROLE_CHANGE"
     PERMISSION_CHANGE = "PERMISSION_CHANGE"
     STUDENTS = "STUDENTS"
     STAFF = "STAFF"

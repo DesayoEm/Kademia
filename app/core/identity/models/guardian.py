@@ -1,7 +1,7 @@
 from .base import UserBase
 
 from app.core.shared.models.common_imports import *
-from app.core.shared.models.enums import AccessLevel, Title, UserType
+from app.core.shared.models.enums import UserRole, Title, UserType
 
 class Guardian(UserBase):
     """
@@ -11,7 +11,7 @@ class Guardian(UserBase):
     __tablename__ = 'guardians'
 
     title: Mapped[Title] = mapped_column(Enum(Title, name='title'))
-    access_level: Mapped[AccessLevel] = mapped_column(Enum(AccessLevel, name='accesslevel'), default=AccessLevel.READ)
+    current_role: Mapped[UserRole] = mapped_column(Enum(UserRole, name='userrole'), default=UserRole.GUARDIAN)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.GUARDIAN)
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))
