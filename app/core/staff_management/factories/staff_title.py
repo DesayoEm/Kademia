@@ -16,7 +16,7 @@ from app.core.shared.exceptions.maps.error_map import error_map
 
 
 class StaffTitleFactory(BaseFactory):
-    """Factory class for managing staff role operations."""
+    """Factory class for managing staff title operations."""
 
     def __init__(self, session: Session, model=StaffTitle, current_user = None):
         super().__init__(current_user)
@@ -33,7 +33,7 @@ class StaffTitleFactory(BaseFactory):
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.actor_id: UUID = self.get_actor_id()
-        self.domain = "Staff Role"
+        self.domain = "Staff Title"
 
     def raise_not_found(self, identifier, error):
         raise EntityNotFoundError(
@@ -45,16 +45,16 @@ class StaffTitleFactory(BaseFactory):
 
     @resolve_fk_on_create()
     @resolve_unique_violation({
-        "staff_roles_name_key": ("name", lambda self, data: data.name),
+        "staff_titles_name_key": ("name", lambda self, data: data.name),
     })
-    def create_role(self, data) -> StaffTitle:
-        """Create a new staff role.
+    def create_title(self, data) -> StaffTitle:
+        """Create a new staff title.
         Args:
-            data: Role data containing name and description
+            data: title data containing name and description
         Returns:
-            StaffTitle: Created role record
+            StaffTitle: Created title record
         """
-        role = StaffTitle(
+        title = StaffTitle(
             id=uuid4(),
             name=self.validator.validate_name(data.name),
             description=self.validator.validate_description(data.description),
@@ -62,46 +62,47 @@ class StaffTitleFactory(BaseFactory):
             last_modified_by=self.actor_id,
         )
 
-        return self.repository.create(role)
+        return self.repository.create(title)
 
 
-    def get_all_roles(self, filters) -> list[StaffTitle]:
-        """Get all active staff roles with filtering.
+    def get_all_titles(self, filters) -> list[StaffTitle]:
+        """Get all active staff titles with filtering.
+
         Returns:
-            List[StaffTitle]: List of active role records
+            List[StaffTitle]: List of active title records
         """
         fields = ['name']
         return self.repository.execute_query(fields, filters)
 
 
-    def get_role(self, role_id: UUID) -> StaffTitle:
-        """Get a specific staff role by id.
+    def get_title(self, title_id: UUID) -> StaffTitle:
+        """Get a specific staff title by id.
         Args:
-            role_id: id of role to retrieve
+            title_id: id of title to retrieve
         Returns:
-            StaffTitle: Retrieved role record
+            StaffTitle: Retrieved title record
         """
         try:
-            return self.repository.get_by_id(role_id)
+            return self.repository.get_by_id(title_id)
         except EntityNotFoundError as e:
-            self.raise_not_found(role_id, e)
+            self.raise_not_found(title_id, e)
 
 
     @resolve_fk_on_update()
     @resolve_unique_violation({
-        "staff_roles_name_key": ("name", lambda self, *a: a[-1].get("name")),
+        "staff_titles_name_key": ("name", lambda self, *a: a[-1].get("name")),
     })
-    def update_role(self, role_id: UUID, data: dict) -> StaffTitle:
-        """Update a staff role's information.
+    def update_title(self, title_id: UUID, data: dict) -> StaffTitle:
+        """Update a staff title's information.
         Args:
-            role_id: id of role to update
+            title_id: id of title to update
             data: Dictionary containing fields to update
         Returns:
-            StaffTitle: Updated role record
+            StaffTitle: Updated title record
         """
         copied_data = data.copy()
         try:
-            existing = self.get_role(role_id)
+            existing = self.get_title(title_id)
             validations = {
                 "name": (self.validator.validate_name, "name"),
                 "description": (self.validator.validate_description, "description"),
@@ -117,103 +118,103 @@ class StaffTitleFactory(BaseFactory):
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            return self.repository.update(role_id, existing,modified_by=self.actor_id)
+            return self.repository.update(title_id, existing,modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
-            self.raise_not_found(role_id, e)
+            self.raise_not_found(title_id, e)
 
 
-    def archive_role(self, role_id: UUID, reason) -> StaffTitle:
-        """Archive a role if no active staff members are assigned to it."""
+    def archive_title(self, title_id: UUID, reason) -> StaffTitle:
+        """Archive a title if no active staff members are assigned to it."""
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
                 entity_model=self.model,
-                target_id=role_id
+                target_id=title_id
             )
 
             if failed_dependencies:
                 raise ArchiveDependencyError(
-                    entity_model=self.entity_model, identifier=role_id,
+                    entity_model=self.entity_model, identifier=title_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            return self.repository.archive(role_id, self.actor_id, reason)
+            return self.repository.archive(title_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
-            self.raise_not_found(role_id, e)
+            self.raise_not_found(title_id, e)
 
 
-    @resolve_fk_on_delete(display="role")
-    def delete_role(self, role_id: UUID) -> None:
-        """Permanently delete a staff role if there are no dependent entities.
+    @resolve_fk_on_delete(display="title")
+    def delete_title(self, title_id: UUID) -> None:
+        """Permanently delete a staff title if there are no dependent entities.
         Args:
-            role_id: id of role to delete
+            title_id: id of title to delete
         """
         try:
-            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, role_id)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, title_id)
 
             if failed_dependencies:
                 raise DeletionDependencyError(
-                    entity_model=self.entity_model, identifier=role_id,
+                    entity_model=self.entity_model, identifier=title_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
 
-            return self.repository.delete(role_id)
+            return self.repository.delete(title_id)
 
         except EntityNotFoundError as e:
-            self.raise_not_found(role_id, e)
+            self.raise_not_found(title_id, e)
 
 
     #Archive methods
-    def get_all_archived_roles(self, filters) -> list[StaffTitle]:
-        """Get all archived staff roles with filtering.
+    def get_all_archived_titles(self, filters) -> list[StaffTitle]:
+        """Get all archived staff titles with filtering.
         Returns:
-            List[StaffTitle]: List of archived role records
+            List[StaffTitle]: List of archived title records
         """
         fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
 
-    def get_archived_role(self, role_id: UUID) -> StaffTitle:
-        """Get an archived role by ID.
+    def get_archived_title(self, title_id: UUID) -> StaffTitle:
+        """Get an archived title by ID.
         Args:
-            role_id: id of role to retrieve
+            title_id: id of title to retrieve
         Returns:
-            StaffTitle: Retrieved role record
+            StaffTitle: Retrieved title record
         """
         try:
-            return self.repository.get_archive_by_id(role_id)
+            return self.repository.get_archive_by_id(title_id)
         except EntityNotFoundError as e:
-            self.raise_not_found(role_id, e)
+            self.raise_not_found(title_id, e)
 
 
-    def restore_role(self, role_id: UUID) -> StaffTitle:
-        """Restore an archived role.
+    def restore_title(self, title_id: UUID) -> StaffTitle:
+        """Restore an archived title.
         Args:
-            role_id: id of role to restore
+            title_id: id of title to restore
         Returns:
-            StaffTitle: Restored role record
+            StaffTitle: Restored title record
         """
         try:
-            return self.repository.restore(role_id)
+            return self.repository.restore(title_id)
         except EntityNotFoundError as e:
-            self.raise_not_found(role_id, e)
+            self.raise_not_found(title_id, e)
 
 
-    @resolve_fk_on_delete(display="role")
-    def delete_archived_role(self, role_id: UUID) -> None:
-        """Permanently delete an archived role if there are no dependent entities.
+    @resolve_fk_on_delete(display="title")
+    def delete_archived_title(self, title_id: UUID) -> None:
+        """Permanently delete an archived title if there are no dependent entities.
         Args:
-            role_id: id of role to delete
+            title_id: id of title to delete
         """
         try:
-            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, role_id)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, title_id)
 
             if failed_dependencies:
                 raise DeletionDependencyError(
-                    entity_model=self.entity_model, identifier=role_id,
+                    entity_model=self.entity_model, identifier=title_id,
                     display_name=self.display_name, related_entities=", ".join(failed_dependencies)
                 )
-            self.repository.delete_archive(role_id)
+            self.repository.delete_archive(title_id)
 
         except EntityNotFoundError as e:
-            self.raise_not_found(role_id, e)
+            self.raise_not_found(title_id, e)

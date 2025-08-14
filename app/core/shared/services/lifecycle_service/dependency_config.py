@@ -1,7 +1,7 @@
 from ....curriculum.models.curriculum import SubjectEducator, StudentSubject, Subject, AcademicLevelSubject
 from ....documents.models.documents import StudentDocument, StudentAward
-from ....auth.models.auth import AccessLevelChange
-from app.core.staff_management.models import StaffDepartment, StaffRole, EducatorQualification
+from ....rbac.models import RoleHistory
+from app.core.staff_management.models import StaffDepartment, StaffTitle, EducatorQualification
 from app.core.academic_structure.models import StudentDepartment, Classes, AcademicLevel
 from ....transfer.models.transfer import DepartmentTransfer
 from ....assessment.models.assessment import Grade, TotalGrade
@@ -33,8 +33,8 @@ DEPENDENCY_CONFIG = {
     ],
 
     # Staff Organization
-    StaffRole: [
-        ("staff_members", Staff, "role_id", "staff members")
+    StaffTitle: [
+        ("staff_members", Staff, "title_id", "staff members")
     ],
 
     StaffDepartment: [
@@ -60,13 +60,13 @@ DEPENDENCY_CONFIG = {
     ],
 
     Staff: [
-        ("access_changes", AccessLevelChange, "staff_id", "permission changes")
+        ("role_changes", RoleHistory, "staff_id", "permission changes")
     ],
 
     Educator: [
         ("qualifications", EducatorQualification, "educator_id", "qualifications"),
         ("subject_assignments", SubjectEducator, "educator_id", "subject assignments"),
-        ("access_changes", AccessLevelChange, "staff_id", "permission changes"),
+        ("role_changes", RoleHistory, "staff_id", "permission changes"),
 
     ],
 
@@ -93,5 +93,5 @@ DEPENDENCY_CONFIG = {
     TotalGrade: [],
     StudentAward: [],
     StudentDocument: [],
-    AccessLevelChange: []
+    RoleHistory: []
 }

@@ -2,14 +2,13 @@ from app.core.shared.schemas.common_imports import *
 from app.core.shared.schemas.shared_models import *
 
 
-
-class RolesFilterParams(BaseFilterParams):
+class StaffTitleFilterParams(BaseFilterParams):
     name: Optional[str] = None
     order_by: Literal["name", "created_at"] = "name"
 
 
-class StaffRoleBase(BaseModel):
-    """Base model for staff roles"""
+class StaffTitleBase(BaseModel):
+    """Base model for staff titles"""
     name: str
     description: str
 
@@ -24,13 +23,13 @@ class StaffRoleBase(BaseModel):
     }
     )
 
-class StaffRoleCreate(StaffRoleBase):
-    """Used for creating new staff roles"""
+class StaffTitleCreate(StaffTitleBase):
+    """Used for creating new staff titles"""
     pass
 
 
-class StaffRoleUpdate(StaffRoleBase):
-    """Used for updating staff roles"""
+class StaffTitleUpdate(StaffTitleBase):
+    """Used for updating staff titles"""
     name: str | None = None
     description: str | None = None
 
@@ -46,13 +45,13 @@ class StaffRoleUpdate(StaffRoleBase):
     )
 
 
-class StaffRoleResponse(StaffRoleBase):
-    """Response model for staff roles"""
+class StaffTitleResponse(StaffTitleBase):
+    """Response model for staff titles"""
     pass
 
 
-class StaffRoleAudit(BaseModel):
-    """Audit information staff role entities"""
+class StaffTitleAudit(BaseModel):
+    """Audit information staff title entities"""
 
     id: UUID
     created_at: datetime
@@ -65,8 +64,8 @@ class StaffRoleAudit(BaseModel):
     archive_reason: ArchiveReason | None = None
 
 
-class StaffRoleInDB:
-    """Represents stored staff roles"""
+class StaffTitleInDB:
+    """Represents stored staff titles"""
     id: UUID
     name: str
     description: str

@@ -8,8 +8,8 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
-from app.api.staff_management import staff_departments_archive, staff_roles_archive
-from app.api.staff_management import qualifications, staff_departments, staff_roles
+from app.api.staff_management import staff_departments_archive
+from app.api.staff_management import qualifications, staff_departments, staff_titles
 from app.api.academic_structure import academic_levels, departments, classes
 from app.api.curriculum import subject, level_subject, student_subject, subject_educator
 
@@ -42,15 +42,13 @@ app.include_router(password.router, prefix=f"/api/{version}/auth/password",tags=
 app.include_router(access_level_change.router, prefix=f"/api/{version}",tags=["Auth", "Access Level"])
 
 # Staff Org
+app.include_router(staff_titles.router, prefix=f"/api/{version}/",tags=["Staff Titles", "Admin"])
 app.include_router(staff_departments.router, prefix=f"/api/{version}/staff/departments",
                    tags=["Staff Departments", "Admin"])
 app.include_router(staff_departments_archive.router, prefix=f"/api/{version}/staff/departments/archived",
                    tags=["Staff Departments", "Admin"])
 
-app.include_router(staff_roles.router, prefix=f"/api/{version}/staff/roles",
-                   tags=["Staff Roles", "Admin"])
-app.include_router(staff_roles_archive.router, prefix=f"/api/{version}/staff/roles/archived",
-                   tags=["Staff Roles", "Admin"])
+
 
 app.include_router(qualifications.router, prefix=f"/api/{version}/staff/qualifications",
                    tags=["Educator Qualifications", "Admin"])

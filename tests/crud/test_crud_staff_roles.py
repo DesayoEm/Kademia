@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 from uuid import uuid4
 
 from app.core.staff_management.crud import StaffRoleCrud
-from app.core.staff_management.schemas.role import (
+from app.core.staff_management.schemas.staff_title import (
     StaffRoleCreate, StaffRoleUpdate, RolesFilterParams
 )
 from app import ArchiveReason
