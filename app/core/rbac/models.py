@@ -81,13 +81,14 @@ class RoleHistory(Base, ArchiveMixins):
     effective_until: Mapped[date] = mapped_column(Date(), nullable=True)
 
     # Relationships
-    staff_member: Mapped['Staff'] = relationship('Staff', foreign_keys='[StaffRoleHistory.staff_id]')
-    changed_by: Mapped['Staff'] = relationship('Staff', foreign_keys='[StaffRoleHistory.changed_by_id]')
+    staff_member: Mapped['Staff'] = relationship('Staff', foreign_keys='[RoleHistory.staff_id]', back_populates='role_changes')
+    changed_by: Mapped['Staff'] = relationship('Staff', foreign_keys='[RoleHistory.changed_by_id]')
+
 
     __table_args__ = (
         Index('idx_staff_role_history_staff', 'staff_id'),
         Index('idx_staff_role_history_dates', 'staff_id', 'effective_from', 'effective_until'),
-        Index('idx_staff_role_history_current', 'staff_id', 'effective_until'),  # For finding current roles
+        Index('idx_staff_role_history_current', 'staff_id', 'effective_until'),
     )
 
 

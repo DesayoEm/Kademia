@@ -5,10 +5,7 @@ from app.core.shared.models.enums import UserRole, EmploymentStatus, UserType, S
 
 
 class Staff(UserBase):
-    """
-    Represents a staff member, including personal details, role, department, and employment status.
-    Inherits from ProfileBase.
-    """
+    """Represents a staff member.Inherits from UserBase."""
     __tablename__ = 'staff'
 
     current_role: Mapped[UserRole] = mapped_column(Enum(UserRole, name='userrole'), default=UserRole.INACTIVE)
@@ -25,8 +22,8 @@ class Staff(UserBase):
         nullable=True
     )
 
-    role_id: Mapped[Optional[UUID]] = mapped_column(
-        ForeignKey('staff_roles.id', ondelete='SET NULL', name='fk_staff_staff_roles_role_id'),
+    title_id: Mapped[Optional[UUID]] = mapped_column(
+        ForeignKey('staff_titles.id', ondelete='SET NULL', name='fk_staff_staff_titles_title_id'),
         nullable=True
     )
     date_joined: Mapped[date] = mapped_column(Date)
@@ -34,22 +31,19 @@ class Staff(UserBase):
 
     # Relationships
     department: Mapped["StaffDepartment"] = relationship(back_populates='staff_members', foreign_keys="[Staff.department_id]")
-    role: Mapped["StaffRole"] = relationship(back_populates='staff_members', foreign_keys='[Staff.role_id]')
+    title: Mapped["StaffTitle"] = relationship(back_populates='staff_members', foreign_keys='[Staff.title_id]')
     role_changes: Mapped[List["RoleHistory"]] = relationship(
         "RoleHistory",
-        back_populates="user",
+        back_populates="staff_member",
         primaryjoin="foreign(RoleHistory.staff_id) == Staff.id"
     )
 
     __table_args__ = (
         Index('idx_staff_name', 'first_name', 'last_name'),
         Index('idx_staff_department', 'department_id'),
-        Index('idx_staff_role', 'role_id'),
+        Index('idx_staff_title', 'title_id'),
         Index('idx_staff_phone', 'phone')
     )
-
-    def __repr__(self) -> str:
-        return f"Staff(name={self.first_name} {self.last_name}, role={self.role_id})"
 
     __mapper_args__ = {
         'polymorphic_identity': 'staff',
@@ -89,9 +83,8 @@ class Educator(Staff):
 
 
 class AdminStaff(Staff):
-    """
-    Represents an operations staff member, inheriting from Staff.
-    """
+    """Represents an admin staff, inheriting from Staff."""
+
     __tablename__ = 'admin_staff'
 
     id: Mapped[UUID] = mapped_column(
@@ -104,14 +97,9 @@ class AdminStaff(Staff):
         'inherit_condition': (id == Staff.id)
     }
 
-    def __repr__(self) -> str:
-        return f"Operations staff(name={self.first_name} {self.last_name}, role_id={self.role_id})"
-
 
 class SupportStaff(Staff):
-    """
-    Represents a support staff member, inheriting from Staff.
-    """
+    """Represents a support staff member, inheriting from Staff."""
     __tablename__ = 'support_staff'
 
     id: Mapped[UUID] = mapped_column(
@@ -124,14 +112,10 @@ class SupportStaff(Staff):
         'inherit_condition': (id == Staff.id)
     }
 
-    def __repr__(self) -> str:
-        return f"Support staff(name={self.first_name} {self.last_name}, role_id={self.role_id})"
 
 
 class System(Staff):
-    """
-    Represents the system, inheriting from Staff.
-    """
+    """Represents the system, inheriting from Staff."""
     __tablename__ = 'system'
 
     id: Mapped[UUID] = mapped_column(
@@ -149,6 +133,6 @@ class System(Staff):
 
 
 from ...rbac.models import RoleHistory
-from app.core.staff_management.models import StaffDepartment, StaffRole, EducatorQualification
+from app.core.staff_management.models import StaffDepartment, StaffTitle, EducatorQualification
 from app.core.curriculum.models.curriculum import SubjectEducator
 from app.core.academic_structure.models import StudentDepartment, Classes

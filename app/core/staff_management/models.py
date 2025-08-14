@@ -27,23 +27,21 @@ class StaffDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class StaffRole(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
-    """
-    Represents a role assigned to a staff member, including the role name and description.
-    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
-    """
-    __tablename__ = 'staff_roles'
+class StaffTitle(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+    """Represents a title assigned to a staff member."""
+
+    __tablename__ = 'staff_titles'
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     name: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str] = mapped_column(String(500))
 
     # Relationships
-    staff_members: Mapped[List["Staff"]] = relationship(back_populates='role',
-            primaryjoin="Staff.role_id == StaffRole.id")
+    staff_members: Mapped[List["Staff"]] = relationship(back_populates='title',
+            primaryjoin="Staff.title_id == StaffTitle.id")
 
     __table_args__ = (
-        Index('idx_role_name', 'name'),
-        Index('idx_role_description', 'description'),
+        Index('idx_title_name', 'name'),
+        Index('idx_title_description', 'description'),
     )
 
 
