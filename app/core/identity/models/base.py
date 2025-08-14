@@ -22,3 +22,12 @@ class UserBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     exported: Mapped[bool] = mapped_column(Boolean, default=False)
     deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
 
+
+class UserRole(Base, AuditMixins, TimeStampMixins):
+    """Tracks role assignments to users"""
+    __tablename__ = 'user_roles'
+
+    user_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
+    role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id'), primary_key=True)
+    assigned_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id'))
+    assigned_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
