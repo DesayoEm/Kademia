@@ -7,7 +7,6 @@ from app.core.identity.factories.staff import StaffFactory
 from app.core.identity.models.staff import Staff, Educator
 from app.core.shared.exceptions import CascadeArchivalError
 from app.core.shared.models.enums import StaffAvailability, StaffType
-from app.core.shared.services.audit_export_service.export import ExportService
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 
 
@@ -16,7 +15,6 @@ class StaffService:
         self.session = session
         self.current_user = current_user
         self.factory = StaffFactory(session, Staff, current_user= current_user)
-        self.export_service = ExportService(session)
         self.archive_service = ArchiveService(session, current_user=current_user)
 
     def unassign_staff_roles(self, staff_id: UUID):
@@ -57,7 +55,7 @@ class StaffService:
         try:
             self.unassign_staff_roles(staff_id)
 
-            if staff.staff_type == StaffType.Educator:
+            if staff.staff_type == StaffType.EDUCATOR:
                 self.archive_service.cascade_archive_object(Educator, staff, reason)
             else:
                 self.archive_service.cascade_archive_object(Staff, staff, reason)
@@ -87,14 +85,3 @@ class StaffService:
         """Update staff availability status."""
         return self.factory.update_staff(staff_id, {"availability": availability.value})
 
-
-
-    def export_staff(self, staff_id: UUID, export_format: str) -> str:
-        """Export staff object and its associated data
-        Args:
-            staff_id: Staff UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            Staff, staff_id, export_format
-        )

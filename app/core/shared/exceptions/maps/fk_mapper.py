@@ -59,7 +59,7 @@ fk_error_map = {
         "fk_educator_qualifications_educators_educator_id": ("Educator", "educator_id", "Educator"),
     },
 
-    "StaffRoleFactory": {},
+    "StaffTitleFactory": {},
 
     "SubjectFactory": {
         "fk_subjects_student_departments_department_id": ("StudentDepartment", "department_id", "department"),
@@ -79,7 +79,6 @@ fk_error_map = {
         "fk_subject_educators_educators_educator_id": ("Educator", "educator_id", "Educator"),
         "fk_subject_educators_academic_levels_level_id": ("AcademicLevel", "level_id", "Academic Level"),
     },
-
     "GradeFactory": {
         "fk_grades_students_student_id": ("Student", "student_id", "Student"),
         "fk_grades_subjects_subject_id": ("Subject", "subject_id", "Subject"),
@@ -89,7 +88,6 @@ fk_error_map = {
         "fk_total_grades_students_student_id": ("Student", "student_id", "Student"),
         "fk_total_grades_subjects_subject_id": ("Subject", "subject_id", "Subject"),
     },
-
     "RepetitionFactory": {
         "fk_student_repetitions_students_student_id": ("Student", "student_id", "Student"),
         "fk_student_repetitions_academic_levels_previous_level": ("AcademicLevel", "previous_level_id", "Previous Level"),
@@ -98,7 +96,6 @@ fk_error_map = {
         "fk_student_repetitions_classes_new_class": ("Classes", "new_class_id", "New Class"),
         "fk_student_repetitions_staff_status_updated_by": ("Staff", "status_updated_by", "Status Updated By"),
     },
-
     "ClassTransferFactory": {
         "fk_student_department_transfers_students_student_id": ("Student", "student_id", "Student"),
         "fk_student_department_transfers_classes_previous_class": ("Classes", "previous_class_id", "Previous Class"),
@@ -121,9 +118,9 @@ fk_error_map = {
     "StudentAwardFactory": {
         "fk_student_documents_students_student_id": ("Student", "student_id", "Student"),
     },
-    "AccessLevelChangeFactory": {
-        "fk_access_level_changes_staff_staff_id": ("Staff", "staff_id", "Target Staff"),
-        "fk_access_level_changes_staff_changed_by": ("Staff", "changed_by_id", "Changed By"),
+    "RoleHistoryFactory": {
+        "fk_role_history_staff_staff_id": ("Staff", "staff_id", "Target Staff"),
+        "fk_role_history_staff_changed_by": ("Staff", "changed_by_id", "Changed By"),
     },
 }
 

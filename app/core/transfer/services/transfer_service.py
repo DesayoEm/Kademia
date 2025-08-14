@@ -6,7 +6,7 @@ from uuid import UUID
 from app.core.shared.exceptions import TransferStatusAlreadySetError, EmptyFieldError, DepartmentNotSetError
 from app.core.transfer.factories.transfer import TransferFactory
 from app.core.transfer.models.transfer import DepartmentTransfer
-from app.core.shared.services.audit_export_service.export import ExportService
+
 
 
 class TransferService:
@@ -14,7 +14,6 @@ class TransferService:
         self.session = session
         self.current_user = current_user
         self.factory = TransferFactory(self.session, DepartmentTransfer, self.current_user)
-        self.export_service = ExportService(session)
         self.domain = "TRANSFER"
 
 
@@ -84,13 +83,3 @@ class TransferService:
             )
         
         
-
-    def export_transfer_audit(self, transfer_id: UUID, export_format: str) -> str:
-        """Export transfer object and its associated data
-        Args:
-            transfer_id: transfer UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            TransferFactory, transfer_id, export_format
-        )

@@ -3,7 +3,6 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from app.core.shared.factory.base_factory import BaseFactory
-from app.core.shared.services.audit_export_service.export import ExportService
 from app.core.staff_management.services.validators import StaffManagementValidator
 from app.core.staff_management.models import EducatorQualification
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -29,7 +28,6 @@ class QualificationFactory(BaseFactory):
         self.repository = SQLAlchemyRepository(self.model, session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session, current_user)
-        self.export_service = ExportService(session)
         self.validator = StaffManagementValidator()
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details

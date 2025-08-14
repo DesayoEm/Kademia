@@ -1,6 +1,4 @@
 from datetime import datetime
-
-from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select
 from uuid import UUID
@@ -9,9 +7,6 @@ from app.core.progression.factories.promotion import PromotionFactory
 from app.core.progression.models.progression import Repetition, Promotion
 from app.core.shared.exceptions import StudentToGraduateError, EmptyFieldError, ProgressionStatusAlreadySetError, \
     LevelNotFinalError, EntityNotFoundError, NoResultError
-from app.core.shared.services.audit_export_service.export import ExportService
-
-
 
 
 class PromotionService:
@@ -19,7 +14,6 @@ class PromotionService:
         self.session = session
         self.current_user = current_user
         self.factory = PromotionFactory(self.session, Promotion, self.current_user)
-        self.export_service = ExportService(session)
         self.domain = "PROGRESSION"
 
 
@@ -141,14 +135,3 @@ class PromotionService:
                  "status_completed_at":datetime.now()}
             )
 
-
-
-    def export_promotion_audit(self, promotion_id: UUID, export_format: str) -> str:
-        """Export promotion object and its associated data
-        Args:
-            promotion_id: Promotion UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            Repetition, promotion_id, export_format
-        )

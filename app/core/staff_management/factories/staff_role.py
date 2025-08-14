@@ -3,9 +3,8 @@ from uuid import uuid4, UUID
 from sqlalchemy.orm import Session
 
 from app.core.shared.factory.base_factory import BaseFactory
-from app.core.shared.services.audit_export_service.export import ExportService
 from app.core.staff_management.services.validators import StaffManagementValidator
-from app.core.staff_management.models import StaffRole
+from app.core.staff_management.models import StaffTitle
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -16,21 +15,20 @@ from app.core.shared.exceptions.maps.error_map import error_map
 
 
 
-class StaffRoleFactory(BaseFactory):
+class StaffTitleFactory(BaseFactory):
     """Factory class for managing staff role operations."""
 
-    def __init__(self, session: Session, model=StaffRole, current_user = None):
+    def __init__(self, session: Session, model=StaffTitle, current_user = None):
         super().__init__(current_user)
         """Initialize factory with db session.
         Args:
             session: SQLAlchemy db session
-            model: Model class, defaults to StaffRole
+            model: Model class, defaults to StaffTitle
         """
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session, current_user)
-        self.export_service = ExportService(session)
         self.validator = StaffManagementValidator()
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
@@ -49,14 +47,14 @@ class StaffRoleFactory(BaseFactory):
     @resolve_unique_violation({
         "staff_roles_name_key": ("name", lambda self, data: data.name),
     })
-    def create_role(self, data) -> StaffRole:
+    def create_role(self, data) -> StaffTitle:
         """Create a new staff role.
         Args:
             data: Role data containing name and description
         Returns:
-            StaffRole: Created role record
+            StaffTitle: Created role record
         """
-        role = StaffRole(
+        role = StaffTitle(
             id=uuid4(),
             name=self.validator.validate_name(data.name),
             description=self.validator.validate_description(data.description),
@@ -67,21 +65,21 @@ class StaffRoleFactory(BaseFactory):
         return self.repository.create(role)
 
 
-    def get_all_roles(self, filters) -> list[StaffRole]:
+    def get_all_roles(self, filters) -> list[StaffTitle]:
         """Get all active staff roles with filtering.
         Returns:
-            List[StaffRole]: List of active role records
+            List[StaffTitle]: List of active role records
         """
         fields = ['name']
         return self.repository.execute_query(fields, filters)
 
 
-    def get_role(self, role_id: UUID) -> StaffRole:
+    def get_role(self, role_id: UUID) -> StaffTitle:
         """Get a specific staff role by id.
         Args:
             role_id: id of role to retrieve
         Returns:
-            StaffRole: Retrieved role record
+            StaffTitle: Retrieved role record
         """
         try:
             return self.repository.get_by_id(role_id)
@@ -93,13 +91,13 @@ class StaffRoleFactory(BaseFactory):
     @resolve_unique_violation({
         "staff_roles_name_key": ("name", lambda self, *a: a[-1].get("name")),
     })
-    def update_role(self, role_id: UUID, data: dict) -> StaffRole:
+    def update_role(self, role_id: UUID, data: dict) -> StaffTitle:
         """Update a staff role's information.
         Args:
             role_id: id of role to update
             data: Dictionary containing fields to update
         Returns:
-            StaffRole: Updated role record
+            StaffTitle: Updated role record
         """
         copied_data = data.copy()
         try:
@@ -125,7 +123,7 @@ class StaffRoleFactory(BaseFactory):
             self.raise_not_found(role_id, e)
 
 
-    def archive_role(self, role_id: UUID, reason) -> StaffRole:
+    def archive_role(self, role_id: UUID, reason) -> StaffTitle:
         """Archive a role if no active staff members are assigned to it."""
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
@@ -166,21 +164,21 @@ class StaffRoleFactory(BaseFactory):
 
 
     #Archive methods
-    def get_all_archived_roles(self, filters) -> list[StaffRole]:
+    def get_all_archived_roles(self, filters) -> list[StaffTitle]:
         """Get all archived staff roles with filtering.
         Returns:
-            List[StaffRole]: List of archived role records
+            List[StaffTitle]: List of archived role records
         """
         fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
 
-    def get_archived_role(self, role_id: UUID) -> StaffRole:
+    def get_archived_role(self, role_id: UUID) -> StaffTitle:
         """Get an archived role by ID.
         Args:
             role_id: id of role to retrieve
         Returns:
-            StaffRole: Retrieved role record
+            StaffTitle: Retrieved role record
         """
         try:
             return self.repository.get_archive_by_id(role_id)
@@ -188,12 +186,12 @@ class StaffRoleFactory(BaseFactory):
             self.raise_not_found(role_id, e)
 
 
-    def restore_role(self, role_id: UUID) -> StaffRole:
+    def restore_role(self, role_id: UUID) -> StaffTitle:
         """Restore an archived role.
         Args:
             role_id: id of role to restore
         Returns:
-            StaffRole: Restored role record
+            StaffTitle: Restored role record
         """
         try:
             return self.repository.restore(role_id)

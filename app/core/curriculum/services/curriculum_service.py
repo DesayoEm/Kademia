@@ -1,22 +1,18 @@
 from sqlalchemy.orm import Session, joinedload
 from datetime import date
 from uuid import UUID
-
-from app.core.shared.services.pdf_service.reportlab_base import ReportLabService
 from app.core.curriculum.models.curriculum import Subject, AcademicLevelSubject, StudentSubject, SubjectEducator
 from app.core.identity.factories.student import StudentFactory
 from app.core.identity.models.student import Student
 from app.core.shared.exceptions.curriculum_errors import AcademicLevelMismatchError
-from app.core.shared.services.audit_export_service.export import ExportService
+
 from app.core.shared.schemas.enums import Term
 from app.core.shared.services.pdf_service.templates.course_list import CourseListPDF
-from app.infra.settings import config
 
 class CurriculumService:
     def __init__(self, session: Session, current_user):
         self.session = session
         self.current_user = current_user
-        self.export_service = ExportService(self.session)
         self.student_factory = StudentFactory(session, Student, current_user)
         self.pdf_service = CourseListPDF()
 
@@ -81,26 +77,5 @@ class CurriculumService:
 
         return self.pdf_service.render_pdf(data, file_name)
 
-
-    def export_subject_audit(self, subject_id: UUID, export_format: str) -> str:
-        """Export subject and its associated data
-        Args:
-            subject_id: subject UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            Subject, subject_id, export_format
-        )
-
-
-    def export_level_subject_audit(self, level_subject_id: UUID, export_format: str) -> str:
-        """Export level subject and its associated data
-        Args:
-            level_subject_id: subject UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            Subject, level_subject_id, export_format
-        )
 
 

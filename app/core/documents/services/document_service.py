@@ -7,8 +7,6 @@ from app.core.identity.models.student import Student
 from app.core.shared.services.file_storage.s3_upload import S3Upload
 from app.infra.log_service.logger import logger
 from app.infra.settings import config
-
-from app.core.shared.services.audit_export_service.export import ExportService
 from app.core.documents.models.documents import StudentAward, StudentDocument
 
 
@@ -17,7 +15,7 @@ class DocumentService:
         self.session = session
         self.current_user = current_user
         self.upload = S3Upload(session, self.current_user)
-        self.export_service = ExportService(session)
+
 
         self.SUPPORTED_DOCUMENT_TYPES = {
             'image/png': 'png',
@@ -119,18 +117,6 @@ class DocumentService:
             logger.error(f"Failed to file for award {award.id}: {str(e)}")
             raise
 
-
-    def export_award_audit(self, award_id: UUID, export_format: str) -> str:
-        """Export award and its associated data
-        Args:
-            award_id: award UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            StudentAward, award_id, export_format
-        )
-
-
     def upload_document_file(self, file, student, document: StudentDocument):
         """
         Upload and validate a document for a student.
@@ -192,15 +178,3 @@ class DocumentService:
             self.session.rollback()
             logger.error(f"Failed to file for document {document.id}: {str(e)}")
             raise
-
-
-
-    def export_document_audit(self, document_id: UUID, export_format: str) -> str:
-        """Export award and its associated data
-        Args:
-            document_id: document UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            StudentDocument, document_id, export_format
-        )

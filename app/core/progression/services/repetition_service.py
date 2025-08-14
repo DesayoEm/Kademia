@@ -8,7 +8,7 @@ from app.core.progression.factories.repetition import RepetitionFactory
 from app.core.progression.models.progression import Repetition
 from app.core.shared.exceptions import InvalidRepetitionLevelError, EmptyFieldError, \
     ProgressionStatusAlreadySetError
-from app.core.shared.services.audit_export_service.export import ExportService
+
 
 
 
@@ -16,7 +16,6 @@ class RepetitionService:
     def __init__(self, session: Session, current_user):
         self.session= session
         self.current_user = current_user
-        self.export_service = ExportService(session)
         self.factory = RepetitionFactory(session, Repetition, self.current_user)
         self.domain = "REPETITION"
 
@@ -107,15 +106,3 @@ class RepetitionService:
                  "status_completed_at":datetime.now()}
             )
 
-
-
-
-    def export_repetition_audit(self, repetition_id: UUID, export_format: str) -> str:
-        """Export repetition object and its associated data
-        Args:
-            repetition_id: Repetition UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            Repetition, repetition_id, export_format
-        )

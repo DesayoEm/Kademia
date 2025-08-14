@@ -1,10 +1,7 @@
 from uuid import UUID
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
-
-
 from app.core.identity.models.guardian import Guardian
-from app.core.shared.services.audit_export_service.export import ExportService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 
 
@@ -12,7 +9,6 @@ class GuardianService:
     def __init__(self, session: Session, current_user = None):
         self.session = session
         self.current_user = current_user
-        self.export_service = ExportService(session)
         self.repository = SQLAlchemyRepository(Guardian, self.session)
 
 
@@ -31,14 +27,3 @@ class GuardianService:
             self.session.commit()
 
 
-
-
-    def export_guardian_audit(self, guardian_id: UUID, export_format: str) -> str:
-        """Export guardian object and its associated data
-        Args:
-            guardian_id: Guardian UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            Guardian, guardian_id, export_format
-        )

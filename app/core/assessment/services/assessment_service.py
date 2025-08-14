@@ -10,7 +10,6 @@ from app.core.assessment.factories.grade import GradeFactory
 from app.core.assessment.models.assessment import TotalGrade
 from app.core.identity.factories.student import StudentFactory
 from app.core.identity.models.student import Student
-from app.core.shared.services.audit_export_service.export import ExportService
 from app.core.shared.exceptions.assessment_errors import WeightTooHighError, UnableToRecalculateError
 from app.core.shared.exceptions import InvalidWeightError
 from app.core.assessment.models.assessment import Grade
@@ -22,7 +21,6 @@ class AssessmentService:
     def __init__(self, session: Session, current_user=None):
         self.session = session
         self.current_user = current_user
-        self.export_service = ExportService(session)
         self.validator = AssessmentValidator(session)
         self.grade_factory = GradeFactory(session , Grade, self.current_user)
         self.student_factory = StudentFactory(session, Student, self.current_user)
@@ -215,23 +213,3 @@ class AssessmentService:
         else:
             return "F"
 
-    def export_grade_audit(self, grade_id: UUID, export_format: str) -> str:
-        """Export grade and its associated data
-        Args:
-            grade_id: grade UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            Grade, grade_id, export_format
-        )
-
-
-    def export_total_grade_audit(self, total_grade_id: UUID, export_format: str) -> str:
-        """Export total grade and its associated data
-        Args:
-            total_grade_id: grade UUID
-            export_format: Preferred export format
-        """
-        return self.export_service.export_entity(
-            TotalGrade, total_grade_id, export_format
-        )
