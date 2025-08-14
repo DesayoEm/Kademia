@@ -20,7 +20,7 @@ from app.api.documents import award, document
 
 from app.api.identity import student, guardian, staff, educator
 from app.api.auth import password
-from app.api.auth import auth, access_level_change
+from app.api.auth import auth, role_change
 
 from app.infra.middleware.exception_handler import ExceptionMiddleware
 from app.infra.log_service.logger import logger
@@ -38,20 +38,21 @@ app.add_middleware(ExceptionMiddleware)
 app.include_router(auth.router, prefix=f"/api/{version}/auth",tags=["Auth"])
 app.include_router(password.router, prefix=f"/api/{version}/auth/password",tags=["Auth"])
 
-# Access level
-app.include_router(access_level_change.router, prefix=f"/api/{version}",tags=["Auth", "Access Level"])
+# Role change
+app.include_router(role_change.router, prefix=f"/api/{version}",tags=["Auth", "Access Level"])
 
 # Staff Org
-app.include_router(staff_titles.router, prefix=f"/api/{version}/",tags=["Staff Titles", "Admin"])
+app.include_router(staff_titles.router, prefix=f"/api/{version}",tags=["Staff Titles", "Admin"])
+
+app.include_router(qualifications.router, prefix=f"/api/{version}/staff/qualifications",tags=["Educator Qualifications", "Admin"])
+
+
 app.include_router(staff_departments.router, prefix=f"/api/{version}/staff/departments",
                    tags=["Staff Departments", "Admin"])
 app.include_router(staff_departments_archive.router, prefix=f"/api/{version}/staff/departments/archived",
                    tags=["Staff Departments", "Admin"])
 
 
-
-app.include_router(qualifications.router, prefix=f"/api/{version}/staff/qualifications",
-                   tags=["Educator Qualifications", "Admin"])
 
 #Academic Structure
 app.include_router(departments.router, prefix=f"/api/{version}/students/departments",tags=["Student Department", "Admin"])
@@ -80,18 +81,20 @@ app.include_router(total_grade.router, prefix=f"/api/{version}/students/assessme
                    tags=["Assessment", "Admin"])
 
 # Progression
-app.include_router(repetition.router, prefix=f"/api/{version}/students/repetitions",
-                   tags=["Progression", "Admin"])
+app.include_router(repetition.router, prefix=f"/api/{version}/students/repetitions",tags=["Progression", "Admin"])
+app.include_router(promotion.router, prefix=f"/api/{version}/students/promotions",tags=["Progression", "Admin"])
+
+#Transfer
+app.include_router(department_transfer.router, prefix=f"/api/{version}/department-transfers",
+                   tags=["Department Transfers", "Admin"])
+
+
 app.include_router(repetition_archive.router, prefix=f"/api/{version}/students/repetitions/archived",
                    tags=["Progression", "Admin"])
 
-app.include_router(promotion.router, prefix=f"/api/{version}/students/promotions",
-                   tags=["Progression", "Admin"])
 app.include_router(promotion_archive.router, prefix=f"/api/{version}/students/promotions/archived",
                    tags=["Progression", "Admin"])
 
-app.include_router(department_transfer.router, prefix=f"/api/{version}/department-transfers",
-                   tags=["Department Transfers", "Admin"])
 
 
 

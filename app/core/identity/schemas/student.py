@@ -1,7 +1,7 @@
 from ...shared.schemas.common_imports import *
 from .base import UserBase, ProfileInDb
 from ...shared.schemas.shared_models import *
-from ...shared.schemas.enums import UserType, AccessLevel, StudentStatus
+from ...shared.schemas.enums import UserType, UserRole, StudentStatus
 
 
 class StudentFilterParams(BaseFilterParams):
@@ -77,7 +77,7 @@ class StudentResponse(StudentCreate):
 
 class StudentAudit(BaseModel):
     id: UUID | None = None
-    access_level: AccessLevel
+    current_role: UserRole
     status: StudentStatus
     user_type: UserType
     date_left: date | None = None

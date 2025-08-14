@@ -4,9 +4,9 @@ from typing import List
 from fastapi.responses import FileResponse
 from fastapi import UploadFile, File
 
-from app.core.auth.factories.access_level_factory import AccessLevelChangeFactory
-from app.core.auth.schemas.access_level_change import AccessLevelChangeCreate, AccessLevelChangeResponse, \
-    AccessLevelFilterParams
+from app.core.rbac.factories.role_history_factory import RoleHistoryFactory
+from app.core.rbac.schemas.staff_role_history import RoleHistoryCreate, RoleHistoryResponse, \
+    RoleHistoryFilterParams
 from app.core.identity.factories.staff import StaffFactory
 from app.core.identity.services.profile_picture_service import ProfilePictureService
 from app.core.identity.services.staff_service import StaffService
@@ -120,14 +120,14 @@ def create_staff(
         return factory.create_staff(payload)
 
 
-@router.get("/staff/{staff_id}/profile/permissions-change-history", response_model=List[AccessLevelChangeResponse])
-def get_staff_level_change_history(
+@router.get("/staff/{staff_id}/profile/permissions-change-history", response_model=List[RoleHistoryResponse])
+def get_staff_role_history(
         staff_id: UUID,
-        filters: AccessLevelFilterParams = Depends(),
-        factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
+        filters: RoleHistoryFilterParams = Depends(),
+        factory: RoleHistoryFactory = Depends(get_authenticated_factory(RoleHistoryFactory))
     ):
         filters.staff_id = staff_id
-        return factory.get_all_level_changes(filters)
+        return factory.get_all_history(filters)
 
 
 @router.get("/staff/", response_model=List[StaffResponse])
@@ -183,13 +183,13 @@ def cascade_archive_staff(
     return service.cascade_staff_archive(staff_id, reason.value)
 
 
-@router.patch("/{staff_id}/permissions", response_model=AccessLevelChangeResponse)
-def change_staff_access_level(
+@router.patch("/{staff_id}/permissions", response_model=RoleHistoryResponse)
+def change_staff_role(
         staff_id: UUID,
-        payload:AccessLevelChangeCreate,
-        factory: AccessLevelChangeFactory = Depends(get_authenticated_factory(AccessLevelChangeFactory))
+        payload:RoleHistoryCreate,
+        factory: RoleHistoryFactory = Depends(get_authenticated_factory(RoleHistoryFactory))
     ):
-        return factory.create_level_change(staff_id, payload)
+        return factory.create_history(staff_id, payload)
 
 
 @router.patch("/{staff_id}/role/assign", response_model=StaffResponse)

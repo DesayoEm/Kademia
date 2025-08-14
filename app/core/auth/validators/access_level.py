@@ -1,6 +1,6 @@
 
 from app.core.shared.exceptions.auth_errors import SameLevelError
-from app.core.shared.schemas.enums import AccessLevel
+from app.core.shared.schemas.enums import UserRole
 
 
 class AccessLevelValidator:
@@ -9,9 +9,9 @@ class AccessLevelValidator:
 
     @staticmethod
     def prevent_redundant_changes(
-            previous_level: AccessLevel, new_level: AccessLevel) -> AccessLevel:
+            current_role: UserRole, new_role: UserRole) -> UserRole:
 
-        if previous_level == new_level:
-            raise SameLevelError(previous = previous_level, new = new_level)
+        if current_role == new_role:
+            raise SameLevelError(previous = current_role, new = new_role)
 
-        return new_level
+        return new_role
