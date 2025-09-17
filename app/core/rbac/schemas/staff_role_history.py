@@ -7,7 +7,6 @@ class RoleHistoryFilterParams(BaseFilterParams):
     staff_id: UUID | None = None
 
 
-
 class RoleHistoryBase(BaseModel):
     """Base model for access role changes"""
     new_role: UserRole
