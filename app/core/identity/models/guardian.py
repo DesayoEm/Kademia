@@ -1,17 +1,13 @@
 from .base import UserBase
 
 from app.core.shared.models.common_imports import *
-from app.core.shared.models.enums import UserRole, Title, UserType
+from app.core.shared.models.enums import Title, UserType
 
 class Guardian(UserBase):
-    """
-    Represents a parent or guardian of students, including contact information and relationship with the students they oversee.
-    Inherits from ProfileBase.
-    """
+    """Represents a parent or guardian of students"""
     __tablename__ = 'guardians'
 
     title: Mapped[Title] = mapped_column(Enum(Title, name='title'))
-    current_role: Mapped[UserRole] = mapped_column(Enum(UserRole, name='userrole'), default=UserRole.GUARDIAN)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.GUARDIAN)
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))

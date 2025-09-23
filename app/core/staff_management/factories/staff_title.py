@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.staff_management.services.validators import StaffManagementValidator
-from app.core.staff_management.models import StaffTitle
+from app.core.staff_management.models import StaffJobTitle
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
@@ -18,7 +18,7 @@ from app.core.shared.exceptions.maps.error_map import error_map
 class StaffTitleFactory(BaseFactory):
     """Factory class for managing staff title operations."""
 
-    def __init__(self, session: Session, model=StaffTitle, current_user = None):
+    def __init__(self, session: Session, model=StaffJobTitle, current_user = None):
         super().__init__(current_user)
         """Initialize factory with db session.
         Args:
@@ -47,14 +47,14 @@ class StaffTitleFactory(BaseFactory):
     @resolve_unique_violation({
         "staff_titles_name_key": ("name", lambda self, data: data.name),
     })
-    def create_title(self, data) -> StaffTitle:
+    def create_title(self, data) -> StaffJobTitle:
         """Create a new staff title.
         Args:
             data: title data containing name and description
         Returns:
-            StaffTitle: Created title record
+            StaffJobTitle: Created title record
         """
-        title = StaffTitle(
+        title = StaffJobTitle(
             id=uuid4(),
             name=self.validator.validate_name(data.name),
             description=self.validator.validate_description(data.description),
@@ -65,22 +65,22 @@ class StaffTitleFactory(BaseFactory):
         return self.repository.create(title)
 
 
-    def get_all_titles(self, filters) -> list[StaffTitle]:
+    def get_all_titles(self, filters) -> list[StaffJobTitle]:
         """Get all active staff titles with filtering.
 
         Returns:
-            List[StaffTitle]: List of active title records
+            List[StaffJobTitle]: List of active title records
         """
         fields = ['name']
         return self.repository.execute_query(fields, filters)
 
 
-    def get_title(self, title_id: UUID) -> StaffTitle:
+    def get_title(self, title_id: UUID) -> StaffJobTitle:
         """Get a specific staff title by id.
         Args:
             title_id: id of title to retrieve
         Returns:
-            StaffTitle: Retrieved title record
+            StaffJobTitle: Retrieved title record
         """
         try:
             return self.repository.get_by_id(title_id)
@@ -92,13 +92,13 @@ class StaffTitleFactory(BaseFactory):
     @resolve_unique_violation({
         "staff_titles_name_key": ("name", lambda self, *a: a[-1].get("name")),
     })
-    def update_title(self, title_id: UUID, data: dict) -> StaffTitle:
+    def update_title(self, title_id: UUID, data: dict) -> StaffJobTitle:
         """Update a staff title's information.
         Args:
             title_id: id of title to update
             data: Dictionary containing fields to update
         Returns:
-            StaffTitle: Updated title record
+            StaffJobTitle: Updated title record
         """
         copied_data = data.copy()
         try:
@@ -124,7 +124,7 @@ class StaffTitleFactory(BaseFactory):
             self.raise_not_found(title_id, e)
 
 
-    def archive_title(self, title_id: UUID, reason) -> StaffTitle:
+    def archive_title(self, title_id: UUID, reason) -> StaffJobTitle:
         """Archive a title if no active staff members are assigned to it."""
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
@@ -165,21 +165,21 @@ class StaffTitleFactory(BaseFactory):
 
 
     #Archive methods
-    def get_all_archived_titles(self, filters) -> list[StaffTitle]:
+    def get_all_archived_titles(self, filters) -> list[StaffJobTitle]:
         """Get all archived staff titles with filtering.
         Returns:
-            List[StaffTitle]: List of archived title records
+            List[StaffJobTitle]: List of archived title records
         """
         fields = ['name']
         return self.repository.execute_archive_query(fields, filters)
 
 
-    def get_archived_title(self, title_id: UUID) -> StaffTitle:
+    def get_archived_title(self, title_id: UUID) -> StaffJobTitle:
         """Get an archived title by ID.
         Args:
             title_id: id of title to retrieve
         Returns:
-            StaffTitle: Retrieved title record
+            StaffJobTitle: Retrieved title record
         """
         try:
             return self.repository.get_archive_by_id(title_id)
@@ -187,12 +187,12 @@ class StaffTitleFactory(BaseFactory):
             self.raise_not_found(title_id, e)
 
 
-    def restore_title(self, title_id: UUID) -> StaffTitle:
+    def restore_title(self, title_id: UUID) -> StaffJobTitle:
         """Restore an archived title.
         Args:
             title_id: id of title to restore
         Returns:
-            StaffTitle: Restored title record
+            StaffJobTitle: Restored title record
         """
         try:
             return self.repository.restore(title_id)

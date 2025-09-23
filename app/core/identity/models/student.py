@@ -1,14 +1,11 @@
 from .base import UserBase
 
 from app.core.shared.models.common_imports import *
-from app.core.shared.models.enums import UserRole, StudentStatus, UserType
+from app.core.shared.models.enums import StudentStatus, UserType
 
 
 class Student(UserBase):
-    """
-    Represents a student, including personal details, enrollment information, academic status, and relationships with other entities.
-    Inherits from ProfileBase.
-    """
+    """Represents a student, including personal details, enrollment information, academic status, and relationships with other entities."""
     __tablename__ = 'students'
 
     student_id: Mapped[str] = mapped_column(String(14), unique=True)
@@ -16,7 +13,6 @@ class Student(UserBase):
                 ondelete='RESTRICT',name='fk_students_guardians_guardian_id')
             )
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.STUDENT)
-    current_role: Mapped[UserRole] = mapped_column(Enum(UserRole, name='userrole'), default=UserRole.STUDENT)
     status: Mapped[StudentStatus] = mapped_column(Enum(StudentStatus, name='studentstatus'), default=StudentStatus.ENROLLED)
     date_of_birth: Mapped[date] = mapped_column(Date)
 

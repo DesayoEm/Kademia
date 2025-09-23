@@ -3,10 +3,8 @@ from app.core.shared.models.mixins import AuditMixins, TimeStampMixins, ArchiveM
 from app.core.shared.models.enums import ValidityType
 
 class StaffDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
-    """
-    Represents a staff department.
-    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
-    """
+    """Represents a staff department."""
+
     __tablename__ = 'staff_departments'
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     name: Mapped[str] = mapped_column(String(100), unique=True)
@@ -27,10 +25,10 @@ class StaffDepartment(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     )
 
 
-class StaffTitle(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
-    """Represents a title assigned to a staff member."""
+class StaffJobTitle(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
+    """Represents a job title assigned to a staff member."""
 
-    __tablename__ = 'staff_titles'
+    __tablename__ = 'staff_job_titles'
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     name: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str] = mapped_column(String(500))
@@ -40,16 +38,14 @@ class StaffTitle(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
             primaryjoin="Staff.title_id == StaffTitle.id")
 
     __table_args__ = (
-        Index('idx_title_name', 'name'),
-        Index('idx_title_description', 'description'),
+        Index('idx_job_title_name', 'name'),
+        Index('idx_job_title_description', 'description'),
     )
 
 
 class EducatorQualification(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
-    """
-    Represents an educator's academic qualifications.
-    Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
-    """
+    """Represents an educator's academic qualifications."""
+
     __tablename__ = 'educator_qualifications'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)

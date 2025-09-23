@@ -1,7 +1,7 @@
 from ....curriculum.models.curriculum import SubjectEducator, StudentSubject, Subject, AcademicLevelSubject
 from ....documents.models.documents import StudentDocument, StudentAward
 from ....rbac.models import RoleHistory
-from app.core.staff_management.models import StaffDepartment, StaffTitle, EducatorQualification
+from app.core.staff_management.models import StaffDepartment, StaffJobTitle, EducatorQualification
 from app.core.academic_structure.models import StudentDepartment, Classes, AcademicLevel
 from ....transfer.models.transfer import DepartmentTransfer
 from ....assessment.models.assessment import Grade, TotalGrade
@@ -33,7 +33,7 @@ DEPENDENCY_CONFIG = {
     ],
 
     # Staff Organization
-    StaffTitle: [
+    StaffJobTitle: [
         ("staff_members", Staff, "title_id", "staff members")
     ],
 

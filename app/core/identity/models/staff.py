@@ -1,14 +1,13 @@
 from .base import UserBase
 from app.core.shared.models.common_imports import *
-from app.core.shared.models.enums import UserRole, EmploymentStatus, UserType, StaffType, StaffAvailability
+from app.core.shared.models.enums import UserRoleName, EmploymentStatus, UserType, StaffType, StaffAvailability
 
 
 
 class Staff(UserBase):
-    """Represents a staff member.Inherits from UserBase."""
     __tablename__ = 'staff'
 
-    current_role: Mapped[UserRole] = mapped_column(Enum(UserRole, name='userrole'), default=UserRole.INACTIVE)
+    current_role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id', ondelete='RESTRICT'), nullable=True)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.STAFF)
     staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType, name='stafftype'))
 
@@ -22,8 +21,8 @@ class Staff(UserBase):
         nullable=True
     )
 
-    title_id: Mapped[Optional[UUID]] = mapped_column(
-        ForeignKey('staff_titles.id', ondelete='SET NULL', name='fk_staff_staff_titles_title_id'),
+    job_title_id: Mapped[Optional[UUID]] = mapped_column(
+        ForeignKey('staff_job_titles.id', ondelete='SET NULL', name='fk_staff_staff_job_titles_title_id'),
         nullable=True
     )
     date_joined: Mapped[date] = mapped_column(Date)
@@ -31,7 +30,9 @@ class Staff(UserBase):
 
     # Relationships
     department: Mapped["StaffDepartment"] = relationship(back_populates='staff_members', foreign_keys="[Staff.department_id]")
-    title: Mapped["StaffTitle"] = relationship(back_populates='staff_members', foreign_keys='[Staff.title_id]')
+    title: Mapped["StaffJobTitle"] = relationship(back_populates='staff_members', foreign_keys='[Staff.title_id]')
+    role: Mapped["Role"] = relationship(back_populates='staff_members',foreign_keys="[Staff.current_role_id]")
+
     role_changes: Mapped[List["RoleHistory"]] = relationship(
         "RoleHistory",
         back_populates="staff_member",
@@ -41,7 +42,7 @@ class Staff(UserBase):
     __table_args__ = (
         Index('idx_staff_name', 'first_name', 'last_name'),
         Index('idx_staff_department', 'department_id'),
-        Index('idx_staff_title', 'title_id'),
+        Index('idx_staff_job_title', 'job_title_id'),
         Index('idx_staff_phone', 'phone')
     )
 
@@ -83,8 +84,7 @@ class Educator(Staff):
 
 
 class AdminStaff(Staff):
-    """Represents an admin staff, inheriting from Staff."""
-
+    """Represents an admin staff member."""
     __tablename__ = 'admin_staff'
 
     id: Mapped[UUID] = mapped_column(
@@ -99,7 +99,7 @@ class AdminStaff(Staff):
 
 
 class SupportStaff(Staff):
-    """Represents a support staff member, inheriting from Staff."""
+    """Represents a support staff member."""
     __tablename__ = 'support_staff'
 
     id: Mapped[UUID] = mapped_column(
@@ -132,7 +132,7 @@ class System(Staff):
 
 
 
-from ...rbac.models import RoleHistory
-from app.core.staff_management.models import StaffDepartment, StaffTitle, EducatorQualification
+from ...rbac.models import RoleHistory, Role
+from app.core.staff_management.models import StaffDepartment, StaffJobTitle, EducatorQualification
 from app.core.curriculum.models.curriculum import SubjectEducator
 from app.core.academic_structure.models import StudentDepartment, Classes
