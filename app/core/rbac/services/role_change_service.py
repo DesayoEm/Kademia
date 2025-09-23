@@ -1,6 +1,6 @@
 from uuid import UUID
 from sqlalchemy.orm import Session
-from app.core.shared.models.enums import UserRole
+from app.core.shared.models.enums import UserRoleName
 from app.core.shared.exceptions.auth_errors import SameRoleError
 
 
@@ -11,9 +11,9 @@ class RoleChangeService:
 
     @staticmethod
     def prevent_redundant_changes(
-            current_role: UserRole, new_role: UserRole) -> UserRole:
-        if current_role == new_role:
-            raise SameRoleError(previous=current_role, new=new_role)
+            current_role_id: UUID, new_role_id: UUID) -> UUID:
+        if current_role_id == new_role_id:
+            raise SameRoleError(previous=current_role_id, new=new_role_id)
 
-        return new_role
+        return new_role_id
 

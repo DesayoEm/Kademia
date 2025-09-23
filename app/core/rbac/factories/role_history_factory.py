@@ -59,23 +59,18 @@ class RoleHistoryFactory(BaseFactory):
         history = RoleHistory(
             id=uuid4(),
             staff_id = staff.id,
-            previous_role=staff.current_role,
-            new_role=self.service.prevent_redundant_changes(staff.current_role, data.new_role),
-            reason=data.reason,
+            previous_role_id=staff.current_role_id,
+            new_role_id=self.service.prevent_redundant_changes(staff.current_role_id, data.new_role_id),
+            change_reason=data.reason,
             changed_at=datetime.now(),
             changed_by_id=self.actor_id
         )
-        staff.current_role = history.new_role
+        staff.current_role_id = history.new_role_id
         return self.repository.create(history)
 
 
     def get_role_change(self, history_id: UUID) -> RoleHistory:
-        """Get a specific role history by ID.
-        Args:
-            history_id (UUID): ID of role history to retrieve
-        Returns:
-            RoleHistory: Retrieved role history record
-        """
+        """Get a specific role history by ID."""
         try:
             return self.repository.get_by_id(history_id)
         except EntityNotFoundError as e:
