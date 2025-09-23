@@ -4,7 +4,7 @@ from app.core.rbac.models import Permission, Role, RolePermission, RoleHistory, 
 from app.core.progression.models.progression import Promotion, Repetition
 from app.core.documents.models.documents import StudentDocument, StudentAward
 from app.core.curriculum.models.curriculum import Subject, SubjectEducator, StudentSubject, AcademicLevelSubject
-from app.core.staff_management.models import StaffDepartment, StaffTitle, EducatorQualification
+from app.core.staff_management.models import StaffDepartment, StaffJobTitle, EducatorQualification
 from app.core.academic_structure.models import StudentDepartment, Classes, AcademicLevel
 from app.core.transfer.models.transfer import DepartmentTransfer
 from app.core.assessment.models.assessment import Grade, TotalGrade

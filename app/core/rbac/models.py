@@ -1,6 +1,6 @@
 
 from app.core.shared.models.common_imports import *
-from app.core.shared.models.enums import Resource, Action, UserRole
+from app.core.shared.models.enums import Resource, Action, UserRoleName
 from app.core.shared.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
 
 
@@ -8,10 +8,11 @@ class Permission(Base, AuditMixins, TimeStampMixins):
     """Represents a specific permission (resource + action)"""
     __tablename__ = 'permissions'
 
+    name: Mapped[str] = mapped_column(String(50))
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     resource: Mapped[Resource] = mapped_column(Enum(Resource, name='resource'))
     action: Mapped[Action] = mapped_column(Enum(Action, name ='action'))
-    description: Mapped[str] = mapped_column(String(200))
+    description: Mapped[str] = mapped_column(String(200), nullable=True)
 
     roles: Mapped[List['Role']] = relationship(
         secondary='role_permissions', back_populates='permissions'
@@ -23,7 +24,7 @@ class Role(Base, AuditMixins, TimeStampMixins):
     __tablename__ = 'roles'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    name: Mapped[str] = mapped_column(String(50), unique=True)
+    name: Mapped[UserRoleName] = mapped_column(Enum(UserRoleName, name='userrolename'))
     description: Mapped[str] = mapped_column(String(200))
     role: Mapped[int] = mapped_column(Integer)
 
@@ -31,9 +32,10 @@ class Role(Base, AuditMixins, TimeStampMixins):
         secondary='role_permissions', back_populates='roles'
     )
 
+    staff: Mapped[List['Staff']] = relationship(back_populates='role')#on staff only
+
 
 class RolePermission(Base):
-    """Many-to-many association table"""
     __tablename__ = 'role_permissions'
 
     role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id'), primary_key=True)
@@ -42,21 +44,27 @@ class RolePermission(Base):
 
 class StaffRole(Base, AuditMixins, TimeStampMixins):
     __tablename__ = 'staff_roles'
+
     staff_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
     role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id'), primary_key=True)
     assigned_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id'))
     assigned_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
     assignment_reason: Mapped[str] = mapped_column(String(500))
 
+
 class StudentRole(Base, AuditMixins, TimeStampMixins):
     __tablename__ = 'student_roles'
+
     student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id'), primary_key=True)
     role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id'), primary_key=True)
     assigned_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id'))
     assigned_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
 
+
+
 class GuardianRole(Base, AuditMixins, TimeStampMixins):
     __tablename__ = 'guardian_roles'
+
     guardian_id: Mapped[UUID] = mapped_column(ForeignKey('guardians.id'), primary_key=True)
     role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id'), primary_key=True)
     assigned_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id'))
@@ -69,9 +77,8 @@ class RoleHistory(Base, ArchiveMixins):
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     staff_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id', ondelete='CASCADE'))
-
-    previous_role: Mapped[UserRole] = mapped_column(Enum(UserRole, name='userrole'))
-    new_role: Mapped[UserRole] = mapped_column(Enum(UserRole, name='userrole'))
+    previous_role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id', ondelete='RESTRICT'), nullable=True)
+    new_role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id', ondelete='RESTRICT'))
     change_reason: Mapped[str] = mapped_column(String(500))
 
     # Audit fields
