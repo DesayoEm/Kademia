@@ -1,6 +1,6 @@
 from app.core.shared.schemas.common_imports import *
 from app.core.shared.schemas.shared_models import *
-from app.core.shared.schemas.enums import UserRole
+from app.core.shared.schemas.enums import UserRoleName
 
 class RoleHistoryFilterParams(BaseFilterParams):
     changed_by_id: UUID | None = None
@@ -9,7 +9,7 @@ class RoleHistoryFilterParams(BaseFilterParams):
 
 class RoleHistoryBase(BaseModel):
     """Base model for access role changes"""
-    new_role: UserRole
+    new_role: UserRoleName
     reason: str
 
 
@@ -32,7 +32,7 @@ class RoleHistoryCreate(RoleHistoryBase):
 
 class RoleHistoryResponse(RoleHistoryBase):
     """Response model for access role changes"""
-    previous_role: UserRole
+    previous_role: UserRoleName
 
 
 

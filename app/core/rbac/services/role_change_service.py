@@ -5,7 +5,7 @@ from app.core.shared.exceptions.auth_errors import SameRoleError
 
 
 class RoleChangeService:
-    def __init__(self, session: Session, current_user):
+    def __init__(self, session: Session, current_user=None):
         self.session = session
         self.current_user = current_user
 

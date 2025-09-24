@@ -3,7 +3,7 @@ from typing import List
 from app.core.rbac.factories.role_history_factory import RoleHistoryFactory
 from app.core.shared.schemas.shared_models import ArchiveRequest
 from fastapi import Depends, APIRouter
-from app.core.rbac.schemas.staff_role_history import (
+from app.core.rbac.schemas.role_history import (
     RoleHistoryFilterParams, RoleHistoryResponse, RoleHistoryAudit
 )
 from app.core.auth.services.token_service import TokenService

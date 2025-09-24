@@ -128,6 +128,7 @@ class Action(Enum):
 class Resource(Enum):
     ROLE_CHANGE = "ROLE_CHANGE"
     PERMISSION_CHANGE = "PERMISSION_CHANGE"
+    ROLE = "ROLE"
     STUDENTS = "STUDENTS"
     STAFF = "STAFF"
     EDUCATORS = "EDUCATORS"

@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi import UploadFile, File
 
 from app.core.rbac.factories.role_history_factory import RoleHistoryFactory
-from app.core.rbac.schemas.staff_role_history import RoleHistoryCreate, RoleHistoryResponse, \
+from app.core.rbac.schemas.role_history import RoleHistoryCreate, RoleHistoryResponse, \
     RoleHistoryFilterParams
 from app.core.identity.factories.staff import StaffFactory
 from app.core.identity.services.profile_picture_service import ProfilePictureService

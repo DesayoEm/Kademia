@@ -6,10 +6,10 @@ from app.core.identity.models.staff import Staff, Educator
 from app.core.identity.models.student import Student
 from app.core.identity.models.guardian import Guardian
 from app.core.rbac.models import Permission, Role
-from app.core.shared.models.enums import UserRole, Resource, Action
+from app.core.shared.models.enums import Resource, Action
 from app.core.rbac.matrix import PERMISSION_MATRIX, CONTEXTUAL_ACCESS_RULES
 
-# Import your models for contextual checks
+#models for contextual checks
 from app.core.assessment.models.assessment import Grade, TotalGrade
 from app.core.documents.models.documents import StudentDocument, StudentAward
 from app.core.progression.models.progression import Promotion, Repetition

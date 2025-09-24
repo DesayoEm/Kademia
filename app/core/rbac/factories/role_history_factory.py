@@ -32,7 +32,7 @@ class RoleHistoryFactory(BaseFactory):
         self.entity_validator = EntityValidator(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
-        self.service = RoleChangeService()
+        self.service = RoleChangeService(self.session,current_user)
         self.actor_id: UUID = self.get_actor_id()
         self.domain = "role history"
 

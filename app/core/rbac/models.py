@@ -26,8 +26,9 @@ class Role(Base, AuditMixins, TimeStampMixins):
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     name: Mapped[UserRoleName] = mapped_column(Enum(UserRoleName, name='userrolename'))
     description: Mapped[str] = mapped_column(String(200))
-    role: Mapped[int] = mapped_column(Integer)
+    rank: Mapped[int] = mapped_column(Integer)
 
+    #relationships
     permissions: Mapped[List['Permission']] = relationship(
         secondary='role_permissions', back_populates='roles'
     )
