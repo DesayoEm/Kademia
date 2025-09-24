@@ -33,6 +33,9 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         RefreshTokenRequiredError: status.HTTP_401_UNAUTHORIZED,
         TokenRevokedError: status.HTTP_401_UNAUTHORIZED,
 
+        # RBAC exceptions
+        NegativeRankError: status.HTTP_400_BAD_REQUEST,
+
         # Generic db exceptions
         KDDatabaseError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         NoResultError: status.HTTP_500_INTERNAL_SERVER_ERROR,

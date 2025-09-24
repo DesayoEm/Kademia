@@ -103,7 +103,7 @@ class ExportFormat(str, Enum):
     excel = "excel"
 
 
-class UserRole(str, Enum):
+class UserRoleName(str, Enum):
     INACTIVE = 'INACTIVE'
     STUDENT = 'STUDENT'
     GUARDIAN = 'GUARDIAN'

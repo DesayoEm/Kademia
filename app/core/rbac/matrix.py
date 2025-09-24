@@ -132,6 +132,9 @@ PERMISSION_MATRIX: Dict[str, Dict[Resource, List[Action]]] = {
         Resource.AUDITS: [Action.READ],
         Resource.SYSTEM_CONFIG: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
                                  Action.APPROVE, Action.REJECT],
+
+        Resource.ROLE: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+                            Action.APPROVE, Action.REJECT],
     },
 
     "SUPER_EDUCATOR": {
