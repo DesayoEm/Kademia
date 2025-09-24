@@ -1,6 +1,7 @@
 from uuid import UUID
 from sqlalchemy.orm import Session
-from app.core.shared.models.enums import UserRoleName
+
+from app.core.shared.exceptions import NegativeRankError
 from app.core.shared.exceptions.auth_errors import SameRoleError
 
 
@@ -16,4 +17,9 @@ class RoleChangeService:
             raise SameRoleError(previous=current_role_id, new=new_role_id)
 
         return new_role_id
+
+    def validate_rank_number(self, value: int)-> int:
+        if value < 0:
+            raise NegativeRankError(value=value)
+
 

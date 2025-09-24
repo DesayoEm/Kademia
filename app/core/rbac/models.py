@@ -24,8 +24,8 @@ class Role(Base, AuditMixins, TimeStampMixins):
     __tablename__ = 'roles'
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    name: Mapped[UserRoleName] = mapped_column(Enum(UserRoleName, name='userrolename'))
-    description: Mapped[str] = mapped_column(String(200))
+    name: Mapped[UserRoleName] = mapped_column(Enum(UserRoleName, name='userrolename'), unique=True)
+    description: Mapped[str] = mapped_column(String(3000))
     rank: Mapped[int] = mapped_column(Integer)
 
     #relationships
@@ -41,35 +41,6 @@ class RolePermission(Base):
 
     role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id'), primary_key=True)
     permission_id: Mapped[UUID] = mapped_column(ForeignKey('permissions.id'), primary_key=True)
-
-
-class StaffRole(Base, AuditMixins, TimeStampMixins):
-    __tablename__ = 'staff_roles'
-
-    staff_id: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), primary_key=True)
-    role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id'), primary_key=True)
-    assigned_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id'))
-    assigned_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
-    assignment_reason: Mapped[str] = mapped_column(String(500))
-
-
-class StudentRole(Base, AuditMixins, TimeStampMixins):
-    __tablename__ = 'student_roles'
-
-    student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id'), primary_key=True)
-    role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id'), primary_key=True)
-    assigned_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id'))
-    assigned_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
-
-
-
-class GuardianRole(Base, AuditMixins, TimeStampMixins):
-    __tablename__ = 'guardian_roles'
-
-    guardian_id: Mapped[UUID] = mapped_column(ForeignKey('guardians.id'), primary_key=True)
-    role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id'), primary_key=True)
-    assigned_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id'))
-    assigned_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
 
 
 class RoleHistory(Base, ArchiveMixins):

@@ -1,15 +1,15 @@
-from datetime import datetime
+
 from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from app.core.rbac.models import Role
-from app.core.rbac.services.role_change_service import RoleChangeService
-from app.core.identity.factories.staff import StaffFactory
-from app.core.identity.models.staff import Staff
+from app.core.rbac.services.role_service import RoleChangeService
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.validators.entity_validators import EntityValidator
+from app.core.shared.validators.entry_validators import EntryValidator
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
+from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
+from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
 from app.core.shared.exceptions import EntityNotFoundError
 from app.core.shared.exceptions.maps.error_map import error_map
 
@@ -28,6 +28,7 @@ class RoleFactory(BaseFactory):
         self.session = session
         self.model = model
         self.repository = SQLAlchemyRepository(self.model, session)
+        self.entry_validator = EntryValidator()
         self.entity_validator = EntityValidator(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
@@ -44,13 +45,13 @@ class RoleFactory(BaseFactory):
         )
 
     @resolve_fk_on_create()
-    def create_role(self, staff_id: UUID, data) -> Role:
+    def create_role(self, data) -> Role:
         """Create a new role."""
 
         role = Role(
             id=uuid4(),
             name=data.name,
-            description=data.description,
+            description=self.entry_validator.validate_description(data.description, "RBAC role"),
             rank= data.rank,
         )
 
@@ -61,6 +62,31 @@ class RoleFactory(BaseFactory):
         """Get a specific role by ID."""
         try:
             return self.repository.get_by_id(role_id)
+        except EntityNotFoundError as e:
+            self.raise_not_found(role_id, e)
+
+    @resolve_unique_violation({
+        "role_name_key": ("name", lambda self, _, data: data["name"])
+    })
+    @resolve_fk_on_update()
+    def update_subject(self, role_id: UUID, data: dict) -> Role:
+        """Update a role information."""
+        copied_data = data.copy()
+        try:
+            existing = self.get_role(role_id)
+
+            if "description" in copied_data:
+                self.entry_validator.validate_description(copied_data["description"], "RBAC role")
+
+            if "rank" in copied_data:
+                self.service.validate_rank_number(copied_data["rank"])
+
+            for key, value in copied_data.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
+
+            return self.repository.update(role_id, existing, modified_by=self.actor_id)
+
         except EntityNotFoundError as e:
             self.raise_not_found(role_id, e)
 

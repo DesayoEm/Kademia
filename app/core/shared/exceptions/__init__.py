@@ -32,6 +32,12 @@ from .auth_errors import (
     SameRoleError
 )
 
+
+from .rbac_errors import (
+    NegativeRankError
+)
+
+
 from .database_errors import (
     DBError,
     NoResultError,
