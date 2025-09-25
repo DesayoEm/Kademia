@@ -4,6 +4,7 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from app.core.rbac.models import Role
 from app.core.rbac.services.role_service import RoleChangeService
+from app.core.rbac.services.utils import RBACUtils
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.validators.entity_validators import EntityValidator
 from app.core.shared.validators.entry_validators import EntryValidator
@@ -32,7 +33,8 @@ class RoleFactory(BaseFactory):
         self.entity_validator = EntityValidator(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
-        self.service = RoleChangeService(self.session, current_user)
+        self.service = RoleChangeService()
+        self.util = RBACUtils()
         self.actor_id: UUID = self.get_actor_id()
         self.domain = "role"
 
@@ -69,7 +71,7 @@ class RoleFactory(BaseFactory):
         "role_name_key": ("name", lambda self, _, data: data["name"])
     })
     @resolve_fk_on_update()
-    def update_subject(self, role_id: UUID, data: dict) -> Role:
+    def update_role(self, role_id: UUID, data: dict) -> Role:
         """Update a role information."""
         copied_data = data.copy()
         try:
@@ -79,7 +81,7 @@ class RoleFactory(BaseFactory):
                 self.entry_validator.validate_description(copied_data["description"], "RBAC role")
 
             if "rank" in copied_data:
-                self.service.validate_rank_number(copied_data["rank"])
+                self.util.validate_rank_number(copied_data["rank"])
 
             for key, value in copied_data.items():
                 if hasattr(existing, key):
@@ -122,14 +124,15 @@ class RoleFactory(BaseFactory):
         return self.repository.execute_archive_query(fields, filters)
 
 
-    def get_archived_role_change(self, role_id: UUID) -> Role:
+    def get_archived_role(self, role_id: UUID) -> Role:
         """Get an archived role by ID."""
         try:
             return self.repository.get_archive_by_id(role_id)
         except EntityNotFoundError as e:
             self.raise_not_found(role_id, e)
 
-    def restore_role_change(self, role_id: UUID) -> Role:
+
+    def restore_role(self, role_id: UUID) -> Role:
         """Restore an archived role."""
         try:
             return self.repository.restore(role_id)
@@ -138,7 +141,7 @@ class RoleFactory(BaseFactory):
 
 
     @resolve_fk_on_delete(display="role")
-    def delete_archived_role_change(self, role_id: UUID) -> None:
+    def delete_archived_role(self, role_id: UUID) -> None:
         """Permanently delete an archived role if there are no dependent entities."""
         try:
             self.repository.delete_archive(role_id)

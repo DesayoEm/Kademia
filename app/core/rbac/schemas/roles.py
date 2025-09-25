@@ -4,10 +4,9 @@ from app.core.shared.schemas.common_imports import *
 from app.core.shared.schemas.shared_models import *
 from app.core.shared.schemas.enums import UserRoleName
 
+
 class RoleFilterParams(BaseFilterParams):
     name: UserRoleName | None = None
-    description: str | None = None
-    rank: int| None = None
 
 
 class RoleBase(BaseModel):

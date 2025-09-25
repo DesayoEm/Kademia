@@ -4,7 +4,7 @@ from typing import List
 from fastapi.responses import FileResponse
 from fastapi import UploadFile, File
 
-from app.core.rbac.factories.role_history_factory import RoleHistoryFactory
+from app.core.rbac.factories.role_history import RoleHistoryFactory
 from app.core.rbac.schemas.role_history import RoleHistoryCreate, RoleHistoryResponse, \
     RoleHistoryFilterParams
 from app.core.identity.factories.staff import StaffFactory

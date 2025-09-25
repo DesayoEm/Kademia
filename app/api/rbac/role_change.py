@@ -1,6 +1,6 @@
 from uuid import UUID
 from typing import List
-from app.core.rbac.factories.role_history_factory import RoleHistoryFactory
+from app.core.rbac.factories.role_history import RoleHistoryFactory
 from app.core.shared.schemas.shared_models import ArchiveRequest
 from fastapi import Depends, APIRouter
 from app.core.rbac.schemas.role_history import (

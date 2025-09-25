@@ -9,7 +9,7 @@ from app.core.rbac.models import Permission, Role
 from app.core.shared.models.enums import Resource, Action
 from app.core.rbac.matrix import PERMISSION_MATRIX, CONTEXTUAL_ACCESS_RULES
 
-#models for contextual checks
+
 from app.core.assessment.models.assessment import Grade, TotalGrade
 from app.core.documents.models.documents import StudentDocument, StudentAward
 from app.core.progression.models.progression import Promotion, Repetition
@@ -17,10 +17,11 @@ from app.core.transfer.models.transfer import DepartmentTransfer
 from app.core.curriculum.models.curriculum import StudentSubject
 
 class PermissionService:
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, current_user = None):
         self.session = session
+        self.current_user = current_user
 
-    def has_permission(self, user_role: UserRole, resource: Resource, action: Action) -> bool:
+    def has_permission(self, user_role: Role, resource: Resource, action: Action) -> bool:
         """Check if a role has permission to perform an action on a resource"""
         if user_role.value not in PERMISSION_MATRIX:
             return False
@@ -47,11 +48,11 @@ class PermissionService:
     def check_contextual_access(self, user: Union[Staff, Student, Guardian], resource: Resource,resource_id: Optional[UUID]) -> bool:
         """Route to appropriate contextual access checker"""
 
-        if user.current_role == UserRole.EDUCATOR:
+        if user.current_role == Role.EDUCATOR:
             return self.check_educator_contextual_access(user, resource, resource_id)
-        elif user.current_role == UserRole.STUDENT:
+        elif user.current_role == Role.STUDENT:
             return self.check_student_contextual_access(user, resource, resource_id)
-        elif user.current_role == UserRole.GUARDIAN:
+        elif user.current_role == Role.GUARDIAN:
             return self.check_guardian_contextual_access(user, resource, resource_id)
 
         return False
@@ -244,19 +245,19 @@ class PermissionService:
 
     def get_accessible_students(self, user: Union[Staff, Student, Guardian]) -> list[UUID]:
         """Get list of student IDs the user can access"""
-        if user.current_role == UserRole.SUPERUSER or user.current_role == UserRole.SUPER_EDUCATOR:
+        if user.current_role == Role.SUPERUSER or user.current_role == Role.SUPER_EDUCATOR:
             # Can access all students
             students = self.session.query(Student.id).all()
             return [s.id for s in students]
 
-        elif user.current_role == UserRole.STUDENT:
+        elif user.current_role == Role.STUDENT:
             return [user.id]
 
-        elif user.current_role == UserRole.GUARDIAN:
+        elif user.current_role == Role.GUARDIAN:
             # Can access ward records
             return [ward.id for ward in user.wards]
 
-        elif user.current_role == UserRole.EDUCATOR:
+        elif user.current_role == Role.EDUCATOR:
             # Get students from supervised class and mentored departments
             accessible_student_ids = set()
 
