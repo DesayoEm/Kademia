@@ -19,7 +19,7 @@ class Permission(Base, AuditMixins, TimeStampMixins):
     )
 
 
-class Role(Base, AuditMixins, TimeStampMixins):
+class Role(Base,TimeStampMixins, ArchiveMixins):
     """Represents a role that can be assigned to users"""
     __tablename__ = 'roles'
 
@@ -27,6 +27,10 @@ class Role(Base, AuditMixins, TimeStampMixins):
     name: Mapped[UserRoleName] = mapped_column(Enum(UserRoleName, name='userrolename'), unique=True)
     description: Mapped[str] = mapped_column(String(3000))
     rank: Mapped[int] = mapped_column(Integer)
+
+    #Audit
+    created_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), nullable=True)
+    last_modified_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), nullable=True)
 
     #relationships
     permissions: Mapped[List['Permission']] = relationship(
