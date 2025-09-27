@@ -40,9 +40,9 @@ app.include_router(auth.router, prefix=f"/api/{version}/auth",tags=["Auth"])
 app.include_router(password.router, prefix=f"/api/{version}/auth/password",tags=["Auth"])
 
 # RBAC
-app.include_router(role_change.router, prefix=f"/api/{version}", tags=["RBAC", "history"])
-app.include_router(roles.router, prefix=f"/api/{version}", tags=["RBAC", "Roles"])
-app.include_router(permissions.router, prefix=f"/api/{version}", tags=["RBAC", "Permissions"])
+app.include_router(role_change.router, prefix=f"/api/{version}", tags=["History"])
+app.include_router(roles.router, prefix=f"/api/{version}", tags=["Roles"])
+app.include_router(permissions.router, prefix=f"/api/{version}", tags=["Permissions"])
 
 # Staff Org
 app.include_router(staff_titles.router, prefix=f"/api/{version}",tags=["Staff Titles", "Admin"])

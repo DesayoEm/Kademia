@@ -341,7 +341,7 @@ def requires_contextual_access(role: str, resource: Resource) -> bool:
     return role in CONTEXTUAL_ACCESS_RULES and resource in CONTEXTUAL_ACCESS_RULES[role]
 
 
-def generate_permission_strings() -> Set[str]:
+def generate_possible_permission_strings() -> Set[str]:
     """Generate all possible permission strings in format 'resource:action'"""
     permissions = set()
     for role_perms in PERMISSION_MATRIX.values():
@@ -351,4 +351,4 @@ def generate_permission_strings() -> Set[str]:
     return permissions
 
 
-ALL_PERMISSIONS = generate_permission_strings()
+ALL_PERMISSIONS = generate_possible_permission_strings()

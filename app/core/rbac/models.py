@@ -37,7 +37,7 @@ class Role(Base,TimeStampMixins, ArchiveMixins):
         secondary='role_permissions', back_populates='roles'
     )
 
-    staff: Mapped[List['Staff']] = relationship(back_populates='role')#on staff only
+    staff_members: Mapped[List['Staff']] = relationship(back_populates='role', primaryjoin='Staff.current_role_id == Role.id')#on staff only
 
 
 class RolePermission(Base):

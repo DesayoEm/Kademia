@@ -1,7 +1,6 @@
 from uuid import UUID
 from sqlalchemy.orm import Session, selectinload
 from typing import List
-from app.core.rbac.factories.role import RoleFactory
 from app.core.shared.exceptions import EntityNotFoundError
 from app.core.shared.exceptions.auth_errors import SameRoleError
 from app.core.rbac.models import Role, Permission

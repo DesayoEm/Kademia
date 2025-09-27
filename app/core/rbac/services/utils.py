@@ -16,7 +16,7 @@ class RBACUtils:
         return value
 
     @staticmethod
-    def generate_permission_name(resource_name: str, action_name: str) -> str:
+    def generate_permission_str(resource_name: str, action_name: str) -> str:
         permission_name = f"{(resource_name +"_" + action_name).upper}"
         return permission_name
 

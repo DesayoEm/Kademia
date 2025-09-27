@@ -30,7 +30,7 @@ class Staff(UserBase):
 
     # Relationships
     department: Mapped["StaffDepartment"] = relationship(back_populates='staff_members', foreign_keys="[Staff.department_id]")
-    title: Mapped["StaffJobTitle"] = relationship(back_populates='staff_members', foreign_keys='[Staff.title_id]')
+    title: Mapped["StaffJobTitle"] = relationship(back_populates='staff_members', foreign_keys='[Staff.job_title_id]')
     role: Mapped["Role"] = relationship(back_populates='staff_members',foreign_keys="[Staff.current_role_id]")
 
     role_changes: Mapped[List["RoleHistory"]] = relationship(

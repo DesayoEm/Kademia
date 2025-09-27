@@ -52,7 +52,7 @@ class PermissionFactory(BaseFactory):
 
         permission = Permission(
             id=uuid4(),
-            name=self.util.generate_permission_name(data.resource, data.action),
+            name=self.util.generate_permission_str(data.resource, data.action),
             resource = data.resource,
             action = data.action,
             description=self.entry_validator.validate_description(data.description, "RBAC permission"),

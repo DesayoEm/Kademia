@@ -11,7 +11,7 @@ from app.infra.settings import config
 from app.infra.db.db_config import engine
 
 KADEMIA_ID = UUID(config.KADEMIA_ID)
-KADEMIA_PASSWORD = UUID(config.KADEMIA_PASSWORD)
+KADEMIA_PASSWORD =config.KADEMIA_PASSWORD
 
 now = datetime.now()
 session = Session(engine)
@@ -21,7 +21,7 @@ def create_role():
         super_user_role = Role(
             id=KADEMIA_ID,
             name=UserRoleName.SYSTEM,
-            description='Super User',
+            description='Super Super User',
             rank=10,
             created_at=now,
             last_modified_at=now,
@@ -70,3 +70,4 @@ def create_user():
 
 
 
+print(KADEMIA_ID)

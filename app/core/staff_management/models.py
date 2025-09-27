@@ -35,7 +35,7 @@ class StaffJobTitle(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     # Relationships
     staff_members: Mapped[List["Staff"]] = relationship(back_populates='title',
-            primaryjoin="Staff.title_id == StaffTitle.id")
+            primaryjoin="Staff.job_title_id == StaffJobTitle.id")
 
     __table_args__ = (
         Index('idx_job_title_name', 'name'),
