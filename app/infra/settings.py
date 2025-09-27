@@ -4,7 +4,10 @@ from pydantic import EmailStr
 load_dotenv()
 
 class Settings(BaseSettings):
-    APP_NAME: str = "Kademia"
+    APP_NAME: str="Kademia"
+    KADEMIA_ID: str
+    KADEMIA_PASSWORD: str
+    SCRIPT_PATH: str
     ANONYMIZED_ID: str
     DEBUG: bool = False
 

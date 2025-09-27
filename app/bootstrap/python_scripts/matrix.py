@@ -1,9 +1,9 @@
-from typing import Dict, List, Set
+from typing import Dict, List
 from app.core.shared.models.enums import Resource
 from app.core.shared.models.enums import Action
 
 
-PERMISSION_MATRIX: Dict[str, Dict[Resource, List[Action]]] = {
+matrix: Dict[str, Dict[Resource, List[Action]]] = {
 
     "STUDENT": {
         # Identity Management - Own records only
@@ -316,39 +316,3 @@ CONTEXTUAL_ACCESS_RULES: Dict[str, Dict[Resource, str]] = {
     }
 }
 
-
-def has_permission(role: str, resource: Resource, action: Action) -> bool:
-    """Check if a role has permission to perform an action on a resource"""
-    if role not in PERMISSION_MATRIX:
-        return False
-
-    resource_permissions = PERMISSION_MATRIX[role].get(resource, [])
-    return action in resource_permissions
-
-
-def get_role_permissions(role: str) -> Dict[Resource, List[Action]]:
-    """Get all permissions for a specific role"""
-    return PERMISSION_MATRIX.get(role, {})
-
-
-def get_contextual_access_rule(role: str, resource: Resource) -> str:
-    """Get the contextual access rule for a role and resource"""
-    return CONTEXTUAL_ACCESS_RULES.get(role, {}).get(resource, "no_access")
-
-
-def requires_contextual_access(role: str, resource: Resource) -> bool:
-    """Check if a role requires contextual access for a resource"""
-    return role in CONTEXTUAL_ACCESS_RULES and resource in CONTEXTUAL_ACCESS_RULES[role]
-
-
-def generate_possible_permission_strings() -> Set[str]:
-    """Generate all possible permission strings in format 'resource:action'"""
-    permissions = set()
-    for role_perms in PERMISSION_MATRIX.values():
-        for resource, actions in role_perms.items():
-            for action in actions:
-                permissions.add(f"{resource.value}:{action.value}")
-    return permissions
-
-
-ALL_PERMISSIONS = generate_possible_permission_strings()

@@ -1,6 +1,6 @@
 from ...shared.schemas.common_imports import *
 from .base import UserBase
-from ...shared.schemas.enums import Title, UserType, UserRole
+from ...shared.schemas.enums import Title, UserType, UserRoleName
 from ...shared.schemas.shared_models import *
 
 
@@ -50,7 +50,7 @@ class GuardianResponse(GuardianBase):
 
 class GuardianAudit(BaseModel):
     id: UUID | None = None
-    current_role: UserRole
+    current_role: UserRoleName
     user_type: UserType
 
     created_at: datetime | None = None

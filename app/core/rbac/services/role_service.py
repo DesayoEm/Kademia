@@ -1,14 +1,14 @@
 from uuid import UUID
-from sqlalchemy.orm import Session
-
-from app.core.shared.exceptions import NegativeRankError
+from sqlalchemy.orm import Session, selectinload
+from typing import List
+from app.core.shared.exceptions import EntityNotFoundError
 from app.core.shared.exceptions.auth_errors import SameRoleError
+from app.core.rbac.models import Role, Permission
 
 
 class RoleChangeService:
-    def __init__(self, session: Session, current_user=None):
-        self.session = session
-        self.current_user = current_user
+    def __init__(self):
+        pass
 
     @staticmethod
     def prevent_redundant_changes(
@@ -18,8 +18,19 @@ class RoleChangeService:
 
         return new_role_id
 
-    def validate_rank_number(self, value: int)-> int:
-        if value < 0:
-            raise NegativeRankError(value=value)
+
+    def see_role_permissions(self, role_id: UUID) -> List[Permission]:
+        role = (
+            self.session.query(Role)
+            .options(selectinload(Role.permissions))
+            .filter(Role.id == role_id)
+            .first()
+        )
+        if not role:
+            raise EntityNotFoundError(
+                Role, role_id, "Role not found", "role"
+            )
+
+        return role.permissions
 
 

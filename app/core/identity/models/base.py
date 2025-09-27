@@ -8,7 +8,7 @@ class UserBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     __abstract__ = True
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    current_role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id', ondelete='RESTRICT'))
+    current_role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id', ondelete='RESTRICT'), nullable=True) #temp
     password_hash: Mapped[str] = mapped_column(String(300))
     first_name: Mapped[str] = mapped_column(String(30))
     last_name: Mapped[str] = mapped_column(String(30))
