@@ -53,7 +53,7 @@ def test_create_staff_role(mock_repository):
             description="New Description"
         )
 
-        result = factory.create_role(create_data)
+        result = factory.init_system_role(create_data)
         assert mock_instance.create.called
         assert result.name == "Test Role"
 
@@ -77,7 +77,7 @@ def create_role_duplicate_error(mock_repository):
             description="New Role"
         )
         with pytest.raises(DuplicateRoleError):
-            factory.create_role(create_data)
+            factory.init_system_role(create_data)
 
 def test_get_all_roles(mock_repository):
     """Test getting all roles"""

@@ -1,5 +1,5 @@
 from datetime import datetime
-from uuid import UUID
+from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from app.core.auth.services.password_service import PasswordService
 from app.core.identity.models.staff import System
@@ -16,18 +16,40 @@ KADEMIA_PASSWORD =config.KADEMIA_PASSWORD
 now = datetime.now()
 session = Session(engine)
 
-def create_role():
+def init_roles():
     try:
-        super_user_role = Role(
+        roles = []
+        system_user_role = Role(
             id=KADEMIA_ID,
             name=UserRoleName.SYSTEM,
             description='Super Super User',
-            rank=10,
+
             created_at=now,
             last_modified_at=now,
             is_archived=False,
         )
-        session.add(super_user_role)
+
+        roles.append(system_user_role)
+
+        #Other roles
+        role_names =["SUPERUSER",]
+
+        for role_name in role_names:
+            name = UserRoleName[role_name]
+            role = Role(
+                id=uuid4(),
+                name=name,
+                description=name,
+
+                created_at=now,
+                last_modified_at=now,
+                is_archived=False,
+            )
+
+            roles.append(role)
+
+
+        session.add_all(roles)
         session.commit()
         print("System role created successfully.\n ========================")
 
@@ -36,7 +58,7 @@ def create_role():
         session.rollback()
 
 
-def create_user():
+def init_system_user():
     try:
         system_user = System(
             id=KADEMIA_ID,
