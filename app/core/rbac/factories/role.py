@@ -55,6 +55,9 @@ class RoleFactory(BaseFactory):
             name=data.name,
             description=self.entry_validator.validate_description(data.description, "RBAC role"),
             rank= data.rank,
+
+            created_by = self.actor_id,
+            last_modified_by = self.actor_id
         )
 
         return self.repository.create(role)

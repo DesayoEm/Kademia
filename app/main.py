@@ -21,7 +21,7 @@ from app.api.documents import award, document
 from app.api.identity import student, guardian, staff, educator
 from app.api.auth import password
 from app.api.auth import auth
-from app.api.rbac import role_change, roles, permissions
+from app.api.rbac import role_change, roles
 
 from app.infra.middleware.exception_handler import ExceptionMiddleware
 from app.infra.log_service.logger import logger
@@ -42,7 +42,7 @@ app.include_router(password.router, prefix=f"/api/{version}/auth/password",tags=
 # RBAC
 app.include_router(role_change.router, prefix=f"/api/{version}", tags=["History"])
 app.include_router(roles.router, prefix=f"/api/{version}", tags=["Roles"])
-app.include_router(permissions.router, prefix=f"/api/{version}", tags=["Permissions"])
+
 
 # Staff Org
 app.include_router(staff_titles.router, prefix=f"/api/{version}",tags=["Staff Titles", "Admin"])

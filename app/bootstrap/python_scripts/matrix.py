@@ -1,318 +1,85 @@
-from typing import Dict, List
-from app.core.shared.models.enums import Resource
-from app.core.shared.models.enums import Action
 
-
-matrix: Dict[str, Dict[Resource, List[Action]]] = {
-
-    "STUDENT": {
-        # Identity Management - Own records only
-        Resource.STUDENTS: [Action.READ, Action.UPDATE],  # Own record only
-        Resource.STAFF: [Action.READ],  # Basic info of their teachers EXCEPT CONTACT DETAILS
-        Resource.EDUCATORS: [Action.READ],  # Basic info of their teachers
-        Resource.GUARDIANS: [Action.READ],  # Own guardian info
-
-        # Academic Structure - Related to their studies
-        Resource.CLASSES: [Action.READ],  # Their class
-        Resource.DEPARTMENTS: [Action.READ],  # Their department
-        Resource.ACADEMIC_LEVELS: [Action.READ],  # Their level
-
-        # Curriculum - Their subjects
-        Resource.SUBJECTS: [Action.READ],  # Their subjects
-        Resource.ACADEMIC_LEVEL_SUBJECTS: [Action.READ],  # Their curriculum
-        Resource.STUDENT_SUBJECTS: [Action.READ],  # Their enrollments
-        Resource.SUBJECT_EDUCATORS: [Action.READ],  # Their teacher ON EACH ENROLLMENT
-
-        # Assessment - Own grades
-        Resource.GRADES: [Action.READ],  # Own grades
-        Resource.TOTAL_GRADES: [Action.READ],  # Own total grades
-
-        # Documents & Awards - Own records
-        Resource.DOCUMENTS: [Action.READ],  # Own documents
-        Resource.AWARDS: [Action.READ],  # Own awards
-
-        # Progression - Can request transfers
-        Resource.TRANSFERS: [Action.CREATE],
-        Resource.PROMOTIONS: [Action.READ],  # View own promotions
-        Resource.REPETITIONS: [Action.READ],  # View own repetitions
-    },
-
-    "GUARDIAN": {
-        # Identity Management - Ward records only
-        Resource.STUDENTS: [Action.READ],  # Ward records only
-        Resource.STAFF: [Action.READ],  # Ward's teachers -BASIC INFO
-        Resource.EDUCATORS: [Action.READ],  # Ward's teachers
-        Resource.GUARDIANS: [Action.READ, Action.UPDATE],  # Own profile
-
-        # Academic Structure - Ward's academic info
-        Resource.CLASSES: [Action.READ],  # Ward's class
-        Resource.DEPARTMENTS: [Action.READ],  # Ward's department
-        Resource.ACADEMIC_LEVELS: [Action.READ],  # Ward's level
-
-        # Curriculum - Ward's subjects
-        Resource.SUBJECTS: [Action.READ],  # Ward's subjects
-        Resource.ACADEMIC_LEVEL_SUBJECTS: [Action.READ],  # Ward's curriculum
-        Resource.STUDENT_SUBJECTS: [Action.READ],  # Ward's enrollments
-        Resource.SUBJECT_EDUCATORS: [Action.READ],  # Ward's teachers - ON EACH ENROLLMENT
-
-        # Assessment - Ward's grades
-        Resource.GRADES: [Action.READ],  # Ward's grades
-        Resource.TOTAL_GRADES: [Action.READ],  # Ward's total grades
-
-        # Documents & Awards - Ward's records
-        Resource.DOCUMENTS: [Action.READ],  # Ward's documents
-        Resource.AWARDS: [Action.READ],  # Ward's awards
-
-        # Progression - Ward's progression
-        Resource.TRANSFERS: [Action.READ],  # Ward's transfers
-        Resource.PROMOTIONS: [Action.READ],  # Ward's promotions
-        Resource.REPETITIONS: [Action.READ],  # Ward's repetitions
-    },
-
-    "SUPERUSER": {
+matrix = {
+    "SUPERUSER": [
         # Identity Management
-        Resource.STUDENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                            Action.APPROVE, Action.REJECT],
-        Resource.STAFF: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                         Action.APPROVE, Action.REJECT],
-        Resource.EDUCATORS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                             Action.APPROVE, Action.REJECT],
-        Resource.GUARDIANS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                             Action.APPROVE, Action.REJECT],
+        "STUDENT_CREATE", "STUDENT_READ", "STUDENT_UPDATE", "STUDENT_DELETE",
+        "STUDENT_ARCHIVE", "STUDENT_RESTORE",
+
+        "STAFF_CREATE", "STAFF_READ", "STAFF_UPDATE", "STAFF_DELETE",
+        "STAFF_ARCHIVE", "STAFF_RESTORE",
+
+        "EDUCATOR_CREATE", "EDUCATOR_READ", "EDUCATOR_UPDATE", "EDUCATOR_DELETE",
+        "EDUCATOR_ARCHIVE", "EDUCATOR_RESTORE",
+
+        "GUARDIAN_CREATE", "GUARDIAN_READ", "GUARDIAN_UPDATE", "GUARDIAN_DELETE",
+        "GUARDIAN_ARCHIVE", "GUARDIAN_RESTORE",
 
         # Staff Management
-        Resource.STAFF_DEPARTMENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                     Action.RESTORE, Action.APPROVE, Action.REJECT],
-        Resource.STAFF_ROLES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                               Action.APPROVE, Action.REJECT],
-        Resource.EDUCATOR_QUALIFICATIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                           Action.RESTORE, Action.APPROVE, Action.REJECT],
+        "STAFF_DEPARTMENT_CREATE", "STAFF_DEPARTMENT_READ", "STAFF_DEPARTMENT_UPDATE", "STAFF_DEPARTMENT_DELETE",
+        "STAFF_DEPARTMENT_ARCHIVE", "STAFF_DEPARTMENT_RESTORE",
+
+        "STAFF_JOB_TITLE_CREATE", "STAFF_JOB_TITLE_READ", "STAFF_JOB_TITLE_UPDATE", "STAFF_JOB_TITLE_DELETE",
+        "STAFF_JOB_TITLE_ARCHIVE", "STAFF_JOB_TITLE_RESTORE",
+
+        "EDUCATOR_QUALIFICATION_CREATE", "EDUCATOR_QUALIFICATION_READ", "EDUCATOR_QUALIFICATION_UPDATE", "EDUCATOR_QUALIFICATION_DELETE",
+        "EDUCATOR_QUALIFICATION_ARCHIVE", "EDUCATOR_QUALIFICATION_RESTORE",
 
         # Academic Structure
-        Resource.CLASSES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                           Action.APPROVE, Action.REJECT],
-        Resource.DEPARTMENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                               Action.APPROVE, Action.REJECT],
-        Resource.ACADEMIC_LEVELS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                   Action.RESTORE, Action.APPROVE, Action.REJECT],
+        "CLASSES_CREATE", "CLASSES_READ", "CLASSES_UPDATE", "CLASSES_DELETE",
+        "CLASSES_ARCHIVE", "CLASSES_RESTORE",
+
+        "DEPARTMENT_CREATE", "DEPARTMENT_READ", "DEPARTMENT_UPDATE", "DEPARTMENT_DELETE",
+        "DEPARTMENT_ARCHIVE", "DEPARTMENT_RESTORE",
+
+        "ACADEMIC_LEVEL_CREATE", "ACADEMIC_LEVEL_READ", "ACADEMIC_LEVEL_UPDATE", "ACADEMIC_LEVEL_DELETE",
+        "ACADEMIC_LEVEL_ARCHIVE", "ACADEMIC_LEVEL_RESTORE",
 
         # Curriculum
-        Resource.SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                            Action.APPROVE, Action.REJECT],
-        Resource.ACADEMIC_LEVEL_SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                           Action.RESTORE, Action.APPROVE, Action.REJECT],
-        Resource.STUDENT_SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                    Action.RESTORE, Action.APPROVE, Action.REJECT],
-        Resource.SUBJECT_EDUCATORS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                     Action.RESTORE, Action.APPROVE, Action.REJECT],
+        "SUBJECT_CREATE", "SUBJECT_READ", "SUBJECT_UPDATE", "SUBJECT_DELETE",
+        "SUBJECT_ARCHIVE", "SUBJECT_RESTORE",
+        "ACADEMIC_LEVEL_SUBJECT_CREATE", "ACADEMIC_LEVEL_SUBJECT_READ", "ACADEMIC_LEVEL_SUBJECT_UPDATE", "ACADEMIC_LEVEL_SUBJECT_DELETE",
+        "ACADEMIC_LEVEL_SUBJECT_ARCHIVE", "ACADEMIC_LEVEL_SUBJECT_RESTORE",
+
+        "STUDENT_SUBJECT_CREATE", "STUDENT_SUBJECT_READ", "STUDENT_SUBJECT_DELETE",
+        "STUDENT_SUBJECT_ARCHIVE", "STUDENT_SUBJECT_RESTORE",
+
+        "SUBJECT_EDUCATOR_CREATE", "SUBJECT_EDUCATOR_READ", "SUBJECT_EDUCATOR_DELETE",
+        "SUBJECT_EDUCATOR_ARCHIVE", "SUBJECT_EDUCATOR_RESTORE",
 
         # Assessment
-        Resource.GRADES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                          Action.APPROVE, Action.REJECT],
-        Resource.TOTAL_GRADES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                                Action.APPROVE, Action.REJECT],
+        "GRADE_CREATE", "GRADE_READ", "GRADE_UPDATE", "GRADE_DELETE",
+        "GRADE_ARCHIVE", "GRADE_RESTORE",
+
+        "TOTAL_GRADE_CREATE", "TOTAL_GRADE_READ", "TOTAL_GRADE_UPDATE", "TOTAL_GRADE_DELETE",
+        "TOTAL_GRADE_ARCHIVE", "TOTAL_GRADE_RESTORE",
 
         # Documents & Awards
-        Resource.DOCUMENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                             Action.APPROVE, Action.REJECT],
-        Resource.AWARDS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                          Action.APPROVE, Action.REJECT],
+        "DOCUMENT_CREATE", "DOCUMENT_READ", "DOCUMENT_UPDATE", "DOCUMENT_DELETE",
+        "DOCUMENT_ARCHIVE", "DOCUMENT_RESTORE",
+
+        "AWARD_CREATE", "AWARD_READ", "AWARD_UPDATE", "AWARD_DELETE",
+        "AWARD_ARCHIVE", "AWARD_RESTORE",
 
         # Progression
-        Resource.TRANSFERS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                             Action.APPROVE, Action.REJECT],
-        Resource.PROMOTIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                              Action.APPROVE, Action.REJECT],
-        Resource.REPETITIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                               Action.APPROVE, Action.REJECT],
+        "TRANSFER_CREATE", "TRANSFER_READ", "TRANSFER_UPDATE", "TRANSFER_DELETE",
+        "TRANSFER_ARCHIVE", "TRANSFER_RESTORE", "TRANSFER_APPROVE", "TRANSFER_REJECT",
 
-        # System
-        Resource.ROLE_CHANGE: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                                       Action.APPROVE, Action.REJECT],
-        Resource.AUDITS: [Action.READ],
-        Resource.SYSTEM_CONFIG: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                                 Action.APPROVE, Action.REJECT],
+        "PROMOTION_CREATE", "PROMOTION_READ", "PROMOTION_UPDATE", "PROMOTION_DELETE",
+        "PROMOTION_ARCHIVE", "PROMOTION_RESTORE", "PROMOTION_APPROVE", "PROMOTION_REJECT",
 
-        Resource.ROLE: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                            Action.APPROVE, Action.REJECT],
-    },
+        "REPETITION_CREATE", "REPETITION_READ", "REPETITION_UPDATE", "REPETITION_DELETE",
+        "REPETITION_ARCHIVE", "REPETITION_RESTORE", "REPETITION_APPROVE", "REPETITION_REJECT",
 
-    "SUPER_EDUCATOR": {
-        # Identity Management
-        Resource.STUDENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                            Action.APPROVE, Action.REJECT],
-        Resource.STAFF: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                         Action.APPROVE, Action.REJECT],
-        Resource.EDUCATORS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                             Action.APPROVE, Action.REJECT],
-        Resource.GUARDIANS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                             Action.APPROVE, Action.REJECT],
+        # RBAC
+        "ROLE_CREATE", "ROLE_READ", "ROLE_UPDATE", "ROLE_DELETE",
+        
+        "ROLE_PERMISSION_CREATE", "ROLE_PERMISSION_READ", "ROLE_PERMISSION_UPDATE", "ROLE_PERMISSION_DELETE",
+                
+        "ROLE_CHANGE_CREATE", "ROLE_CHANGE_READ", "ROLE_CHANGE_UPDATE", "ROLE_CHANGE_DELETE",
+        "ROLE_CHANGE_ARCHIVE", "ROLE_CHANGE_RESTORE",
+        
 
-
-        # Academic Structure
-        Resource.CLASSES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                           Action.APPROVE, Action.REJECT],
-        Resource.DEPARTMENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                               Action.APPROVE, Action.REJECT],
-        Resource.ACADEMIC_LEVELS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                   Action.RESTORE, Action.APPROVE, Action.REJECT],
-
-        # Curriculum
-        Resource.SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                            Action.APPROVE, Action.REJECT],
-        Resource.ACADEMIC_LEVEL_SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                           Action.RESTORE, Action.APPROVE, Action.REJECT],
-        Resource.STUDENT_SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                    Action.RESTORE, Action.APPROVE, Action.REJECT],
-        Resource.SUBJECT_EDUCATORS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                     Action.RESTORE, Action.APPROVE, Action.REJECT],
-
-        # Assessment
-        Resource.GRADES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                          Action.APPROVE, Action.REJECT],
-        Resource.TOTAL_GRADES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE,
-                                Action.RESTORE,
-                                Action.APPROVE, Action.REJECT],
-
-        # Documents & Awards
-        Resource.DOCUMENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                             Action.APPROVE, Action.REJECT],
-        Resource.AWARDS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                          Action.APPROVE, Action.REJECT],
-
-        # Progression
-        Resource.TRANSFERS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                             Action.APPROVE, Action.REJECT],
-        Resource.PROMOTIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                              Action.APPROVE, Action.REJECT],
-        Resource.REPETITIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
-                               Action.APPROVE, Action.REJECT],
-
-    },
-
-    "EDUCATOR": {
-        # Identity Management - Contextual access
-        Resource.STUDENTS: [Action.READ, Action.UPDATE],  # Only their students
-        Resource.STAFF: [Action.READ],
-        Resource.EDUCATORS: [Action.READ],
-        Resource.GUARDIANS: [Action.READ],  # Only for their students' guardians
-
-        # Staff Management
-        Resource.EDUCATOR_QUALIFICATIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE],  # Own qualifications only
-
-        # Academic Structure
-        Resource.CLASSES: [Action.READ],
-        Resource.DEPARTMENTS: [Action.READ],
-        Resource.ACADEMIC_LEVELS: [Action.READ],
-
-        # Curriculum
-        Resource.SUBJECTS: [Action.READ],
-        Resource.ACADEMIC_LEVEL_SUBJECTS: [Action.READ],  # Their subjects
-        Resource.STUDENT_SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE],  # For their students
-        Resource.SUBJECT_EDUCATORS: [Action.READ],
-
-        # Assessment
-        Resource.GRADES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE],  # For their subjects
-        Resource.TOTAL_GRADES: [Action.READ],  # For their students
-
-        # Documents & Awards
-        Resource.DOCUMENTS: [Action.READ, Action.CREATE, Action.UPDATE],  # For their students
-        Resource.AWARDS: [Action.CREATE, Action.READ, Action.UPDATE],  # For their students
-
-        # Progression
-        Resource.TRANSFERS: [Action.CREATE, Action.READ, Action.UPDATE, Action.APPROVE,
-                             Action.REJECT],  # For their students/department
-        Resource.PROMOTIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.APPROVE, Action.REJECT],  # For their students
-        Resource.REPETITIONS: [Action.CREATE, Action.READ, Action.UPDATE, Action.APPROVE, Action.REJECT],  # For their students
-
-        # System
-        Resource.ROLE_CHANGE: [Action.READ],  # Own changes only
-
-    },
-
-    "ADMIN": {
-        # Identity Management
-        Resource.STUDENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.ARCHIVE, Action.RESTORE],
-        Resource.STAFF: [Action.CREATE, Action.READ, Action.UPDATE, Action.ARCHIVE, Action.RESTORE],
-        Resource.EDUCATORS: [Action.CREATE, Action.READ, Action.UPDATE, Action.ARCHIVE, Action.RESTORE],
-        Resource.GUARDIANS: [Action.CREATE, Action.READ, Action.UPDATE, Action.ARCHIVE, Action.RESTORE],
-
-        # Staff Management - Read only
-        Resource.STAFF_DEPARTMENTS: [Action.READ],
-        Resource.STAFF_ROLES: [Action.READ],
-        Resource.EDUCATOR_QUALIFICATIONS: [Action.READ],
-
-        # Academic Structure
-        Resource.CLASSES: [Action.CREATE, Action.READ, Action.UPDATE],
-        Resource.DEPARTMENTS: [Action.READ],
-        Resource.ACADEMIC_LEVELS: [Action.READ],
-
-        # Curriculum
-        Resource.SUBJECTS: [Action.READ],
-        Resource.ACADEMIC_LEVEL_SUBJECTS: [Action.READ],
-        Resource.STUDENT_SUBJECTS: [Action.CREATE, Action.READ, Action.UPDATE],
-        Resource.SUBJECT_EDUCATORS: [Action.CREATE, Action.READ, Action.UPDATE],
-
-        # Assessment - Read only
-        Resource.GRADES: [Action.READ],
-        Resource.TOTAL_GRADES: [Action.READ],
-
-        # Documents & Awards
-        Resource.DOCUMENTS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE],
-        Resource.AWARDS: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE],
-
-        # Progression - Can process but not approve
-        Resource.TRANSFERS: [Action.CREATE, Action.READ, Action.UPDATE],
-        Resource.PROMOTIONS: [Action.CREATE, Action.READ, Action.UPDATE],
-        Resource.REPETITIONS: [Action.CREATE, Action.READ, Action.UPDATE],
-
-        # System
-        Resource.ROLE_CHANGE: [Action.READ],
-        Resource.AUDITS: [Action.READ],
-    },
-
+        #Audit
+        "AUDIT_READ"
+    ]
 }
-
-# Contextual access rules for roles that need row-level filtering
-CONTEXTUAL_ACCESS_RULES: Dict[str, Dict[Resource, str]] = {
-    "EDUCATOR": {
-        Resource.STUDENTS: "educator_student_access",
-        Resource.GUARDIANS: "educator_guardian_access",
-        Resource.GRADES: "educator_grade_access",
-        Resource.DOCUMENTS: "educator_document_access",
-        Resource.AWARDS: "educator_award_access",
-        Resource.TRANSFERS: "educator_transfer_access",
-        Resource.PROMOTIONS: "educator_promotion_access",
-        Resource.REPETITIONS: "educator_repetition_access",
-        Resource.STUDENT_SUBJECTS: "educator_student_subject_access",
-    },
-    "STUDENT": {
-        Resource.STUDENTS: "own_record_only",
-        Resource.GUARDIANS: "own_guardian_only",
-        Resource.GRADES: "own_grades_only",
-        Resource.DOCUMENTS: "own_documents_only",
-        Resource.AWARDS: "own_awards_only",
-        Resource.TRANSFERS: "own_transfers_only",
-        Resource.PROMOTIONS: "own_promotions_only",
-        Resource.REPETITIONS: "own_repetitions_only",
-        Resource.STUDENT_SUBJECTS: "own_subjects_only",
-        Resource.CLASSES: "own_class_only",
-        Resource.DEPARTMENTS: "own_department_only",
-        Resource.ACADEMIC_LEVELS: "own_level_only",
-    },
-    "GUARDIAN": {
-        Resource.STUDENTS: "ward_records_only",
-        Resource.GUARDIANS: "own_record_only",
-        Resource.GRADES: "ward_grades_only",
-        Resource.DOCUMENTS: "ward_documents_only",
-        Resource.AWARDS: "ward_awards_only",
-        Resource.TRANSFERS: "ward_transfers_only",
-        Resource.PROMOTIONS: "ward_promotions_only",
-        Resource.REPETITIONS: "ward_repetitions_only",
-        Resource.STUDENT_SUBJECTS: "ward_subjects_only",
-        Resource.CLASSES: "ward_class_only",
-        Resource.DEPARTMENTS: "ward_department_only",
-        Resource.ACADEMIC_LEVELS: "ward_level_only",
-    }
-}
-

@@ -26,7 +26,7 @@ class Role(Base,TimeStampMixins, ArchiveMixins):
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     name: Mapped[UserRoleName] = mapped_column(Enum(UserRoleName, name='userrolename'), unique=True)
     description: Mapped[str] = mapped_column(String(3000))
-    rank: Mapped[int] = mapped_column(Integer)
+    rank: Mapped[int] = mapped_column(Integer, nullable = True)
 
     #Audit
     created_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id'), nullable=True)
@@ -40,7 +40,7 @@ class Role(Base,TimeStampMixins, ArchiveMixins):
     staff_members: Mapped[List['Staff']] = relationship(back_populates='role', primaryjoin='Staff.current_role_id == Role.id')#on staff only
 
 
-class RolePermission(Base):
+class RolePermission(Base, AuditMixins, TimeStampMixins):
     __tablename__ = 'role_permissions'
 
     role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id'), primary_key=True)
