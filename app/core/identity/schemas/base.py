@@ -1,5 +1,5 @@
 from ...shared.schemas.common_imports import *
-from ...shared.schemas.enums import Gender,  ArchiveReason
+from ...shared.schemas.enums import Gender, ArchiveReason, UserRoleName
 
 
 class UserBase(BaseModel):
@@ -15,6 +15,7 @@ class ProfileInDb(BaseModel):
     password_hash:str
     created_at: datetime
     created_by: UUID | None
+    current_role_id: UUID
     last_login: datetime
     deletion_eligible: bool
     last_modified_at: datetime

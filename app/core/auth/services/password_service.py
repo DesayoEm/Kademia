@@ -1,6 +1,5 @@
 import random
 import string
-from sqlalchemy import or_, func
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from sqlalchemy import select

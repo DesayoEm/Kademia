@@ -2,7 +2,9 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
+from app.core.identity.services.rbac_service import RBACService
 from app.core.shared.factory.base_factory import BaseFactory
+from app.core.shared.schemas.enums import UserRoleName
 from app.core.shared.services.email_service.onboarding import OnboardingService
 from app.core.auth.services.password_service import PasswordService
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -37,6 +39,7 @@ class GuardianFactory(BaseFactory):
         self.password_service = PasswordService(session)
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session, current_user)
+        self.rbac_service = RBACService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.onboarding_service = OnboardingService()
@@ -76,6 +79,7 @@ class GuardianFactory(BaseFactory):
             email_address=self.validator.validate_email_address(data.email_address),
             address=self.validator.validate_address(data.address),
             phone=self.validator.validate_phone(data.phone),
+            current_role_id=self.rbac_service.fetch_role_id(UserRoleName.GUARDIAN.value),
             created_by=self.actor_id,
             last_modified_by=self.actor_id,
         )

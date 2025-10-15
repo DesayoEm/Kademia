@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
 from app.core.shared.factory.base_factory import BaseFactory
-from app.core.shared.models.enums import StaffType
+from app.core.shared.models.enums import StaffType, UserRoleName
 from app.core.shared.services.email_service.onboarding import OnboardingService
 from app.core.auth.services.password_service import PasswordService
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
@@ -11,6 +11,7 @@ from app.core.shared.services.lifecycle_service.delete_service import DeleteServ
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from app.core.identity.services.validators import IdentityValidator
 from app.core.identity.models.staff import Staff, Educator, SupportStaff, AdminStaff
+from ..services.rbac_service import RBACService
 from ...shared.exceptions.maps.error_map import error_map
 from ...shared.exceptions import ArchiveDependencyError, EntityNotFoundError, StaffTypeError, DeletionDependencyError
 from ...shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
@@ -38,6 +39,7 @@ class StaffFactory(BaseFactory):
         self.onboarding_service = OnboardingService()
         self.delete_service = DeleteService(self.model, session)
         self.archive_service = ArchiveService(session, current_user)
+        self.rbac_service = RBACService(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
         self.actor_id: UUID = self.get_actor_id()
@@ -73,6 +75,7 @@ class StaffFactory(BaseFactory):
                 "date_joined": self.validator.validate_date(data.date_joined),
                 "created_by": self.actor_id,
                 "last_modified_by": self.actor_id,
+                "current_role_id" :self.rbac_service.fetch_role_id(UserRoleName.INACTIVE.value)
             }
 
             if data.staff_type == "Educator":

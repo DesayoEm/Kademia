@@ -146,5 +146,9 @@ matrix = {
         "PROMOTION_READ",
         "REPETITION_READ",
     ],
+
+    "INACTIVE":[
+        "STAFF_READ" #Oen records
+    ]
 }
 

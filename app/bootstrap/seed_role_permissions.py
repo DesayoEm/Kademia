@@ -19,7 +19,7 @@ def seed_roles():
     try:
         roles = []
         role_names = ["SUPERUSER", "SUPER_EDUCATOR", "EDUCATOR",
-                      "STUDENT", "GUARDIAN", "ADMIN"]
+                      "STUDENT", "GUARDIAN", "ADMIN", "INACTIVE"]
 
         for role_name in role_names:
             name = UserRoleName[role_name]

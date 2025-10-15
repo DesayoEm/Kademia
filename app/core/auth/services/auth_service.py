@@ -50,10 +50,11 @@ class AuthService:
     def log_in(self, identifier: str, password: str, user_type: UserType):
         """Login a identity and generate access tokens"""
         user = self.authenticate_user(identifier, password, user_type)
+
         user_data = {
             "user_id": str(user.id),
             "user_type": user_type.value,
-            "access_level": user.access_level,
+            "current_role_id": str(user.current_role_id),
         }
 
         if user_type == UserType.STAFF:

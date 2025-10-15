@@ -11,11 +11,11 @@ def run_bootstrap():
     try:
         # create_tables()
         # init_system_user_and_role()
-        # seed_roles()
+        seed_roles()
         # seed_super_user()
 
         # seed_permissions()
-        seed_super_user_permissions()
+        # seed_super_user_permissions()
         # seed_student_permissions()
         # seed_guardian_permissions()
 
