@@ -1,6 +1,6 @@
 from .base import UserBase
 from app.core.shared.models.common_imports import *
-from app.core.shared.models.enums import UserRoleName, EmploymentStatus, UserType, StaffType, StaffAvailability
+from app.core.shared.models.enums import StaffStatus, UserType, StaffType, StaffAvailability
 
 
 
@@ -11,7 +11,7 @@ class Staff(UserBase):
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name='usertype'), default=UserType.STAFF)
     staff_type: Mapped[StaffType] = mapped_column(Enum(StaffType, name='stafftype'))
 
-    status: Mapped[EmploymentStatus] = mapped_column(Enum(EmploymentStatus, name='employmentstatus'), default=EmploymentStatus.ACTIVE)
+    status: Mapped[StaffStatus] = mapped_column(Enum(StaffStatus, name='employmentstatus'), default=StaffStatus.ACTIVE)
     availability: Mapped[StaffAvailability] = mapped_column(Enum(StaffAvailability, name='staffavailability'), default=StaffAvailability.AVAILABLE)
     email_address: Mapped[str] = mapped_column(String(255), unique=True)
     address: Mapped[str] = mapped_column(String(500))

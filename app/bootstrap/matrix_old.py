@@ -5,69 +5,7 @@ from app.core.shared.models.enums import Action
 
 matrix: Dict[str, Dict[Resource, List[Action]]] = {
 
-    "STUDENT": {
-        # Identity Management - Own records only
-        Resource.STUDENT: [Action.READ, Action.UPDATE],  # Own record only
-        Resource.STAFF: [Action.READ],  # Basic info of their teachers EXCEPT CONTACT DETAILS
-        Resource.EDUCATOR: [Action.READ],  # Basic info of their teachers
-        Resource.GUARDIAN: [Action.READ],  # Own guardian info
 
-        # Academic Structure - Related to their studies
-        Resource.CLASSES: [Action.READ],  # Their class
-        Resource.DEPARTMENT: [Action.READ],  # Their department
-        Resource.ACADEMIC_LEVEL: [Action.READ],  # Their level
-
-        # Curriculum - Their subjects
-        Resource.SUBJECT: [Action.READ],  # Their subjects
-        Resource.ACADEMIC_LEVEL_SUBJECT: [Action.READ],  # Their curriculum
-        Resource.STUDENT_SUBJECT: [Action.READ],  # Their enrollments
-        Resource.SUBJECT_EDUCATOR: [Action.READ],  # Their teacher ON EACH ENROLLMENT
-
-        # Assessment - Own grades
-        Resource.GRADE: [Action.READ],  # Own grades
-        Resource.TOTAL_GRADE: [Action.READ],  # Own total grades
-
-        # Documents & Awards - Own records
-        Resource.DOCUMENT: [Action.READ],  # Own documents
-        Resource.AWARD: [Action.READ],  # Own awards
-
-        # Progression - Can request transfers
-        Resource.TRANSFER: [Action.CREATE],
-        Resource.PROMOTION: [Action.READ],  # View own promotions
-        Resource.REPETITION: [Action.READ],  # View own repetitions
-    },
-
-    "GUARDIAN": {
-        # Identity Management - Ward records only
-        Resource.STUDENT: [Action.READ],  # Ward records only
-        Resource.STAFF: [Action.READ],  # Ward's teachers -BASIC INFO
-        Resource.EDUCATOR: [Action.READ],  # Ward's teachers
-        Resource.GUARDIAN: [Action.READ, Action.UPDATE],  # Own profile
-
-        # Academic Structure - Ward's academic info
-        Resource.CLASSE: [Action.READ],  # Ward's class
-        Resource.DEPARTMENT: [Action.READ],  # Ward's department
-        Resource.ACADEMIC_LEVEL: [Action.READ],  # Ward's level
-
-        # Curriculum - Ward's subjects
-        Resource.SUBJECT: [Action.READ],  # Ward's subjects
-        Resource.ACADEMIC_LEVEL_SUBJECT: [Action.READ],  # Ward's curriculum
-        Resource.STUDENT_SUBJECT: [Action.READ],  # Ward's enrollments
-        Resource.SUBJECT_EDUCATOR: [Action.READ],  # Ward's teachers - ON EACH ENROLLMENT
-
-        # Assessment - Ward's grades
-        Resource.GRADE: [Action.READ],  # Ward's grades
-        Resource.TOTAL_GRADE: [Action.READ],  # Ward's total grades
-
-        # Documents & Awards - Ward's records
-        Resource.DOCUMENT: [Action.READ],  # Ward's documents
-        Resource.AWARD: [Action.READ],  # Ward's awards
-
-        # Progression - Ward's progression
-        Resource.TRANSFER: [Action.READ],  # Ward's transfers
-        Resource.PROMOTION: [Action.READ],  # Ward's promotions
-        Resource.REPETITION: [Action.READ],  # Ward's repetitions
-    },
 
     "SUPER_EDUCATOR": {
         # Identity Management
@@ -82,7 +20,7 @@ matrix: Dict[str, Dict[Resource, List[Action]]] = {
 
 
         # Academic Structure
-        Resource.CLASSE: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
+        Resource.CLASSES: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
                            Action.APPROVE, Action.REJECT],
         Resource.DEPARTMENT: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE, Action.ARCHIVE, Action.RESTORE,
                                Action.APPROVE, Action.REJECT],

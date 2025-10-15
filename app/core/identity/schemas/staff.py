@@ -1,6 +1,6 @@
 from ...shared.schemas.common_imports import *
 from ...shared.schemas.shared_models import *
-from ...shared.schemas.enums import StaffType, UserType, EmploymentStatus, StaffAvailability, UserRoleName
+from ...shared.schemas.enums import StaffType, UserType, StaffStatus, StaffAvailability, UserRoleName
 from .base import UserBase
 
 
@@ -76,7 +76,7 @@ class StaffAudit(BaseModel):
     id: UUID | None = None
     current_role: UserRoleName
     user_type: UserType
-    status: EmploymentStatus
+    status: StaffStatus
     availability: StaffAvailability
     date_left: date | None = None
     created_at: datetime | None = None

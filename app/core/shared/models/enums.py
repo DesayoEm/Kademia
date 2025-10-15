@@ -41,7 +41,7 @@ class StaffAvailability(str, Enum):
     UNAVAILABLE = 'UNAVAILABLE'
 
 
-class EmploymentStatus(str, Enum):
+class StaffStatus(str, Enum):
     ACTIVE = 'ACTIVE'
     LEFT = 'LEFT'
 

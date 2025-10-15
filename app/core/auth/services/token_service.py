@@ -3,7 +3,7 @@ import jwt
 import uuid
 
 from app.core.shared.exceptions import TokenInvalidError, TokenExpiredError
-from app.infra.settings import config
+from app.settings import config
 
 class TokenService:
     def __init__(self):

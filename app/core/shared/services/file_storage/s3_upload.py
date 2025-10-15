@@ -8,7 +8,7 @@ from app.core.shared.exceptions.file_errors import EmptyFileError, FileTooSmallE
     UnsupportedFileFormatError
 from app.core.shared.exceptions.file_errors import AbsentKeyError
 from app.infra.log_service.logger import logger
-from app.infra.settings import config
+from app.settings import config
 
 
 s3 = boto3.resource('s3')

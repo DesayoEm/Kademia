@@ -1,12 +1,12 @@
 
-from uuid import UUID, uuid4
+from uuid import uuid4
 import magic
 from sqlalchemy.orm import Session
 
 from app.core.identity.models.student import Student
 from app.core.shared.services.file_storage.s3_upload import S3Upload
 from app.infra.log_service.logger import logger
-from app.infra.settings import config
+from app.settings import config
 from app.core.documents.models.documents import StudentAward, StudentDocument
 
 

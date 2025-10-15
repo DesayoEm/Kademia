@@ -3,9 +3,7 @@ from typing import List
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from sqlalchemy import select, exists
-from app.core.shared.exceptions import EntityInUseError
-from app.core.shared.exceptions.maps.error_map import error_map
-from app.infra.settings import config
+from app.settings import config
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from .dependency_config import DEPENDENCY_CONFIG
 

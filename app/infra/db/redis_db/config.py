@@ -1,4 +1,4 @@
-from app.infra.settings import config
+from app.settings import config
 import redis
 
 
