@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 from app.core.shared.exceptions.email_errors import EmailFailedToSendError
-from app.infra.settings import email_settings
+from app.settings import email_settings
 
 class EmailService:
     def __init__(self):

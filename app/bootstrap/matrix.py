@@ -81,5 +81,70 @@ matrix = {
 
         #Audit
         "AUDIT_READ"
-    ]
+    ],
+
+    "STUDENT": [
+        # Identity Management - Own records only
+        "STUDENT_READ", "STUDENT_UPDATE",
+        "STAFF_READ",
+        "EDUCATOR_READ",
+        "GUARDIAN_READ",
+
+        # Academic Structure - Related to their studies
+        "CLASSES_READ",
+        "DEPARTMENT_READ",
+        "ACADEMIC_LEVEL_READ",
+
+        # Curriculum - Their subjects
+        "SUBJECT_READ",
+        "ACADEMIC_LEVEL_SUBJECT_READ",
+        "STUDENT_SUBJECT_READ",
+        "SUBJECT_EDUCATOR_READ",
+
+        # Assessment - Own grades
+        "GRADE_READ",
+        "TOTAL_GRADE_READ",
+
+        # Documents & Awards - Own records
+        "DOCUMENT_READ",
+        "AWARD_READ",
+
+        # Progression
+        "TRANSFER_CREATE",
+        "PROMOTION_READ",
+        "REPETITION_READ",
+    ],
+
+    "GUARDIAN": [
+        # Identity Management - Ward records only
+        "STUDENT_READ",
+        "STAFF_READ",
+        "EDUCATOR_READ", #on subject allocations
+        "GUARDIAN_READ", "GUARDIAN_UPDATE",
+
+        # Academic Structure - Ward's academic info
+        "CLASSES_READ",
+        "DEPARTMENT_READ",
+        "ACADEMIC_LEVEL_READ",
+
+        # Curriculum - Ward's subjects
+        "SUBJECT_READ",
+        "ACADEMIC_LEVEL_SUBJECT_READ",
+        "STUDENT_SUBJECT_READ",
+        "SUBJECT_EDUCATOR_READ",
+
+        # Assessment - Ward's grades
+        "GRADE_READ",
+        "TOTAL_GRADE_READ",
+
+        # Documents & Awards - Ward's records
+        "DOCUMENT_READ",
+        "AWARD_READ",
+
+        # Progression
+        "TRANSFER_READ",
+        "PROMOTION_READ",
+        "REPETITION_READ",
+    ],
 }
+

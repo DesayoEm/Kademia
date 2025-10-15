@@ -1,9 +1,8 @@
-from app.bootstrap.python_scripts.matrix import matrix
-from app.infra.settings import config
+from app.settings import config
 from app.infra.db.db_config import engine
 from sqlalchemy.orm import Session
 from app.core.shared.models.enums import Action, Resource
-from app.core.rbac.models import Permission, RolePermission
+from app.core.rbac.models import Permission
 from uuid import UUID, uuid4
 from datetime import datetime
 
@@ -23,7 +22,7 @@ now = datetime.now()
 KADEMIA_ID = UUID(config.KADEMIA_ID)
 
 
-def init_permissions():
+def seed_permissions():
     try:
         permissions = []
         for resource in resources:
@@ -61,7 +60,7 @@ def init_permissions():
         session.commit()
 
         for permission in permissions:
-            print(f"{permission.name} created purr")
+            print(f"{permission.name} created")
 
     except Exception as e:
         print(f"Error: {e} \n xxxxxxxxxxxxxxxxxxxxxxxxx")

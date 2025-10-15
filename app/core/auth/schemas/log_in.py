@@ -10,7 +10,7 @@ class StaffLoginRequest(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "email": "system@kademia.com",
+                "email": "admin@kademia.com",
                 "password": "kademia"
         }
     }

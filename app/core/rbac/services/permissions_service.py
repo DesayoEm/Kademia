@@ -7,8 +7,7 @@ from app.core.identity.models.student import Student
 from app.core.identity.models.guardian import Guardian
 from app.core.rbac.models import Permission, Role
 from app.core.shared.models.enums import Resource, Action
-from app.core.rbac.matrix import PERMISSION_MATRIX, CONTEXTUAL_ACCESS_RULES
-
+from app.core.rbac.matrix import CONTEXTUAL_ACCESS_RULES
 
 from app.core.assessment.models.assessment import Grade, TotalGrade
 from app.core.documents.models.documents import StudentDocument, StudentAward
@@ -21,8 +20,12 @@ class PermissionService:
         self.session = session
         self.current_user = current_user
 
-    def has_permission(self, user_role: Role, resource: Resource, action: Action) -> bool:
+    def has_permission(self, current_role_id: UUID, resource: Resource, action: Action) -> bool:
         """Check if a role has permission to perform an action on a resource"""
+        role = #get_role_from_db
+        role_permissions = role.permissions
+
+        
         if user_role.value not in PERMISSION_MATRIX:
             return False
 

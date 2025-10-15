@@ -4,7 +4,7 @@ from typing import Dict, Any
 from sqlalchemy.orm import Session
 from app.core.shared.services.file_storage.s3_upload import S3Upload
 from app.infra.log_service.logger import logger
-from app.infra.settings import config
+from app.settings import config
 
 
 class ProfilePictureService:
