@@ -22,16 +22,3 @@ RESOURCE_TO_MODEL = {
     Resource.TRANSFER: DepartmentTransfer,
     Resource.STUDENT_SUBJECT: StudentSubject,
 }
-
-student_resources =[
-    Student,
-    StudentDocument,
-    StudentAward,
-    Grade,
-    TotalGrade,
-    Promotion,
-    Repetition,
-    DepartmentTransfer,
-    StudentSubject
-]
-

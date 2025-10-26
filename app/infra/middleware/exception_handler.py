@@ -36,6 +36,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         # RBAC exceptions
         NegativeRankError: status.HTTP_400_BAD_REQUEST,
         NoMatchingRoleError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+        PermissionHandlerError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         AccessDenied: status.HTTP_403_FORBIDDEN,
 
         # Generic db exceptions

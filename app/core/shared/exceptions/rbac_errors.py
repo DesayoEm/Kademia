@@ -27,3 +27,12 @@ class AccessDenied(RoleError):
         super().__init__()
         self.user_message = f"Access denied. \nCheck with you administrator if you think you should be a able to access this record"
         self.log_message = f"Access denied for {user_id}. \n Error: Tried to {permission} on {resource_id}"
+
+
+class PermissionHandlerError(RoleError):
+    """Raised when a user tries to access a resource they don't have permissions to"""
+
+    def __init__(self, message: str):
+        super().__init__()
+        self.user_message = f"Internal server error"
+        self.log_message = f"{message}"

@@ -8,7 +8,7 @@ from app.core.identity.models.student import Student
 from app.core.identity.models.guardian import Guardian
 from app.core.rbac.factories.role import RoleFactory
 from app.core.rbac.models import Permission, Role
-from app.core.rbac.services.contextual_permission_config import student_resources, RESOURCE_TO_MODEL
+from app.core.rbac.services.contextual_permission_config import RESOURCE_TO_MODEL
 from app.core.rbac.services.role_service import RBACService
 from app.core.shared.exceptions.rbac_errors import AccessDenied
 from app.core.shared.models.enums import Resource, Action, UserType
