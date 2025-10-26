@@ -35,7 +35,8 @@ from .auth_errors import (
 
 from .rbac_errors import (
     NegativeRankError,
-    NoMatchingRoleError
+    NoMatchingRoleError,
+    AccessDenied
 )
 
 

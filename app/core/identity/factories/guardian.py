@@ -2,7 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 
-from app.core.identity.services.rbac_service import RBACService
+from app.core.rbac.services.role_service import RBACService
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.schemas.enums import UserRoleName
 from app.core.shared.services.email_service.onboarding import OnboardingService

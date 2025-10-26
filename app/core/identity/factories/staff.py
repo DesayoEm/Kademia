@@ -11,7 +11,7 @@ from app.core.shared.services.lifecycle_service.delete_service import DeleteServ
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
 from app.core.identity.services.validators import IdentityValidator
 from app.core.identity.models.staff import Staff, Educator, SupportStaff, AdminStaff
-from ..services.rbac_service import RBACService
+from app.core.rbac.services.role_service import RBACService
 from ...shared.exceptions.maps.error_map import error_map
 from ...shared.exceptions import ArchiveDependencyError, EntityNotFoundError, StaffTypeError, DeletionDependencyError
 from ...shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation

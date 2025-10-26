@@ -8,7 +8,8 @@ from app.core.shared.exceptions import  EntityNotFoundError
 from app.core.shared.exceptions.decorators.repo_error_handlers import handle_write_errors, handle_read_errors
 
 NOT_FOUND_ERROR = "Object not found"
-
+#Commits are not done in the repository layer and is handled by FastAPI dependency layer (session_manager.py)
+#This way, every request automatically becomes an atomic transaction.
 
 class BaseRepository(Repository[T]):
     """Base repository class"""
@@ -40,7 +41,6 @@ class SQLAlchemyRepository(BaseRepository[T]):
         """Create a new entity in the db."""
         self.session.add(entity)
         self.session.flush()
-        self.session.commit()
         self.session.refresh(entity)
         return entity
 
@@ -162,7 +162,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
         if modified_by and hasattr(entity, "last_modified_by"):
             entity.last_modified_by = modified_by
 
-        self.session.commit()
+
         self.session.refresh(entity)
         return entity
 
@@ -181,7 +181,6 @@ class SQLAlchemyRepository(BaseRepository[T]):
                 )
 
         entity.archive(archived_by_id, reason)
-        self.session.commit()
         self.session.refresh(entity)
         return entity
 
@@ -200,7 +199,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
                 )
 
         self.session.delete(entity)
-        self.session.commit()
+
 
 
     @handle_read_errors()
@@ -254,7 +253,7 @@ class SQLAlchemyRepository(BaseRepository[T]):
                 )
 
         entity.restore()
-        self.session.commit()
+
         self.session.refresh(entity)
         return entity
 
@@ -273,4 +272,4 @@ class SQLAlchemyRepository(BaseRepository[T]):
                 )
 
         self.session.delete(entity)
-        self.session.commit()
+

@@ -90,5 +90,13 @@ class ArchiveService:
             self.session.rollback()
             raise CascadeArchivalError(f"[{entity_model}] Failed to archive main object: {e}")
 
-
+# return {
+#         "student_id": student_id,
+#         "archived_entities": {
+#             "grades": result.get('grades_count', 0),
+#             "documents": result.get('documents_count', 0),
+#             "awards": result.get('awards_count', 0),
+#         },
+#         "message": "Deep archive completed successfully"
+#     }
 
