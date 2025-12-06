@@ -1,6 +1,7 @@
 from typing import Generator
 from .db_config import SessionFactory
 
+
 def get_db() -> Generator:
     db = SessionFactory()
     try:

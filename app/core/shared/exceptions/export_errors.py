@@ -1,5 +1,6 @@
 from .base_error import KademiaError
 
+
 class ExportError(KademiaError):
     """Base exception for all export-related exceptions"""
 
@@ -13,6 +14,7 @@ class ExportFormatError(ExportError):
 
         super().__init__()
 
+
 class UnimplementedGathererError(ExportError):
     """Raised when a data gatherer method is not called during exporting."""
 
@@ -21,5 +23,3 @@ class UnimplementedGathererError(ExportError):
         self.log_message = f"No gatherer implemented for {entity}"
 
         super().__init__()
-
-

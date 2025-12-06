@@ -13,10 +13,20 @@ If missing, Kademia will crash while attempting to raise an exception.
 Example:
     Student: (Student, "Student")
 """
-from ....curriculum.models.curriculum import SubjectEducator, StudentSubject, Subject, AcademicLevelSubject
+
+from ....curriculum.models.curriculum import (
+    SubjectEducator,
+    StudentSubject,
+    Subject,
+    AcademicLevelSubject,
+)
 from ....documents.models.documents import StudentDocument, StudentAward
 from ....rbac.models import RoleHistory
-from app.core.staff_management.models import StaffDepartment, StaffJobTitle, EducatorQualification
+from app.core.staff_management.models import (
+    StaffDepartment,
+    StaffJobTitle,
+    EducatorQualification,
+)
 from app.core.academic_structure.models import StudentDepartment, Classes, AcademicLevel
 from ....transfer.models.transfer import DepartmentTransfer
 from ....assessment.models.assessment import Grade, TotalGrade
@@ -35,18 +45,15 @@ error_map = {
     Educator: (Educator, "educator"),
     AdminStaff: (AdminStaff, "administrative staff"),
     SupportStaff: (SupportStaff, "support staff"),
-
     # Staff organization models
     StaffJobTitle: (StaffJobTitle, "title"),
     StaffDepartment: (StaffDepartment, "department"),
     EducatorQualification: (EducatorQualification, "qualification"),
-
     # Student organization models
     AcademicLevel: (AcademicLevel, "academic level"),
     StudentDepartment: (StudentDepartment, "department"),
     Classes: (Classes, "class"),
     DepartmentTransfer: (DepartmentTransfer, "department transfer"),
-
     # Curriculum models
     Subject: (Subject, "subject"),
     AcademicLevelSubject: (AcademicLevelSubject, "curriculum assignment"),
@@ -55,14 +62,11 @@ error_map = {
     Grade: (Grade, "grade"),
     TotalGrade: (TotalGrade, "total grade"),
     StudentAward: (StudentAward, "award"),
-
     # Document models
     StudentDocument: (StudentDocument, "document"),
-
     # Auth models
     RoleHistory: (RoleHistory, "role history"),
-
     # Progression
     Repetition: (Repetition, "repetition record"),
-    Promotion: (Promotion, "promotion record")
+    Promotion: (Promotion, "promotion record"),
 }

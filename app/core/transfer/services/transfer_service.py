@@ -3,19 +3,23 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from app.core.shared.exceptions import TransferStatusAlreadySetError, EmptyFieldError, DepartmentNotSetError
+from app.core.shared.exceptions import (
+    TransferStatusAlreadySetError,
+    EmptyFieldError,
+    DepartmentNotSetError,
+)
 from app.core.transfer.factories.transfer import TransferFactory
 from app.core.transfer.models.transfer import DepartmentTransfer
-
 
 
 class TransferService:
     def __init__(self, session: Session, current_user):
         self.session = session
         self.current_user = current_user
-        self.factory = TransferFactory(self.session, DepartmentTransfer, self.current_user)
+        self.factory = TransferFactory(
+            self.session, DepartmentTransfer, self.current_user
+        )
         self.domain = "TRANSFER"
-
 
     def check_student_has_department(self, student_id: UUID):
         """Check if a student is assigned to a department before attempting transfer."""
@@ -28,7 +32,6 @@ class TransferService:
         if not student.department_id:
             raise DepartmentNotSetError(student_id)
         return student.department_id
-
 
     def action_transfer_record(self, transfer_id: UUID, data: dict):
         """
@@ -62,10 +65,12 @@ class TransferService:
 
             return self.factory.update_transfer(
                 transfer_id,
-                {"status": data["status"].value,
-                 "decision_reason": data["decision_reason"],
-                 "status_completed_by": self.current_user.id,
-                 "status_completed_at": datetime.now()}
+                {
+                    "status": data["status"].value,
+                    "decision_reason": data["decision_reason"],
+                    "status_completed_by": self.current_user.id,
+                    "status_completed_at": datetime.now(),
+                },
             )
 
         # if approved, persist student's new department, and transfer record
@@ -76,10 +81,10 @@ class TransferService:
 
             return self.factory.update_transfer(
                 transfer_id,
-                {"status": data["status"].value,
-                 "decision_reason": data["decision_reason"],
-                 "status_completed_by": self.current_user.id,
-                 "status_completed_at": datetime.now()}
+                {
+                    "status": data["status"].value,
+                    "decision_reason": data["decision_reason"],
+                    "status_completed_by": self.current_user.id,
+                    "status_completed_at": datetime.now(),
+                },
             )
-        
-        

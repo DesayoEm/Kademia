@@ -1,4 +1,3 @@
-
 from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
@@ -9,16 +8,26 @@ from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
-from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, DeletionDependencyError
+from app.core.shared.exceptions.decorators.resolve_unique_violation import (
+    resolve_unique_violation,
+)
+from app.core.shared.exceptions.decorators.resolve_fk_violation import (
+    resolve_fk_on_create,
+    resolve_fk_on_update,
+    resolve_fk_on_delete,
+)
+from app.core.shared.exceptions import (
+    EntityNotFoundError,
+    ArchiveDependencyError,
+    DeletionDependencyError,
+)
 from app.core.shared.exceptions.maps.error_map import error_map
 
 
 class ClassFactory(BaseFactory):
     """Factory class for managing class operations."""
 
-    def __init__(self, session: Session, model=Classes, current_user = None):
+    def __init__(self, session: Session, model=Classes, current_user=None):
         super().__init__(current_user)
         """Initialize factory with db session, model and current actor..
             Args:
@@ -37,20 +46,21 @@ class ClassFactory(BaseFactory):
         self.actor_id: UUID = self.get_actor_id()
         self.domain = "Class"
 
-
     def raise_not_found(self, identifier, error):
         raise EntityNotFoundError(
             entity_model=self.entity_model,
             identifier=identifier,
             error=str(error),
-            display_name=self.display_name
+            display_name=self.display_name,
         )
 
     @resolve_fk_on_create()
-    @resolve_unique_violation({
-        "uq_class_level_code": ("code", lambda self, _, data: data.code.value),
-        "uq_class_level_order": ("order", lambda self, _, data: str(data.order)),
-    })
+    @resolve_unique_violation(
+        {
+            "uq_class_level_code": ("code", lambda self, _, data: data.code.value),
+            "uq_class_level_order": ("order", lambda self, _, data: str(data.order)),
+        }
+    )
     def create_class(self, data) -> Classes:
         """Create a new class.
         Args:
@@ -59,7 +69,10 @@ class ClassFactory(BaseFactory):
             Classes: Created class record
         """
 
-        from app.core.academic_structure.services.academic_structure import AcademicStructureService
+        from app.core.academic_structure.services.academic_structure import (
+            AcademicStructureService,
+        )
+
         service = AcademicStructureService(self.session, self.current_user)
 
         new_class = Classes(
@@ -67,40 +80,38 @@ class ClassFactory(BaseFactory):
             level_id=data.level_id,
             order=service.create_class_order(data.level_id),
             code=data.code,
-
             created_by=self.actor_id,
             last_modified_by=self.actor_id,
         )
         return self.repository.create(new_class)
 
-
     def get_class(self, class_id: UUID) -> Classes:
         """Get a specific class by ID.
-            Args:
-                class_id (UUID): ID of class to retrieve
-            Returns:
-                Classes: Retrieved class record
+        Args:
+            class_id (UUID): ID of class to retrieve
+        Returns:
+            Classes: Retrieved class record
         """
         try:
             return self.repository.get_by_id(class_id)
         except EntityNotFoundError as e:
             self.raise_not_found(class_id, e)
 
-
     def get_all_classes(self, filters) -> List[Classes]:
         """Get all active classes with filtering.
         Returns:
             List[Classes]: List of active classes
         """
-        fields = ['level_id', 'code']
+        fields = ["level_id", "code"]
         return self.repository.execute_query(fields, filters)
 
-
     @resolve_fk_on_update()
-    @resolve_unique_violation({
-        "uq_class_level_code": ("code", lambda self, _, data: data["code"].value),
-        "uq_class_level_order": ("order", lambda self, _, data: str(data["order"])),
-    })
+    @resolve_unique_violation(
+        {
+            "uq_class_level_code": ("code", lambda self, _, data: data["code"].value),
+            "uq_class_level_order": ("order", lambda self, _, data: str(data["order"])),
+        }
+    )
     def update_class(self, class_id: UUID, data: dict) -> Classes:
         """Update a class's information.
         Args:
@@ -109,7 +120,7 @@ class ClassFactory(BaseFactory):
         Returns:
             Classes: Updated class record
         """
-        copied_data = data.copy() #preserve original payload for error extraction
+        copied_data = data.copy()  # preserve original payload for error extraction
         try:
             existing = self.get_class(class_id)
             validations = {
@@ -120,7 +131,6 @@ class ClassFactory(BaseFactory):
                 if field in data:
                     setattr(existing, attr_name, validator_func(copied_data.pop(field)))
 
-
             for key, value in data.items():
                 if hasattr(existing, key):
                     setattr(existing, key, value)
@@ -129,7 +139,6 @@ class ClassFactory(BaseFactory):
 
         except EntityNotFoundError as e:
             self.raise_not_found(class_id, e)
-
 
     def archive_class(self, class_id: UUID, reason) -> Classes:
         """Archive a class if there are no active dependencies.
@@ -140,19 +149,20 @@ class ClassFactory(BaseFactory):
         Classes: Archived class record
         """
         try:
-            failed_dependencies = (
-                self.archive_service.check_active_dependencies_exists(self.model, class_id)
-                )
+            failed_dependencies = self.archive_service.check_active_dependencies_exists(
+                self.model, class_id
+            )
             if failed_dependencies:
                 raise ArchiveDependencyError(
-                    entity_model=self.entity_model, identifier=class_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                    entity_model=self.entity_model,
+                    identifier=class_id,
+                    display_name=self.display_name,
+                    related_entities=", ".join(failed_dependencies),
                 )
             return self.repository.archive(class_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(class_id, e)
-
 
     @resolve_fk_on_delete(display="Class")
     def delete_class(self, class_id: UUID) -> None:
@@ -161,40 +171,41 @@ class ClassFactory(BaseFactory):
             class_id (UUID): ID of class to delete
         """
         try:
-            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, class_id)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(
+                self.model, class_id
+            )
 
             if failed_dependencies:
                 raise DeletionDependencyError(
-                    entity_model=self.entity_model, identifier=class_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                    entity_model=self.entity_model,
+                    identifier=class_id,
+                    display_name=self.display_name,
+                    related_entities=", ".join(failed_dependencies),
                 )
             self.repository.delete(class_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(class_id, e)
 
-
     def get_all_archived_classes(self, filters) -> List[Classes]:
         """Get all archived classes with filtering.
         Returns:
             List[Classes]: List of archived class records
         """
-        fields = ['level_id', 'code']
+        fields = ["level_id", "code"]
         return self.repository.execute_archive_query(fields, filters)
-
 
     def get_archived_class(self, class_id: UUID) -> Classes:
         """Get an archived class by ID.
-         Args:
-            class_id: ID of class to retrieve
-         Returns:
-            Classes: Retrieved class record
-         """
+        Args:
+           class_id: ID of class to retrieve
+        Returns:
+           Classes: Retrieved class record
+        """
         try:
             return self.repository.get_archive_by_id(class_id)
         except EntityNotFoundError as e:
             self.raise_not_found(class_id, e)
-
 
     def restore_class(self, class_id: UUID) -> Classes:
         """Restore an archived class.
@@ -208,7 +219,6 @@ class ClassFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(class_id, e)
 
-
     @resolve_fk_on_delete(display="Class")
     def delete_archived_class(self, class_id: UUID) -> None:
         """Permanently delete an archived class if there are no dependent entities.
@@ -216,12 +226,16 @@ class ClassFactory(BaseFactory):
             class_id: ID of class to delete
         """
         try:
-            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, class_id)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(
+                self.model, class_id
+            )
 
             if failed_dependencies:
                 raise DeletionDependencyError(
-                    entity_model=self.entity_model, identifier=class_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                    entity_model=self.entity_model,
+                    identifier=class_id,
+                    display_name=self.display_name,
+                    related_entities=", ".join(failed_dependencies),
                 )
             self.repository.delete_archive(class_id)
 

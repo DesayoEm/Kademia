@@ -5,19 +5,16 @@ from app.core.shared.schemas.enums import Term
 
 class CourseListRequest(BaseModel):
     """Request model for enrollments"""
+
     academic_session: str
     term: Term
-
 
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
         json_schema_extra={
-            "example": {
-                "academic_session": "2025/2026",
-                "term": "FIRST"
-            }
-        }
+            "example": {"academic_session": "2025/2026", "term": "FIRST"}
+        },
     )
 
 
@@ -30,6 +27,7 @@ from typing import List, Tuple
 
 class CourseItem(BaseModel):
     """Individual course item in the course list"""
+
     course_code: str
     course_title: str
     educator_name: str
@@ -40,14 +38,15 @@ class CourseItem(BaseModel):
             "example": {
                 "course_code": "MATH101",
                 "course_title": "Algebra I",
-                "educator_name": "Mrs. Johnson"
+                "educator_name": "Mrs. Johnson",
             }
-        }
+        },
     )
 
 
 class CourseListResponse(BaseModel):
     """Response model for student course list"""
+
     student_name: str
     term: Term
     academic_session: str
@@ -66,9 +65,9 @@ class CourseListResponse(BaseModel):
                     {
                         "course_code": "MATH101",
                         "course_title": "Algebra I",
-                        "educator_name": "Mrs. Johnson"
+                        "educator_name": "Mrs. Johnson",
                     }
-                ]
+                ],
             }
-        }
+        },
     )

@@ -15,6 +15,7 @@ class StudentSubjectFilterParams(BaseFilterParams):
 
 class StudentSubjectBase(BaseModel):
     """Base model for student subject enrollments"""
+
     academic_level_subject_id: UUID
     academic_session: str
     term: Term
@@ -28,18 +29,21 @@ class StudentSubjectBase(BaseModel):
                 "academic_level_subject_id": "00000000-0000-0000-0000-000000000002",
                 "academic_session": "2025/2026",
                 "term": "FIRST",
-                "is_active": True
+                "is_active": True,
             }
-        }
+        },
     )
+
 
 class StudentSubjectCreate(StudentSubjectBase):
     """Used for creating new student subject enrollments"""
+
     pass
 
 
 class StudentSubjectResponse(StudentSubjectBase):
     """Response model for student subject enrollments"""
+
     pass
 
 
@@ -51,6 +55,7 @@ class EnrollmentResponse(BaseModel):
 
 class StudentSubjectAudit(BaseModel):
     """Response model for subject audit"""
+
     id: UUID
     academic_level_subject_id: UUID
     created_at: datetime
@@ -60,4 +65,4 @@ class StudentSubjectAudit(BaseModel):
     is_archived: bool
     archived_at: datetime | None = None
     archived_by: UUID | None = None
-    archive_reason: ArchiveReason |None = None
+    archive_reason: ArchiveReason | None = None

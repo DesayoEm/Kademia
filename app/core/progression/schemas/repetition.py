@@ -14,70 +14,69 @@ class RepetitionFilterParams(BaseFilterParams):
 
 class RepetitionBase(BaseModel):
     """Base model for student repetitions"""
+
     academic_session: str
     repeat_level_id: UUID
     repetition_reason: str
 
-
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
-        json_schema_extra = {
-                "example": {
-                    "academic_session": "2025/2026",
-                    "repeat_level_id": "00000000-0000-0000-0000-000000000002",
-                    "repetition_reason": "Academic performance below promotion criteria"
-                }
+        json_schema_extra={
+            "example": {
+                "academic_session": "2025/2026",
+                "repeat_level_id": "00000000-0000-0000-0000-000000000002",
+                "repetition_reason": "Academic performance below promotion criteria",
             }
-
-   )
+        },
+    )
 
 
 class RepetitionReview(BaseModel):
     """Model for reviewing student repetitions"""
+
     repeat_level_id: UUID
     repetition_reason: str
-
 
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
-        json_schema_extra = {
-                "example": {
-                    "repeat_level_id": "00000000-0000-0000-0000-000000000002",
-                    "repetition_reason": "Academic performance below promotion criteria"
-                }
+        json_schema_extra={
+            "example": {
+                "repeat_level_id": "00000000-0000-0000-0000-000000000002",
+                "repetition_reason": "Academic performance below promotion criteria",
             }
-
-   )
+        },
+    )
 
 
 class RepetitionDecision(BaseModel):
     """Model for reviewing student repetitions"""
+
     status: ApprovalStatus = ApprovalStatus.PENDING
     decision_reason: str
-
 
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
-        json_schema_extra = {
-                "example": {
-                    "decision_reason": "Academic performance below promotion criteria",
-                    "status": "APPROVED"
-                }
+        json_schema_extra={
+            "example": {
+                "decision_reason": "Academic performance below promotion criteria",
+                "status": "APPROVED",
             }
-
-   )
+        },
+    )
 
 
 class RepetitionCreate(RepetitionBase):
     """For creating a new student repetition"""
+
     pass
 
 
 class RepetitionResponse(RepetitionBase):
     """Response model for student repetitions"""
+
     student_id: UUID
     failed_level_id: UUID
     status_completed_by: UUID | None = None
@@ -87,6 +86,7 @@ class RepetitionResponse(RepetitionBase):
 
 class RepetitionAudit(BaseModel):
     """Response model for student repetitions"""
+
     created_at: datetime | None = None
     created_by: UUID
     last_modified_at: datetime | None = None

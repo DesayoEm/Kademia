@@ -1,17 +1,19 @@
-
 import boto3
 import magic
 from sqlalchemy.orm import Session
 from botocore.exceptions import ClientError
 from app.core.shared.exceptions import FileTooLargeError
-from app.core.shared.exceptions.file_errors import EmptyFileError, FileTooSmallError, \
-    UnsupportedFileFormatError
+from app.core.shared.exceptions.file_errors import (
+    EmptyFileError,
+    FileTooSmallError,
+    UnsupportedFileFormatError,
+)
 from app.core.shared.exceptions.file_errors import AbsentKeyError
-from app.infra.log_service.logger import logger
+from app.core.shared.log_service.logger import logger
 from app.settings import config
 
 
-s3 = boto3.resource('s3')
+s3 = boto3.resource("s3")
 bucket = s3.Bucket(config.AWS_BUCKET_NAME)
 
 
@@ -25,32 +27,31 @@ class S3Upload:
         self.current_user = current_user
 
         self.s3_resource = boto3.resource(
-            's3',
+            "s3",
             aws_access_key_id=self.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY,
-            region_name=self.AWS_DEFAULT_REGION
+            region_name=self.AWS_DEFAULT_REGION,
         )
 
         self.s3_client = boto3.client(
-            's3',
+            "s3",
             aws_access_key_id=self.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY,
-            region_name=self.AWS_DEFAULT_REGION
+            region_name=self.AWS_DEFAULT_REGION,
         )
         self.bucket = self.s3_resource.Bucket(self.AWS_BUCKET_NAME)
         self.KB = 1024
         self.MB = 1024 * self.KB
 
-
         if not self.AWS_ACCESS_KEY_ID or not self.AWS_SECRET_ACCESS_KEY:
             logger.error("AWS credentials not found in environment variables")
             raise ValueError("AWS credentials are required but not found in .env file")
 
-        logger.info(f"S3Upload initialized for bucket: {self.AWS_BUCKET_NAME} in region: {self.AWS_DEFAULT_REGION}")
+        logger.info(
+            f"S3Upload initialized for bucket: {self.AWS_BUCKET_NAME} in region: {self.AWS_DEFAULT_REGION}"
+        )
 
-
-
-    def s3_upload(self,contents: bytes, key: str) -> str:
+    def s3_upload(self, contents: bytes, key: str) -> str:
         """
         Upload file to S3 with proper folder structure.
         Args:
@@ -58,17 +59,18 @@ class S3Upload:
             key: File name/key (folder path will be prepended)
         """
 
-        logger.info(f'Uploading {key} to s3')
+        logger.info(f"Uploading {key} to s3")
         try:
-            self.bucket.put_object(Key = key, Body = contents)
+            self.bucket.put_object(Key=key, Body=contents)
             return key
 
         except Exception as e:
-            logger.error(f'Failed to upload {key}: {str(e)}')
+            logger.error(f"Failed to upload {key}: {str(e)}")
             raise
 
-
-    def validate_file_upload(self, file, min_size, max_size, supported_types: dict) -> bytes:
+    def validate_file_upload(
+        self, file, min_size, max_size, supported_types: dict
+    ) -> bytes:
         """
         Validate uploaded file for size, type, and content.
         Args:
@@ -103,13 +105,13 @@ class S3Upload:
         if detected_type not in supported_types:
             acceptable_formats = ", ".join(supported_types.keys())
             raise UnsupportedFileFormatError(
-                file_type=detected_type,
-                acceptable_types=acceptable_formats
+                file_type=detected_type, acceptable_types=acceptable_formats
             )
 
-        logger.info(f"File validation successful: {file.filename}, size: {size} bytes, type: {detected_type}")
+        logger.info(
+            f"File validation successful: {file.filename}, size: {size} bytes, type: {detected_type}"
+        )
         return contents
-
 
     def save_key_in_db(self, obj, s3_key: str, key_col_name: str):
         """
@@ -129,10 +131,10 @@ class S3Upload:
 
         except Exception as e:
             self.session.rollback()
-            logger.error(f"Failed to save S3 key to database for object {type(obj)}, id: {obj.id}: {str(e)}")
+            logger.error(
+                f"Failed to save S3 key to database for object {type(obj)}, id: {obj.id}: {str(e)}"
+            )
             raise
-
-
 
     def generate_presigned_url(self, s3_key: str, exp: int = 3600 * 24) -> str:
         """
@@ -144,18 +146,15 @@ class S3Upload:
                 raise AbsentKeyError(entry=s3_key)
 
             url = self.s3_client.generate_presigned_url(
-                'get_object',
-                Params={'Bucket': self.AWS_BUCKET_NAME, 'Key': s3_key},
-                ExpiresIn=exp
-             )
+                "get_object",
+                Params={"Bucket": self.AWS_BUCKET_NAME, "Key": s3_key},
+                ExpiresIn=exp,
+            )
 
             logger.info(f"Generated presigned URL for {s3_key} (expires in {exp}s)")
             return url
 
-
         except ClientError as e:
-            error_code = e.response['Error']['Code']
+            error_code = e.response["Error"]["Code"]
             logger.error(f"Error generating presigned URL for {s3_key}: {error_code}")
             raise
-
-

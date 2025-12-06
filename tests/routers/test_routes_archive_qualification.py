@@ -8,6 +8,7 @@ from app import app
 
 client = TestClient(app)
 
+
 @pytest.fixture
 def mock_crud():
     test_uuid = uuid4()
@@ -19,7 +20,9 @@ def mock_crud():
         "description": "Test Description",
     }
 
-    with patch("V2.app.academic_structure.staff_management.archived_qualifications.QualificationsCrud") as mock:
+    with patch(
+        "V2.app.academic_structure.staff_management.archived_qualifications.QualificationsCrud"
+    ) as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
 
@@ -29,7 +32,6 @@ def mock_crud():
         mock_instance.delete_archived_qualification.return_value = None
 
         yield mock_instance, test_uuid
-
 
 
 def test_get_archived_qualification(mock_crud):
@@ -59,11 +61,9 @@ def test_get_all_archived_qualifications(mock_crud):
     assert data[0]["name"] == "Test qualification"
 
 
-
 def test_restore_qualification(mock_crud):
     """Test archiving a specific qualification"""
     mock_instance, test_uuid = mock_crud
-
 
     response = client.patch(f"/api/v1/archive/staff/qualifications/{test_uuid}")
     print("Mock Calls:", mock_instance.mock_calls)
@@ -82,4 +82,4 @@ def test_delete_qualification(mock_crud):
 
     mock_instance.delete_archived_qualification.assert_called_once_with(test_uuid)
     assert response.status_code == 204
-    assert response.content == b''
+    assert response.content == b""

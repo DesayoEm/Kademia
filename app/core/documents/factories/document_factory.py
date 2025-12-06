@@ -8,8 +8,14 @@ from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
+from app.core.shared.exceptions.decorators.resolve_unique_violation import (
+    resolve_unique_violation,
+)
+from app.core.shared.exceptions.decorators.resolve_fk_violation import (
+    resolve_fk_on_create,
+    resolve_fk_on_update,
+    resolve_fk_on_delete,
+)
 from app.core.shared.exceptions import EntityNotFoundError
 from app.core.shared.exceptions.maps.error_map import error_map
 
@@ -17,7 +23,7 @@ from app.core.shared.exceptions.maps.error_map import error_map
 class DocumentFactory(BaseFactory):
     """Factory class for managing Document operations."""
 
-    def __init__(self, session: Session, model = StudentDocument, current_user = None):
+    def __init__(self, session: Session, model=StudentDocument, current_user=None):
         super().__init__(current_user)
         """Initialize factory.
             Args:
@@ -42,13 +48,17 @@ class DocumentFactory(BaseFactory):
             entity_model=self.entity_model,
             identifier=identifier,
             error=str(error),
-            display_name=self.display_name
+            display_name=self.display_name,
         )
 
-
-    @resolve_unique_violation({
-        "uq_student_document_title_student_id": ("_", "This document title exists for this student in the same academic session")
-    })
+    @resolve_unique_violation(
+        {
+            "uq_student_document_title_student_id": (
+                "_",
+                "This document title exists for this student in the same academic session",
+            )
+        }
+    )
     @resolve_fk_on_create()
     def create_document(self, student_id: UUID, data) -> StudentDocument:
         """Create a new Document.
@@ -62,14 +72,14 @@ class DocumentFactory(BaseFactory):
             id=uuid4(),
             title=self.validator.validate_name(data.title),
             student_id=student_id,
-            academic_session=self.validator.validate_academic_session(data.academic_session),
-            document_type = data.document_type,
-
+            academic_session=self.validator.validate_academic_session(
+                data.academic_session
+            ),
+            document_type=data.document_type,
             created_by=self.actor_id,
-            last_modified_by=self.actor_id
+            last_modified_by=self.actor_id,
         )
         return self.repository.create(new_document)
-
 
     def get_document(self, document_id: UUID) -> StudentDocument:
         """Get a specific Document by ID.
@@ -83,19 +93,22 @@ class DocumentFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(document_id, e)
 
-
     def get_all_documents(self, filters) -> List[StudentDocument]:
         """Get all active Documents with filtering.
         Returns:
             List[Document]: List of active Documents
         """
-        fields = ['title', 'academic_session','document_type','student_id']
+        fields = ["title", "academic_session", "document_type", "student_id"]
         return self.repository.execute_query(fields, filters)
 
-
-    @resolve_unique_violation({
-        "uq_student_document_title_student_id": ("_", "This document title exists for this student in the same academic session")
-    })
+    @resolve_unique_violation(
+        {
+            "uq_student_document_title_student_id": (
+                "_",
+                "This document title exists for this student in the same academic session",
+            )
+        }
+    )
     @resolve_fk_on_update()
     def update_document(self, document_id: UUID, data: dict) -> StudentDocument:
         """Update Document information.
@@ -121,11 +134,12 @@ class DocumentFactory(BaseFactory):
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            return self.repository.update(document_id, existing, modified_by=self.actor_id)
+            return self.repository.update(
+                document_id, existing, modified_by=self.actor_id
+            )
 
         except EntityNotFoundError as e:
-                self.raise_not_found(document_id, e)
-
+            self.raise_not_found(document_id, e)
 
     def archive_document(self, document_id: UUID, reason) -> None:
         """Archive Document
@@ -141,7 +155,6 @@ class DocumentFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(document_id, e)
 
-
     @resolve_fk_on_delete(display="document")
     def delete_document(self, document_id: UUID) -> None:
         doc_service = DocumentService(self.session, self.current_user)
@@ -150,24 +163,22 @@ class DocumentFactory(BaseFactory):
             document_id (UUID): ID of Document to delete
         """
         try:
-            doc= self.get_document(document_id)
+            doc = self.get_document(document_id)
 
-            #remove the s3 file for the document
+            # remove the s3 file for the document
             doc_service.remove_document_file(doc)
             self.repository.delete(document_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(document_id, e)
 
-
     def get_all_archived_documents(self, filters) -> List[StudentDocument]:
         """Get all archived Documents with filtering.
         Returns:
             List[Document]: List of archived Document records
         """
-        fields = ['title', 'academic_session','document_type','student_id']
+        fields = ["title", "academic_session", "document_type", "student_id"]
         return self.repository.execute_archive_query(fields, filters)
-
 
     def get_archived_document(self, document_id: UUID) -> StudentDocument:
         """Get an archived Document by ID.
@@ -181,7 +192,6 @@ class DocumentFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(document_id, e)
 
-
     def restore_document(self, document_id: UUID) -> StudentDocument:
         """Restore an archived Document.
         Args:
@@ -193,7 +203,6 @@ class DocumentFactory(BaseFactory):
             return self.repository.restore(document_id)
         except EntityNotFoundError as e:
             self.raise_not_found(document_id, e)
-
 
     @resolve_fk_on_delete(display="document")
     def delete_archived_document(self, document_id: UUID) -> None:
@@ -213,5 +222,3 @@ class DocumentFactory(BaseFactory):
 
         except EntityNotFoundError as e:
             self.raise_not_found(document_id, e)
-
-

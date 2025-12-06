@@ -6,22 +6,30 @@ from app.core.curriculum.models.curriculum import StudentSubject
 from app.core.curriculum.services.curriculum_service import CurriculumService
 from app.core.curriculum.services.validators import CurriculumValidator
 from app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
-from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
+from app.core.shared.exceptions.decorators.resolve_unique_violation import (
+    resolve_unique_violation,
+)
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
-from app.core.shared.exceptions import EntityNotFoundError, UniqueViolationError, ArchiveDependencyError, \
-    DeletionDependencyError
+from app.core.shared.exceptions.decorators.resolve_fk_violation import (
+    resolve_fk_on_create,
+    resolve_fk_on_delete,
+)
+from app.core.shared.exceptions import (
+    EntityNotFoundError,
+    UniqueViolationError,
+    ArchiveDependencyError,
+    DeletionDependencyError,
+)
 from app.core.shared.exceptions.maps.error_map import error_map
-
 
 
 class StudentSubjectFactory(BaseFactory):
     """Factory class for managing StudentSubject operations."""
 
-    def __init__(self, session: Session, model = StudentSubject, current_user = None):
+    def __init__(self, session: Session, model=StudentSubject, current_user=None):
         super().__init__(current_user)
         """Initialize factory.
             Args:
@@ -46,14 +54,17 @@ class StudentSubjectFactory(BaseFactory):
             entity_model=self.entity_model,
             identifier=identifier,
             error=str(error),
-            display_name=self.display_name
+            display_name=self.display_name,
         )
 
-    @resolve_unique_violation({
-        "student_subjects_student_id_academic_level_subject_id_acade_key": (
-                "_", "This subject is already assigned to this student for the specified session"
-        )
-    })
+    @resolve_unique_violation(
+        {
+            "student_subjects_student_id_academic_level_subject_id_acade_key": (
+                "_",
+                "This subject is already assigned to this student for the specified session",
+            )
+        }
+    )
     @resolve_fk_on_create()
     def create_student_subject(self, student_id: UUID, data) -> StudentSubject:
         """Create a new StudentSubject.
@@ -63,27 +74,33 @@ class StudentSubjectFactory(BaseFactory):
         Returns:
             StudentSubject: Created StudentSubject record
         """
-        from app.core.curriculum.factories.academic_level_subject import AcademicLevelSubjectFactory
+        from app.core.curriculum.factories.academic_level_subject import (
+            AcademicLevelSubjectFactory,
+        )
         from app.core.academic_structure.models import AcademicLevelSubject
-        academic_factory = AcademicLevelSubjectFactory(self.session, AcademicLevelSubject, self.current_user)
-        level_subject = academic_factory.get_academic_level_subject(data.academic_level_subject_id)
+
+        academic_factory = AcademicLevelSubjectFactory(
+            self.session, AcademicLevelSubject, self.current_user
+        )
+        level_subject = academic_factory.get_academic_level_subject(
+            data.academic_level_subject_id
+        )
         level_id = level_subject.level_id
 
         new_student_subject = StudentSubject(
             id=uuid4(),
             student_id=student_id,
             academic_level_subject_id=self.service.check_academic_level(
-                  student_id, level_id, data.academic_level_subject_id
-             ),
+                student_id, level_id, data.academic_level_subject_id
+            ),
             term=data.term,
-            academic_session=self.validator.validate_academic_session(data.academic_session),
-
+            academic_session=self.validator.validate_academic_session(
+                data.academic_session
+            ),
             created_by=self.actor_id,
-            last_modified_by=self.actor_id
+            last_modified_by=self.actor_id,
         )
         return self.repository.create(new_student_subject)
-
-
 
     def get_student_subject(self, student_subject_id: UUID) -> StudentSubject:
         """Get a specific StudentSubject by ID.
@@ -97,17 +114,23 @@ class StudentSubjectFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(student_subject_id, e)
 
-
     def get_all_student_subjects(self, filters) -> List[StudentSubject]:
         """Get all active StudentSubjects with filtering.
         Returns:
             List[StudentSubject]: List of active StudentSubjects
         """
-        fields = ['academic_session', 'term', 'is_active','student_id', 'academic_level_subject_id']
+        fields = [
+            "academic_session",
+            "term",
+            "is_active",
+            "student_id",
+            "academic_level_subject_id",
+        ]
         return self.repository.execute_query(fields, filters)
 
-
-    def archive_student_subject(self, student_subject_id: UUID, reason) -> StudentSubject:
+    def archive_student_subject(
+        self, student_subject_id: UUID, reason
+    ) -> StudentSubject:
         """Archive a StudentSubject if no active dependencies exist.
         Args:
             student_subject_id (UUID): ID of StudentSubject to archive
@@ -117,19 +140,19 @@ class StudentSubjectFactory(BaseFactory):
         """
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
-                entity_model=self.model,
-                target_id=student_subject_id
+                entity_model=self.model, target_id=student_subject_id
             )
             if failed_dependencies:
                 raise ArchiveDependencyError(
-                    entity_model=self.entity_model, identifier=student_subject_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                    entity_model=self.entity_model,
+                    identifier=student_subject_id,
+                    display_name=self.display_name,
+                    related_entities=", ".join(failed_dependencies),
                 )
             return self.repository.archive(student_subject_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(student_subject_id, e)
-
 
     @resolve_fk_on_delete(display="student subject")
     def delete_student_subject(self, student_subject_id: UUID) -> None:
@@ -138,27 +161,35 @@ class StudentSubjectFactory(BaseFactory):
             student_subject_id (UUID): ID of StudentSubject to delete
         """
         try:
-            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, student_subject_id)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(
+                self.model, student_subject_id
+            )
 
             if failed_dependencies:
                 raise DeletionDependencyError(
-                    entity_model=self.entity_model, identifier=student_subject_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                    entity_model=self.entity_model,
+                    identifier=student_subject_id,
+                    display_name=self.display_name,
+                    related_entities=", ".join(failed_dependencies),
                 )
             self.repository.delete_archive(student_subject_id)
 
         except EntityNotFoundError as e:
             self.raise_not_found(student_subject_id, e)
 
-
     def get_all_archived_student_subjects(self, filters) -> List[StudentSubject]:
         """Get all archived StudentSubjects with filtering.
         Returns:
             List[StudentSubject]: List of archived StudentSubject records
         """
-        fields = ['academic_session', 'term', 'is_active','student_id', 'academic_level_subject_id']
+        fields = [
+            "academic_session",
+            "term",
+            "is_active",
+            "student_id",
+            "academic_level_subject_id",
+        ]
         return self.repository.execute_archive_query(fields, filters)
-
 
     def get_archived_student_subject(self, student_subject_id: UUID) -> StudentSubject:
         """Get an archived StudentSubject by ID.
@@ -172,7 +203,6 @@ class StudentSubjectFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(student_subject_id, e)
 
-
     def restore_student_subject(self, student_subject_id: UUID) -> StudentSubject:
         """Restore an archived StudentSubject.
         Args:
@@ -185,7 +215,6 @@ class StudentSubjectFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(student_subject_id, e)
 
-
     @resolve_fk_on_delete(display="student subject")
     def delete_archived_student_subject(self, student_subject_id: UUID) -> None:
         """Permanently delete an archived StudentSubject if there are no dependent entities.
@@ -193,12 +222,16 @@ class StudentSubjectFactory(BaseFactory):
             student_subject_id: ID of StudentSubject to delete
         """
         try:
-            failed_dependencies = self.delete_service.check_active_dependencies_exists(self.model, student_subject_id)
+            failed_dependencies = self.delete_service.check_active_dependencies_exists(
+                self.model, student_subject_id
+            )
 
             if failed_dependencies:
                 raise DeletionDependencyError(
-                    entity_model=self.entity_model, identifier=student_subject_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                    entity_model=self.entity_model,
+                    identifier=student_subject_id,
+                    display_name=self.display_name,
+                    related_entities=", ".join(failed_dependencies),
                 )
             self.repository.delete_archive(student_subject_id)
 

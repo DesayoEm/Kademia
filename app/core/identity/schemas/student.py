@@ -19,18 +19,17 @@ class StudentFilterParams(BaseFilterParams):
 
 class StudentBase(UserBase):
     """Base model for students"""
+
     session_start_year: int
     date_of_birth: date
 
 
-
 class StudentCreate(StudentBase):
     """Used for creating new students"""
+
     date_of_birth: date
     level_id: UUID
     guardian_id: UUID
-
-
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -45,7 +44,8 @@ class StudentCreate(StudentBase):
                 "level_id": "00000000-0000-0000-0000-000000000002",
                 "session_start_year": "2025",
             }
-        })
+        },
+    )
 
 
 class StudentUpdate(StudentBase):
@@ -62,7 +62,9 @@ class StudentUpdate(StudentBase):
                 "date_of_birth": "2010-05-15",
                 "session_start_year": "2025",
             }
-        })
+        },
+    )
+
 
 class StudentResponse(StudentCreate):
     """Response model for students"""
@@ -91,4 +93,3 @@ class StudentAudit(BaseModel):
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
     deletion_eligible: bool
-

@@ -9,14 +9,18 @@ class BaseFilterParams(BaseModel):
     order_by: str = "created_at"
     order_dir: Literal["asc", "desc"] = "asc"
 
+
 class ArchiveRequest(BaseModel):
     reason: ArchiveReason
+
 
 class ExportRequest(BaseModel):
     export_format: ExportFormat
 
+
 class UploadResponse(BaseModel):
     """Response model for successful uploads."""
+
     filename: str
     size: int
     file_type: str

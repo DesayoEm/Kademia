@@ -7,17 +7,19 @@ from app import app
 
 client = TestClient(app)
 
+
 @pytest.fixture
 def mock_crud():
     test_uuid = uuid4()
-
 
     valid_response = {
         "name": "Test department",
         "description": "Test Description",
     }
 
-    with patch("V2.app.academic_structure.staff_management.archived_staff_departments.StaffDepartmentCrud") as mock:
+    with patch(
+        "V2.app.academic_structure.staff_management.archived_staff_departments.StaffDepartmentCrud"
+    ) as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
 
@@ -52,7 +54,6 @@ def test_get_all_archived_staff_departments(mock_crud):
     print("Response status:", response.status_code)
     print("Response data:", response.json())
 
-
     assert mock_instance.get_all_archived_departments.called
 
     assert response.status_code == 200
@@ -84,4 +85,4 @@ def test_delete_department(mock_crud):
 
     mock_instance.delete_archived_department.assert_called_once_with(test_uuid)
     assert response.status_code == 204
-    assert response.content == b''
+    assert response.content == b""

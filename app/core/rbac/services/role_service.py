@@ -11,20 +11,16 @@ from app.core.shared.models.enums import UserRoleName
 from app.core.rbac.models import Role, Permission
 
 
-
-
 class RBACService:
     def __init__(self, session: Session):
         self.session = session
 
     @staticmethod
-    def prevent_redundant_changes(
-            current_role_id: UUID, new_role_id: UUID) -> UUID:
+    def prevent_redundant_changes(current_role_id: UUID, new_role_id: UUID) -> UUID:
         if current_role_id == new_role_id:
             raise SameRoleError(previous=current_role_id, new=new_role_id)
 
         return new_role_id
-
 
     def fetch_role_id(self, role_name: str) -> UUID:
         try:
@@ -36,7 +32,6 @@ class RBACService:
         except NoResultFound as e:
             raise NoMatchingRoleError(role_name, str(e))
 
-
     def get_role_permission_strs(self, role_id: UUID) -> List[Permission]:
         role = (
             self.session.query(Role)
@@ -45,11 +40,7 @@ class RBACService:
             .first()
         )
         if not role:
-            raise EntityNotFoundError(
-                Role, role_id, "Role not found", "role"
-            )
+            raise EntityNotFoundError(Role, role_id, "Role not found", "role")
 
         permissions = role.permissions
         return [permission.name for permission in permissions]
-
-

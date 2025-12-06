@@ -7,7 +7,11 @@ from app.core.shared.models.enums import UserRoleName
 from app.core.rbac.models import Role
 
 from app.core.shared.models.enums import (
-    StaffStatus, StaffAvailability, StaffType, Gender, UserType
+    StaffStatus,
+    StaffAvailability,
+    StaffType,
+    Gender,
+    UserType,
 )
 
 from app.settings import config
@@ -37,10 +41,11 @@ def init_system_user_and_role():
             session.add(system_role)
             session.flush()
 
-
             system_user = System(
                 id=KADEMIA_ID,
-                password_hash=PasswordService.hash_password(f"{config.KADEMIA_PASSWORD}"),
+                password_hash=PasswordService.hash_password(
+                    f"{config.KADEMIA_PASSWORD}"
+                ),
                 first_name="Kademia",
                 last_name="System",
                 gender=Gender.SYSTEM,
@@ -73,5 +78,6 @@ def init_system_user_and_role():
         session.rollback()
         print(f"Error: {e}")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     init_system_user_and_role()

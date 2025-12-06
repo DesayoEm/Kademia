@@ -18,7 +18,9 @@ class AcademicStructureService:
 
         self.class_factory = ClassFactory(session, current_user=current_user)
         self.level_factory = AcademicLevelFactory(session, current_user=current_user)
-        self.department_factory = StudentDepartmentFactory(session, current_user=current_user)
+        self.department_factory = StudentDepartmentFactory(
+            session, current_user=current_user
+        )
         self.student_factory = StudentFactory(session, current_user=current_user)
 
         self.level_repository = SQLAlchemyRepository(AcademicLevel, session)
@@ -26,41 +28,35 @@ class AcademicStructureService:
         self.entity_validator = EntityValidator(session)
         self.validator = AcademicStructureValidator()
 
-
     def return_default_level_order(self) -> int:
         """Create a new order value by getting the max order + 1 for the given level"""
         stmt = select(func.max(AcademicLevel.display_order))
         result = self.level_repository.session.execute(stmt).scalar_one_or_none()
         return 1 if result is None else result + 1
 
-
-
     # Class Management
     def create_class_order(self, level_id: UUID) -> int:
         """Create a new order value by getting the max order + 1 for the given level"""
-        stmt = (
-            select(func.max(Classes.order))
-            .where(Classes.level_id == level_id)
-        )
+        stmt = select(func.max(Classes.order)).where(Classes.level_id == level_id)
         result = self.class_repository.session.execute(stmt).scalar_one_or_none()
         return 1 if result is None else result + 1
 
-
-    def assign_class_supervisor(self, class_id: UUID, supervisor_id: UUID | None = None):
+    def assign_class_supervisor(
+        self, class_id: UUID, supervisor_id: UUID | None = None
+    ):
         """Assign a supervisor to a class"""
 
         if not supervisor_id:
-            return self.class_factory.update_class(
-                class_id, {"supervisor_id": None}
-            )
+            return self.class_factory.update_class(class_id, {"supervisor_id": None})
 
-        #Validate supervisor exists before updating due to polymorphic association
-        validated_supervisor_id = self.entity_validator.validate_staff_exists(supervisor_id)
+        # Validate supervisor exists before updating due to polymorphic association
+        validated_supervisor_id = self.entity_validator.validate_staff_exists(
+            supervisor_id
+        )
 
         return self.class_factory.update_class(
             class_id, {"supervisor_id": validated_supervisor_id}
         )
-
 
     def assign_class_student_rep(self, class_id: UUID, rep_id: UUID | None = None):
         """Assign a student representative to a class"""
@@ -68,12 +64,11 @@ class AcademicStructureService:
         if not student.class_id == class_id:
             raise ClassRepMismatchError
 
-        return self.class_factory.update_class(
-            class_id, {"student_rep_id": rep_id}
-        )
+        return self.class_factory.update_class(class_id, {"student_rep_id": rep_id})
 
-
-    def assign_class_assistant_rep(self, class_id: UUID, asst_rep_id: UUID | None = None):
+    def assign_class_assistant_rep(
+        self, class_id: UUID, asst_rep_id: UUID | None = None
+    ):
         """Assign an assistant representative to a class"""
 
         student = self.student_factory.get_student(asst_rep_id)
@@ -84,9 +79,10 @@ class AcademicStructureService:
             class_id, {"assistant_rep_id": asst_rep_id}
         )
 
-
     # Department Management
-    def assign_department_mentor(self, department_id: UUID, mentor_id: UUID | None = None):
+    def assign_department_mentor(
+        self, department_id: UUID, mentor_id: UUID | None = None
+    ):
         """Assign a mentor to a department"""
 
         if not mentor_id:
@@ -94,15 +90,16 @@ class AcademicStructureService:
                 department_id, {"mentor_id": None}
             )
 
-        #Validate mentor exists before updating due to polymorphic association
+        # Validate mentor exists before updating due to polymorphic association
         validated_mentor_id = self.entity_validator.validate_staff_exists(mentor_id)
 
         return self.department_factory.update_student_department(
             department_id, {"mentor_id": validated_mentor_id}
         )
 
-
-    def assign_department_student_rep(self, department_id: UUID, rep_id: UUID | None = None):
+    def assign_department_student_rep(
+        self, department_id: UUID, rep_id: UUID | None = None
+    ):
         """Assign a student representative to a department"""
 
         student = self.student_factory.get_student(rep_id)
@@ -113,7 +110,9 @@ class AcademicStructureService:
             department_id, {"student_rep_id": rep_id}
         )
 
-    def assign_department_assistant_rep(self, department_id: UUID, asst_rep_id: UUID | None = None):
+    def assign_department_assistant_rep(
+        self, department_id: UUID, asst_rep_id: UUID | None = None
+    ):
         """Assign an assistant representative to a department"""
 
         student = self.student_factory.get_student(asst_rep_id)

@@ -1,100 +1,104 @@
 from enum import Enum
 
+
 class Gender(str, Enum):
-    MALE = 'MALE'
-    FEMALE = 'FEMALE'
-    SYSTEM = 'SYSTEM'
+    MALE = "MALE"
+    FEMALE = "FEMALE"
+    SYSTEM = "SYSTEM"
+
 
 class Title(str, Enum):
-    Ms = 'Ms'
-    Mrs = 'Mrs'
-    Mr = 'Mr'
+    Ms = "Ms"
+    Mrs = "Mrs"
+    Mr = "Mr"
+
 
 class ValidityType(str, Enum):
-    Temporary = 'Temporary'
-    Lifetime = 'Lifetime'
+    Temporary = "Temporary"
+    Lifetime = "Lifetime"
+
 
 class UserType(str, Enum):
-    STUDENT = 'STUDENT'
-    GUARDIAN = 'GUARDIAN'
-    STAFF = 'STAFF'
-    SYSTEM = 'SYSTEM'
+    STUDENT = "STUDENT"
+    GUARDIAN = "GUARDIAN"
+    STAFF = "STAFF"
+    SYSTEM = "SYSTEM"
 
 
 class DocumentType(str, Enum):
-    RESULT = 'RESULT'
-    ID = 'ID'
-    CERTIFICATE = 'CERTIFICATE'
-    ARTICLE = 'ARTICLE'
-    OTHER = 'OTHER'
+    RESULT = "RESULT"
+    ID = "ID"
+    CERTIFICATE = "CERTIFICATE"
+    ARTICLE = "ARTICLE"
+    OTHER = "OTHER"
 
 
 class StaffType(str, Enum):
-    EDUCATOR = 'Educator'
-    ADMIN = 'Admin'
-    SUPPORT = 'Support'
-    SYSTEM = 'System'
+    EDUCATOR = "Educator"
+    ADMIN = "Admin"
+    SUPPORT = "Support"
+    SYSTEM = "System"
 
 
 class StaffAvailability(str, Enum):
-    AVAILABLE = 'AVAILABLE'
-    UNAVAILABLE = 'UNAVAILABLE'
+    AVAILABLE = "AVAILABLE"
+    UNAVAILABLE = "UNAVAILABLE"
 
 
 class StaffStatus(str, Enum):
-    ACTIVE = 'ACTIVE'
-    LEFT = 'LEFT'
+    ACTIVE = "ACTIVE"
+    LEFT = "LEFT"
 
 
 class StudentStatus(str, Enum):
-    ENROLLED = 'ENROLLED'
-    LEFT = 'LEFT'
-    GRADUATED = 'GRADUATED'
+    ENROLLED = "ENROLLED"
+    LEFT = "LEFT"
+    GRADUATED = "GRADUATED"
 
 
 class ClassCode(str, Enum):
-    A = 'A'
-    B = 'B'
-    C = 'C'
-    D = 'D'
-    E = 'E'
-    F = 'F'
+    A = "A"
+    B = "B"
+    C = "C"
+    D = "D"
+    E = "E"
+    F = "F"
 
 
 class Term(str, Enum):
-    FIRST = 'FIRST'
-    SECOND = 'SECOND'
-    THIRD = 'THIRD'
+    FIRST = "FIRST"
+    SECOND = "SECOND"
+    THIRD = "THIRD"
 
 
 class SubjectGroup(str, Enum):
-    SCIENCE = 'SCIENCE'
-    HUMANITIES = 'HUMANITIES'
-    BUSINESS = 'BUSINESS'
-    GENERAL = 'GENERAL'
+    SCIENCE = "SCIENCE"
+    HUMANITIES = "HUMANITIES"
+    BUSINESS = "BUSINESS"
+    GENERAL = "GENERAL"
 
 
 class GradeType(str, Enum):
-    EXAM = 'EXAM'
-    TEST = 'TEST'
-    ASSIGNMENT = 'ASSIGNMENT'
-    PRACTICAL = 'PRACTICAL'
-    MOCK = 'MOCK'
-    EXTRACURRICULAR = 'EXTRACURRICULAR'
+    EXAM = "EXAM"
+    TEST = "TEST"
+    ASSIGNMENT = "ASSIGNMENT"
+    PRACTICAL = "PRACTICAL"
+    MOCK = "MOCK"
+    EXTRACURRICULAR = "EXTRACURRICULAR"
 
 
 class ApprovalStatus(str, Enum):
-    PENDING = 'PENDING'
-    APPROVED = 'APPROVED'
-    REJECTED = 'REJECTED'
+    PENDING = "PENDING"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
 
 
 class ArchiveReason(str, Enum):
-    ERROR = 'ERROR'
-    GRADUATED = 'GRADUATED'
-    TRANSFERRED = 'TRANSFERRED'
-    WITHDRAWN = 'WITHDRAWN'
-    ADMINISTRATIVE = 'ADMINISTRATIVE'
+    ERROR = "ERROR"
+    GRADUATED = "GRADUATED"
+    TRANSFERRED = "TRANSFERRED"
+    WITHDRAWN = "WITHDRAWN"
+    ADMINISTRATIVE = "ADMINISTRATIVE"
 
 
 class ExportFormat(str, Enum):
@@ -104,14 +108,14 @@ class ExportFormat(str, Enum):
 
 
 class UserRoleName(str, Enum):
-    INACTIVE = 'INACTIVE'
-    STUDENT = 'STUDENT'
-    GUARDIAN = 'GUARDIAN'
-    EDUCATOR = 'EDUCATOR'
-    SUPER_EDUCATOR = 'SUPER_EDUCATOR'
-    ADMIN = 'ADMIN'
-    SUPERUSER = 'SUPERUSER'
-    SYSTEM = 'SYSTEM'
+    INACTIVE = "INACTIVE"
+    STUDENT = "STUDENT"
+    GUARDIAN = "GUARDIAN"
+    EDUCATOR = "EDUCATOR"
+    SUPER_EDUCATOR = "SUPER_EDUCATOR"
+    ADMIN = "ADMIN"
+    SUPERUSER = "SUPERUSER"
+    SYSTEM = "SYSTEM"
 
 
 class Action(Enum):
@@ -129,7 +133,6 @@ class Resource(Enum):
     ROLE = "ROLE"
     ROLE_CHANGE = "ROLE_CHANGE"
     ROLE_PERMISSION = "ROLE_PERMISSION"
-
 
     STUDENT = "STUDENT"
     STAFF = "STAFF"

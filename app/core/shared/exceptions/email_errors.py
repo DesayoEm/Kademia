@@ -1,5 +1,6 @@
 from .base_error import KademiaError
 
+
 class EmailError(KademiaError):
     """Base exception for all email_service-related exceptions"""
 

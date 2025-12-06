@@ -5,7 +5,6 @@ class AuthValidator:
     def __init__(self):
         self.domain = "AUTH"
 
-
     @staticmethod
     def validate_password(password: str):
         is_valid = True
@@ -32,5 +31,3 @@ class AuthValidator:
             raise PasswordFormatError()
 
         return password
-
-

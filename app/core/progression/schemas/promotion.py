@@ -2,6 +2,7 @@ from app.core.shared.schemas.common_imports import *
 from app.core.shared.schemas.enums import ApprovalStatus
 from app.core.shared.schemas.shared_models import *
 
+
 class PromotionFilterParams(BaseFilterParams):
     student_id: UUID | None = None
     status_completed_by: UUID | None = None
@@ -12,24 +13,21 @@ class PromotionFilterParams(BaseFilterParams):
 
 class GraduationCreate(BaseModel):
     """Base model for student promotions"""
-    academic_session: str
 
+    academic_session: str
 
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
-        json_schema_extra={
-            "example": {
-                "academic_session": "2025/2026"
-            }
-        }
+        json_schema_extra={"example": {"academic_session": "2025/2026"}},
     )
+
 
 class PromotionBase(BaseModel):
     """Base model for student promotions"""
+
     academic_session: str
     notes: str
-
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -37,20 +35,21 @@ class PromotionBase(BaseModel):
         json_schema_extra={
             "example": {
                 "academic_session": "2025/2026",
-                "notes": "Met promotion criteria"
-
+                "notes": "Met promotion criteria",
             }
-        }
+        },
     )
 
 
 class PromotionCreate(PromotionBase):
     """For creating a new student promotion"""
+
     pass
 
 
 class PromotionReview(BaseModel):
     """For updating a  promotion record"""
+
     academic_session: str
     notes: str
 
@@ -58,19 +57,14 @@ class PromotionReview(BaseModel):
         from_attributes=True,
         extra="ignore",
         json_schema_extra={
-            "example": {
-                "academic_session": "2025/2026",
-                "notes": "Under review"
-
-            }
-        }
+            "example": {"academic_session": "2025/2026", "notes": "Under review"}
+        },
     )
 
 
 class PromotionDecision(BaseModel):
     status: ApprovalStatus
     decision_reason: str | None = None
-    
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -79,16 +73,14 @@ class PromotionDecision(BaseModel):
             "example": {
                 "decision_reason": "agree",
                 "status": "APPROVED",
-                
-
             }
-        }
+        },
     )
-    
-    
-    
+
+
 class PromotionResponse(PromotionBase):
     """Response model for student promotions"""
+
     student_id: UUID
     previous_level_id: UUID
     status: ApprovalStatus
@@ -97,11 +89,10 @@ class PromotionResponse(PromotionBase):
     decision_reason: str | None = None
     notes: str | None = None
 
-    
-    
-    
+
 class PromotionAudit(BaseModel):
     """Response model for student promotions"""
+
     created_at: datetime | None = None
     created_by: UUID
     last_modified_at: datetime | None = None

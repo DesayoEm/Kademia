@@ -1,23 +1,32 @@
 from app.core.shared.exceptions import (
-    EmptyFieldError, TextTooShortError, InvalidCharacterError, InvalidSessionYearError, TextTooLongError, PastDateError
+    EmptyFieldError,
+    TextTooShortError,
+    InvalidCharacterError,
+    InvalidSessionYearError,
+    TextTooLongError,
+    PastDateError,
 )
 from datetime import datetime
 import re
 
-from app.core.shared.exceptions.entry_validation_errors import PastYearError, SessionYearFormatError, \
-    FutureYearError, InvalidSessionRangeError
+from app.core.shared.exceptions.entry_validation_errors import (
+    PastYearError,
+    SessionYearFormatError,
+    FutureYearError,
+    InvalidSessionRangeError,
+)
 
 
 class CurriculumValidator:
     def __init__(self):
         self.domain = "CURRICULUM"
 
-    def validate_name(self, value:str) -> str:
+    def validate_name(self, value: str) -> str:
         value = (value or "").strip()
         if not value:
             raise EmptyFieldError(entry=value, domain=self.domain)
         if len(value.strip()) < 3:
-            raise TextTooShortError(entry = value, domain = self.domain, min_length = 3)
+            raise TextTooShortError(entry=value, domain=self.domain, min_length=3)
         if len(value.strip()) > 100:
             raise TextTooLongError(entry=value, max_length=100, domain=self.domain)
         if any(val.isnumeric() for val in value):
@@ -25,16 +34,14 @@ class CurriculumValidator:
 
         return value.strip().title()
 
-
-    def validate_code(self, value:str) -> str:
+    def validate_code(self, value: str) -> str:
         value = (value or "").strip()
         if not value:
             raise EmptyFieldError(entry=value, domain=self.domain)
         if len(value.strip()) < 3:
-            raise TextTooShortError(entry = value, domain = self.domain, min_length = 3)
+            raise TextTooShortError(entry=value, domain=self.domain, min_length=3)
         if len(value.strip()) > 100:
             raise TextTooLongError(entry=value, max_length=100, domain=self.domain)
-
 
         return value.strip().upper()
 
@@ -56,7 +63,3 @@ class CurriculumValidator:
             raise InvalidSessionRangeError(entry=value, domain=self.domain)
 
         return value
-
-
-
-

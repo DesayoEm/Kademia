@@ -11,7 +11,7 @@ from .lifecycle_errors import (
     CascadeDeletionError,
     CascadeArchivalError,
     ArchiveDependencyError,
-    DeletionDependencyError
+    DeletionDependencyError,
 )
 
 from .auth_errors import (
@@ -29,7 +29,7 @@ from .auth_errors import (
     AccessTokenRequiredError,
     RefreshTokenRequiredError,
     TokenRevokedError,
-    SameRoleError
+    SameRoleError,
 )
 
 
@@ -37,7 +37,7 @@ from .rbac_errors import (
     NegativeRankError,
     NoMatchingRoleError,
     AccessDenied,
-    PermissionHandlerError
+    PermissionHandlerError,
 )
 
 
@@ -112,14 +112,14 @@ from .academic_structure_errors import (
     InvalidCodeError,
     InvalidRankNumberError,
     InvalidOrderNumberError,
-    ClassLevelMismatchError
+    ClassLevelMismatchError,
 )
 
 from .identity_errors import (
     IdentityError,
     StaffTypeError,
     DuplicateStudentIDError,
-    InvalidSessionYearError
+    InvalidSessionYearError,
 )
 from .assessment_errors import (
     ScoreExceedsMaxError,
@@ -127,14 +127,14 @@ from .assessment_errors import (
     InvalidWeightError,
     UnableToRecalculateError,
     WeightTooHighError,
-    FileAlreadyExistsError
+    FileAlreadyExistsError,
 )
 
 from .progression_errors import (
     InvalidRepetitionLevelError,
     StudentToGraduateError,
     ProgressionStatusAlreadySetError,
-    LevelNotFinalError
+    LevelNotFinalError,
 )
 
 from .curriculum_errors import (
@@ -144,13 +144,10 @@ from .curriculum_errors import (
 from .academic_structure_errors import (
     ClassRepMismatchError,
     ClassLevelMismatchError,
-    DepartmentRepMismatchError
+    DepartmentRepMismatchError,
 )
 
-from .transfer_errors import (
-    TransferStatusAlreadySetError,
-    DepartmentNotSetError
-)
+from .transfer_errors import TransferStatusAlreadySetError, DepartmentNotSetError
 
 
 logging.basicConfig(level=logging.INFO)
@@ -161,6 +158,9 @@ for loader, module_name, is_pkg in pkgutil.walk_packages(__path__):
 current_module = sys.modules[__name__]
 
 __all__ = [
-    name for name, obj in inspect.getmembers(current_module)
-    if inspect.isclass(obj) and issubclass(obj, KademiaError) and obj is not KademiaError
+    name
+    for name, obj in inspect.getmembers(current_module)
+    if inspect.isclass(obj)
+    and issubclass(obj, KademiaError)
+    and obj is not KademiaError
 ]

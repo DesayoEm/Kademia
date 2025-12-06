@@ -1,12 +1,12 @@
 import pytest
 from app.core import StaffOrganizationValidators
-from app.core import (
-    EmptyFieldError, BlankFieldError, TextTooShortError
-)
+from app.core import EmptyFieldError, BlankFieldError, TextTooShortError
+
 
 @pytest.fixture
 def validator():
     return StaffOrganizationValidators()
+
 
 class TestValidateName:
     """Tests for the validate_name method"""
@@ -44,6 +44,7 @@ class TestValidateName:
 
         result = validator.validate_name("hUmAn ReSOurCeS")
         assert result == "Human Resources"
+
 
 class TestValidateDescription:
     """Tests for the validate_description method"""

@@ -1,23 +1,30 @@
 from app.core.shared.exceptions import (
-    EmptyFieldError, TextTooShortError, InvalidCharacterError, TextTooLongError,
+    EmptyFieldError,
+    TextTooShortError,
+    InvalidCharacterError,
+    TextTooLongError,
 )
 from datetime import datetime
 import re
 
-from app.core.shared.exceptions.entry_validation_errors import PastYearError, SessionYearFormatError, \
-    FutureYearError, InvalidSessionRangeError
+from app.core.shared.exceptions.entry_validation_errors import (
+    PastYearError,
+    SessionYearFormatError,
+    FutureYearError,
+    InvalidSessionRangeError,
+)
 
 
 class DocumentValidator:
     def __init__(self):
         self.domain = "TRANSFER"
 
-    def validate_name(self, value:str) -> str:
+    def validate_name(self, value: str) -> str:
         value = (value or "").strip()
         if not value:
             raise EmptyFieldError(entry=value, domain=self.domain)
         if len(value.strip()) < 3:
-            raise TextTooShortError(entry = value, domain = self.domain, min_length = 3)
+            raise TextTooShortError(entry=value, domain=self.domain, min_length=3)
         if len(value.strip()) > 100:
             raise TextTooLongError(entry=value, max_length=100, domain=self.domain)
         if any(val.isnumeric() for val in value):
@@ -41,7 +48,6 @@ class DocumentValidator:
 
         return value
 
-
     def validate_current_academic_session(self, value):
         match = re.fullmatch(r"(\d{4})/(\d{4})", value)
         if not match:
@@ -60,7 +66,3 @@ class DocumentValidator:
             raise InvalidSessionRangeError(entry=value, domain=self.domain)
 
         return value
-
-
-
-

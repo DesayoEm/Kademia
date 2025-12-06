@@ -4,6 +4,7 @@ from .base_error import KademiaError
 class FileError(KademiaError):
     """Base exception class for entry-related exceptions."""
 
+
 class EmptyFileError(FileError):
     """Raised when a required file is empty."""
 
@@ -36,7 +37,9 @@ class UnsupportedFileFormatError(FileError):
 
     def __init__(self, file_type: str, acceptable_types: str):
         super().__init__()
-        self.user_message = f"File format not supported. Acceptable formats: {acceptable_types}"
+        self.user_message = (
+            f"File format not supported. Acceptable formats: {acceptable_types}"
+        )
         self.log_message = f"Upload attempted with unsupported file type: {file_type}"
 
 
@@ -47,4 +50,3 @@ class AbsentKeyError(FileError):
         super().__init__()
         self.user_message = "S3 key cannot be found!"
         self.log_message = f"S3 key cannot be found!: {entry}"
-
