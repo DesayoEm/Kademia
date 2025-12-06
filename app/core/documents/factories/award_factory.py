@@ -8,8 +8,14 @@ from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
+from app.core.shared.exceptions.decorators.resolve_unique_violation import (
+    resolve_unique_violation,
+)
+from app.core.shared.exceptions.decorators.resolve_fk_violation import (
+    resolve_fk_on_create,
+    resolve_fk_on_update,
+    resolve_fk_on_delete,
+)
 from app.core.shared.exceptions import EntityNotFoundError
 from app.core.shared.exceptions.maps.error_map import error_map
 
@@ -17,7 +23,7 @@ from app.core.shared.exceptions.maps.error_map import error_map
 class AwardFactory(BaseFactory):
     """Factory class for managing Award operations."""
 
-    def __init__(self, session: Session, model = StudentAward, current_user = None):
+    def __init__(self, session: Session, model=StudentAward, current_user=None):
         super().__init__(current_user)
         """Initialize factory.
             Args:
@@ -42,13 +48,17 @@ class AwardFactory(BaseFactory):
             entity_model=self.entity_model,
             identifier=identifier,
             error=str(error),
-            display_name=self.display_name
+            display_name=self.display_name,
         )
 
-    @resolve_unique_violation({
-        "uq_student_award_title_student_id": (
-        "_", "This award title has been created to this student in the same academic session")
-    })
+    @resolve_unique_violation(
+        {
+            "uq_student_award_title_student_id": (
+                "_",
+                "This award title has been created to this student in the same academic session",
+            )
+        }
+    )
     @resolve_fk_on_create()
     def create_award(self, student_id: UUID, data) -> StudentAward:
         """Create a new Award.
@@ -62,13 +72,13 @@ class AwardFactory(BaseFactory):
             id=uuid4(),
             title=self.validator.validate_name(data.title),
             student_id=student_id,
-            academic_session=self.validator.validate_academic_session(data.academic_session),
-
+            academic_session=self.validator.validate_academic_session(
+                data.academic_session
+            ),
             created_by=self.actor_id,
-            last_modified_by=self.actor_id
+            last_modified_by=self.actor_id,
         )
         return self.repository.create(new_award)
-
 
     def get_award(self, award_id: UUID) -> StudentAward:
         """Get a specific Award by ID.
@@ -82,19 +92,22 @@ class AwardFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(award_id, e)
 
-
     def get_all_awards(self, filters) -> List[StudentAward]:
         """Get all active Awards with filtering.
         Returns:
             List[Award]: List of active Awards
         """
-        fields = ['title', 'academic_session', 'student_id']
+        fields = ["title", "academic_session", "student_id"]
         return self.repository.execute_query(fields, filters)
 
-    @resolve_unique_violation({
-        "uq_student_award_title_student_id": (
-        "_", "This award title has been created to this student in the same academic session")
-    })
+    @resolve_unique_violation(
+        {
+            "uq_student_award_title_student_id": (
+                "_",
+                "This award title has been created to this student in the same academic session",
+            )
+        }
+    )
     @resolve_fk_on_update()
     def update_award(self, award_id: UUID, data: dict) -> StudentAward:
         """Update Award information.
@@ -123,8 +136,7 @@ class AwardFactory(BaseFactory):
             return self.repository.update(award_id, existing, modified_by=self.actor_id)
 
         except EntityNotFoundError as e:
-                self.raise_not_found(award_id, e)
-
+            self.raise_not_found(award_id, e)
 
     def archive_award(self, award_id: UUID, reason) -> None:
         """Archive Award
@@ -139,7 +151,6 @@ class AwardFactory(BaseFactory):
 
         except EntityNotFoundError as e:
             self.raise_not_found(award_id, e)
-
 
     @resolve_fk_on_delete(display="award")
     def delete_award(self, award_id: UUID) -> None:
@@ -157,15 +168,13 @@ class AwardFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(award_id, e)
 
-
     def get_all_archived_awards(self, filters) -> List[StudentAward]:
         """Get all archived Awards with filtering.
         Returns:
             List[Award]: List of archived Award records
         """
-        fields = ['title', 'academic_session', 'student_id']
+        fields = ["title", "academic_session", "student_id"]
         return self.repository.execute_archive_query(fields, filters)
-
 
     def get_archived_award(self, award_id: UUID) -> StudentAward:
         """Get an archived Award by ID.
@@ -179,7 +188,6 @@ class AwardFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(award_id, e)
 
-
     def restore_award(self, award_id: UUID) -> StudentAward:
         """Restore an archived Award.
         Args:
@@ -191,7 +199,6 @@ class AwardFactory(BaseFactory):
             return self.repository.restore(award_id)
         except EntityNotFoundError as e:
             self.raise_not_found(award_id, e)
-
 
     @resolve_fk_on_delete(display="award")
     def delete_archived_award(self, award_id: UUID) -> None:

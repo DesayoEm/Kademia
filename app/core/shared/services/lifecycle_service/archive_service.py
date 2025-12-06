@@ -23,10 +23,9 @@ class ArchiveService:
         self.session = session
         self.current_user = current_user
 
-
     def check_active_dependencies_exists(
-            self, entity_model, target_id: UUID,
-            is_archived_field: str = "is_archived") -> List[str]:
+        self, entity_model, target_id: UUID, is_archived_field: str = "is_archived"
+    ) -> List[str]:
         """
         Check if any active entities are referencing the target entity using DEPENDENCY CONFIG
         Args:
@@ -42,19 +41,18 @@ class ArchiveService:
         failed = []
 
         for _, model_class, fk_field, display_name in dependencies:
-            #fk based check
+            # fk based check
             table = model_class.__table__
-            stmt = select(exists().where(
-                 table.c[fk_field] == target_id,
-                table.c[is_archived_field] == False
-            ))
+            stmt = select(
+                exists().where(
+                    table.c[fk_field] == target_id, table.c[is_archived_field] == False
+                )
+            )
 
             if self.session.execute(stmt).scalar_one():
                 failed.append(display_name)
 
         return failed
-
-
 
     def cascade_archive_object(self, entity_model, target_obj, reason: str) -> None:
         dependencies = DEPENDENCY_CONFIG.get(entity_model)
@@ -64,11 +62,15 @@ class ArchiveService:
                 continue
 
             try:
-                relationship_prop = getattr(type(target_obj), relationship_title).property
+                relationship_prop = getattr(
+                    type(target_obj), relationship_title
+                ).property
                 backref = relationship_prop.back_populates
 
                 if not backref:
-                    raise ValueError(f"Relationship '{relationship_title}' must define back_populates.")
+                    raise ValueError(
+                        f"Relationship '{relationship_title}' must define back_populates."
+                    )
 
                 related_attr = getattr(target_obj, relationship_title)
 
@@ -81,14 +83,26 @@ class ArchiveService:
 
             except Exception as e:
                 self.session.rollback()
-                raise CascadeArchivalError(f"[{relationship_title}] Cascade failed: {e}")
+                raise CascadeArchivalError(
+                    f"[{relationship_title}] Cascade failed: {e}"
+                )
 
         try:
             target_obj.archive(self.current_user, reason)
             self.session.commit()
         except Exception as e:
             self.session.rollback()
-            raise CascadeArchivalError(f"[{entity_model}] Failed to archive main object: {e}")
+            raise CascadeArchivalError(
+                f"[{entity_model}] Failed to archive main object: {e}"
+            )
 
 
-
+# return {
+#         "student_id": student_id,
+#         "archived_entities": {
+#             "grades": result.get('grades_count', 0),
+#             "documents": result.get('documents_count', 0),
+#             "awards": result.get('awards_count', 0),
+#         },
+#         "message": "Deep archive completed successfully"
+#     }

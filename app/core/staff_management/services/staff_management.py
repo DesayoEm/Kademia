@@ -10,8 +10,6 @@ class StaffManagementService:
         self.factory = StaffDepartmentFactory(session, current_user=current_user)
         self.entity_validator = EntityValidator(session)
 
-
-
     def assign_manager(self, department_id: UUID, manager_id: UUID | None = None):
         department = self.factory.get_staff_department(department_id)
 
@@ -26,4 +24,3 @@ class StaffManagementService:
         return self.factory.update_staff_department(
             department_id, {"manager_id": validated_manager_id}
         )
-

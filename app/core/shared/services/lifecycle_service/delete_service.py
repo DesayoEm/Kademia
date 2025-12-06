@@ -33,10 +33,9 @@ class DeleteService:
         self.repository = SQLAlchemyRepository(model, session)
         self.anonymous_user = UUID(config.ANONYMIZED_ID)
 
-
-
     def check_active_dependencies_exists(
-            self, entity_model, target_id: UUID) -> List[str]:
+        self, entity_model, target_id: UUID
+    ) -> List[str]:
         """
         Check if any active entities are referencing the target entity using DEPENDENCY CONFIG
         Args:
@@ -51,16 +50,18 @@ class DeleteService:
         failed = []
 
         for _, model_class, fk_field, display_name in dependencies:
-            #fk based check
+            # fk based check
             table = model_class.__table__
-            stmt = select(exists().where(table.c[fk_field] == target_id,
-               ))
+            stmt = select(
+                exists().where(
+                    table.c[fk_field] == target_id,
+                )
+            )
 
             if self.session.execute(stmt).scalar_one():
                 failed.append(display_name)
 
         return failed
-
 
     def get_fk_delete_rules_from_info_schema(self, table_name: str) -> dict:
         """
@@ -73,7 +74,8 @@ class DeleteService:
         Returns:
             dict: Mapping {constraint_name: delete_rule}
         """
-        query = text("""
+        query = text(
+            """
                SELECT
                    tc.constraint_name,
                    rc.delete_rule
@@ -85,8 +87,7 @@ class DeleteService:
                WHERE
                    tc.constraint_type = 'FOREIGN KEY'
                    AND tc.table_name = :table_name
-           """)
-        result = self.session.execute(query, {'table_name': table_name}).fetchall()
+           """
+        )
+        result = self.session.execute(query, {"table_name": table_name}).fetchall()
         return {row.constraint_name: row.delete_rule.upper() for row in result}
-
-

@@ -5,9 +5,7 @@ from enum import Enum
 from datetime import timezone, date as pydate
 
 
-from datetime import (
-    datetime,
-    date)
+from datetime import datetime, date
 
 from sqlalchemy import (
     ForeignKey,
@@ -23,15 +21,11 @@ from sqlalchemy import (
     DateTime,
     Text,
     Enum,
-    DECIMAL
+    DECIMAL,
 )
-from sqlalchemy.orm import (
-    DeclarativeBase,
-    Mapped,
-    mapped_column,
-    relationship
-)
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
+
 
 class Base(DeclarativeBase):
     pass

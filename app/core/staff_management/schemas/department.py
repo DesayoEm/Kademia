@@ -13,16 +13,15 @@ class StaffDepartmentBase(BaseModel):
     name: str
     description: str
 
-
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
-        json_schema_extra = {
+        json_schema_extra={
             "example": {
                 "name": "Academic Affairs",
                 "description": "Manages academic programs and curriculum",
             }
-        }
+        },
     )
 
 
@@ -46,17 +45,19 @@ class StaffDepartmentUpdate(StaffDepartmentBase):
                 "name": "Academic Affairs",
                 "description": "Manages academic programs",
             }
-        }
+        },
     )
 
 
 class StaffDepartmentResponse(StaffDepartmentBase):
     """Response model for staff departments"""
+
     manager_id: UUID | None = None
 
 
 class StaffDepartmentAudit(BaseModel):
     """Represents stored staff departments"""
+
     id: UUID
     created_at: datetime
     created_by: UUID
@@ -70,6 +71,7 @@ class StaffDepartmentAudit(BaseModel):
 
 class StaffDepartmentInDB:
     """Represents stored staff departments"""
+
     id: UUID
     name: str
     description: str
@@ -82,5 +84,3 @@ class StaffDepartmentInDB:
     archived_at: datetime | None = None
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
-
-

@@ -3,27 +3,25 @@ from uuid import uuid4
 from typing import Dict, Any
 from sqlalchemy.orm import Session
 from app.core.shared.services.file_storage.s3_upload import S3Upload
-from app.infra.log_service.logger import logger
+from app.core.shared.log_service.logger import logger
 from app.settings import config
 
 
 class ProfilePictureService:
-    def __init__(self, session: Session, current_user = None):
+    def __init__(self, session: Session, current_user=None):
         self.session = session
         self.current_user = current_user
         self.upload = S3Upload(session, current_user=current_user)
 
-
         self.SUPPORTED_IMAGE_TYPES = {
-            'image/png': 'png',
-            'image/jpeg': 'jpg',
-            'image/jpg': 'jpg',
-            'image/webp': 'webp'
+            "image/png": "png",
+            "image/jpeg": "jpg",
+            "image/jpg": "jpg",
+            "image/webp": "webp",
         }
 
         self.MIN_FILE_SIZE = 1 * self.upload.KB
         self.MAX_FILE_SIZE = 5 * self.upload.MB
-
 
     def upload_profile_picture(self, file, user) -> Dict[str, Any]:
         """
@@ -49,20 +47,21 @@ class ProfilePictureService:
 
             self.upload.s3_upload(contents=contents, key=s3_key)
 
-            logger.info(f"Profile picture uploaded successfully for user {user.id}: {s3_key}")
+            logger.info(
+                f"Profile picture uploaded successfully for user {user.id}: {s3_key}"
+            )
 
             self.upload.save_key_in_db(user, s3_key, profile_pic_key_name)
 
             return {
-                "filename": s3_key.split('/')[-1],
+                "filename": s3_key.split("/")[-1],
                 "size": len(contents),
-                "file_type": detected_type
+                "file_type": detected_type,
             }
 
         except Exception as e:
             logger.error(f"Profile picture upload failed for user {user.id}: {str(e)}")
             raise
-
 
     @staticmethod
     def generate_profile_pic_key(user, s3_folder: str, file_extension: str) -> str:
@@ -84,7 +83,6 @@ class ProfilePictureService:
 
         return f"{s3_folder}{user_type}_{first_name}_{last_name}_{unique_id}_profile.{file_extension}"
 
-
     def remove_profile_pic(self, user) -> None:
         """
         Delete profile picture from S3 and database.
@@ -93,7 +91,9 @@ class ProfilePictureService:
         """
         try:
             s3_key = user.profile_s3_key
-            self.upload.s3_client.delete_object(Bucket=self.upload.AWS_BUCKET_NAME, Key=s3_key)
+            self.upload.s3_client.delete_object(
+                Bucket=self.upload.AWS_BUCKET_NAME, Key=s3_key
+            )
 
             user.profile_s3_key = None
             user.last_modified_by = self.current_user.id
@@ -101,13 +101,9 @@ class ProfilePictureService:
 
             logger.info(f"Profile picture deleted for user {user.id}")
 
-
         except Exception as e:
             self.session.rollback()
-            logger.error(f"Failed to delete profile picture for user {user.id}: {str(e)}")
+            logger.error(
+                f"Failed to delete profile picture for user {user.id}: {str(e)}"
+            )
             raise
-
-
-
-
-

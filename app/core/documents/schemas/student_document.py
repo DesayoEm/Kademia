@@ -4,15 +4,17 @@ from app.core.shared.schemas.shared_models import *
 
 
 class DocumentFilterParams(BaseFilterParams):
-    title: str|None = None
-    student_id: UUID|None = None
-    academic_session: str|None = None
-    document_type: DocumentType|None = None
+    title: str | None = None
+    student_id: UUID | None = None
+    academic_session: str | None = None
+    document_type: DocumentType | None = None
 
     order_by: Literal["title", "created_at"] = "title"
 
+
 class DocumentBase(BaseModel):
     """Base model for student documents"""
+
     title: str
     academic_session: str
     document_type: DocumentType
@@ -25,19 +27,20 @@ class DocumentBase(BaseModel):
                 "title": "First Term Report Card",
                 "academic_session": "2025/2026",
                 "document_type": "RESULT",
-
             }
-        }
+        },
     )
 
 
 class DocumentCreate(DocumentBase):
     """Used for creating new student documents"""
+
     pass
 
 
 class DocumentUpdate(BaseModel):
     """Used for updating student documents"""
+
     title: str
     document_type: DocumentType
 
@@ -49,17 +52,19 @@ class DocumentUpdate(BaseModel):
                 "title": "Second Term Report Card",
                 "document_type": "RESULT",
             }
-        }
+        },
     )
 
 
 class DocumentResponse(DocumentBase):
     """Response model for student documents"""
-    document_s3_key: str |None = None
+
+    document_s3_key: str | None = None
 
 
 class DocumentAudit(BaseModel):
     """Response model for student documents audit"""
+
     id: UUID
     student_id: UUID
     document_s3_key: str | None = None

@@ -8,42 +8,79 @@ class DepartmentTransfer(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     Represents a student's transfer between departments including the reason,approval status, and status updates.
     Inherits from Base, AuditMixins, TimeStampMixins, and ArchiveMixins.
     """
-    __tablename__ = 'department_transfers'
 
-    id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    student_id: Mapped[UUID] = mapped_column(ForeignKey('students.id',
-                    ondelete='CASCADE',name='fk_department_transfers_students_student_id'))
+    __tablename__ = "department_transfers"
+
+    id: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid4
+    )
+    student_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "students.id",
+            ondelete="CASCADE",
+            name="fk_department_transfers_students_student_id",
+        )
+    )
 
     academic_session: Mapped[str] = mapped_column(String(9))
 
     previous_department_id: Mapped[UUID] = mapped_column(
-        ForeignKey('student_departments.id',
-                    ondelete='RESTRICT', name='fk_student_transfers_previous_department')
+        ForeignKey(
+            "student_departments.id",
+            ondelete="RESTRICT",
+            name="fk_student_transfers_previous_department",
+        )
     )
-    new_department_id: Mapped[UUID] = mapped_column(ForeignKey('student_departments.id',
-                    ondelete='RESTRICT',name='fk_student_transfers_new_department')
-                                                    )
+    new_department_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "student_departments.id",
+            ondelete="RESTRICT",
+            name="fk_student_transfers_new_department",
+        )
+    )
     reason: Mapped[str] = mapped_column(String(500))
-    status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus, name='approvalstatus'), default=ApprovalStatus.PENDING)
-    status_completed_by: Mapped[UUID] = mapped_column(ForeignKey('staff.id',
-                    ondelete='RESTRICT',name='fk_department_transfers_staff_status_completed_by'),nullable=True
-                                                    )
-    status_completed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
+    status: Mapped[ApprovalStatus] = mapped_column(
+        Enum(ApprovalStatus, name="approvalstatus"), default=ApprovalStatus.PENDING
+    )
+    status_completed_by: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "staff.id",
+            ondelete="RESTRICT",
+            name="fk_department_transfers_staff_status_completed_by",
+        ),
+        nullable=True,
+    )
+    status_completed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     decision_reason: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Relationships
-    transferred_student: Mapped['Student'] = relationship(back_populates='department_transfers', foreign_keys='[DepartmentTransfer.student_id]',
-                         passive_deletes=True)
-    former_department: Mapped['StudentDepartment'] = relationship(foreign_keys='[DepartmentTransfer.previous_department_id]')
-    new_department: Mapped['StudentDepartment'] = relationship(foreign_keys='[DepartmentTransfer.new_department_id]')
-    status_changer: Mapped['Staff'] = relationship(foreign_keys='[DepartmentTransfer.status_completed_by]')
+    transferred_student: Mapped["Student"] = relationship(
+        back_populates="department_transfers",
+        foreign_keys="[DepartmentTransfer.student_id]",
+        passive_deletes=True,
+    )
+    former_department: Mapped["StudentDepartment"] = relationship(
+        foreign_keys="[DepartmentTransfer.previous_department_id]"
+    )
+    new_department: Mapped["StudentDepartment"] = relationship(
+        foreign_keys="[DepartmentTransfer.new_department_id]"
+    )
+    status_changer: Mapped["Staff"] = relationship(
+        foreign_keys="[DepartmentTransfer.status_completed_by]"
+    )
 
     __table_args__ = (
-        UniqueConstraint('student_id', 'academic_session', name='uq_transfer_student_session'),
-        Index('idx_department_transfer_status', 'student_id', 'status'),
-        Index('idx_department_transfer_academic_session', 'student_id', 'academic_session'),
-        Index('idx_previous_department_id', 'previous_department_id'),
-        Index('idx_new_department_id', 'new_department_id'),
+        UniqueConstraint(
+            "student_id", "academic_session", name="uq_transfer_student_session"
+        ),
+        Index("idx_department_transfer_status", "student_id", "status"),
+        Index(
+            "idx_department_transfer_academic_session", "student_id", "academic_session"
+        ),
+        Index("idx_previous_department_id", "previous_department_id"),
+        Index("idx_new_department_id", "new_department_id"),
     )
 
     def __repr__(self) -> str:

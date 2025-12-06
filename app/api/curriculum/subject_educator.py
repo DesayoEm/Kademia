@@ -1,4 +1,3 @@
-
 from uuid import UUID
 from typing import List
 
@@ -7,116 +6,150 @@ from app.core.shared.schemas.shared_models import ArchiveRequest
 from fastapi import Depends, APIRouter
 
 from app.core.curriculum.schemas.subject_educator import (
-    SubjectEducatorCreate, SubjectEducatorFilterParams, SubjectEducatorResponse, SubjectEducatorAudit
+    SubjectEducatorCreate,
+    SubjectEducatorFilterParams,
+    SubjectEducatorResponse,
+    SubjectEducatorAudit,
 )
 
 from app.core.auth.services.token_service import TokenService
 from app.core.auth.services.dependencies.token_deps import AccessTokenBearer
-from app.core.auth.services.dependencies.current_user_deps import get_authenticated_factory
+from app.core.auth.services.dependencies.current_user_deps import (
+    get_authenticated_factory,
+)
 
-token_service=TokenService()
+token_service = TokenService()
 access = AccessTokenBearer()
 router = APIRouter()
 
 
-#Archive routers
+# Archive routers
 @router.get("/", response_model=List[SubjectEducatorResponse])
 def get_archived_subject_educators(
-        filters: SubjectEducatorFilterParams = Depends(),
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
+    filters: SubjectEducatorFilterParams = Depends(),
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
     return factory.get_all_archived_subject_educators(filters)
 
 
-@router.get("/archive/subject-educators/{subject_educator_id}/audit", response_model=SubjectEducatorAudit)
+@router.get(
+    "/archive/subject-educators/{subject_educator_id}/audit",
+    response_model=SubjectEducatorAudit,
+)
 def get_archived_subject_educator_audit(
-        subject_educator_id: UUID,
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
+    subject_educator_id: UUID,
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
     return factory.get_archived_subject_educator(subject_educator_id)
 
 
-@router.get("/archive/subject-educators/{subject_educator_id}", response_model=SubjectEducatorResponse)
+@router.get(
+    "/archive/subject-educators/{subject_educator_id}",
+    response_model=SubjectEducatorResponse,
+)
 def get_archived_subject_educator(
-        subject_educator_id: UUID,
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
+    subject_educator_id: UUID,
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
     return factory.get_archived_subject_educator(subject_educator_id)
 
 
-@router.patch("/archive/subject-educators/{subject_educator_id}", response_model=SubjectEducatorResponse)
+@router.patch(
+    "/archive/subject-educators/{subject_educator_id}",
+    response_model=SubjectEducatorResponse,
+)
 def restore_subject_educator(
-        subject_educator_id: UUID,
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
+    subject_educator_id: UUID,
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
     return factory.restore_subject_educator(subject_educator_id)
 
 
 @router.delete("/archive/subject-educators/{subject_educator_id}", status_code=204)
 def delete_archived_subject_educator(
-        subject_educator_id: UUID,
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
+    subject_educator_id: UUID,
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
     return factory.delete_archived_subject_educator(subject_educator_id)
 
 
-
-#Active routers
-@router.post("/subject-educators/educator_id}", response_model= SubjectEducatorResponse, status_code=201)
+# Active routers
+@router.post(
+    "/subject-educators/educator_id}",
+    response_model=SubjectEducatorResponse,
+    status_code=201,
+)
 def assign_subject_educator(
-        educator_id: UUID,
-        data:SubjectEducatorCreate,
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
-    return factory.create_subject_educator(educator_id,data)
+    educator_id: UUID,
+    data: SubjectEducatorCreate,
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
+    return factory.create_subject_educator(educator_id, data)
 
 
 @router.get("/subject-educators/", response_model=List[SubjectEducatorResponse])
 def get_subject_educators(
-        filters: SubjectEducatorFilterParams = Depends(),
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
+    filters: SubjectEducatorFilterParams = Depends(),
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
     return factory.get_all_subject_educators(filters)
 
 
-@router.get("/subject-educators/{subject_educator_id}/audit", response_model=SubjectEducatorAudit)
+@router.get(
+    "/subject-educators/{subject_educator_id}/audit",
+    response_model=SubjectEducatorAudit,
+)
 def get_subject_educator_audit(
-        subject_educator_id: UUID,
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
+    subject_educator_id: UUID,
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
     return factory.get_subject_educator(subject_educator_id)
 
 
-@router.get("/subject-educators/{subject_educator_id}", response_model=SubjectEducatorResponse)
+@router.get(
+    "/subject-educators/{subject_educator_id}", response_model=SubjectEducatorResponse
+)
 def get_subject_educator(
-        subject_educator_id: UUID,
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
+    subject_educator_id: UUID,
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
     return factory.get_subject_educator(subject_educator_id)
 
 
-@router.patch("/subject-educators/{subject_educator_id}",  status_code=204)
+@router.patch("/subject-educators/{subject_educator_id}", status_code=204)
 def archive_subject_educator(
-        subject_educator_id: UUID,
-        reason:ArchiveRequest,
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
+    subject_educator_id: UUID,
+    reason: ArchiveRequest,
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
     return factory.archive_subject_educator(subject_educator_id, reason.reason)
 
 
 @router.delete("/subject-educators/{subject_educator_id}", status_code=204)
 def delete_subject_educator(
-        subject_educator_id: UUID,
-        factory: SubjectEducatorFactory = Depends(get_authenticated_factory(SubjectEducatorFactory))
-    ):
+    subject_educator_id: UUID,
+    factory: SubjectEducatorFactory = Depends(
+        get_authenticated_factory(SubjectEducatorFactory)
+    ),
+):
     return factory.delete_subject_educator(subject_educator_id)
-
-
-
-
-
-
-
-
-
-

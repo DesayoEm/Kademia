@@ -1,11 +1,18 @@
 from app.core.shared.exceptions import (
-    EmptyFieldError, TextTooShortError, InvalidCharacterError, TextTooLongError,
+    EmptyFieldError,
+    TextTooShortError,
+    InvalidCharacterError,
+    TextTooLongError,
 )
 from datetime import datetime
 import re
 
-from app.core.shared.exceptions.entry_validation_errors import PastYearError, SessionYearFormatError, \
-    FutureYearError, InvalidSessionRangeError
+from app.core.shared.exceptions.entry_validation_errors import (
+    PastYearError,
+    SessionYearFormatError,
+    FutureYearError,
+    InvalidSessionRangeError,
+)
 
 
 class TransferValidator:
@@ -28,7 +35,6 @@ class TransferValidator:
 
         return value
 
-
     def validate_current_academic_session(self, value):
         match = re.fullmatch(r"(\d{4})/(\d{4})", value)
         if not match:
@@ -47,7 +53,3 @@ class TransferValidator:
             raise InvalidSessionRangeError(entry=value, domain=self.domain)
 
         return value
-
-
-
-

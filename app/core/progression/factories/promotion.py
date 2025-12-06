@@ -4,23 +4,31 @@ from sqlalchemy.orm import Session
 
 from app.core.progression.models.progression import Promotion
 from app.core.shared.exceptions.database_errors import CompositeDuplicateEntityError
-from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
+from app.core.shared.exceptions.decorators.resolve_unique_violation import (
+    resolve_unique_violation,
+)
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.models.enums import ApprovalStatus
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete, \
-    resolve_fk_on_update
-from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, UniqueViolationError
+from app.core.shared.exceptions.decorators.resolve_fk_violation import (
+    resolve_fk_on_create,
+    resolve_fk_on_delete,
+    resolve_fk_on_update,
+)
+from app.core.shared.exceptions import (
+    EntityNotFoundError,
+    ArchiveDependencyError,
+    UniqueViolationError,
+)
 from app.core.shared.exceptions.maps.error_map import error_map
-
 
 
 class PromotionFactory(BaseFactory):
     """Factory class for managing promotion operations."""
 
-    def __init__(self, session: Session, model=Promotion, current_user = None):
+    def __init__(self, session: Session, model=Promotion, current_user=None):
         super().__init__(current_user)
         """Initialize factory with db session, model and current user.
         Args:
@@ -44,49 +52,51 @@ class PromotionFactory(BaseFactory):
             entity_model=self.entity_model,
             identifier=identifier,
             error=str(error),
-            display_name=self.display_name
+            display_name=self.display_name,
         )
 
-    @resolve_unique_violation({
-        "uq_promotion_student_session": (
-                "_", "This student has an existing promotion record for the specified academic session"
-        )
-    })
+    @resolve_unique_violation(
+        {
+            "uq_promotion_student_session": (
+                "_",
+                "This student has an existing promotion record for the specified academic session",
+            )
+        }
+    )
     @resolve_fk_on_create()
     def create_promotion(self, student_id: UUID, data) -> Promotion:
         """Create a new promotion record for a student."""
         from app.core.identity.models.student import Student
         from app.core.identity.factories.student import StudentFactory
+
         student_factory = StudentFactory(self.session, Student, self.current_user)
         student = student_factory.get_student(student_id)
 
-
         from app.core.progression.services.promotion_service import PromotionService
+
         service = PromotionService(self.session, self.current_user)
         promotion_level_id = service.generate_promotion_level(student.level_id)
 
-
         try:
             new_promotion = Promotion(
-            id=uuid4(),
-            student_id=student_id,
-            academic_session=data.academic_session,
-            notes=data.notes,
-            previous_level_id=student.level_id,
-            promoted_level_id=promotion_level_id,
-
-            status=ApprovalStatus.PENDING,
-            created_by=self.actor_id,
-            last_modified_by=self.actor_id
-        )
+                id=uuid4(),
+                student_id=student_id,
+                academic_session=data.academic_session,
+                notes=data.notes,
+                previous_level_id=student.level_id,
+                promoted_level_id=promotion_level_id,
+                status=ApprovalStatus.PENDING,
+                created_by=self.actor_id,
+                last_modified_by=self.actor_id,
+            )
             return self.repository.create(new_promotion)
 
         except UniqueViolationError as e:
             raise CompositeDuplicateEntityError(
-                Promotion, str(e),
-                f"This student has an existing promotion record for the {data.academic_session} session")
-
-
+                Promotion,
+                str(e),
+                f"This student has an existing promotion record for the {data.academic_session} session",
+            )
 
     def get_promotion(self, promotion_id: UUID) -> Promotion:
         """Get a specific promotion by ID."""
@@ -95,18 +105,19 @@ class PromotionFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(promotion_id, e)
 
-
     def get_all_promotions(self, filters) -> List[Promotion]:
         """Get all active promotions with filtering."""
-        fields = ['student_id', 'academic_session', 'status','status_completed_by']
+        fields = ["student_id", "academic_session", "status", "status_completed_by"]
         return self.repository.execute_query(fields, filters)
 
-
-    @resolve_unique_violation({
-        "uq_promotion_student_session": (
-                "_", "This student has an existing promotion record for the specified academic session"
-        )
-    })
+    @resolve_unique_violation(
+        {
+            "uq_promotion_student_session": (
+                "_",
+                "This student has an existing promotion record for the specified academic session",
+            )
+        }
+    )
     @resolve_fk_on_update()
     def update_promotion(self, promotion_id: UUID, data: dict) -> Promotion:
         """Update a promotion record information."""
@@ -117,12 +128,12 @@ class PromotionFactory(BaseFactory):
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            return self.repository.update(promotion_id, existing, modified_by=self.actor_id)
+            return self.repository.update(
+                promotion_id, existing, modified_by=self.actor_id
+            )
 
         except EntityNotFoundError as e:
             self.raise_not_found(promotion_id, e)
-
-
 
     def archive_promotion(self, promotion_id: UUID, reason) -> None:
         """Archive a promotion record."""
@@ -131,7 +142,6 @@ class PromotionFactory(BaseFactory):
 
         except EntityNotFoundError as e:
             self.raise_not_found(promotion_id, e)
-
 
     @resolve_fk_on_delete(display="promotion")
     def delete_promotion(self, promotion_id: UUID, is_archived=False) -> None:
@@ -143,12 +153,10 @@ class PromotionFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(promotion_id, e)
 
-
     def get_all_archived_promotions(self, filters) -> List[Promotion]:
         """Get all archived promotion records with filtering."""
-        fields = ['student_id', 'academic_session', 'status','status_completed_by']
+        fields = ["student_id", "academic_session", "status", "status_completed_by"]
         return self.repository.execute_archive_query(fields, filters)
-
 
     def get_archived_promotion(self, promotion_id: UUID) -> Promotion:
         """Get an archived promotion record by ID."""
@@ -157,14 +165,12 @@ class PromotionFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(promotion_id, e)
 
-
     def restore_promotion(self, promotion_id: UUID) -> Promotion:
         """Restore an archived promotion record."""
         try:
             return self.repository.restore(promotion_id)
         except EntityNotFoundError as e:
             self.raise_not_found(promotion_id, e)
-
 
     @resolve_fk_on_delete(display="promotion")
     def delete_archived_promotion(self, promotion_id: UUID, is_archived=True) -> None:

@@ -4,6 +4,7 @@ from app.core.shared.exceptions.database_errors import CompositeDuplicateEntityE
 
 from functools import wraps
 
+
 def resolve_unique_violation(constraint_map):
     def decorator(func):
         @wraps(func)
@@ -11,7 +12,7 @@ def resolve_unique_violation(constraint_map):
             try:
                 return func(self, *args, **kwargs)
             except Exception as e:
-                constraint = getattr(e, 'constraint', None)
+                constraint = getattr(e, "constraint", None)
 
                 if constraint in constraint_map:
                     field_name, value_provider = constraint_map[constraint]
@@ -23,18 +24,18 @@ def resolve_unique_violation(constraint_map):
                             field=field_name,
                             entry=value,
                             display_name=self.display_name,
-                            detail=str(e)
+                            detail=str(e),
                         )
                     else:
                         value = value_provider
                         raise CompositeDuplicateEntityError(
-                            entity_model=self.entity_model,
-                            detail=str(e),
-                            display=value
+                            entity_model=self.entity_model, detail=str(e), display=value
                         )
 
                 raise e
+
         return wrapper
+
     return decorator
 
 

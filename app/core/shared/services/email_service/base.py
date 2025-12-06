@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from app.core.shared.exceptions.email_errors import EmailFailedToSendError
 from app.settings import email_settings
 
+
 class EmailService:
     def __init__(self):
         self.username = email_settings.MAIL_USERNAME
@@ -15,8 +16,9 @@ class EmailService:
         self.use_tls = email_settings.MAIL_TLS
         self.use_ssl = email_settings.MAIL_SSL
 
-    def send_email(self, recipient: str, subject: str, body_html: str,
-                                body_text: str = None) -> bool:
+    def send_email(
+        self, recipient: str, subject: str, body_html: str, body_text: str = None
+    ) -> bool:
         """Send email_service to a recipient with a given subject and body."""
         message = MIMEMultipart("alternative")
         message["Subject"] = subject
@@ -35,4 +37,4 @@ class EmailService:
                 server.sendmail(self.sender, recipient, message.as_string())
                 return True
         except Exception as e:
-            raise EmailFailedToSendError(detail = str(e))
+            raise EmailFailedToSendError(detail=str(e))

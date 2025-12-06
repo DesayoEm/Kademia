@@ -1,14 +1,12 @@
 from app.core.shared.services.email_service.base import EmailService
 
+
 class PasswordEmailService:
 
     def __init__(self):
         self.service = EmailService()
 
-
-    def send_password_change_notification(
-            self, to_email: str, name: str
-    ) -> bool:
+    def send_password_change_notification(self, to_email: str, name: str) -> bool:
         """Notify user (guardian and staff) their password has been changed successfully."""
 
         subject = "Your Kademia Password Has Been Changed"
@@ -81,10 +79,9 @@ class PasswordEmailService:
 
         return self.service.send_email(to_email, subject, html_body, text_body)
 
-
-
     def send_ward_password_change_alert(
-            self, to_email: str, guardian_name: str, ward_name: str) -> bool:
+        self, to_email: str, guardian_name: str, ward_name: str
+    ) -> bool:
         """
         Sends a notification to the guardian that their ward changed their password.
         """
@@ -141,9 +138,8 @@ class PasswordEmailService:
 
         return self.service.send_email(to_email, subject, html_body, text_body)
 
-
     def send_guardian_new_password(
-            self, to_email: str, full_name: str, password: str
+        self, to_email: str, full_name: str, password: str
     ) -> bool:
         """Send email with guardian's new password after a reset."""
 
@@ -221,13 +217,14 @@ class PasswordEmailService:
 
         return self.service.send_email(to_email, subject, html_body, text_body)
 
-
-
     def send_ward_new_password(
-            self, to_email: str, full_name: str, password: str,
-            ward_first_name: str, ward_last_name: str
+        self,
+        to_email: str,
+        full_name: str,
+        password: str,
+        ward_first_name: str,
+        ward_last_name: str,
     ) -> bool:
-
         """Send email student's new email to their guardian ."""
 
         subject = f"Password Reset for {ward_first_name} {ward_last_name}"
@@ -303,7 +300,6 @@ class PasswordEmailService:
 
         return self.service.send_email(to_email, subject, html_body, text_body)
 
-
     def send_staff_reset_link(self, to_email: str, name: str, reset_url: str) -> bool:
         """Send email to staff with a password reset link."""
 
@@ -377,6 +373,3 @@ class PasswordEmailService:
         """
 
         return self.service.send_email(to_email, subject, html_body, text_body)
-
-
-

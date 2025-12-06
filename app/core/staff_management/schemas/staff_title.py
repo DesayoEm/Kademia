@@ -9,27 +9,31 @@ class StaffTitleFilterParams(BaseFilterParams):
 
 class StaffTitleBase(BaseModel):
     """Base model for staff titles"""
+
     name: str
     description: str
 
     model_config = ConfigDict(
         from_attributes=True,
         extra="forbid",
-        json_schema_extra = {
-        "example": {
-            "name": "Head of Department",
-            "description": "Manages departmental operations and staff"
-        }
-    }
+        json_schema_extra={
+            "example": {
+                "name": "Head of Department",
+                "description": "Manages departmental operations and staff",
+            }
+        },
     )
+
 
 class StaffTitleCreate(StaffTitleBase):
     """Used for creating new staff titles"""
+
     pass
 
 
 class StaffTitleUpdate(StaffTitleBase):
     """Used for updating staff titles"""
+
     name: str | None = None
     description: str | None = None
 
@@ -37,16 +41,14 @@ class StaffTitleUpdate(StaffTitleBase):
         from_attributes=True,
         extra="forbid",
         json_schema_extra={
-            "example": {
-                "name": "Biology Teacher",
-                "description": "Teaches biology"
-            }
-        }
+            "example": {"name": "Biology Teacher", "description": "Teaches biology"}
+        },
     )
 
 
 class StaffTitleResponse(StaffTitleBase):
     """Response model for staff titles"""
+
     pass
 
 
@@ -66,6 +68,7 @@ class StaffTitleAudit(BaseModel):
 
 class StaffTitleInDB:
     """Represents stored staff titles"""
+
     id: UUID
     name: str
     description: str
@@ -77,4 +80,3 @@ class StaffTitleInDB:
     archived_at: datetime | None = None
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
-

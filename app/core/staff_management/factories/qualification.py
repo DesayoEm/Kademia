@@ -8,8 +8,14 @@ from app.core.staff_management.models import EducatorQualification
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
+from app.core.shared.exceptions.decorators.resolve_unique_violation import (
+    resolve_unique_violation,
+)
+from app.core.shared.exceptions.decorators.resolve_fk_violation import (
+    resolve_fk_on_create,
+    resolve_fk_on_update,
+    resolve_fk_on_delete,
+)
 from app.core.shared.exceptions import EntityNotFoundError
 from app.core.shared.exceptions.maps.error_map import error_map
 
@@ -17,7 +23,9 @@ from app.core.shared.exceptions.maps.error_map import error_map
 class QualificationFactory(BaseFactory):
     """Factory class for managing qualification operations."""
 
-    def __init__(self, session: Session, model = EducatorQualification, current_user = None):
+    def __init__(
+        self, session: Session, model=EducatorQualification, current_user=None
+    ):
         super().__init__(current_user)
         """Initialize factory with model and db session.
         Args:
@@ -39,13 +47,12 @@ class QualificationFactory(BaseFactory):
             entity_model=self.entity_model,
             identifier=identifier,
             error=str(error),
-            display_name=self.display_name
+            display_name=self.display_name,
         )
 
-    @resolve_unique_violation({
-        "uq_educator_qualification_name": ("name", lambda self,_, data: data.name)
-                })
-
+    @resolve_unique_violation(
+        {"uq_educator_qualification_name": ("name", lambda self, _, data: data.name)}
+    )
     @resolve_fk_on_create()
     def create_qualification(self, educator_id: UUID, data) -> EducatorQualification:
         """Create a new qualification.
@@ -60,25 +67,22 @@ class QualificationFactory(BaseFactory):
             educator_id=educator_id,
             name=self.validator.validate_name(data.name),
             description=self.validator.validate_description(data.description),
-            validity_type = data.validity_type,
-            valid_until = self.validator.validate_valid_until(
-                data.validity_type.value,
-                data.valid_until
+            validity_type=data.validity_type,
+            valid_until=self.validator.validate_valid_until(
+                data.validity_type.value, data.valid_until
             ),
             created_by=self.actor_id,
             last_modified_by=self.actor_id,
         )
         return self.repository.create(qualification)
 
-
     def get_all_qualifications(self, filters) -> List[EducatorQualification]:
         """Get all active qualifications with filtering.
         Returns:
             List[EducatorQualification]: List of active qualification records
         """
-        fields = ['name', 'educator_id', 'is_expired', 'validity_type']
+        fields = ["name", "educator_id", "is_expired", "validity_type"]
         return self.repository.execute_query(fields, filters)
-
 
     def get_qualification(self, qualification_id: UUID) -> EducatorQualification:
         """Get a specific qualification by ID.
@@ -92,12 +96,13 @@ class QualificationFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)
 
-
     @resolve_fk_on_update()
-    @resolve_unique_violation({
-        "uq_educator_qualification_name": ("name", lambda self, _, data: data.name)
-    })
-    def update_qualification(self, qualification_id: UUID, data: dict) -> EducatorQualification:
+    @resolve_unique_violation(
+        {"uq_educator_qualification_name": ("name", lambda self, _, data: data.name)}
+    )
+    def update_qualification(
+        self, qualification_id: UUID, data: dict
+    ) -> EducatorQualification:
         """Update a qualification's information.
         Args:
             qualification_id: ID of qualification to update
@@ -111,18 +116,20 @@ class QualificationFactory(BaseFactory):
             educator_id = existing.educator_id  # stored for for error handling
 
             if "validity_type" in data and "valid_until" in data:
-                existing.validity_type = data['validity_type']
+                existing.validity_type = data["validity_type"]
 
                 existing.valid_until = self.validator.validate_valid_until(
-                    data['validity_type'], data['valid_until'])
+                    data["validity_type"], data["valid_until"]
+                )
 
             elif "valid_until" in data:
                 existing.valid_until = self.validator.validate_valid_until(
-                    existing.validity_type, data['valid_until'])
+                    existing.validity_type, data["valid_until"]
+                )
 
             elif "validity_type" in data:
                 existing.valid_until = self.validator.validate_valid_until(
-                    data['validity_type'], existing.valid_until
+                    data["validity_type"], existing.valid_until
                 )
 
             validations = {
@@ -135,13 +142,16 @@ class QualificationFactory(BaseFactory):
                     validated_value = validator_func(copied_data.pop(field))
                     setattr(existing, model_attr, validated_value)
 
-            return self.repository.update(qualification_id, existing, modified_by=self.actor_id)
+            return self.repository.update(
+                qualification_id, existing, modified_by=self.actor_id
+            )
 
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)
 
-
-    def archive_qualification(self, qualification_id: UUID, reason) -> EducatorQualification:
+    def archive_qualification(
+        self, qualification_id: UUID, reason
+    ) -> EducatorQualification:
         """Archive a qualification.
         Args:
             qualification_id: ID of qualification to archive
@@ -155,7 +165,6 @@ class QualificationFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)
 
-
     @resolve_fk_on_delete(display="qualification")
     def delete_qualification(self, qualification_id: UUID) -> None:
         """Permanently delete a qualification.
@@ -167,18 +176,18 @@ class QualificationFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)
 
-
     # Archive factory methods
     def get_all_archived_qualifications(self, filters) -> List[EducatorQualification]:
         """Get all archived qualifications with filtering.
         Returns:
             List[EducatorQualification]: List of archived qualification records
         """
-        fields = ['name', 'educator_id', 'is_expired', 'validity_type']
+        fields = ["name", "educator_id", "is_expired", "validity_type"]
         return self.repository.execute_archive_query(fields, filters)
 
-
-    def get_archived_qualification(self, qualification_id: UUID) -> EducatorQualification:
+    def get_archived_qualification(
+        self, qualification_id: UUID
+    ) -> EducatorQualification:
         """Get a specific archived qualification by ID.
         Args:
             qualification_id: ID of qualification to retrieve
@@ -189,7 +198,6 @@ class QualificationFactory(BaseFactory):
             return self.repository.get_archive_by_id(qualification_id)
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)
-
 
     def restore_qualification(self, qualification_id: UUID) -> EducatorQualification:
         """Restore a qualification.
@@ -202,7 +210,6 @@ class QualificationFactory(BaseFactory):
             return self.repository.restore(qualification_id)
         except EntityNotFoundError as e:
             self.raise_not_found(qualification_id, e)
-
 
     @resolve_fk_on_delete(display="qualification")
     def delete_archived_qualification(self, qualification_id: UUID) -> None:

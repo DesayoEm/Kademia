@@ -21,14 +21,16 @@ class AuthService:
         user = None
 
         if user_type == UserType.STUDENT:
-            stmt = select(Student).where(func.lower(Student.student_id) == identifier.lower())
+            stmt = select(Student).where(
+                func.lower(Student.student_id) == identifier.lower()
+            )
             user = self.session.execute(stmt).scalars().first()
 
         elif user_type == UserType.GUARDIAN:
             stmt = select(Guardian).where(
                 or_(
                     Guardian.email_address == identifier.lower(),
-                    Guardian.phone == identifier
+                    Guardian.phone == identifier,
                 )
             )
             user = self.session.execute(stmt).scalars().first()
@@ -46,7 +48,6 @@ class AuthService:
         self.session.commit()
         return user
 
-
     def log_in(self, identifier: str, password: str, user_type: UserType):
         """Login a identity and generate access tokens"""
         user = self.authenticate_user(identifier, password, user_type)
@@ -58,27 +59,23 @@ class AuthService:
         }
 
         if user_type == UserType.STAFF:
-            user_data.update({
-                "staff_type": user.staff_type,
-            })
-
+            user_data.update(
+                {
+                    "staff_type": user.staff_type,
+                }
+            )
 
         access_token = self.token_service.create_access_token(
-            user_data = user_data,
-            expiry = timedelta(minutes=30)
+            user_data=user_data, expiry=timedelta(minutes=30)
         )
 
         refresh_token = self.token_service.create_access_token(
-            user_data=user_data,
-            refresh=True,
-            expiry=timedelta(days=1)
+            user_data=user_data, refresh=True, expiry=timedelta(days=1)
         )
 
         return {
             "access_token": access_token,
             "refresh_token": refresh_token,
             "token_type": "bearer",
-            "user_type": user_type
+            "user_type": user_type,
         }
-
-

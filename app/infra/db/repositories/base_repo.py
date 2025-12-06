@@ -4,7 +4,7 @@ from uuid import UUID
 from app.core.shared.models.common_imports import Base
 
 
-T = TypeVar('T', bound=Base)
+T = TypeVar("T", bound=Base)
 
 
 class Repository(ABC, Generic[T]):
@@ -115,7 +115,6 @@ class Repository(ABC, Generic[T]):
             The archived entity if found, None otherwise
         """
         pass
-
 
     @abstractmethod
     def execute_archive_query(self, fields, filters) -> List[T]:

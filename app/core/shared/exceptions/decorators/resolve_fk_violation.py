@@ -7,7 +7,9 @@ from app.core.shared.exceptions import RelationshipError, RelatedEntityNotFoundE
 
 class FKResolver:
     @staticmethod
-    def resolve_fk_violation(factory_class, error_message, context_obj, operation, fk_map):
+    def resolve_fk_violation(
+        factory_class, error_message, context_obj, operation, fk_map
+    ):
         """
         Resolves a foreign key constraint violation to a user-friendly error.
 
@@ -36,7 +38,7 @@ class FKResolver:
             constraint_patterns = [
                 constraint_name.lower(),
                 f'"{constraint_name.lower()}"',
-                f"'{constraint_name.lower()}'"
+                f"'{constraint_name.lower()}'",
             ]
 
             if any(p in error_message for p in constraint_patterns):
@@ -47,7 +49,7 @@ class FKResolver:
                     identifier=attr_value,
                     display_name=label,
                     operation=operation,
-                    detail=error_message
+                    detail=error_message,
                 )
 
         return None
@@ -58,6 +60,7 @@ def resolve_fk_on_create():
     Decorator to resolve foreign key exceptions during CREATE operations.
     Parses the error message to identify the specific foreign key constraint.
     """
+
     def decorator(func):
         @wraps(func)
         def wrapper(self, *args, **kwargs):
@@ -73,12 +76,14 @@ def resolve_fk_on_create():
                     error_message=str(e),
                     context_obj=context_obj,
                     operation="create",
-                    fk_map=fk_error_map
+                    fk_map=fk_error_map,
                 )
                 if resolved:
                     raise resolved
                 raise e
+
         return wrapper
+
     return decorator
 
 
@@ -87,6 +92,7 @@ def resolve_fk_on_update():
     Decorator to resolve foreign key exceptions during UPDATE operations.
     Expects the updated object (e.g. existing entity) to be assigned to a local variable inside the method.
     """
+
     def decorator(func):
         @wraps(func)
         def wrapper(self, *args, **kwargs):
@@ -99,14 +105,14 @@ def resolve_fk_on_update():
                     error_message=str(e),
                     context_obj=existing,
                     operation="update",
-                    fk_map=fk_error_map
+                    fk_map=fk_error_map,
                 )
                 if resolved:
                     raise resolved
-                raise RelationshipError(
-                    error=str(e), operation="update"
-                )
+                raise RelationshipError(error=str(e), operation="update")
+
         return wrapper
+
     return decorator
 
 
@@ -117,9 +123,8 @@ def resolve_fk_on_delete(display: str):
             try:
                 return func(self, *args, **kwargs)
             except RelationshipError as e:
-                raise RelationshipErrorOnDelete(
-                    error=str(e),
-                    display=display
-                )
+                raise RelationshipErrorOnDelete(error=str(e), display=display)
+
         return wrapper
+
     return decorator

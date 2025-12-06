@@ -1,11 +1,10 @@
-
 from uuid import uuid4
 import magic
 from sqlalchemy.orm import Session
 
 from app.core.identity.models.student import Student
 from app.core.shared.services.file_storage.s3_upload import S3Upload
-from app.infra.log_service.logger import logger
+from app.core.shared.log_service.logger import logger
 from app.settings import config
 from app.core.documents.models.documents import StudentAward, StudentDocument
 
@@ -16,15 +15,14 @@ class DocumentService:
         self.current_user = current_user
         self.upload = S3Upload(session, self.current_user)
 
-
         self.SUPPORTED_DOCUMENT_TYPES = {
-            'image/png': 'png',
-            'image/jpeg': 'jpg',
-            'image/jpg': 'jpg',
-            'image/webp': 'webp',
-            'application/pdf': 'pdf',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
-            'application/msword': 'doc'
+            "image/png": "png",
+            "image/jpeg": "jpg",
+            "image/jpg": "jpg",
+            "image/webp": "webp",
+            "application/pdf": "pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+            "application/msword": "doc",
         }
 
         self.MIN_FILE_SIZE = 1 * self.upload.KB
@@ -32,7 +30,7 @@ class DocumentService:
 
     @staticmethod
     def generate_doc_key(
-            student: Student, doc_type: str,  s3_folder: str, file_extension: str
+        student: Student, doc_type: str, s3_folder: str, file_extension: str
     ) -> str:
         """
         Generate a unique filename for the uploaded file.
@@ -50,9 +48,7 @@ class DocumentService:
         first_name = student.first_name
         last_name = student.last_name
 
-
         return f"{s3_folder}{doc_type}_{first_name}_{last_name}_{unique_id}.{file_extension}"
-
 
     def upload_award_file(self, file, student: Student, award: StudentAward):
         """
@@ -66,10 +62,13 @@ class DocumentService:
         """
         try:
             contents = self.upload.validate_file_upload(
-                file, self.MIN_FILE_SIZE, self.MAX_FILE_SIZE, self.SUPPORTED_DOCUMENT_TYPES
+                file,
+                self.MIN_FILE_SIZE,
+                self.MAX_FILE_SIZE,
+                self.SUPPORTED_DOCUMENT_TYPES,
             )
 
-            detected_type = magic.from_buffer(contents, mime = True)
+            detected_type = magic.from_buffer(contents, mime=True)
             file_extension = self.SUPPORTED_DOCUMENT_TYPES[detected_type]
 
             s3_folder = config.STUDENT_AWARDS_FOLDER
@@ -85,15 +84,14 @@ class DocumentService:
             self.upload.save_key_in_db(award, s3_key, award_key_column)
 
             return {
-                "filename": s3_key.split('/')[-1],
+                "filename": s3_key.split("/")[-1],
                 "size": len(contents),
-                "file_type": detected_type
+                "file_type": detected_type,
             }
 
         except Exception as e:
             logger.error(f"Award upload failed for award {award.id}: {str(e)}")
             raise
-
 
     def remove_award_file(self, award: StudentAward) -> None:
         """
@@ -103,14 +101,15 @@ class DocumentService:
         """
         try:
             s3_key = award.award_s3_key
-            self.upload.s3_client.delete_object(Bucket=self.upload.AWS_BUCKET_NAME, Key=s3_key)
+            self.upload.s3_client.delete_object(
+                Bucket=self.upload.AWS_BUCKET_NAME, Key=s3_key
+            )
 
             award.award_s3_key = None
             award.last_modified_by = self.current_user.id
             self.session.commit()
 
             logger.info(f"Award file deleted for award {award.id}")
-
 
         except Exception as e:
             self.session.rollback()
@@ -129,7 +128,10 @@ class DocumentService:
         """
         try:
             contents = self.upload.validate_file_upload(
-                file, self.MIN_FILE_SIZE, self.MAX_FILE_SIZE, self.SUPPORTED_DOCUMENT_TYPES
+                file,
+                self.MIN_FILE_SIZE,
+                self.MAX_FILE_SIZE,
+                self.SUPPORTED_DOCUMENT_TYPES,
             )
 
             detected_type = magic.from_buffer(contents, mime=True)
@@ -142,20 +144,21 @@ class DocumentService:
 
             self.upload.s3_upload(contents=contents, key=s3_key)
 
-            logger.info(f"Document uploaded successfully for document {document.id}: {s3_key}")
+            logger.info(
+                f"Document uploaded successfully for document {document.id}: {s3_key}"
+            )
 
             self.upload.save_key_in_db(document, s3_key, document_key_column)
 
             return {
-                "filename": s3_key.split('/')[-1],
+                "filename": s3_key.split("/")[-1],
                 "size": len(contents),
-                "file_type": detected_type
+                "file_type": detected_type,
             }
 
         except Exception as e:
             logger.error(f"Document upload failed for document {document.id}: {str(e)}")
             raise
-
 
     def remove_document_file(self, document: StudentDocument) -> None:
         """
@@ -165,14 +168,15 @@ class DocumentService:
         """
         try:
             s3_key = document.document_s3_key
-            self.upload.s3_client.delete_object(Bucket=self.upload.AWS_BUCKET_NAME, Key=s3_key)
+            self.upload.s3_client.delete_object(
+                Bucket=self.upload.AWS_BUCKET_NAME, Key=s3_key
+            )
 
             document.document_s3_key = None
             document.last_modified_by = self.current_user.id
             self.session.commit()
 
             logger.info(f"Document file deleted document {document.id}")
-
 
         except Exception as e:
             self.session.rollback()

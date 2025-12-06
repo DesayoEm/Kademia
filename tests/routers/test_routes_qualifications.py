@@ -4,12 +4,15 @@ from fastapi.testclient import TestClient
 import uuid
 from uuid import uuid4
 from app import app
-from app.core.staff_management.schemas.qualification import(
-    QualificationCreate, QualificationUpdate, QualificationResponse
+from app.core.staff_management.schemas.qualification import (
+    QualificationCreate,
+    QualificationUpdate,
+    QualificationResponse,
 )
 from app import ArchiveReason
 
 client = TestClient(app)
+
 
 @pytest.fixture
 def mock_crud():
@@ -17,20 +20,25 @@ def mock_crud():
     educator_uuid = uuid4()
 
     valid_response = QualificationResponse(
-        educator_id = educator_uuid,
+        educator_id=educator_uuid,
         name="Test qualification",
         description="Test Description",
     )
     response_dict = valid_response.model_dump()
 
-    with patch("V2.app.academic_structure.staff_management.qualifications.QualificationsCrud") as mock:
+    with patch(
+        "V2.app.academic_structure.staff_management.qualifications.QualificationsCrud"
+    ) as mock:
         mock_instance = MagicMock()
         mock.return_value = mock_instance
 
         mock_instance.create_qualification.return_value = response_dict
         mock_instance.get_qualification.return_value = response_dict
         mock_instance.get_all_qualifications.return_value = [response_dict]
-        mock_instance.update_qualification.return_value = {**response_dict, "name": "Updated qualification"}
+        mock_instance.update_qualification.return_value = {
+            **response_dict,
+            "name": "Updated qualification",
+        }
         mock_instance.archive_qualification.return_value = response_dict
         mock_instance.delete_qualification.return_value = None
 
@@ -43,9 +51,7 @@ def test_create_qualification(mock_crud):
 
     educator_uuid = uuid4()
     qualification_data = QualificationCreate(
-        educator_id = educator_uuid,
-        name = "Teaching qualification",
-        description = "Teaching"
+        educator_id=educator_uuid, name="Teaching qualification", description="Teaching"
     )
     json_data = qualification_data.model_dump()
     for key, value in json_data.items():
@@ -59,6 +65,7 @@ def test_create_qualification(mock_crud):
     assert response.status_code == 201
     data = response.json()
     assert data["name"] == "Test qualification"
+
 
 def test_get_qualification(mock_crud):
     """Test getting a specific qualification"""
@@ -88,13 +95,16 @@ def test_get_all_qualifications(mock_crud):
 def test_update_qualification(mock_crud):
     """Test updating a specific qualification"""
     mock_instance, test_uuid = mock_crud
-    update_data = QualificationUpdate(name="Updated qualification",
-                                  description = "Human Resources")
+    update_data = QualificationUpdate(
+        name="Updated qualification", description="Human Resources"
+    )
 
-    response = client.put(f"/api/v1/staff/qualifications/{test_uuid}", json = update_data.model_dump())
+    response = client.put(
+        f"/api/v1/staff/qualifications/{test_uuid}", json=update_data.model_dump()
+    )
     print("Mock Calls:", mock_instance.mock_calls)
 
-    mock_instance.update_qualification.assert_called_once_with(test_uuid,update_data)
+    mock_instance.update_qualification.assert_called_once_with(test_uuid, update_data)
     assert response.status_code == 200
     data = response.json()
     assert data["name"] == "Updated qualification"
@@ -105,12 +115,14 @@ def test_archive_qualification(mock_crud):
     mock_instance, test_uuid = mock_crud
 
     archive_data = {"reason": "ADMINISTRATIVE"}
-    response = client.patch(f"/api/v1/staff/qualifications/{test_uuid}", json=archive_data)
+    response = client.patch(
+        f"/api/v1/staff/qualifications/{test_uuid}", json=archive_data
+    )
     print("Mock Calls:", mock_instance.mock_calls)
     reason = ArchiveReason.ADMINISTRATIVE
     mock_instance.archive_qualification.assert_called_once_with(test_uuid, reason)
     assert response.status_code == 204
-    assert response.content == b''
+    assert response.content == b""
 
 
 def test_delete_qualification(mock_crud):
@@ -122,4 +134,4 @@ def test_delete_qualification(mock_crud):
 
     mock_instance.delete_qualification.assert_called_once_with(test_uuid)
     assert response.status_code == 204
-    assert response.content == b''
+    assert response.content == b""

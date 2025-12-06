@@ -1,10 +1,12 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
 from pydantic import EmailStr
+
 load_dotenv()
 
+
 class Settings(BaseSettings):
-    APP_NAME: str="Kademia"
+    APP_NAME: str = "Kademia"
     KADEMIA_ID: str
     KADEMIA_PASSWORD: str
     USER_PASSWORD: str
@@ -19,27 +21,28 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_SECONDS: int
 
-    REDIS_HOST: str = 'localhost'
+    REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
 
     EXPORT_DIR: str
 
-    AWS_ACCESS_KEY_ID :str
-    AWS_SECRET_ACCESS_KEY :str
-    AWS_DEFAULT_REGION :str
+    AWS_ACCESS_KEY_ID: str
+    AWS_SECRET_ACCESS_KEY: str
+    AWS_DEFAULT_REGION: str
     AWS_BUCKET_NAME: str
     PROFILE_PICTURES_FOLDER: str
     STUDENT_DOCUMENTS_FOLDER: str
     STUDENT_AWARDS_FOLDER: str
     ASSESSMENTS_FOLDER: str
 
-
     model_config = SettingsConfigDict(
         env_file="../.env",
         env_file_encoding="utf-8",
         case_sensitive=False,
-        extra="ignore"
+        extra="ignore",
     )
+
+
 config = Settings()
 
 
@@ -58,5 +61,6 @@ class EmailSettings(BaseSettings):
         env_file = "../.env"
         env_prefix = "EMAIL_"
         extra = "ignore"
+
 
 email_settings = EmailSettings()

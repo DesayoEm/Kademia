@@ -3,8 +3,13 @@ from psycopg2.errors import StringDataRightTruncation
 from psycopg2 import errors as pg_errors
 
 from app.core.shared.exceptions import (
-    EntityNotFoundError, UniqueViolationError, RelationshipError, DBConnectionError,
-    KDDatabaseError, DBTextTooLongError, RelationshipErrorOnDelete
+    EntityNotFoundError,
+    UniqueViolationError,
+    RelationshipError,
+    DBConnectionError,
+    KDDatabaseError,
+    DBTextTooLongError,
+    RelationshipErrorOnDelete,
 )
 
 
@@ -21,28 +26,28 @@ def handle_write_errors(operation: str = "unknown"):
 
             except IntegrityError as e:
                 self.session.rollback()
-                orig = getattr(e, 'orig', None)
+                orig = getattr(e, "orig", None)
                 msg = str(orig).lower() if orig else str(e).lower()
 
                 constraint_name = None
-                if hasattr(orig, 'diag') and hasattr(orig.diag, 'constraint_name'):
+                if hasattr(orig, "diag") and hasattr(orig.diag, "constraint_name"):
                     constraint_name = orig.diag.constraint_name
 
-                if 'unique' in msg or isinstance(orig, pg_errors.UniqueViolation):
+                if "unique" in msg or isinstance(orig, pg_errors.UniqueViolation):
                     raise UniqueViolationError(error=msg, constraint=constraint_name)
 
-                if 'null value in column' in msg or isinstance(orig, pg_errors.ForeignKeyViolation):
+                if "null value in column" in msg or isinstance(
+                    orig, pg_errors.ForeignKeyViolation
+                ):
                     raise RelationshipError(
-                        error=msg,
-                        operation=operation,
-                        constraint=constraint_name
+                        error=msg, operation=operation, constraint=constraint_name
                     )
 
-                if 'foreign key' in msg or isinstance(orig, pg_errors.ForeignKeyViolation):
+                if "foreign key" in msg or isinstance(
+                    orig, pg_errors.ForeignKeyViolation
+                ):
                     raise RelationshipError(
-                        error=msg,
-                        operation=operation,
-                        constraint=constraint_name
+                        error=msg, operation=operation, constraint=constraint_name
                     )
 
                 raise KDDatabaseError(error=f"Database integrity error: {msg}")

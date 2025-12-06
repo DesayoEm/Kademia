@@ -1,5 +1,7 @@
 from .base_error import KademiaError
 from uuid import UUID
+
+
 class AssessmentError(KademiaError):
     """Base exception class for assessment-related exceptions."""
 
@@ -9,6 +11,7 @@ class MaxScoreTooHighError(AssessmentError):
         super().__init__()
         self.user_message = f"Max score '{entry}' exceeds maximum allowed score"
         self.log_message = f"Max score entry {entry} exceeds max."
+
 
 class WeightTooHighError(AssessmentError):
     def __init__(self, entry):
@@ -35,18 +38,18 @@ class UnableToRecalculateError(AssessmentError):
 class InvalidWeightError(AssessmentError):
     def __init__(self, entry: int, cumulative_weight: int):
         super().__init__()
-        self.user_message = (f"Cumulative weight for the term can't exceed 10. "
-                             f"Total weight left: {10- cumulative_weight}")
-        self.log_message = (
-            f"Weight entry {entry} caused cumulative weight {cumulative_weight} to exceed 10"
-
+        self.user_message = (
+            f"Cumulative weight for the term can't exceed 10. "
+            f"Total weight left: {10- cumulative_weight}"
         )
+        self.log_message = f"Weight entry {entry} caused cumulative weight {cumulative_weight} to exceed 10"
+
 
 class FileAlreadyExistsError(AssessmentError):
     def __init__(self, obj_id: UUID):
         super().__init__()
-        self.user_message = (f"There's a file associated with this grade object. \""
-                             f"Please remove it to upload a new one")
+        self.user_message = (
+            f"There's a file associated with this grade object. \""
+            f"Please remove it to upload a new one"
+        )
         self.log_message = f"File already exists for object ({obj_id})."
-
-

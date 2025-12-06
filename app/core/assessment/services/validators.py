@@ -4,8 +4,13 @@ from sqlalchemy import select, func
 import re
 from sqlalchemy.orm import Session
 from app.core.shared.exceptions import (
-    FutureDateError, MaxScoreTooHighError, ScoreExceedsMaxError,
-    PastYearError, SessionYearFormatError, FutureYearError, InvalidSessionRangeError
+    FutureDateError,
+    MaxScoreTooHighError,
+    ScoreExceedsMaxError,
+    PastYearError,
+    SessionYearFormatError,
+    FutureYearError,
+    InvalidSessionRangeError,
 )
 
 
@@ -14,7 +19,6 @@ class AssessmentValidator:
 
     def __init__(self, session: Session):
         self.session = session
-
 
     @staticmethod
     def validate_graded_date(value: date) -> date:

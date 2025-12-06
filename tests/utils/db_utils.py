@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, MetaData
 from app import Base
 
+
 def create_test_tables(engine):
     """Create all tables defined in Base.metadata"""
     try:
@@ -12,6 +13,7 @@ def create_test_tables(engine):
     except Exception as e:
         print(f"Error creating test tables: {e}")
         raise
+
 
 def drop_test_tables(engine):
     """Drop all tables in correct order based on dependencies"""

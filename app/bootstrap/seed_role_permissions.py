@@ -1,4 +1,3 @@
-
 from app.settings import config
 from app.infra.db.db_config import engine
 from sqlalchemy.orm import Session
@@ -14,12 +13,18 @@ now = datetime.now()
 KADEMIA_ID = UUID(config.KADEMIA_ID)
 
 
-
 def seed_roles():
     try:
         roles = []
-        role_names = ["SUPERUSER", "SUPER_EDUCATOR", "EDUCATOR",
-                      "STUDENT", "GUARDIAN", "ADMIN", "INACTIVE"]
+        role_names = [
+            "SUPERUSER",
+            "SUPER_EDUCATOR",
+            "EDUCATOR",
+            "STUDENT",
+            "GUARDIAN",
+            "ADMIN",
+            "INACTIVE",
+        ]
 
         for role_name in role_names:
             name = UserRoleName[role_name]
@@ -27,18 +32,14 @@ def seed_roles():
                 id=uuid4(),
                 name=name,
                 description=name,
-
                 created_by=KADEMIA_ID,
                 last_modified_by=KADEMIA_ID,
-
                 created_at=now,
                 last_modified_at=now,
                 is_archived=False,
             )
 
             roles.append(role)
-
-
 
         session.add_all(roles)
         session.commit()
@@ -49,19 +50,18 @@ def seed_roles():
         session.rollback()
 
 
-
 def seed_super_user_permissions():
     try:
         role_permissions = matrix.get("SUPERUSER")
         super_user_permissions = []
 
         with Session(engine) as session:
-            #role
+            # role
             stmt = select(Role).where(Role.name == UserRoleName.SUPERUSER)
             super_user = session.execute(stmt).scalar_one()
             role_id = super_user.id
 
-            #find permission obj for each str in the matrix
+            # find permission obj for each str in the matrix
             for permission_str in role_permissions:
 
                 permission_obj = session.execute(
@@ -71,8 +71,8 @@ def seed_super_user_permissions():
                 super_user_permission = RolePermission(
                     role_id=role_id,
                     permission_id=permission_obj.id,
-                    created_by = KADEMIA_ID,
-                    last_modified_by = KADEMIA_ID
+                    created_by=KADEMIA_ID,
+                    last_modified_by=KADEMIA_ID,
                 )
                 super_user_permissions.append(super_user_permission)
 
@@ -85,19 +85,18 @@ def seed_super_user_permissions():
         session.rollback()
 
 
-
 def seed_student_permissions():
     try:
         role_permissions = matrix.get("STUDENT")
         student_permissions = []
 
         with Session(engine) as session:
-            #role
+            # role
             stmt = select(Role).where(Role.name == UserRoleName.STUDENT)
             student = session.execute(stmt).scalar_one()
             role_id = student.id
 
-            #find permission obj for each str in the matrix
+            # find permission obj for each str in the matrix
             for permission_str in role_permissions:
 
                 permission_obj = session.execute(
@@ -107,8 +106,8 @@ def seed_student_permissions():
                 student_permission = RolePermission(
                     role_id=role_id,
                     permission_id=permission_obj.id,
-                    created_by = KADEMIA_ID,
-                    last_modified_by = KADEMIA_ID
+                    created_by=KADEMIA_ID,
+                    last_modified_by=KADEMIA_ID,
                 )
                 student_permissions.append(student_permission)
 
@@ -127,12 +126,12 @@ def seed_guardian_permissions():
         guardian_permissions = []
 
         with Session(engine) as session:
-            #role
+            # role
             stmt = select(Role).where(Role.name == UserRoleName.GUARDIAN)
             guardian = session.execute(stmt).scalar_one()
             role_id = guardian.id
 
-            #find permission obj for each str in the matrix
+            # find permission obj for each str in the matrix
             for permission_str in role_permissions:
 
                 permission_obj = session.execute(
@@ -142,8 +141,8 @@ def seed_guardian_permissions():
                 guardian_permission = RolePermission(
                     role_id=role_id,
                     permission_id=permission_obj.id,
-                    created_by = KADEMIA_ID,
-                    last_modified_by = KADEMIA_ID
+                    created_by=KADEMIA_ID,
+                    last_modified_by=KADEMIA_ID,
                 )
                 guardian_permissions.append(guardian_permission)
 
@@ -154,5 +153,3 @@ def seed_guardian_permissions():
     except Exception as e:
         print(f"Error: {e} \n xxxxxxxxxxxxxxxxxxxxxxxxx")
         session.rollback()
-
-

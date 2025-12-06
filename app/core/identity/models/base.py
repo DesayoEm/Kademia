@@ -5,10 +5,15 @@ from app.core.shared.models.mixins import AuditMixins, TimeStampMixins, ArchiveM
 
 class UserBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     """Abstract base class for users"""
+
     __abstract__ = True
 
-    id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    current_role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.id', ondelete='RESTRICT'), nullable=True) #temp
+    id: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid4
+    )
+    current_role_id: Mapped[UUID] = mapped_column(
+        ForeignKey("roles.id", ondelete="RESTRICT"), nullable=True
+    )  # temp
     password_hash: Mapped[str] = mapped_column(String(300))
     first_name: Mapped[str] = mapped_column(String(30))
     last_name: Mapped[str] = mapped_column(String(30))
@@ -18,5 +23,3 @@ class UserBase(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
     last_login: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
     exported: Mapped[bool] = mapped_column(Boolean, default=False)
     deletion_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
-
-

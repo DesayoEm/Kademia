@@ -4,10 +4,15 @@ from sqlalchemy import desc, asc, select, Select, func, or_, Enum
 from sqlalchemy.orm import Session
 
 from ..base_repo import Repository, T
-from app.core.shared.exceptions import  EntityNotFoundError
-from app.core.shared.exceptions.decorators.repo_error_handlers import handle_write_errors, handle_read_errors
+from app.core.shared.exceptions import EntityNotFoundError
+from app.core.shared.exceptions.decorators.repo_error_handlers import (
+    handle_write_errors,
+    handle_read_errors,
+)
 
 NOT_FOUND_ERROR = "Object not found"
+# Commits are not done in the repository layer and is handled by FastAPI dependency layer (session_manager.py)
+# This way, every request automatically becomes an atomic transaction.
 
 
 class BaseRepository(Repository[T]):
@@ -40,21 +45,19 @@ class SQLAlchemyRepository(BaseRepository[T]):
         """Create a new entity in the db."""
         self.session.add(entity)
         self.session.flush()
-        self.session.commit()
         self.session.refresh(entity)
         return entity
-
 
     @handle_read_errors()
     def exists(self, entity_id: UUID) -> bool:
         """Check if an active entity exists by ID."""
-        stmt = select(func.count()).select_from(self.model).where(
-            self.model.id == entity_id,
-            self.model.is_archived == False
+        stmt = (
+            select(func.count())
+            .select_from(self.model)
+            .where(self.model.id == entity_id, self.model.is_archived == False)
         )
         count = self.session.execute(stmt).scalar()
         return count > 0
-
 
     @handle_read_errors()
     def get_by_id(self, entity_id: UUID) -> Optional[T]:
@@ -65,11 +68,12 @@ class SQLAlchemyRepository(BaseRepository[T]):
         if not entity:
             raise EntityNotFoundError(
                 entity_model=self.model.__name__,
-                identifier=entity_id, error = NOT_FOUND_ERROR, display_name="Unknown"
+                identifier=entity_id,
+                error=NOT_FOUND_ERROR,
+                display_name="Unknown",
             )
-            
-        return entity
 
+        return entity
 
     def apply_filters(self, stmt: Select, fields: List[str], filters) -> Select:
         """
@@ -84,19 +88,27 @@ class SQLAlchemyRepository(BaseRepository[T]):
             Select: Filtered SQLAlchemy SELECT statement
         """
         for field, value in filters.model_dump(exclude_unset=True).items():
-            if field in {'limit', 'offset', 'order_by', 'order_dir'}:
+            if field in {"limit", "offset", "order_by", "order_dir"}:
                 continue
 
             if value is not None:
 
-                if field == "full_name" and hasattr(self.model, "first_name") and hasattr(self.model, "last_name"):
-                    full_name = func.concat(self.model.first_name, ' ', self.model.last_name)
-                    reversed_full_name = func.concat(self.model.last_name, ' ', self.model.first_name)
+                if (
+                    field == "full_name"
+                    and hasattr(self.model, "first_name")
+                    and hasattr(self.model, "last_name")
+                ):
+                    full_name = func.concat(
+                        self.model.first_name, " ", self.model.last_name
+                    )
+                    reversed_full_name = func.concat(
+                        self.model.last_name, " ", self.model.first_name
+                    )
 
                     stmt = stmt.where(
                         or_(
                             full_name.ilike(f"%{value}%"),
-                            reversed_full_name.ilike(f"%{value}%")
+                            reversed_full_name.ilike(f"%{value}%"),
                         )
                     )
 
@@ -114,22 +126,20 @@ class SQLAlchemyRepository(BaseRepository[T]):
 
         return stmt
 
-
     @handle_read_errors()
     def execute_query(self, fields, filters) -> List[T]:
         """Execute a query for active entities with sorting and pagination."""
         stmt = self.active_query()
         stmt = self.apply_filters(stmt, fields, filters)
 
-        order_by = getattr(filters, 'order_by', 'created_at')
-        order_dir = getattr(filters, 'order_dir', 'asc')
+        order_by = getattr(filters, "order_by", "created_at")
+        order_dir = getattr(filters, "order_dir", "asc")
 
-        order_func = desc if order_dir == 'desc' else asc
+        order_func = desc if order_dir == "desc" else asc
 
         if order_by == "full_name":
             stmt = stmt.order_by(
-                order_func(self.model.first_name),
-                order_func(self.model.last_name)
+                order_func(self.model.first_name), order_func(self.model.last_name)
             )
 
         elif hasattr(self.model, order_by):
@@ -138,14 +148,12 @@ class SQLAlchemyRepository(BaseRepository[T]):
         else:
             stmt = stmt.order_by(order_func(self.model.created_at))
 
-
-        limit = getattr(filters, 'limit', 100)
-        offset = getattr(filters, 'offset', 0)
+        limit = getattr(filters, "limit", 100)
+        offset = getattr(filters, "offset", 0)
         stmt = stmt.limit(limit).offset(offset)
 
         result = self.session.execute(stmt).scalars().all()
         return result or []
-
 
     @handle_write_errors("update")
     def update(self, entity_id: UUID, entity: T, modified_by: UUID = None) -> T:
@@ -156,16 +164,16 @@ class SQLAlchemyRepository(BaseRepository[T]):
         if not existing:
             raise EntityNotFoundError(
                 entity_model=self.model.__name__,
-                identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                identifier=entity_id,
+                error=NOT_FOUND_ERROR,
+                display_name="Unknown",
             )
-            #apply audit metadata just before committing
+            # apply audit metadata just before committing
         if modified_by and hasattr(entity, "last_modified_by"):
             entity.last_modified_by = modified_by
 
-        self.session.commit()
         self.session.refresh(entity)
         return entity
-
 
     @handle_read_errors()
     def archive(self, entity_id: UUID, archived_by_id: UUID, reason: str) -> T:
@@ -177,14 +185,14 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_model=self.model.__name__,
-                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                    identifier=entity_id,
+                    error=NOT_FOUND_ERROR,
+                    display_name="Unknown",
                 )
 
         entity.archive(archived_by_id, reason)
-        self.session.commit()
         self.session.refresh(entity)
         return entity
-
 
     @handle_write_errors("delete")
     def delete(self, entity_id: UUID) -> None:
@@ -196,12 +204,12 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_model=self.model.__name__,
-                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                    identifier=entity_id,
+                    error=NOT_FOUND_ERROR,
+                    display_name="Unknown",
                 )
 
         self.session.delete(entity)
-        self.session.commit()
-
 
     @handle_read_errors()
     def get_archive_by_id(self, entity_id: UUID) -> Optional[T]:
@@ -212,11 +220,12 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_model=self.model.__name__,
-                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                    identifier=entity_id,
+                    error=NOT_FOUND_ERROR,
+                    display_name="Unknown",
                 )
 
         return entity
-
 
     @handle_read_errors()
     def execute_archive_query(self, fields, filters) -> List[T]:
@@ -224,21 +233,20 @@ class SQLAlchemyRepository(BaseRepository[T]):
         stmt = self.archive_query()
         stmt = self.apply_filters(stmt, fields, filters)
 
-        order_by = getattr(filters, 'order_by', 'created_at')
-        order_dir = getattr(filters, 'order_dir', 'asc')
+        order_by = getattr(filters, "order_by", "created_at")
+        order_dir = getattr(filters, "order_dir", "asc")
 
         if order_by and hasattr(self.model, order_by):
             order_column = getattr(self.model, order_by)
-            order_func = desc if order_dir == 'desc' else asc
+            order_func = desc if order_dir == "desc" else asc
             stmt = stmt.order_by(order_func(order_column))
 
-        limit = getattr(filters, 'limit', 100)
-        offset = getattr(filters, 'offset', 0)
+        limit = getattr(filters, "limit", 100)
+        offset = getattr(filters, "offset", 0)
         stmt = stmt.limit(limit).offset(offset)
 
         result = self.session.execute(stmt).scalars().all()
         return result or []
-
 
     @handle_read_errors()
     def restore(self, entity_id: UUID) -> T:
@@ -250,14 +258,15 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_model=self.model.__name__,
-                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                    identifier=entity_id,
+                    error=NOT_FOUND_ERROR,
+                    display_name="Unknown",
                 )
 
         entity.restore()
-        self.session.commit()
+
         self.session.refresh(entity)
         return entity
-
 
     @handle_write_errors("delete")
     def delete_archive(self, entity_id: UUID) -> None:
@@ -269,8 +278,9 @@ class SQLAlchemyRepository(BaseRepository[T]):
             if not entity:
                 raise EntityNotFoundError(
                     entity_model=self.model.__name__,
-                    identifier=entity_id, error=NOT_FOUND_ERROR, display_name="Unknown"
+                    identifier=entity_id,
+                    error=NOT_FOUND_ERROR,
+                    display_name="Unknown",
                 )
 
         self.session.delete(entity)
-        self.session.commit()

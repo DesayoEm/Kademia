@@ -11,6 +11,7 @@ class GuardianFilterParams(BaseFilterParams):
 
 class GuardianBase(UserBase):
     """Base model for a Guardian"""
+
     email_address: str
     address: str
     phone: str
@@ -21,30 +22,33 @@ class GuardianBase(UserBase):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "title":"Ms",
+                "title": "Ms",
                 "first_name": "Bola",
                 "last_name": "Coker",
                 "gender": "MALE",
                 "email_address": "bola.coker@example.com",
                 "address": "123 Akala Express Ibadan",
-                "phone": "+2348056794345"
-        }
-        }
+                "phone": "+2348056794345",
+            }
+        },
     )
 
 
 class GuardianCreate(GuardianBase):
     """Used for creating a new  Guardian"""
+
     pass
 
 
 class GuardianUpdate(GuardianBase):
     """Used for updating a Guardian"""
+
     pass
 
 
 class GuardianResponse(GuardianBase):
     """Response model for a Guardian"""
+
     pass
 
 
@@ -63,4 +67,3 @@ class GuardianAudit(BaseModel):
     archived_by: UUID | None = None
     archive_reason: ArchiveReason | None = None
     deletion_eligible: bool
-

@@ -7,7 +7,7 @@ class PasswordTokenList:
     def __init__(self, redis_client):
         self.redis = redis_client
         self.key_pref = "password_token:"
-        self.exp = timedelta(minutes = 15)
+        self.exp = timedelta(minutes=15)
 
     @staticmethod
     def generate_reset_token():
@@ -22,15 +22,13 @@ class PasswordTokenList:
         self.redis.setex(key, ttl, user_identifier)
         return token
 
-
     def get_email_from_token(self, token):
         key = f"{self.key_pref}{token}"
-        return  self.redis.get(key)
-
+        return self.redis.get(key)
 
     def is_token_active(self, token) -> bool:
-            key = f"{self.key_pref}{token}"
-            return self.redis.exists(key) == 1
+        key = f"{self.key_pref}{token}"
+        return self.redis.exists(key) == 1
 
 
 password_token_list = PasswordTokenList(r)

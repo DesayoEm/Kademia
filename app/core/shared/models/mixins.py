@@ -20,9 +20,10 @@ class TimeStampMixins:
         last_modified_at (datetime): Timestamp when the record was last modified.
                                      Automatically updates on record changes.
     """
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=func.now()
-        )
+    )
 
     last_modified_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=func.now(), onupdate=func.now()
@@ -46,29 +47,41 @@ class AuditMixins:
 
     @declared_attr
     def created_by(cls):
-        return mapped_column(ForeignKey(
-            'staff.id', ondelete='SET NULL',name=f'fk_{cls.__tablename__}_staff_created_by'),
-                        nullable=False)
+        return mapped_column(
+            ForeignKey(
+                "staff.id",
+                ondelete="SET NULL",
+                name=f"fk_{cls.__tablename__}_staff_created_by",
+            ),
+            nullable=False,
+        )
 
     @declared_attr
     def last_modified_by(cls):
-        return mapped_column(ForeignKey(
-            'staff.id', ondelete='SET NULL', name=f'fk_{cls.__tablename__}_staff_last_modified_by'),
-                    nullable=False
+        return mapped_column(
+            ForeignKey(
+                "staff.id",
+                ondelete="SET NULL",
+                name=f"fk_{cls.__tablename__}_staff_last_modified_by",
+            ),
+            nullable=False,
         )
 
     @declared_attr
     def created_by_staff(cls):
-        return relationship('Staff', foreign_keys=[cls.created_by],
-                            primaryjoin=f"Staff.id == {cls.__name__}.created_by"
-                )
+        return relationship(
+            "Staff",
+            foreign_keys=[cls.created_by],
+            primaryjoin=f"Staff.id == {cls.__name__}.created_by",
+        )
 
     @declared_attr
     def last_modified_by_staff(cls):
         return relationship(
-            'Staff', foreign_keys=[cls.last_modified_by],
-                primaryjoin=f"Staff.id == {cls.__name__}.last_modified_by"
-            )
+            "Staff",
+            foreign_keys=[cls.last_modified_by],
+            primaryjoin=f"Staff.id == {cls.__name__}.last_modified_by",
+        )
 
 
 class ArchiveMixins:
@@ -87,8 +100,12 @@ class ArchiveMixins:
     """
 
     is_archived: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    archived_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
-    archive_reason: Mapped[ArchiveReason] = mapped_column(Enum(ArchiveReason), nullable=True)
+    archived_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    archive_reason: Mapped[ArchiveReason] = mapped_column(
+        Enum(ArchiveReason), nullable=True
+    )
 
     def archive(self, archived_by: UUID, archive_reason: ArchiveReason) -> None:
         """
@@ -102,7 +119,6 @@ class ArchiveMixins:
         self.archived_at = datetime.now(timezone.utc)
         self.archived_by = archived_by
         self.archive_reason = archive_reason
-
 
     def restore(self) -> None:
         """

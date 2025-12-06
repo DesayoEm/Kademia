@@ -14,12 +14,11 @@ class QualificationFilterParams(BaseFilterParams):
 
 class QualificationBase(BaseModel):
     """Base model for educator qualifications"""
+
     name: str
     description: str | None = None
-    validity_type : ValidityType
+    validity_type: ValidityType
     valid_until: str
-
-
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -30,17 +29,19 @@ class QualificationBase(BaseModel):
                 "validity_type": "Temporary",
                 "valid_until": "2026-06-01",
             }
-
-        }
+        },
     )
+
 
 class QualificationCreate(QualificationBase):
     """Used for creating new educator qualifications"""
+
     pass
 
 
 class QualificationUpdate(BaseModel):
     """Used for updating educator qualifications"""
+
     name: str | None = None
     description: str | None = None
     validity_type: ValidityType | None = None
@@ -55,12 +56,11 @@ class QualificationUpdate(BaseModel):
                 "validity_type": "Temporary",
                 "valid_until": "2026-06-01",
             }
-        }
+        },
     )
 
 
 class QualificationResponse(QualificationBase):
     """Response model for educator qualifications"""
+
     pass
-
-

@@ -6,32 +6,35 @@ from app.core.academic_structure.factories.academic_level import AcademicLevelFa
 from app.core.academic_structure.models import AcademicLevel
 from app.core.progression.factories.repetition import RepetitionFactory
 from app.core.progression.models.progression import Repetition
-from app.core.shared.exceptions import InvalidRepetitionLevelError, EmptyFieldError, \
-    ProgressionStatusAlreadySetError
-
-
+from app.core.shared.exceptions import (
+    InvalidRepetitionLevelError,
+    EmptyFieldError,
+    ProgressionStatusAlreadySetError,
+)
 
 
 class RepetitionService:
     def __init__(self, session: Session, current_user):
-        self.session= session
+        self.session = session
         self.current_user = current_user
         self.factory = RepetitionFactory(session, Repetition, self.current_user)
         self.domain = "REPETITION"
 
     def validate_repetition_level(self, failed_level_id: UUID, repeat_level_id: UUID):
         """
-            Validate that repeat level is at or below the failed level.
-            Args:
-                failed_level_id: Academic level the student failed
-                repeat_level_id: Proposed repetition level
-            Returns:
-                UUID: Validated repeat_level_id
-            Raises:
-                InvalidRepetitionLevelError: If repeat level ranks higher than failed level
-            """
+        Validate that repeat level is at or below the failed level.
+        Args:
+            failed_level_id: Academic level the student failed
+            repeat_level_id: Proposed repetition level
+        Returns:
+            UUID: Validated repeat_level_id
+        Raises:
+            InvalidRepetitionLevelError: If repeat level ranks higher than failed level
+        """
 
-        academic_factory = AcademicLevelFactory(self.session, AcademicLevel, self.current_user)
+        academic_factory = AcademicLevelFactory(
+            self.session, AcademicLevel, self.current_user
+        )
         failed_level = academic_factory.get_academic_level(failed_level_id)
         repeat_level = academic_factory.get_academic_level(repeat_level_id)
 
@@ -41,7 +44,6 @@ class RepetitionService:
             )
 
         return repeat_level_id
-
 
     def action_repetition_record(self, repetition_id: UUID, data: dict):
         """
@@ -72,12 +74,12 @@ class RepetitionService:
                 "repetition", repetition.status, data["status"].value, repetition_id
             )
 
-        #if rejected, state reason for rejection
+        # if rejected, state reason for rejection
         if data["status"].value == "REJECTED":
-            if not data["decision_reason"]: #if rejected, state reason for rejection
-                raise EmptyFieldError(entry = data["decision_reason"])
+            if not data["decision_reason"]:  # if rejected, state reason for rejection
+                raise EmptyFieldError(entry=data["decision_reason"])
 
-            #persist student's repetition record
+            # persist student's repetition record
 
             student_factory.update_student(
                 repetition.student_id, {"level_id": repetition.failed_level_id}
@@ -85,24 +87,27 @@ class RepetitionService:
 
             return self.factory.update_repetition(
                 repetition_id,
-                {"status": data["status"].value,
-                 "decision_reason": data["decision_reason"],
-                 "status_completed_by": self.current_user.id,
-                 "status_completed_at": datetime.now()}
+                {
+                    "status": data["status"].value,
+                    "decision_reason": data["decision_reason"],
+                    "status_completed_by": self.current_user.id,
+                    "status_completed_at": datetime.now(),
+                },
             )
 
-        #if approved, persist student's new academic level, and repetition record
+        # if approved, persist student's new academic level, and repetition record
         if data["status"].value == "APPROVED":
 
             student_factory.update_student(
-                repetition.student_id, {"level_id":repetition.repeat_level_id}
+                repetition.student_id, {"level_id": repetition.repeat_level_id}
             )
 
             return self.factory.update_repetition(
                 repetition_id,
-                {"status":data["status"].value,
-                 "decision_reason": data["decision_reason"],
-                 "status_completed_by":self.current_user.id ,
-                 "status_completed_at":datetime.now()}
+                {
+                    "status": data["status"].value,
+                    "decision_reason": data["decision_reason"],
+                    "status_completed_by": self.current_user.id,
+                    "status_completed_at": datetime.now(),
+                },
             )
-

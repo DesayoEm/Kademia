@@ -2,33 +2,35 @@ from .base_error import KademiaError
 from uuid import UUID
 
 
-
 class DBError(KademiaError):
     """Base exception class for all db related exceptions"""
 
 
 class EntityNotFoundError(DBError):
     """Raised when an entity cannot be found in the db"""
-    def __init__(self, entity_model, identifier: UUID, error: str, display_name: str ):
+
+    def __init__(self, entity_model, identifier: UUID, error: str, display_name: str):
 
         self.user_message = f"{display_name} not found"
-        self.log_message = f"{entity_model} not with id {identifier} not found. DETAIL: {error}"
+        self.log_message = (
+            f"{entity_model} not with id {identifier} not found. DETAIL: {error}"
+        )
         super().__init__()
 
 
 class NoResultError(DBError):
     """Raised when a query returns no result (not based on ID)."""
-    def __init__(self,query_description: str, criteria: str, display_name: str):
+
+    def __init__(self, query_description: str, criteria: str, display_name: str):
         self.user_message = f"{display_name} {criteria} not found"
-        self.log_message = (
-            f"No result found for query: {query_description}"
-        )
+        self.log_message = f"No result found for query: {query_description}"
         super().__init__(self.log_message)
 
 
 class UniqueViolationError(DBError):
     """Raised when attempting to violate a unique constraint"""
-    def __init__(self, error: str, constraint: str|None = None):
+
+    def __init__(self, error: str, constraint: str | None = None):
         self.error = error
         self.constraint = constraint or "unknown"
         self.user_message = "This record already exists"
@@ -38,7 +40,10 @@ class UniqueViolationError(DBError):
 
 class DuplicateEntityError(UniqueViolationError):
     """Raised when creation of a duplicate entity is attempted."""
-    def __init__(self, entity_model, entry: str, field: str, detail: str, display_name: str):
+
+    def __init__(
+        self, entity_model, entry: str, field: str, detail: str, display_name: str
+    ):
         super().__init__(error=detail)
         self.user_message = f"A {display_name} with {field} '{entry}' already exists"
         self.log_message = f"Duplicate {entity_model} creation: {detail}'"
@@ -46,6 +51,7 @@ class DuplicateEntityError(UniqueViolationError):
 
 class CompositeDuplicateEntityError(UniqueViolationError):
     """Raised when creation of a duplicate entity with multiple constraints is attempted."""
+
     def __init__(self, entity_model, detail: str, display: str):
         super().__init__(error=detail)
         self.user_message = display
@@ -74,40 +80,50 @@ class RelationshipErrorOnDelete(DBError):
         super().__init__(display)
 
 
-
 class RelatedEntityNotFoundError(RelationshipError):
     """Raised when an entity cannot be found during attempted fk insertion"""
+
     def __init__(
-            self, entity_model, identifier: UUID, display_name: str, operation: str,
-            detail: str):
+        self,
+        entity_model,
+        identifier: UUID,
+        display_name: str,
+        operation: str,
+        detail: str,
+    ):
         super().__init__(error=detail, operation=operation)
 
         self.user_message = f"Related {display_name} not found!"
-        self.log_message = (f"Error during during fk insertion of {entity_model} with "
-                            f"id:{identifier} during {operation}.")
-
+        self.log_message = (
+            f"Error during during fk insertion of {entity_model} with "
+            f"id:{identifier} during {operation}."
+        )
 
 
 class EntityInUseError(UniqueViolationError):
     """Raised when attempting to delete an entity that is referenced as a fk by another entity."""
 
-    def __init__(self, entity_model, dependencies: str,  display_name: str, detail: str):
+    def __init__(self, entity_model, dependencies: str, display_name: str, detail: str):
         super().__init__(error=detail)
-        self.user_message = f"Cannot delete {display_name} while linked to {dependencies}"
+        self.user_message = (
+            f"Cannot delete {display_name} while linked to {dependencies}"
+        )
         self.log_message = f"Deletion blocked: {entity_model} is still linked to {dependencies}. Detail: {detail}"
 
 
-class NullFKConstraintMisconfiguredError (DBError):
+class NullFKConstraintMisconfiguredError(DBError):
     """Raised when a fk delete action is not set to NULL as expected"""
 
     def __init__(self, fk_name: str, entity_model, display_name: str):
         super().__init__()
         self.user_message = f"Error: Cannot delete {display_name}."
-        self.log_message = (f"{entity_model} Deletion blocked: Foreign key constraint {fk_name} "
-                            f"not set to NULL on delete")
+        self.log_message = (
+            f"{entity_model} Deletion blocked: Foreign key constraint {fk_name} "
+            f"not set to NULL on delete"
+        )
 
 
-class CascadeFKConstraintMisconfiguredError (DBError):
+class CascadeFKConstraintMisconfiguredError(DBError):
     """Raised when a fk delete action is not set as predicted"""
 
     def __init__(self, fk_name: str, entity_name: str):
@@ -118,6 +134,7 @@ class CascadeFKConstraintMisconfiguredError (DBError):
 
 class TransactionError(DBError):
     """Raised when a db transaction fails"""
+
     def __init__(self, operation: str = None):
         self.operation = operation
         self.user_message = "Operation could not be completed!"
@@ -128,9 +145,9 @@ class TransactionError(DBError):
         super().__init__()
 
 
-
 class DBConnectionError(DBError):
     """Raised when db connection fails"""
+
     def __init__(self, error: str):
         self.error = error
 
@@ -139,9 +156,9 @@ class DBConnectionError(DBError):
         super().__init__()
 
 
-
 class KDDatabaseError(DBError):
-    """For parent class db exceptions. """
+    """For parent class db exceptions."""
+
     def __init__(self, error: str):
         self.user_message = "An unexpected error occurred"
         self.log_message = f"Database operation failed. Detail: {error}"
@@ -150,4 +167,3 @@ class KDDatabaseError(DBError):
 
     def __str__(self):
         return self.log_message
-

@@ -7,8 +7,11 @@ from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete, \
-    resolve_fk_on_update
+from app.core.shared.exceptions.decorators.resolve_fk_violation import (
+    resolve_fk_on_create,
+    resolve_fk_on_delete,
+    resolve_fk_on_update,
+)
 from app.core.shared.exceptions import EntityNotFoundError
 from app.core.shared.exceptions.maps.error_map import error_map
 
@@ -16,7 +19,7 @@ from app.core.shared.exceptions.maps.error_map import error_map
 class TotalGradeFactory(BaseFactory):
     """Factory class for managing TotalGrade operations."""
 
-    def __init__(self, session: Session, model=TotalGrade, current_user = None):
+    def __init__(self, session: Session, model=TotalGrade, current_user=None):
         super().__init__(current_user)
         """Initialize factory with db session, model and current user.
         Args:
@@ -40,11 +43,13 @@ class TotalGradeFactory(BaseFactory):
             entity_model=self.entity_model,
             identifier=identifier,
             error=str(error),
-            display_name=self.display_name
+            display_name=self.display_name,
         )
 
     @resolve_fk_on_create()
-    def create_total_grade(self, student_id: UUID, student_subject_id:UUID) -> TotalGrade:
+    def create_total_grade(
+        self, student_id: UUID, student_subject_id: UUID
+    ) -> TotalGrade:
         """Create a new TotalGrade.
         Args:
             student_id: id of the student to grade
@@ -53,20 +58,18 @@ class TotalGradeFactory(BaseFactory):
             TotalGrade: Created TotalGrade record
         """
         from app.core.assessment.services.assessment_service import AssessmentService
+
         service = AssessmentService(self.session, self.current_user)
         new_total_grade = TotalGrade(
             id=uuid4(),
             student_subject_id=student_subject_id,
             student_id=student_id,
-            total_score=service.calculate_total_grade(
-                student_subject_id
-            ),
+            total_score=service.calculate_total_grade(student_subject_id),
             created_by=self.actor_id,
-            last_modified_by=self.actor_id
+            last_modified_by=self.actor_id,
         )
-        
-        return self.repository.create(new_total_grade)
 
+        return self.repository.create(new_total_grade)
 
     def get_total_grade(self, total_grade_id: UUID) -> TotalGrade:
         """Get a specific TotalGrade by ID.
@@ -80,15 +83,13 @@ class TotalGradeFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(total_grade_id, e)
 
-
     def get_all_total_grades(self, filters) -> List[TotalGrade]:
         """Get all active TotalGrades with filtering.
         Returns:
             List[TotalGrade]: List of active TotalGrades
         """
-        fields = ['student_id', 'student_subject_id']
+        fields = ["student_id", "student_subject_id"]
         return self.repository.execute_query(fields, filters)
-
 
     @resolve_fk_on_update()
     def update_total_grade(self, total_grade_id: UUID, data: dict) -> TotalGrade:
@@ -105,11 +106,12 @@ class TotalGradeFactory(BaseFactory):
                 if hasattr(existing, key):
                     setattr(existing, key, value)
 
-            return self.repository.update(total_grade_id, existing, modified_by=self.actor_id)
+            return self.repository.update(
+                total_grade_id, existing, modified_by=self.actor_id
+            )
 
         except EntityNotFoundError as e:
             self.raise_not_found(total_grade_id, e)
-
 
     def archive_total_grade(self, total_grade_id: UUID, reason) -> TotalGrade:
         """Archive a TotalGrade record.
@@ -125,7 +127,6 @@ class TotalGradeFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(total_grade_id, e)
 
-
     @resolve_fk_on_delete(display="total grade")
     def delete_total_grade(self, total_grade_id: UUID) -> None:
         """Permanently delete a TotalGrade
@@ -138,15 +139,13 @@ class TotalGradeFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(total_grade_id, e)
 
-
     def get_all_archived_total_grades(self, filters) -> List[TotalGrade]:
         """Get all archived TotalGrades with filtering.
         Returns:
             List[TotalGrade]: List of archived TotalGrade records
         """
-        fields = ['student_id', 'student_subject_id']
+        fields = ["student_id", "student_subject_id"]
         return self.repository.execute_archive_query(fields, filters)
-
 
     def get_archived_total_grade(self, total_grade_id: UUID) -> TotalGrade:
         """Get an archived TotalGrade by ID.
@@ -160,7 +159,6 @@ class TotalGradeFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(total_grade_id, e)
 
-
     def restore_total_grade(self, total_grade_id: UUID) -> TotalGrade:
         """Restore an archived TotalGrade.
         Args:
@@ -172,7 +170,6 @@ class TotalGradeFactory(BaseFactory):
             return self.repository.restore(total_grade_id)
         except EntityNotFoundError as e:
             self.raise_not_found(total_grade_id, e)
-
 
     @resolve_fk_on_delete(display="total grade")
     def delete_archived_total_grade(self, total_grade_id: UUID) -> None:

@@ -1,4 +1,3 @@
-
 from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
@@ -8,8 +7,14 @@ from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.validators.entity_validators import EntityValidator
 from app.core.shared.validators.entry_validators import EntryValidator
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_update, resolve_fk_on_delete
+from app.core.shared.exceptions.decorators.resolve_unique_violation import (
+    resolve_unique_violation,
+)
+from app.core.shared.exceptions.decorators.resolve_fk_violation import (
+    resolve_fk_on_create,
+    resolve_fk_on_update,
+    resolve_fk_on_delete,
+)
 from app.core.shared.exceptions import EntityNotFoundError
 from app.core.shared.exceptions.maps.error_map import error_map
 
@@ -41,22 +46,20 @@ class RolePermissionFactory(BaseFactory):
             entity_model=self.entity_model,
             identifier=identifier,
             error=str(error),
-            display_name=self.display_name
+            display_name=self.display_name,
         )
 
     @resolve_fk_on_create()
     def create_role_permission(self, role_id, permission_id) -> RolePermission:
         """Create a new role permission."""
         role_permission = RolePermission(
-                role_id=role_id,
-                permission_id=permission_id,
-
-                created_by=self.actor_id,
-                last_modified_by=self.actor_id
+            role_id=role_id,
+            permission_id=permission_id,
+            created_by=self.actor_id,
+            last_modified_by=self.actor_id,
         )
 
         return self.repository.create(role_permission)
-
 
     def get_role_permission(self, role_permission_id: UUID) -> RolePermission:
         """Get a specific role permission by ID."""
@@ -65,12 +68,10 @@ class RolePermissionFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(role_permission_id, e)
 
-
     def get_all_role_permissions(self, filters) -> List[RolePermission]:
         """Get all role permissions"""
-        fields = ['role_id', 'permission_id']
+        fields = ["role_id", "permission_id"]
         return self.repository.execute_query(fields, filters)
-
 
     @resolve_fk_on_delete(display="RolePermission")
     def delete_role_permission(self, role_permission_id: UUID) -> None:
@@ -80,7 +81,6 @@ class RolePermissionFactory(BaseFactory):
 
         except EntityNotFoundError as e:
             self.raise_not_found(role_permission_id, e)
-
 
     # def get_all_archived_role_permissions(self, filters) -> List[RolePermission]:
     #     """Get all archived RolePermissions with filtering"""

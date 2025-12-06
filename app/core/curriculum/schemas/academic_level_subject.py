@@ -11,11 +11,10 @@ class AcademicLevelSubjectFilterParams(BaseFilterParams):
 
 class AcademicLevelSubjectBase(BaseModel):
     """Base model for academic level subject assignments"""
+
     subject_id: UUID
     code: str | None = None
     is_elective: bool = True
-
-
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -26,20 +25,23 @@ class AcademicLevelSubjectBase(BaseModel):
                 "is_elective": True,
                 "code": "BIO 222",
             }
-        }
+        },
     )
+
 
 class AcademicLevelSubjectResponse(AcademicLevelSubjectBase):
     """Response model for academic level subject assignments"""
+
     pass
 
 
 class AcademicLevelSubjectCreate(AcademicLevelSubjectBase):
-     """For creating new academic level subject assignments"""
+    """For creating new academic level subject assignments"""
 
 
 class AcademicLevelSubjectUpdate(AcademicLevelSubjectBase):
     """For updating academic level subject assignments"""
+
     is_elective: bool = True
 
     model_config = ConfigDict(
@@ -49,12 +51,13 @@ class AcademicLevelSubjectUpdate(AcademicLevelSubjectBase):
             "example": {
                 "is_elective": True,
             }
-        }
+        },
     )
 
 
 class AcademicLevelSubjectAudit(BaseModel):
     """Response model for level subject audit"""
+
     id: UUID
     subject_id: UUID
     created_at: datetime

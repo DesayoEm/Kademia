@@ -11,17 +11,25 @@ from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.services.lifecycle_service.archive_service import ArchiveService
 from app.core.shared.services.lifecycle_service.delete_service import DeleteService
 from app.infra.db.repositories.sqlalchemy_repos.base_repo import SQLAlchemyRepository
-from app.core.shared.exceptions.decorators.resolve_unique_violation import resolve_unique_violation
-from app.core.shared.exceptions.decorators.resolve_fk_violation import resolve_fk_on_create, resolve_fk_on_delete
-from app.core.shared.exceptions import EntityNotFoundError, ArchiveDependencyError, UniqueViolationError
+from app.core.shared.exceptions.decorators.resolve_unique_violation import (
+    resolve_unique_violation,
+)
+from app.core.shared.exceptions.decorators.resolve_fk_violation import (
+    resolve_fk_on_create,
+    resolve_fk_on_delete,
+)
+from app.core.shared.exceptions import (
+    EntityNotFoundError,
+    ArchiveDependencyError,
+    UniqueViolationError,
+)
 from app.core.shared.exceptions.maps.error_map import error_map
-
 
 
 class SubjectEducatorFactory(BaseFactory):
     """Factory class for managing SubjectEducator operations."""
 
-    def __init__(self, session: Session, model = SubjectEducator, current_user = None):
+    def __init__(self, session: Session, model=SubjectEducator, current_user=None):
         super().__init__(current_user)
         """Initialize factory.
             Args:
@@ -45,10 +53,8 @@ class SubjectEducatorFactory(BaseFactory):
             entity_model=self.entity_model,
             identifier=identifier,
             error=str(error),
-            display_name=self.display_name
+            display_name=self.display_name,
         )
-
-
 
     @resolve_fk_on_create()
     def create_subject_educator(self, educator_id: UUID, data) -> SubjectEducator:
@@ -65,22 +71,26 @@ class SubjectEducatorFactory(BaseFactory):
                 academic_level_subject_id=data.academic_level_subject_id,
                 educator_id=educator_id,
                 is_active=data.is_active,
-                academic_session=self.validator.validate_academic_session(data.academic_session),
+                academic_session=self.validator.validate_academic_session(
+                    data.academic_session
+                ),
                 date_assigned=date.today(),
-
                 created_by=self.actor_id,
-                last_modified_by=self.actor_id
+                last_modified_by=self.actor_id,
             )
             return self.repository.create(new_subject_educator)
 
         except UniqueViolationError as e:
-            if "subject_educators_educator_id_subject_id_academic_session_term_key" in str(e):
-                raise CompositeDuplicateEntityError( #fix.not raised
-                    SubjectEducator, str(e),
-                    "This subject is already assigned to this educator for the specified session"
+            if (
+                "subject_educators_educator_id_subject_id_academic_session_term_key"
+                in str(e)
+            ):
+                raise CompositeDuplicateEntityError(  # fix.not raised
+                    SubjectEducator,
+                    str(e),
+                    "This subject is already assigned to this educator for the specified session",
                 )
             raise
-
 
     def get_subject_educator(self, subject_educator_id: UUID) -> SubjectEducator:
         """Get a specific SubjectEducator by ID.
@@ -94,17 +104,24 @@ class SubjectEducatorFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(subject_educator_id, e)
 
-
     def get_all_subject_educators(self, filters) -> List[SubjectEducator]:
         """Get all active SubjectEducators with filtering.
         Returns:
             List[SubjectEducator]: List of active SubjectEducators
         """
-        fields = ['academic_session', 'is_active', 'date_assigned', 'term', 'academic_level_subject_id', 'educator_id']
+        fields = [
+            "academic_session",
+            "is_active",
+            "date_assigned",
+            "term",
+            "academic_level_subject_id",
+            "educator_id",
+        ]
         return self.repository.execute_query(fields, filters)
 
-
-    def archive_subject_educator(self, subject_educator_id: UUID, reason) -> SubjectEducator:
+    def archive_subject_educator(
+        self, subject_educator_id: UUID, reason
+    ) -> SubjectEducator:
         """Archive a SubjectEducator if no active dependencies exist.
         Args:
             subject_educator_id (UUID): ID of SubjectEducator to archive
@@ -114,19 +131,19 @@ class SubjectEducatorFactory(BaseFactory):
         """
         try:
             failed_dependencies = self.archive_service.check_active_dependencies_exists(
-                entity_model=self.model,
-                target_id=subject_educator_id
+                entity_model=self.model, target_id=subject_educator_id
             )
             if failed_dependencies:
                 raise ArchiveDependencyError(
-                    entity_model=self.entity_model, identifier=subject_educator_id,
-                    display_name=self.display_name, related_entities=", ".join(failed_dependencies)
+                    entity_model=self.entity_model,
+                    identifier=subject_educator_id,
+                    display_name=self.display_name,
+                    related_entities=", ".join(failed_dependencies),
                 )
             return self.repository.archive(subject_educator_id, self.actor_id, reason)
 
         except EntityNotFoundError as e:
             self.raise_not_found(subject_educator_id, e)
-
 
     @resolve_fk_on_delete(display="subject educator")
     def delete_subject_educator(self, subject_educator_id: UUID) -> None:
@@ -140,17 +157,24 @@ class SubjectEducatorFactory(BaseFactory):
         except EntityNotFoundError as e:
             self.raise_not_found(subject_educator_id, e)
 
-
     def get_all_archived_subject_educators(self, filters) -> List[SubjectEducator]:
         """Get all archived SubjectEducators with filtering.
         Returns:
             List[SubjectEducator]: List of archived SubjectEducator records
         """
-        fields = ['academic_session', 'is_active', 'date_assigned', 'term', 'academic_level_subject_id', 'educator_id']
+        fields = [
+            "academic_session",
+            "is_active",
+            "date_assigned",
+            "term",
+            "academic_level_subject_id",
+            "educator_id",
+        ]
         return self.repository.execute_archive_query(fields, filters)
 
-
-    def get_archived_subject_educator(self, subject_educator_id: UUID) -> SubjectEducator:
+    def get_archived_subject_educator(
+        self, subject_educator_id: UUID
+    ) -> SubjectEducator:
         """Get an archived SubjectEducator by ID.
         Args:
             subject_educator_id: ID of SubjectEducator to retrieve
@@ -161,7 +185,6 @@ class SubjectEducatorFactory(BaseFactory):
             return self.repository.get_archive_by_id(subject_educator_id)
         except EntityNotFoundError as e:
             self.raise_not_found(subject_educator_id, e)
-
 
     def restore_subject_educator(self, subject_educator_id: UUID) -> SubjectEducator:
         """Restore an archived SubjectEducator.
@@ -174,7 +197,6 @@ class SubjectEducatorFactory(BaseFactory):
             return self.repository.restore(subject_educator_id)
         except EntityNotFoundError as e:
             self.raise_not_found(subject_educator_id, e)
-
 
     @resolve_fk_on_delete(display="subject educator")
     def delete_archived_subject_educator(self, subject_educator_id: UUID) -> None:

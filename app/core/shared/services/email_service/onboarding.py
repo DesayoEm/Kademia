@@ -6,7 +6,9 @@ class OnboardingService:
     def __init__(self):
         self.service = EmailService()
 
-    def send_staff_onboarding_email(self, to_email: str, full_name: str, password: str) -> bool:
+    def send_staff_onboarding_email(
+        self, to_email: str, full_name: str, password: str
+    ) -> bool:
         """Send an onboarding email with temporary password to a new staff member."""
 
         subject = "Welcome to Kademia - Your Account Information"
@@ -72,9 +74,10 @@ class OnboardingService:
         """
 
         return self.service.send_email(to_email, subject, html_body, text_body)
+
     def send_guardian_onboarding_email(
-            self, to_email: str, full_name: str, password: str
-            ) -> bool:
+        self, to_email: str, full_name: str, password: str
+    ) -> bool:
         """Send an onboarding email_service with temporary password to a guardian."""
 
         subject = "Welcome to Kademia - Your Account Information"
@@ -139,5 +142,3 @@ class OnboardingService:
         """
 
         return self.service.send_email(to_email, subject, html_body, text_body)
-
-

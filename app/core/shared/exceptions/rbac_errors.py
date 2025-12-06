@@ -1,10 +1,14 @@
 from .base_error import KademiaError
+from uuid import UUID
+
 
 class RoleError(KademiaError):
     """Base exception for all RBAC-related exceptions"""
 
+
 class NegativeRankError(RoleError):
     """Raised when a negative number is entered as a role rank"""
+
     def __init__(self, value: int):
         super().__init__()
         self.user_message = "Rank cannot be negative"
@@ -13,7 +17,28 @@ class NegativeRankError(RoleError):
 
 class NoMatchingRoleError(RoleError):
     """Raised when no matching role is found after a name search"""
+
     def __init__(self, role_name: str, error_message: str):
         super().__init__()
         self.user_message = f"No matching role found for {role_name}"
-        self.log_message = f"No matching role found for {role_name}. Error: {error_message}"
+        self.log_message = (
+            f"No matching role found for {role_name}. Error: {error_message}"
+        )
+
+
+class AccessDenied(RoleError):
+    """Raised when a user tries to access a resource they don't have permissions to"""
+
+    def __init__(self, user_id: UUID, resource_id: UUID, permission: str):
+        super().__init__()
+        self.user_message = f"Access denied. \nCheck with you administrator if you think you should be a able to access this record"
+        self.log_message = f"Access denied for {user_id}. \n Error: Tried to {permission} on {resource_id}"
+
+
+class PermissionHandlerError(RoleError):
+    """Raised when a user tries to access a resource they don't have permissions to"""
+
+    def __init__(self, message: str):
+        super().__init__()
+        self.user_message = f"Internal server error"
+        self.log_message = f"{message}"
