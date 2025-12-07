@@ -3,16 +3,23 @@
 A modular, scalable backend system for managing academic institutions. 
 Built as a learning project to explore complex authorization patterns, data lifecycle management, and enterprise-grade architectural patterns.
 
+## Core Architecture
+
+- Repository + Factory + Service layering
+- Decorator-based error and FK/unique violation handling
+- SQLAlchemy + PostgreSQL with Redis for token tracking
+- Archival system and with soft-deletion and restoring of entities
+
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Runtime | Python 3.12 |
-| Framework | FastAPI |
-| ORM | SQLAlchemy 2.0 |
-| Database | PostgreSQL |
+| Layer | Technology             |
+|-------|------------------------|
+| Runtime | Python 3.11            |
+| Framework | FastAPI                |
+| ORM | SQLAlchemy 2.0         |
+| Database | PostgreSQL             |
 | Cache | Redis (token tracking) |
-| Migrations | Alembic |
+| Migrations | Alembic                |
 
 ---
 
@@ -38,19 +45,15 @@ Built as a learning project to explore complex authorization patterns, data life
 │            Data access, Object creation, persistence        │
 └─────────────────────────────────────────────────────────────┘
 ```
-
-Strict separation prevents the "God controller" anti-pattern. Each layer has a single responsibility: routers handle HTTP concerns, services contain business rules, repositories manage data access.
-
 ---
 
 ## Database Design
 
 ### Domain Model (25 Tables, 9 Domains)
-    
 
 ![ERD.png](documentation/ERD.png)
 
-See full [documentation](documentation/database_design.md)
+See full [database documentation](documentation/database_design.md)
 
 ### User Type Hierarchy
 
