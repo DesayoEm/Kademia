@@ -3,7 +3,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from app.core.rbac.models import RoleHistory
-from app.core.rbac.services.role_service import RoleChangeService
+from app.core.rbac.services.role_service import RBACService
 from app.core.identity.factories.staff import StaffFactory
 from app.core.identity.models.staff import Staff
 from app.core.shared.factory.base_factory import BaseFactory
@@ -34,7 +34,7 @@ class RoleHistoryFactory(BaseFactory):
         self.entity_validator = EntityValidator(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
-        self.service = RoleChangeService(self.session, current_user)
+        self.service = RBACService(self.session)
         self.actor_id: UUID = self.get_actor_id()
         self.domain = "role history"
 

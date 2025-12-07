@@ -1,6 +1,6 @@
 from app.core.shared.models.common_imports import *
 from app.core.shared.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
-from app.core.shared.models.enums import Term
+from app.core.shared.models.enums import Semester
 
 
 class Subject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
@@ -83,7 +83,7 @@ class AcademicLevelSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
 
 class StudentSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
-    """Association table representing a student's enrollment in a subject for a specific academic year and term."""
+    """Association table representing a student's enrollment in a subject for a specific academic year and semester."""
 
     __tablename__ = "student_subjects"
 
@@ -105,7 +105,7 @@ class StudentSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
         )
     )
     academic_session: Mapped[str] = mapped_column(String(9))
-    term: Mapped[Term] = mapped_column(Enum(Term, name="term"))
+    semester: Mapped[Semester] = mapped_column(Enum(Semester, name="semester"))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     # Relationships
@@ -124,20 +124,20 @@ class StudentSubject(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
 
     __table_args__ = (
         UniqueConstraint(
-            "student_id", "academic_level_subject_id", "academic_session", "term"
+            "student_id", "academic_level_subject_id", "academic_session", "semester"
         ),
         Index(
-            "idx_student_subject_term",
+            "idx_student_subject_semester",
             "student_id",
             "academic_level_subject_id",
-            "term",
+            "semester",
             "academic_session",
         ),
     )
 
 
 class SubjectEducator(Base, AuditMixins, TimeStampMixins, ArchiveMixins):
-    """Association table representing a teacher assignment to a subject for a specific academic year and term."""
+    """Association table representing a teacher assignment to a subject for a specific academic year and semester."""
 
     __tablename__ = "subject_educators"
 

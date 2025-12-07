@@ -1,4 +1,4 @@
-from app.core.shared.schemas.enums import Term
+from app.core.shared.schemas.enums import Semester
 from app.core.shared.schemas.common_imports import *
 from app.core.shared.schemas.shared_models import *
 

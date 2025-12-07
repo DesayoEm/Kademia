@@ -1,13 +1,13 @@
 from app.core.shared.schemas.common_imports import *
 from app.core.shared.schemas.shared_models import *
-from app.core.shared.schemas.enums import Term
+from app.core.shared.schemas.enums import Semester
 
 
 class SubjectEducatorFilterParams(BaseFilterParams):
     academic_session: str | None = None
     academic_level_subject_id: UUID | None = None
     educator_id: UUID | None = None
-    term: Term | None = None
+    semester: Semester | None = None
     is_active: bool | None = None
     date_assigned: date | None = None
 
@@ -28,7 +28,7 @@ class SubjectEducatorBase(BaseModel):
             "example": {
                 "academic_level_subject_id": "00000000-0000-0000-0000-000000000001",
                 "academic_session": "2025/2026",
-                "term": "FIRST",
+                "semester": "FIRST",
                 "is_active": True,
             }
         },

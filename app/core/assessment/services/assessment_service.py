@@ -7,7 +7,7 @@ from app.core.curriculum.models.curriculum import (
     AcademicLevelSubject,
     Subject,
 )
-from app.core.shared.schemas.enums import Term
+from app.core.shared.schemas.enums import Semester
 from app.core.assessment.factories.total_grade import TotalGradeFactory
 from app.core.assessment.services.validators import AssessmentValidator
 from app.core.assessment.factories.grade import GradeFactory
@@ -38,7 +38,7 @@ class AssessmentService:
         self.pdf_service = ResultPDF()
 
     def validate_grade_weight(self, value: int, student_subject_id: UUID) -> int:
-        """Ensure cumulative weight for a term doesn't exceed 10."""
+        """Ensure cumulative weight for a semester doesn't exceed 10."""
         if value > 10:
             raise WeightTooHighError(entry=value)
 
@@ -54,7 +54,7 @@ class AssessmentService:
     def validate_grade_weight_on_update(
         self, current_value: int, new_value: int, student_subject_id: UUID
     ) -> int:
-        """Ensure cumulative weight for a term doesn't exceed 10 on update."""
+        """Ensure cumulative weight for a semester doesn't exceed 10 on update."""
         if new_value > 10:
             raise WeightTooHighError(entry=new_value)
 
@@ -159,7 +159,7 @@ class AssessmentService:
         return self.total_grade_factory.get_total_grade(total_grade_id)
 
     def generate_student_results(
-        self, student_id: UUID, academic_session: str, term: Term
+        self, student_id: UUID, academic_session: str, semester: Semester
     ):
         student = self.student_factory.get_student(student_id)
         student_name = f"{student.first_name} {student.last_name}"
@@ -173,7 +173,7 @@ class AssessmentService:
             .filter(
                 StudentSubject.student_id == student_id,
                 StudentSubject.academic_session == academic_session,
-                StudentSubject.term == term,
+                StudentSubject.semester == semester,
             )
             .all()
         )
@@ -199,19 +199,19 @@ class AssessmentService:
 
         return {
             "student_name": student_name,
-            "term": term.value,
+            "semester": semester.value,
             "academic_session": academic_session,
             "result_list": result_list,
         }
 
     def generate_assessment_pdf(
-        self, student_id: UUID, academic_session: str, term: Term
+        self, student_id: UUID, academic_session: str, semester: Semester
     ):
         student = self.student_factory.get_student(student_id)
         student_name = f"{student.first_name} {student.last_name}"
-        file_name = f"{student_name} {academic_session} {term} term results"
+        file_name = f"{student_name} {academic_session} {semester} semester results"
 
-        data = self.generate_student_results(student_id, academic_session, term)
+        data = self.generate_student_results(student_id, academic_session, semester)
 
         return self.pdf_service.render_pdf(data, file_name)
 

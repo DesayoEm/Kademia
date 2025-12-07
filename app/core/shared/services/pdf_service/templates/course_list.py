@@ -81,7 +81,7 @@ class CourseListPDF(ReportLabService):
         title = Paragraph("Student Course List", self.styles["CustomTitle"])
         story.append(title)
 
-        subtitle_text = f"{data.get('student_name', 'Unknown Student')} - {data.get('academic_session', '')} ({data.get('term', '')})"
+        subtitle_text = f"{data.get('student_name', 'Unknown Student')} - {data.get('academic_session', '')} ({data.get('semester', '')})"
         subtitle = Paragraph(subtitle_text, self.styles["CustomSubtitle"])
         story.append(subtitle)
 
@@ -90,7 +90,7 @@ class CourseListPDF(ReportLabService):
             story.append(course_table)
         else:
             no_courses = Paragraph(
-                "No courses enrolled for this term.", self.styles["Normal"]
+                "No courses enrolled for this semester.", self.styles["Normal"]
             )
             story.append(no_courses)
 

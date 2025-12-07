@@ -1,6 +1,6 @@
 from app.core.shared.models.common_imports import *
 from app.core.shared.models.mixins import AuditMixins, TimeStampMixins, ArchiveMixins
-from app.core.shared.models.enums import Term, GradeType
+from app.core.shared.models.enums import Semester, GradeType
 
 
 class Grade(Base, AuditMixins, TimeStampMixins, ArchiveMixins):

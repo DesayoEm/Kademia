@@ -82,7 +82,7 @@ class SubjectEducatorFactory(BaseFactory):
 
         except UniqueViolationError as e:
             if (
-                "subject_educators_educator_id_subject_id_academic_session_term_key"
+                "subject_educators_educator_id_subject_id_academic_session_semester_key"
                 in str(e)
             ):
                 raise CompositeDuplicateEntityError(  # fix.not raised
@@ -113,7 +113,7 @@ class SubjectEducatorFactory(BaseFactory):
             "academic_session",
             "is_active",
             "date_assigned",
-            "term",
+            "semester",
             "academic_level_subject_id",
             "educator_id",
         ]
@@ -166,7 +166,7 @@ class SubjectEducatorFactory(BaseFactory):
             "academic_session",
             "is_active",
             "date_assigned",
-            "term",
+            "semester",
             "academic_level_subject_id",
             "educator_id",
         ]

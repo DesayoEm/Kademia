@@ -11,7 +11,7 @@ from app.core.identity.factories.student import StudentFactory
 from app.core.identity.models.student import Student
 from app.core.shared.exceptions.curriculum_errors import AcademicLevelMismatchError
 
-from app.core.shared.schemas.enums import Term
+from app.core.shared.schemas.enums import Semester
 from app.core.shared.services.pdf_service.templates.course_list import CourseListPDF
 
 
@@ -32,7 +32,7 @@ class CurriculumService:
         return academic_level_subject_id
 
     def generate_enrollment_list(
-        self, student_id: UUID, academic_session: str, term: Term
+        self, student_id: UUID, academic_session: str, semester: Semester
     ):
         student = self.student_factory.get_student(student_id)
         student_name = f"{student.first_name} {student.last_name}"
@@ -52,7 +52,7 @@ class CurriculumService:
             .filter(
                 StudentSubject.student_id == student_id,
                 StudentSubject.academic_session == academic_session,
-                StudentSubject.term == term,
+                StudentSubject.semester == semester,
             )
             .all()
         )
@@ -80,19 +80,19 @@ class CurriculumService:
 
         return {
             "student_name": student_name,
-            "term": term.value,
+            "semester": semester.value,
             "academic_session": academic_session,
             "date_generated": date_generated,
             "enrollment_list": enrollment_list,
         }
 
     def render_enrollment_list_pdf(
-        self, student_id: UUID, academic_session: str, term: Term
+        self, student_id: UUID, academic_session: str, semester: Semester
     ):
         student = self.student_factory.get_student(student_id)
         student_name = f"{student.first_name} {student.last_name}"
         file_name = f"{student_name} {academic_session} course list"
 
-        data = self.generate_enrollment_list(student_id, academic_session, term)
+        data = self.generate_enrollment_list(student_id, academic_session, semester)
 
         return self.pdf_service.render_pdf(data, file_name)

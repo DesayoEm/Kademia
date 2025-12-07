@@ -93,7 +93,7 @@ class StudentSubjectFactory(BaseFactory):
             academic_level_subject_id=self.service.check_academic_level(
                 student_id, level_id, data.academic_level_subject_id
             ),
-            term=data.term,
+            semester=data.semester,
             academic_session=self.validator.validate_academic_session(
                 data.academic_session
             ),
@@ -121,7 +121,7 @@ class StudentSubjectFactory(BaseFactory):
         """
         fields = [
             "academic_session",
-            "term",
+            "semester",
             "is_active",
             "student_id",
             "academic_level_subject_id",
@@ -184,7 +184,7 @@ class StudentSubjectFactory(BaseFactory):
         """
         fields = [
             "academic_session",
-            "term",
+            "semester",
             "is_active",
             "student_id",
             "academic_level_subject_id",

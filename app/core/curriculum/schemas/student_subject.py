@@ -1,13 +1,13 @@
 from app.core.shared.schemas.common_imports import *
 from app.core.shared.schemas.shared_models import *
-from app.core.shared.schemas.enums import Term
+from app.core.shared.schemas.enums import Semester
 
 
 class StudentSubjectFilterParams(BaseFilterParams):
     student_id: UUID | None = None
     academic_level_subject_id: UUID | None = None
     academic_session: str | None = None
-    term: str | None = None
+    semester: str | None = None
     is_active: bool | None = None
 
     order_by: Literal["created_at"] = "created_at"
@@ -18,7 +18,7 @@ class StudentSubjectBase(BaseModel):
 
     academic_level_subject_id: UUID
     academic_session: str
-    term: Term
+    semester: Semester
     is_active: bool = True
 
     model_config = ConfigDict(
@@ -28,7 +28,7 @@ class StudentSubjectBase(BaseModel):
             "example": {
                 "academic_level_subject_id": "00000000-0000-0000-0000-000000000002",
                 "academic_session": "2025/2026",
-                "term": "FIRST",
+                "semester": "FIRST",
                 "is_active": True,
             }
         },

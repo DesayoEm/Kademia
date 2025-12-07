@@ -2,7 +2,7 @@ from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy.orm import Session
 from app.core.rbac.models import Role
-from app.core.rbac.services.role_service import RoleChangeService
+from app.core.rbac.services.role_service import RBACService
 from app.core.rbac.services.utils import RBACUtils
 from app.core.shared.factory.base_factory import BaseFactory
 from app.core.shared.validators.entity_validators import EntityValidator
@@ -38,7 +38,7 @@ class RoleFactory(BaseFactory):
         self.entity_validator = EntityValidator(session)
         self.error_details = error_map.get(self.model)
         self.entity_model, self.display_name = self.error_details
-        self.service = RoleChangeService()
+        self.service = RBACService(self.session)
         self.util = RBACUtils()
         self.actor_id: UUID = self.get_actor_id()
         self.domain = "role"

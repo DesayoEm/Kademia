@@ -4,7 +4,7 @@ from typing import List
 from fastapi.responses import FileResponse
 from starlette.responses import StreamingResponse
 
-from app.core.shared.schemas.enums import Term
+from app.core.shared.schemas.enums import Semester
 from app.core.curriculum.factories.student_subject import StudentSubjectFactory
 from app.core.curriculum.schemas.curriculum import CourseListRequest, CourseListResponse
 from app.core.curriculum.services.curriculum_service import CurriculumService
@@ -109,11 +109,11 @@ def assign_student_subject(
 def download_course_list(
     student_id: UUID,
     academic_session: str,
-    term: Term,
+    semester: Semester,
     service: CurriculumService = Depends(get_authenticated_service(CurriculumService)),
 ):
     pdf_bytes, filename = service.render_enrollment_list_pdf(
-        student_id, academic_session, term
+        student_id, academic_session, semester
     )
 
     return StreamingResponse(
@@ -130,7 +130,7 @@ def get_student_course_list(
     service: CurriculumService = Depends(get_authenticated_service(CurriculumService)),
 ):
     return service.generate_enrollment_list(
-        student_id, payload.academic_session, payload.term
+        student_id, payload.academic_session, payload.semester
     )
 
 

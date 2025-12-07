@@ -24,7 +24,7 @@ class DocumentBase(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "title": "First Term Report Card",
+                "title": "First semester Report Card",
                 "academic_session": "2025/2026",
                 "document_type": "RESULT",
             }
@@ -49,7 +49,7 @@ class DocumentUpdate(BaseModel):
         extra="ignore",
         json_schema_extra={
             "example": {
-                "title": "Second Term Report Card",
+                "title": "Second semester Report Card",
                 "document_type": "RESULT",
             }
         },

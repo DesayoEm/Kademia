@@ -81,7 +81,7 @@ class ResultPDF(ReportLabService):
         title = Paragraph("Student Result Report", self.styles["CustomTitle"])
         story.append(title)
 
-        subtitle_text = f"{data.get('student_name', 'Unknown Student')} - {data.get('academic_session', '')} ({data.get('term', '')})"
+        subtitle_text = f"{data.get('student_name', 'Unknown Student')} - {data.get('academic_session', '')} ({data.get('semester', '')})"
         subtitle = Paragraph(subtitle_text, self.styles["CustomSubtitle"])
         story.append(subtitle)
 
@@ -90,7 +90,7 @@ class ResultPDF(ReportLabService):
             story.append(result_table)
         else:
             no_results = Paragraph(
-                "No results available for this term.", self.styles["Normal"]
+                "No results available for this semester.", self.styles["Normal"]
             )
             story.append(no_results)
 

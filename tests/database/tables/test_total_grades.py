@@ -10,7 +10,7 @@ def test_model_structure_column_data_types(db_inspector):
         "student_id": UUID,
         "subject_id": UUID,
         "academic_year": String,
-        "term": Enum,
+        "semester": Enum,
         "total_score": Integer,
         "rank": Integer,
         "created_at": DateTime,
@@ -26,7 +26,7 @@ def test_model_structure_column_data_types(db_inspector):
             columns[column]["type"], expected_type
         ), f"{column} has incorrect type"
 
-    enum_checks = {"archive_reason": ArchiveReason, "term": Term}
+    enum_checks = {"archive_reason": ArchiveReason, "semester": Semester}
     for column, enum_class in enum_checks.items():
         col_type = columns[column]["type"]
         assert col_type.enum_class is enum_class or col_type.enums == [
@@ -44,7 +44,7 @@ def test_model_structure_nullable_constraints(db_inspector):
         "student_id": False,
         "subject_id": False,
         "academic_year": False,
-        "term": False,
+        "semester": False,
         "total_score": False,
         "rank": True,
         "created_at": False,
@@ -81,7 +81,7 @@ def test_model_structure_default_values(db_inspector):
         "student_id",
         "subject_id",
         "academic_year",
-        "term",
+        "semester",
         "total_score",
         "rank",
     ]

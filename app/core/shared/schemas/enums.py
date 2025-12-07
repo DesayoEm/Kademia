@@ -65,10 +65,9 @@ class ClassCode(str, Enum):
     F = "F"
 
 
-class Term(str, Enum):
+class Semester(str, Enum):
     FIRST = "FIRST"
     SECOND = "SECOND"
-    THIRD = "THIRD"
 
 
 class SubjectGroup(str, Enum):

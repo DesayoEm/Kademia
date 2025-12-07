@@ -1,26 +1,26 @@
 from app.core.shared.schemas.common_imports import *
 from app.core.shared.schemas.shared_models import *
-from app.core.shared.schemas.enums import Term
+from app.core.shared.schemas.enums import Semester
 
 
 class CourseListRequest(BaseModel):
     """Request model for enrollments"""
 
     academic_session: str
-    term: Term
+    semester: Semester
 
     model_config = ConfigDict(
         from_attributes=True,
         extra="ignore",
         json_schema_extra={
-            "example": {"academic_session": "2025/2026", "term": "FIRST"}
+            "example": {"academic_session": "2025/2026", "semester": "FIRST"}
         },
     )
 
 
 from app.core.shared.schemas.common_imports import *
 from app.core.shared.schemas.shared_models import *
-from app.core.shared.schemas.enums import Term
+from app.core.shared.schemas.enums import Semester
 from datetime import date
 from typing import List, Tuple
 
@@ -48,7 +48,7 @@ class CourseListResponse(BaseModel):
     """Response model for student course list"""
 
     student_name: str
-    term: Term
+    semester: Semester
     academic_session: str
     date_generated: str
     enrollment_list: List[CourseItem]
@@ -58,7 +58,7 @@ class CourseListResponse(BaseModel):
         json_schema_extra={
             "example": {
                 "student_name": "Johnny Smith",
-                "term": "FIRST",
+                "semester": "FIRST",
                 "academic_session": "2025/2026",
                 "date_generated": "2025-07-09",
                 "enrollment_list": [
