@@ -51,7 +51,6 @@ class RolePermissionFactory(BaseFactory):
     """
 
     def __init__(self, session: Session, model=RolePermission, current_user=None):
-
         """
         Initialize the RolePermissionFactory with database session and optional authenticated user.
 
@@ -95,27 +94,27 @@ class RolePermissionFactory(BaseFactory):
     @resolve_fk_on_create()
     def create_role_permission(self, role_id, permission_id) -> RolePermission:
         """
-    Assign a permission to a role.
+        Assign a permission to a role.
 
-    Creates a new role-permission association, granting the specified
-    permission to users with the specified role.
+        Creates a new role-permission association, granting the specified
+        permission to users with the specified role.
 
-    Args:
-        role_id: UUID of the role to grant the permission to.
-        permission_id: UUID of the permission to grant.
+        Args:
+            role_id: UUID of the role to grant the permission to.
+            permission_id: UUID of the permission to grant.
 
-    Returns:
-        RolePermission: The newly created assignment record.
+        Returns:
+            RolePermission: The newly created assignment record.
 
-    Raises:
-        ForeignKeyViolationError: If role_id or permission_id reference
-            non-existent entities (handled by @resolve_fk_on_create decorator).
-        UniqueViolationError: If this permission is already assigned to
-            this role (composite primary key constraint).
+        Raises:
+            ForeignKeyViolationError: If role_id or permission_id reference
+                non-existent entities (handled by @resolve_fk_on_create decorator).
+            UniqueViolationError: If this permission is already assigned to
+                this role (composite primary key constraint).
 
-    Note:
-        The combination of (role_id, permission_id) must be unique.
-    """
+        Note:
+            The combination of (role_id, permission_id) must be unique.
+        """
         role_permission = RolePermission(
             role_id=role_id,
             permission_id=permission_id,
@@ -185,4 +184,3 @@ class RolePermissionFactory(BaseFactory):
 
         except EntityNotFoundError as e:
             self.raise_not_found(role_permission_id, e)
-

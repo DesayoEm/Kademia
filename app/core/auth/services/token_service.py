@@ -31,7 +31,6 @@ class TokenService:
         No dependencies required; configuration is loaded from app settings.
         """
 
-
     ACCESS_TOKEN_EXPIRY = config.ACCESS_TOKEN_EXPIRE_SECONDS
 
     def create_access_token(

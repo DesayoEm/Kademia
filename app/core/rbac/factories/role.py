@@ -49,10 +49,10 @@ class RoleFactory(BaseFactory):
 
     def __init__(self, session: Session, model=Role, current_user=None):
         """Initialize factory with db session, model, and current actor.
-            Args:
-                session: SQLAlchemy db session
-                model: Model class, defaults to Role
-                current_user: The authenticated user performing the operation, if any.
+        Args:
+            session: SQLAlchemy db session
+            model: Model class, defaults to Role
+            current_user: The authenticated user performing the operation, if any.
         """
         super().__init__(current_user)
 
@@ -135,28 +135,28 @@ class RoleFactory(BaseFactory):
     @resolve_fk_on_update()
     def update_role(self, role_id: UUID, data: dict) -> Role:
         """
-    Update an existing role's attributes.
+        Update an existing role's attributes.
 
-    Supports partial updates—only provided fields are modified. Validates
-    description and rank if included in the update data.
+        Supports partial updates—only provided fields are modified. Validates
+        description and rank if included in the update data.
 
-    Args:
-        role_id: The UUID of the role to update.
-        data: Dictionary of fields to update. Supported keys include:
-            - name: New UserRoleName value.
-            - description: New description (validated).
-            - rank: New rank value (validated).
+        Args:
+            role_id: The UUID of the role to update.
+            data: Dictionary of fields to update. Supported keys include:
+                - name: New UserRoleName value.
+                - description: New description (validated).
+                - rank: New rank value (validated).
 
-    Returns:
-        Role: The updated Role instance.
+        Returns:
+            Role: The updated Role instance.
 
-    Raises:
-        EntityNotFoundError: If no role exists with the given ID.
-        UniqueViolationError: If updated name conflicts with existing role
-            (handled by @resolve_unique_violation decorator).
-        ForeignKeyViolationError: If any referenced entities don't exist
-            (handled by @resolve_fk_on_update decorator).
-    """
+        Raises:
+            EntityNotFoundError: If no role exists with the given ID.
+            UniqueViolationError: If updated name conflicts with existing role
+                (handled by @resolve_unique_violation decorator).
+            ForeignKeyViolationError: If any referenced entities don't exist
+                (handled by @resolve_fk_on_update decorator).
+        """
         copied_data = data.copy()
 
         try:

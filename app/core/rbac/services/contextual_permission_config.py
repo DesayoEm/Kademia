@@ -42,7 +42,6 @@ Models mapped:
     - STUDENT_SUBJECT -> StudentSubject
 """
 
-
 from app.core.identity.models.staff import Staff, Educator
 from app.core.identity.models.student import Student
 from app.core.identity.models.guardian import Guardian

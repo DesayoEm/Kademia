@@ -44,6 +44,7 @@ class PermissionService:
         service = PermissionService(session, current_user=teacher)
         service.check_permission(teacher, Resource.GRADE, Action.UPDATE, grade_id)
     """
+
     def __init__(self, session: Session, current_user=None):
         """
         Initialize the PermissionService.
@@ -146,7 +147,6 @@ class PermissionService:
 
         else:
             raise AccessDenied(active_student_id, resource_id, permission_str)
-
 
     def check_guardian_contextual_access(
         self, permission_str, resource: Resource, resource_id: Optional[UUID]
@@ -438,4 +438,3 @@ class PermissionService:
             )
 
         return False
-

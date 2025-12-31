@@ -108,7 +108,6 @@ class PasswordService:
 
         return password
 
-
     @staticmethod
     def generate_random_password():
         """
@@ -322,7 +321,10 @@ class PasswordService:
 
         token = self.token_list.save_password_token(email_address)
 
-        reset_url = F"{config.RESET_URL}{token}"      f"https://kademia.com/staff/reset-password?token={token}"
+        reset_url = (
+            f"{config.RESET_URL}{token}"
+            f"https://kademia.com/staff/reset-password?token={token}"
+        )
 
         self.email_service.send_staff_reset_link(
             user.email_address, user.first_name, reset_url

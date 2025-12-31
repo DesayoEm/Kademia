@@ -9,6 +9,7 @@ class RBACUtils:
     Provides static helper methods for validation and string generation
     used across the RBAC module. Stateless—no database access required.
     """
+
     def __init__(self):
         """
         Initialize RBACUtils.

@@ -16,7 +16,6 @@ the RolePermission association table.
 """
 
 
-
 class Permission(Base, AuditMixins, TimeStampMixins):
     """Represents a specific permission (resource + action)"""
 

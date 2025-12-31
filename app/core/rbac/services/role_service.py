@@ -21,6 +21,7 @@ class RBACService:
     Attributes:
         session: SQLAlchemy database session.
     """
+
     def __init__(self, session: Session):
         """
         Initialize the RBACService with a database session.
@@ -53,7 +54,6 @@ class RBACService:
 
         return new_role_id
 
-
     def fetch_role_id(self, role_name: str) -> UUID:
         """
         Look up a role's UUID by its name.
@@ -82,7 +82,6 @@ class RBACService:
 
         except NoResultFound as e:
             raise NoMatchingRoleError(role_name, str(e))
-
 
     def get_role_permission_strs(self, role_id: UUID) -> List[str]:
         """

@@ -26,6 +26,7 @@ Module Attributes:
 
 """
 
+
 def get_current_user(token_data, db_session):
     """
     Resolve token data to a user model instance.
@@ -117,6 +118,3 @@ def get_authenticated_service(service_class):
         return service_class(session, current_user=current_user)
 
     return get_service
-
-
-

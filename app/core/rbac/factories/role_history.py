@@ -45,8 +45,8 @@ class RoleHistoryFactory(BaseFactory):
             data=RoleChangeSchema(new_role_id=admin_role.id, reason="Promotion")
         )
     """
-    def __init__(self, session: Session, model=RoleHistory, current_user=None):
 
+    def __init__(self, session: Session, model=RoleHistory, current_user=None):
         """
         Initialize the RoleHistoryFactory with database session and optional authenticated user.
 
@@ -246,17 +246,17 @@ class RoleHistoryFactory(BaseFactory):
 
     def restore_role_change(self, history_id: UUID) -> RoleHistory:
         """
-    Restore an archived role history record to active state.
+        Restore an archived role history record to active state.
 
-    Args:
-        history_id: The UUID of the archived record to restore.
+        Args:
+            history_id: The UUID of the archived record to restore.
 
-    Returns:
-        RoleHistory: The restored record (now active).
+        Returns:
+            RoleHistory: The restored record (now active).
 
-    Raises:
-        EntityNotFoundError: If no archived record exists with the given ID.
-    """
+        Raises:
+            EntityNotFoundError: If no archived record exists with the given ID.
+        """
         try:
             return self.repository.restore(history_id)
         except EntityNotFoundError as e:

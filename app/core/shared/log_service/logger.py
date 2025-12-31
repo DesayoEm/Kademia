@@ -11,76 +11,68 @@ def general_logging():
     logger.setLevel(logging.INFO)
 
     logging_config = {
-        'version': 1,
-        'disable_existing_loggers': False,
-
-        'formatters': {
-            'simple': {
-                'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "simple": {
+                "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             },
-            'detailed': {
-                'format': '[%(levelname)s|%(module)s|L%(lineno)d] %(asctime)s: %(message)s',
-                'datefmt': '%Y-%m-%d %H:%M:%S',
+            "detailed": {
+                "format": "[%(levelname)s|%(module)s|L%(lineno)d] %(asctime)s: %(message)s",
+                "datefmt": "%Y-%m-%d %H:%M:%S",
             },
-            'json': {
-                '()': 'logger.JSONFormatter',
-                'fmt_keys': {
-                    'level': 'levelname',
-                    'message': 'message',
-                    'timestamp': 'timestamp',
-                    'logger': 'name',
-                    'module': 'module',
-                    'function': 'function',
-                    'line': 'lineno'
-                }
-            }
+            "json": {
+                "()": "logger.JSONFormatter",
+                "fmt_keys": {
+                    "level": "levelname",
+                    "message": "message",
+                    "timestamp": "timestamp",
+                    "logger": "name",
+                    "module": "module",
+                    "function": "function",
+                    "line": "lineno",
+                },
+            },
         },
-
-        'handlers': {
-            'main_file': {
-                'class': 'logging.handlers.TimedRotatingFileHandler',
-                'filename': 'logs/main.log',
-                'when': "midnight",
-                'maxBytes': 10_000_000,
-                'backupCount': 30,
-                'level': 'DEBUG',
-                'formatter': 'json'
+        "handlers": {
+            "main_file": {
+                "class": "logging.handlers.TimedRotatingFileHandler",
+                "filename": "logs/main.log",
+                "when": "midnight",
+                "maxBytes": 10_000_000,
+                "backupCount": 30,
+                "level": "DEBUG",
+                "formatter": "json",
             },
-            'error_file': {
-                'class': 'logging.handlers.TimedRotatingFileHandler',
-                'filename': 'logs/errors.log',
-                'when': "midnight",
-                'maxBytes': 5_000_000,
-                'backupCount': 30,
-                'level': 'ERROR',
-                'formatter': 'json'
+            "error_file": {
+                "class": "logging.handlers.TimedRotatingFileHandler",
+                "filename": "logs/errors.log",
+                "when": "midnight",
+                "maxBytes": 5_000_000,
+                "backupCount": 30,
+                "level": "ERROR",
+                "formatter": "json",
             },
-            'console': {
-                'class': 'logging.StreamHandler',
-                'level': 'INFO',
-                'formatter': 'json',
-                'stream': 'ext://sys.stdout'
-            }
+            "console": {
+                "class": "logging.StreamHandler",
+                "level": "INFO",
+                "formatter": "json",
+                "stream": "ext://sys.stdout",
+            },
         },
-
-        'loggers': {
-            'uvicorn.access': {
-                'handlers': ['main_file', 'error_file'],
-                'level': 'WARNING',
-                'propagate': True
+        "loggers": {
+            "uvicorn.access": {
+                "handlers": ["main_file", "error_file"],
+                "level": "WARNING",
+                "propagate": True,
             },
-
-            'sqlalchemy.engine': {
-                'handlers': ['main_file', 'error_file'],
-                'level': 'WARNING',
-                'propagate': True
-            }
+            "sqlalchemy.engine": {
+                "handlers": ["main_file", "error_file"],
+                "level": "WARNING",
+                "propagate": True,
+            },
         },
-
-        'root': {
-            'handlers': ['main_file', 'error_file'],
-            'level': 'DEBUG'
-        }
+        "root": {"handlers": ["main_file", "error_file"], "level": "DEBUG"},
     }
 
     return logger
