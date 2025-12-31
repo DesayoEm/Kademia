@@ -13,9 +13,40 @@ from app.infra.db.session_manager import get_db
 token_service = TokenService()
 access = AccessTokenBearer()
 
+"""
+FastAPI dependency injection utilities for authentication and service instantiation.
+
+Provides factory functions for creating route dependencies that automatically
+handle database sessions, token validation, and user resolution. Enables
+consistent authentication patterns across routes without boilerplate.
+
+Module Attributes:
+    token_service: Shared TokenService instance for JWT operations.
+    access: AccessTokenBearer dependency for extracting/validating tokens.
+
+"""
 
 def get_current_user(token_data, db_session):
-    """Convert token data to a identity object"""
+    """
+    Resolve token data to a user model instance.
+
+    Extracts user_id and user_type from the token's identity claim, then
+    queries the appropriate table (Staff, Student, or Guardian) to fetch
+    the full user object.
+
+    Args:
+        token_data: Decoded JWT payload containing an 'identity' dict with
+            'user_id' and 'user_type' keys.
+        db_session: Active SQLAlchemy session for database queries.
+
+    Returns:
+        The user model instance (Staff, Student, or Guardian).
+
+    Raises:
+        TokenInvalidError: If the token is missing user_id or user_type.
+        UserNotFoundError: If no user exists with the given ID in the
+            expected table.
+    """
     user_data = token_data["identity"]
 
     user_id = user_data.get("user_id")
@@ -39,7 +70,20 @@ def get_current_user(token_data, db_session):
 
 
 def get_authenticated_factory(factory_class):
-    """Factory function to create a dependency that returns a factory class instance with authenticated user"""
+    """
+    Create a FastAPI dependency that provides an authenticated factory instance.
+
+    Returns a dependency function that resolves the current user from the
+    access token and instantiates the given factory class with the database
+    session and authenticated user.
+
+    Args:
+        factory_class: A factory class whose __init__ accepts (session, current_user).
+
+    Returns:
+        Callable: A FastAPI-compatible dependency function.
+
+    """
 
     def get_factory(
         session: Session = Depends(get_db), token_data: dict = Depends(access)
@@ -51,7 +95,20 @@ def get_authenticated_factory(factory_class):
 
 
 def get_authenticated_service(service_class):
-    """Factory function to create a dependency that returns a service class instance with authenticated user"""
+    """
+    Create a FastAPI dependency that provides an authenticated service instance.
+
+    Returns a dependency function that resolves the current user from the
+    access token and instantiates the given service class with the database
+    session and authenticated user.
+
+    Args:
+        service_class: A service class whose __init__ accepts (session, current_user).
+
+    Returns:
+        Callable: A FastAPI-compatible dependency function.
+
+    """
 
     def get_service(
         session: Session = Depends(get_db), token_data: dict = Depends(access)
@@ -62,20 +119,4 @@ def get_authenticated_service(service_class):
     return get_service
 
 
-def get_crud(crud_class):
-    """Factory function to create a dependency that returns a CRUD instance without authentication"""
 
-    def get_crud(db: Session = Depends(get_db)):
-        return crud_class(db)
-
-    return get_crud
-
-
-def get_authenticated_crud(crud_class):
-    """Factory function to create a dependency that returns a CRUD instance with authenticated user"""
-
-    def get_crud(db: Session = Depends(get_db), token_data: dict = Depends(access)):
-        current_user = get_current_user(token_data, db)
-        return crud_class(db, current_user=current_user)
-
-    return get_crud

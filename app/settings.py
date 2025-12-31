@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     JWT_SECRET: str
     JWT_ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_SECONDS: int
+    RESET_URL: str
 
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
